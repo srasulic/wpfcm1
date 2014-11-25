@@ -2,7 +2,7 @@
 
 namespace wpfcm1.ViewModels
 {
-    public class ShellViewModel : PropertyChangedBase
+    public class ShellViewModel : PropertyChangedBase, IShell
     {
     }
 }
