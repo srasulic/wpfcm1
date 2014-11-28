@@ -4,32 +4,32 @@
              xmlns:cal="http://www.caliburnproject.org"
             >
     <Grid>
-    <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="0.5*"/>
-        <ColumnDefinition Width="0.5*"/>
-    </Grid.ColumnDefinitions>
+        <Grid.Resources>
+            <DataTemplate x:Key="FolderInfoDataTemplate">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0} ({1:D})">
+                                <Binding Path="DisplayName"/>
+                                <Binding Path="Count"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+            </DataTemplate>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.5*"/>
+            <ColumnDefinition Width="0.5*"/>
+        </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0">
             <Button Content="{Binding Path=Svm.OutboundVM.DisplayName}" cal:Message.Attach="ShowOutbound"/>
-            <ItemsControl ItemsSource="{Binding Path=Svm.OutboundVM.FolderVMs}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding DisplayName}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
+            <ItemsControl ItemsSource="{Binding Path=Svm.OutboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}">
             </ItemsControl>
         </StackPanel>
         <StackPanel Grid.Column="1">
             <Button Content="{Binding Path=Svm.InboundVM.DisplayName}" cal:Message.Attach="ShowInbound"/>
-            <ItemsControl ItemsSource="{Binding Path=Svm.InboundVM.FolderVMs}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding DisplayName}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
+            <ItemsControl ItemsSource="{Binding Path=Svm.InboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}">
             </ItemsControl>
         </StackPanel>
     </Grid>

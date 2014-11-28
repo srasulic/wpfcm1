@@ -18,6 +18,7 @@ namespace wpfcm1.ViewModels
         }
 
         public string Path { get; private set; }
-        public ObservableCollection<FileInfo> Documents { get; private set; } 
+        public ObservableCollection<FileInfo> Documents { get; private set; }
+        public int Count { get { return Documents.Count; } }
     }
 }
