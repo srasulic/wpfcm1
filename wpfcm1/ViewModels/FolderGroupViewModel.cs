@@ -4,9 +4,9 @@ using wpfcm1.DataAccess;
 
 namespace wpfcm1.ViewModels
 {
-    public class WorkspaceViewModel : Screen
+    public class FolderGroupViewModel : Screen
     {
-        public WorkspaceViewModel(Dictionary<string,string> wsFolders, string name)
+        public FolderGroupViewModel(Dictionary<string,string> wsFolders, string name)
         {
             DisplayName = name;
             FolderVMs = new BindableCollection<FolderViewModel>();

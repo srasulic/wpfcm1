@@ -10,17 +10,17 @@ namespace wpfcm1
     {
         public ShellViewModel()
         {
-            OutboundVM = new WorkspaceViewModel(FolderManager.InvoicesOutboundFolders, "Outbound");
-            InboundVM = new WorkspaceViewModel(FolderManager.InvoicesInboundFolders, "Inbound");
             HomeVM = new HomeViewModel(this);
+            OutboundVM = new FolderGroupViewModel(FolderManager.InvoicesOutboundFolders, "Outbound");
+            InboundVM = new FolderGroupViewModel(FolderManager.InvoicesInboundFolders, "Inbound");
             DisplayName = "Shell";
 
             ShowHome();
         }
 
-        public WorkspaceViewModel OutboundVM { get; private set; }
-        public WorkspaceViewModel InboundVM { get; private set; }
         public HomeViewModel HomeVM { get; private set; }
+        public FolderGroupViewModel OutboundVM { get; private set; }
+        public FolderGroupViewModel InboundVM { get; private set; }
 
         public void ShowHome()
         {
