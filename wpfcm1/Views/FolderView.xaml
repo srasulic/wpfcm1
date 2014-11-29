@@ -1,7 +1,7 @@
-﻿<UserControl x:Class="wpfcm1.Views.CertificatesView"
+﻿<UserControl x:Class="wpfcm1.Views.FolderView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Grid>
-        <ComboBox x:Name="Certificates" DisplayMemberPath="CertificateSimpleName" IsSynchronizedWithCurrentItem="True"/>
+        <ListBox x:Name="Documents" DisplayMemberPath="Name" />
     </Grid>
 </UserControl>

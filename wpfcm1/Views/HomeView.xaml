@@ -1,8 +1,7 @@
 ﻿<UserControl x:Class="wpfcm1.Views.HomeView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:cal="http://www.caliburnproject.org"
-            >
+             xmlns:cal="http://www.caliburnproject.org">
     <Grid>
         <Grid.Resources>
             <DataTemplate x:Key="FolderInfoDataTemplate">
@@ -24,13 +23,11 @@
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0">
             <Button Content="{Binding Path=Svm.OutboundVM.DisplayName}" cal:Message.Attach="ShowOutbound"/>
-            <ItemsControl ItemsSource="{Binding Path=Svm.OutboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}">
-            </ItemsControl>
+            <ItemsControl ItemsSource="{Binding Path=Svm.OutboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}" />
         </StackPanel>
         <StackPanel Grid.Column="1">
             <Button Content="{Binding Path=Svm.InboundVM.DisplayName}" cal:Message.Attach="ShowInbound"/>
-            <ItemsControl ItemsSource="{Binding Path=Svm.InboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}">
-            </ItemsControl>
+            <ItemsControl ItemsSource="{Binding Path=Svm.InboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}" />
         </StackPanel>
     </Grid>
 </UserControl>

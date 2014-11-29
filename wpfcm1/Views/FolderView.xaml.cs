@@ -2,9 +2,9 @@
 
 namespace wpfcm1.Views
 {
-    public partial class CertificatesView : UserControl
+    public partial class FolderView : UserControl
     {
-        public CertificatesView()
+        public FolderView()
         {
             InitializeComponent();
         }

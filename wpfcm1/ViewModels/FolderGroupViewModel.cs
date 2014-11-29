@@ -4,7 +4,7 @@ using wpfcm1.DataAccess;
 
 namespace wpfcm1.ViewModels
 {
-    public class FolderGroupViewModel : Screen
+    public class FolderGroupViewModel : Conductor<IScreen>.Collection.OneActive
     {
         public FolderGroupViewModel(Dictionary<string,string> wsFolders, string name)
         {

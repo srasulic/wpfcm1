@@ -40,7 +40,7 @@ namespace wpfcm1.DataAccess
             InvoicesOutboundFolders = new Dictionary<string, string>
             {
                 {"OutboundErpIfaceFolder", OutboundErpIfaceFolder},
-                {"OutboundErpProcFolder", OutboundErpProcFolder},
+                //{"OutboundErpProcFolder", OutboundErpProcFolder},
                 {"OutboundOutboxFolder", OutboundOutboxFolder},
                 {"OutboundSentFolder", OutboundSentFolder},
                 {"OutboundPendFolder", OutboundPendFolder},
@@ -56,6 +56,7 @@ namespace wpfcm1.DataAccess
             };
             CheckFolders(InvoicesInboundFolders);
 
+            if (!Directory.Exists(OutboundErpProcFolder)) Directory.CreateDirectory(OutboundErpProcFolder);
         }
 
         private static void CheckFolders(Dictionary<string,string> folders)

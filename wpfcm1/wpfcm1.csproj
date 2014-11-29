@@ -96,6 +96,9 @@
     <Compile Include="Views\CertificatesView.xaml.cs">
       <DependentUpon>CertificatesView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\FolderView.xaml.cs">
+      <DependentUpon>FolderView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
@@ -107,6 +110,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CertificatesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FolderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
