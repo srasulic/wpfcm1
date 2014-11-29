@@ -12,7 +12,18 @@ namespace wpfcm1.ViewModels
             FolderVMs = new BindableCollection<FolderViewModel>();
             foreach (var wsFolder in wsFolders)
             {
-                FolderVMs.Add(new FolderViewModel(wsFolder.Value, FolderManager.FolderNameMap[wsFolder.Key]));
+                switch (FolderManager.FolderTypeMap[wsFolder.Key].Name)
+                {
+                    case "GeneratedDocumentItem":
+                        FolderVMs.Add(new GeneratedFolderViewModel(wsFolder.Value, FolderManager.FolderNameMap[wsFolder.Key]));
+                        break;
+                    case "InboxDocumentItem":
+                        FolderVMs.Add(new InboxFolderViewModel(wsFolder.Value, FolderManager.FolderNameMap[wsFolder.Key]));
+                        break;
+                    default:
+                        FolderVMs.Add(new FolderViewModel(wsFolder.Value, FolderManager.FolderNameMap[wsFolder.Key]));
+                        break;
+                }
             }
         }
 

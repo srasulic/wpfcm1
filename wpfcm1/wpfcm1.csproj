@@ -93,19 +93,27 @@
     </Compile>
     <Compile Include="ViewModels\CertificatesViewModel.cs" />
     <Compile Include="ViewModels\FolderViewModel.cs" />
+    <Compile Include="ViewModels\GeneratedFolderViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\FolderGroupViewModel.cs" />
+    <Compile Include="ViewModels\InboxFolderViewModel.cs" />
     <Compile Include="Views\CertificatesView.xaml.cs">
       <DependentUpon>CertificatesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FolderView.xaml.cs">
       <DependentUpon>FolderView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\GeneratedFolderView.xaml.cs">
+      <DependentUpon>GeneratedFolderView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FolderGroupView.xaml.cs">
       <DependentUpon>FolderGroupView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InboxFolderView.xaml.cs">
+      <DependentUpon>InboxFolderView.xaml</DependentUpon>
     </Compile>
     <Page Include="ShellView.xaml">
       <SubType>Designer</SubType>
@@ -119,11 +127,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\GeneratedFolderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\HomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FolderGroupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InboxFolderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

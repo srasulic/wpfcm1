@@ -8,18 +8,23 @@ namespace wpfcm1.ViewModels
 {
     public class FolderViewModel : Screen
     {
-        private DocumentRepository _repository;
+        protected DocumentRepository _repository;
 
         public FolderViewModel(string path, string name)
         {
             Path = path;
             DisplayName = name;
             _repository = new DocumentRepository(path);
-            Documents = new ObservableCollection<DocumentItem>(_repository.Files.Select(fi => new DocumentItem(fi)));
         }
 
         public string Path { get; private set; }
-        public ObservableCollection<DocumentItem> Documents { get; private set; }
         public int Count { get { return Documents.Count; } }
+
+        private ObservableCollection<DocumentItem> _documents;
+        public ObservableCollection<DocumentItem> Documents
+        {
+            get { return _documents ?? new ObservableCollection<DocumentItem>(_repository.Files.Select(fi => new DocumentItem(fi))); }
+            private set { _documents = value; NotifyOfPropertyChange(() => Documents); }
+        }
     }
 }

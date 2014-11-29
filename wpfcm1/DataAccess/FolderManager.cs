@@ -1,22 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using wpfcm1.Model;
 using wpfcm1.Settings;
 
 namespace wpfcm1.DataAccess
 {
     public class FolderManager
     {
-        static readonly string OutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundErpIfaceFolder);
-        static readonly string OutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundErpProcFolder);
-        static readonly string OutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundOutboxFolder);
-        static readonly string OutboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundSentFolder);
-        static readonly string OutboundPendFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundPendFolder);
-        static readonly string OutboundConfirmedFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundConfirmedFolder);
-        static readonly string InboundInboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundInboxFolder);
-        static readonly string InboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundOutboxFolder);
-        static readonly string InboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundSentFolder);
-        static readonly string InboundConfirmedFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundConfirmedFolder);
+        public static readonly string OutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundErpIfaceFolder);
+        public static readonly string OutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundErpProcFolder);
+        public static readonly string OutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundOutboxFolder);
+        public static readonly string OutboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundSentFolder);
+        public static readonly string OutboundPendFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundPendFolder);
+        public static readonly string OutboundConfirmedFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundConfirmedFolder);
+        public static readonly string InboundInboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundInboxFolder);
+        public static readonly string InboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundOutboxFolder);
+        public static readonly string InboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundSentFolder);
+        public static readonly string InboundConfirmedFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundConfirmedFolder);
 
         public static Dictionary<string, string> InvoicesOutboundFolders { get; private set; } 
         public static Dictionary<string, string> InvoicesInboundFolders { get; private set; }
@@ -33,6 +35,19 @@ namespace wpfcm1.DataAccess
             {"InboundOutboxFolder", "Outbox"},
             {"InboundSentFolder", "Sent"},
             {"InboundConfirmedFolder", "Confirmed"}
+        };
+
+        public static readonly Dictionary<string, Type> FolderTypeMap = new Dictionary<string, Type>()
+        {
+            {"OutboundErpIfaceFolder", typeof(GeneratedDocumentItem)},
+            {"OutboundOutboxFolder", typeof(DocumentItem)},
+            {"OutboundSentFolder", typeof(DocumentItem)},
+            {"OutboundPendFolder", typeof(DocumentItem)},
+            {"OutboundConfirmedFolder", typeof(DocumentItem)},
+            {"InboundInboxFolder", typeof(InboxDocumentItem)},
+            {"InboundOutboxFolder", typeof(DocumentItem)},
+            {"InboundSentFolder", typeof(DocumentItem)},
+            {"InboundConfirmedFolder", typeof(DocumentItem)}
         };
 
         static FolderManager()

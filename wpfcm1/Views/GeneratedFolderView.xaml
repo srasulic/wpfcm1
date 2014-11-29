@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="wpfcm1.Views.GeneratedFolderView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <ListView x:Name="Documents">
+            <ListView.Resources>
+                <DataTemplate x:Key="CheckedCellTemplate">
+                    <CheckBox IsChecked="{Binding Path=IsChecked}"/>
+                </DataTemplate>
+            </ListView.Resources>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn CellTemplate="{StaticResource CheckedCellTemplate}"/>
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=DocumentInfo.Name}"/>
+                    <GridViewColumn Header="Date modified" DisplayMemberBinding="{Binding Path=DocumentInfo.LastWriteTime}"/>
+                    <GridViewColumn Header="Size" DisplayMemberBinding="{Binding Path=DocumentInfo.Length}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</UserControl>

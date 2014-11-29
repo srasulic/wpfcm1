@@ -7,7 +7,6 @@ namespace wpfcm1.DataAccess
 {
     public class CertificateRepositiory
     {
-
         public CertificateRepositiory()
         {
             CertificateItems = LoadCertificateItems();

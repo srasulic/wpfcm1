@@ -17,6 +17,7 @@ namespace wpfcm1.Model
         }
 
         [XmlIgnore] public FileInfo DocumentInfo { get; set; }
+
         public string DocumentPath { get { return DocumentInfo.FullName; } }
 
         private bool _needsProcessing;
@@ -24,6 +25,14 @@ namespace wpfcm1.Model
         {
             get { return _needsProcessing; }
             set { _needsProcessing = value; NotifyOfPropertyChange(() => NeedsProcessing); }
+        }
+
+        private bool _isChecked;
+        [XmlIgnore]
+        public bool IsChecked
+        {
+            get { return _isChecked; }
+            set { _isChecked = value; NotifyOfPropertyChange(() => IsChecked); }
         }
 
         public virtual string this[string columnName]

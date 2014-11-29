@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Text.RegularExpressions;
-using System.Xml.Serialization;
 
 namespace wpfcm1.Model
 {
@@ -12,14 +11,6 @@ namespace wpfcm1.Model
 
         public GeneratedDocumentItem(FileInfo fi) : base(fi)
         {
-        }
-
-        private bool _isChecked;
-        [XmlIgnore] 
-        public bool IsChecked
-        {
-            get { return _isChecked; }
-            set { _isChecked = value; NotifyOfPropertyChange(() => IsChecked); }
         }
 
         private string _pib;
