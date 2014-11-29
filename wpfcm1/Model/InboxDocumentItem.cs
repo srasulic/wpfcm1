@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.IO;
+using System.Xml.Serialization;
 
 namespace wpfcm1.Model
 {
@@ -8,16 +9,7 @@ namespace wpfcm1.Model
         {
         }
 
-        public InboxDocumentItem(string path) : base(path)
-        {
-        }
-
-        public InboxDocumentItem(InboxDocumentItem that) : base(that)
-        {
-            IsValid = that.IsValid;
-        }
-
-        public InboxDocumentItem(DocumentItem that) : base(that)
+        public InboxDocumentItem(FileInfo fi) : base(fi)
         {
         }
 

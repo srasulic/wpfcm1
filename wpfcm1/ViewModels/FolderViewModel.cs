@@ -15,7 +15,7 @@ namespace wpfcm1.ViewModels
             Path = path;
             DisplayName = name;
             _repository = new DocumentRepository(path);
-            Documents = new ObservableCollection<DocumentItem>(_repository.Files.Select(fi => new DocumentItem(fi.FullName)));
+            Documents = new ObservableCollection<DocumentItem>(_repository.Files.Select(fi => new DocumentItem(fi)));
         }
 
         public string Path { get; private set; }

@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.IO;
+using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
 namespace wpfcm1.Model
@@ -9,17 +10,7 @@ namespace wpfcm1.Model
         {
         }
 
-        public GeneratedDocumentItem(string path) : base(path)
-        {
-        }
-
-        public GeneratedDocumentItem(GeneratedDocumentItem that) : base(that)
-        {
-            Pib = that.Pib;
-            InvoiceNo = that.InvoiceNo;
-        }
-
-        public GeneratedDocumentItem(DocumentItem that) : base(that)
+        public GeneratedDocumentItem(FileInfo fi) : base(fi)
         {
         }
 

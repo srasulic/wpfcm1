@@ -11,21 +11,13 @@ namespace wpfcm1.Model
         {
         }
 
-        public DocumentItem(string path)
+        public DocumentItem(FileInfo fi)
         {
-            DocumentInfo = new FileInfo(path);
-            DocumentPath = path;
-        }
-
-        public DocumentItem(DocumentItem that)
-        {
-            DocumentInfo = that.DocumentInfo;
-            DocumentPath = that.DocumentPath;
-            NeedsProcessing = that.NeedsProcessing;
+            DocumentInfo = fi;
         }
 
         [XmlIgnore] public FileInfo DocumentInfo { get; set; }
-        public string DocumentPath { get; set; }
+        public string DocumentPath { get { return DocumentInfo.FullName; } }
 
         private bool _needsProcessing;
         public bool NeedsProcessing
