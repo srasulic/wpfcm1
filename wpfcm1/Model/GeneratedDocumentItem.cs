@@ -28,21 +28,21 @@ namespace wpfcm1.Model
         public bool IsChecked
         {
             get { return _isChecked; }
-            set { NotifyOfPropertyChange(() => IsChecked); }
+            set { _isChecked = value; NotifyOfPropertyChange(() => IsChecked); }
         }
 
         private string _pib;
         public string Pib
         {
             get { return _pib; }
-            set { NotifyOfPropertyChange(() => Pib); }
+            set { _pib = value; NotifyOfPropertyChange(() => Pib); }
         }
 
         private string _invoiceNo;
         public string InvoiceNo
         {
             get { return _invoiceNo; }
-            set { NotifyOfPropertyChange(() => InvoiceNo); }
+            set { _invoiceNo = value; NotifyOfPropertyChange(() => InvoiceNo); }
         }
 
         public override string this[string columnName]

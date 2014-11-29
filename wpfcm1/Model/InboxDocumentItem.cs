@@ -26,21 +26,21 @@ namespace wpfcm1.Model
         public bool IsChecked
         {
             get { return _isChecked; }
-            set { NotifyOfPropertyChange(() => IsChecked); }
+            set { _isChecked = value; NotifyOfPropertyChange(() => IsChecked); }
         }
 
         private bool? _isValid;
         public bool? IsValid
         {
             get { return _isValid; }
-            set { NotifyOfPropertyChange(() => IsValid); }
+            set { _isValid = value; NotifyOfPropertyChange(() => IsValid); }
         }
 
         private bool _isAcknowledged;
         public bool IsAcknowledged
         {
             get { return _isAcknowledged; }
-            set { NotifyOfPropertyChange(() => IsAcknowledged); }
+            set { _isAcknowledged = value; NotifyOfPropertyChange(() => IsAcknowledged); }
         }
     }
 }

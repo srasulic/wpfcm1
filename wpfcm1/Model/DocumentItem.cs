@@ -31,7 +31,7 @@ namespace wpfcm1.Model
         public bool NeedsProcessing
         {
             get { return _needsProcessing; }
-            set { NotifyOfPropertyChange(() => NeedsProcessing); }
+            set { _needsProcessing = value; NotifyOfPropertyChange(() => NeedsProcessing); }
         }
 
         public virtual string this[string columnName]
