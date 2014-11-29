@@ -1,7 +1,8 @@
 ﻿using Caliburn.Micro;
 using System.Collections.ObjectModel;
-using System.IO;
+using System.Linq;
 using wpfcm1.DataAccess;
+using wpfcm1.Model;
 
 namespace wpfcm1.ViewModels
 {
@@ -14,11 +15,11 @@ namespace wpfcm1.ViewModels
             Path = path;
             DisplayName = name;
             _repository = new DocumentRepository(path);
-            Documents = new ObservableCollection<FileInfo>(_repository.Files);
+            Documents = new ObservableCollection<DocumentItem>(_repository.Files.Select(fi => new DocumentItem(fi.FullName)));
         }
 
         public string Path { get; private set; }
-        public ObservableCollection<FileInfo> Documents { get; private set; }
+        public ObservableCollection<DocumentItem> Documents { get; private set; }
         public int Count { get { return Documents.Count; } }
     }
 }

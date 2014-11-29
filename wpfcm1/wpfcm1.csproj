@@ -75,6 +75,9 @@
     <Compile Include="Helpers\CertificateHelpers.cs" />
     <Compile Include="IShell.cs" />
     <Compile Include="Model\CertificateItem.cs" />
+    <Compile Include="Model\DocumentItem.cs" />
+    <Compile Include="Model\GeneratedDocumentItem.cs" />
+    <Compile Include="Model\InboxDocumentItem.cs" />
     <Compile Include="Settings\Folders.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
