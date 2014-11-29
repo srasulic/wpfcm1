@@ -10,6 +10,7 @@ namespace wpfcm1
     {
         public ShellViewModel()
         {
+            CertVM = new CertificatesViewModel();
             HomeVM = new HomeViewModel(this);
             OutboundVM = new FolderGroupViewModel(FolderManager.InvoicesOutboundFolders, "Outbound");
             InboundVM = new FolderGroupViewModel(FolderManager.InvoicesInboundFolders, "Inbound");
@@ -18,6 +19,7 @@ namespace wpfcm1
             ShowHome();
         }
 
+        public CertificatesViewModel CertVM { get; private set; }
         public HomeViewModel HomeVM { get; private set; }
         public FolderGroupViewModel OutboundVM { get; private set; }
         public FolderGroupViewModel InboundVM { get; private set; }

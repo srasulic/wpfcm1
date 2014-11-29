@@ -40,9 +40,13 @@
     <Reference Include="Caliburn.Micro.Platform">
       <HintPath>..\..\3rdparty\Caliburn.Micro-master\bin\net45\Release\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>
+    <Reference Include="itextsharp">
+      <HintPath>Lib\itextsharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\3rdparty\Caliburn.Micro-master\bin\net45\Release\System.Windows.Interactivity.dll</HintPath>
@@ -65,9 +69,13 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppBootstrapper.cs" />
+    <Compile Include="DataAccess\CertificateRepositiory.cs" />
     <Compile Include="DataAccess\DocumentRepository.cs" />
     <Compile Include="DataAccess\FolderManager.cs" />
+    <Compile Include="Helpers\CertificateCheckers.cs" />
+    <Compile Include="Helpers\CertificateHelpers.cs" />
     <Compile Include="IShell.cs" />
+    <Compile Include="Model\CertificateItem.cs" />
     <Compile Include="Settings\Folders.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -81,9 +89,13 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ViewModels\CertificatesViewModel.cs" />
     <Compile Include="ViewModels\FolderViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\FolderGroupViewModel.cs" />
+    <Compile Include="Views\CertificatesView.xaml.cs">
+      <DependentUpon>CertificatesView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
@@ -91,6 +103,10 @@
       <DependentUpon>FolderGroupView.xaml</DependentUpon>
     </Compile>
     <Page Include="ShellView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CertificatesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

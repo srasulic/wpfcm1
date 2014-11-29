@@ -7,11 +7,16 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition />
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <ContentControl x:Name="CertVM" />
+        <StackPanel Orientation="Horizontal" Grid.Column="1">
             <Button Content="Home" Width="96" x:Name="ShowHome"/>
             <Button Content="Sync" Width="96" />
             <Button Content="Settings" Width="96" />
         </StackPanel>
-        <ContentControl Grid.Row="1" x:Name="ActiveItem" />
+        <ContentControl Grid.Row="1" Grid.ColumnSpan="2"  x:Name="ActiveItem" />
     </Grid>
 </UserControl>
