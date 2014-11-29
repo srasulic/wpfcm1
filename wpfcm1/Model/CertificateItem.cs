@@ -24,7 +24,7 @@ namespace wpfcm1.Model
             var chain = chainBuildInfo.Item1;
             ChainElements = CertificateHelpers.GetChainElements(chain);
 
-            Errors = CertificateCheckers.CheckCertificate(Certificate, chainBuildInfo);
+            Errors = CertificateHelpers.CheckCertificate(Certificate, chainBuildInfo);
 
             var bccert = DotNetUtilities.FromX509Certificate(Certificate);
             var crlUrl = CertificateUtil.GetCRLURL(bccert);
