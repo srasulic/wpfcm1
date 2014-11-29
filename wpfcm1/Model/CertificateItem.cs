@@ -10,10 +10,10 @@ namespace wpfcm1.Model
     public class CertificateItem
     {
         public X509Certificate2 Certificate { get; private set; }
-        public List<X509Certificate> ChainElements { get; private set; }
-        public bool IsQualified { get; private set; }
         public string CertificateSimpleName { get; private set; }
+        public List<X509Certificate> ChainElements { get; private set; }
         public List<string> Errors { get; private set; }
+        public bool IsQualified { get; private set; }
 
         public CertificateItem(X509Certificate2 certificate)
         {
@@ -32,7 +32,7 @@ namespace wpfcm1.Model
             var hasCrl = crlUrl != null;
             var hasOcsp = ocspUrl != null;
             if (!(hasOcsp || hasCrl))
-                Errors.Add("Cannot check revocation.");
+                Errors.Add("Cannot check revocation (no ocsp and crl).");
 
             IsQualified = Errors.Count == 0 && (hasOcsp || hasCrl);
         }
