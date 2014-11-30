@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="wpfcm1.Views.FolderGroupView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls">
     <Grid>
         <!--<Grid.Resources>
             <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedTabControl.xaml" />
@@ -8,9 +9,14 @@
         <TabControl x:Name="FolderVMs" IsSynchronizedWithCurrentItem="True">
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding DisplayName}" />
-                    </StackPanel>
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0} ({1:D})">
+                                <Binding Path="DisplayName"/>
+                                <Binding Path="Documents.Count"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
                 </DataTemplate>
             </TabControl.ItemTemplate>
         </TabControl>
