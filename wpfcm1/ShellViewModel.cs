@@ -14,7 +14,7 @@ namespace wpfcm1
             HomeVM = new HomeViewModel(this);
             OutboundVM = new FolderGroupViewModel(FolderManager.InvoicesOutboundFolders, "Outbound");
             InboundVM = new FolderGroupViewModel(FolderManager.InvoicesInboundFolders, "Inbound");
-            DisplayName = "Shell";
+            DisplayName = "Invoices";
 
             ShowHome();
         }
