@@ -5,9 +5,9 @@
         <DataGrid x:Name="Documents" AutoGenerateColumns="False" CanUserAddRows="false">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Binding="{Binding IsChecked}" />
-                <DataGridTextColumn Header="Name" Binding="{Binding Path=DocumentInfo.Name}"/>
-                <DataGridTextColumn Header="Date modified" Binding="{Binding Path=DocumentInfo.LastWriteTime}" />
-                <DataGridTextColumn Header="Size" Binding="{Binding Path=DocumentInfo.Length}" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Date modified" Binding="{Binding Path=DocumentInfo.LastWriteTime}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Size" Binding="{Binding Path=DocumentInfo.Length}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
