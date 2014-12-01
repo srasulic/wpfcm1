@@ -34,8 +34,7 @@
                 <Rectangle Width="21" Height="21"
                            Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
                     <Rectangle.OpacityMask>
-                        <VisualBrush Stretch="Fill"
-                                     Visual="{DynamicResource appbar_home_empty}" />
+                        <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_home_empty}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </Button>
@@ -43,8 +42,7 @@
                 <Rectangle Width="21" Height="21"
                            Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
                     <Rectangle.OpacityMask>
-                        <VisualBrush Stretch="Fill"
-                                     Visual="{DynamicResource appbar_refresh}" />
+                        <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_refresh}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </Button>
