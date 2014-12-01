@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using wpfcm1.Model;
 
@@ -10,11 +11,18 @@ namespace wpfcm1.ViewModels
         {
         }
 
-        private ObservableCollection<DocumentItem> _documents;
-        public new ObservableCollection<DocumentItem> Documents
+        protected override void InitDocuments()
         {
-            get { return _documents ?? new ObservableCollection<DocumentItem>(_repository.Files.Select(fi => new GeneratedDocumentItem(fi))); }
-            private set { _documents = value; NotifyOfPropertyChange(() => Documents); }
+            Documents = new ObservableCollection<DocumentItem>(
+                 Directory.EnumerateFiles(FolderPath)
+                 .Where(f => Extensions.Contains(Path.GetExtension(f)))
+                 .Select(f => new GeneratedDocumentItem(new FileInfo(f))));
+            InitWatcher(FolderPath);
+        }
+
+        protected override void AddFile(string filePath)
+        {
+            Documents.Add(new GeneratedDocumentItem(new FileInfo(filePath)));
         }
     }
 }

@@ -72,7 +72,6 @@
     </ApplicationDefinition>
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="DataAccess\CertificateRepositiory.cs" />
-    <Compile Include="DataAccess\DocumentRepository.cs" />
     <Compile Include="DataAccess\FolderManager.cs" />
     <Compile Include="Helpers\CertificateHelpers.cs" />
     <Compile Include="IShell.cs" />

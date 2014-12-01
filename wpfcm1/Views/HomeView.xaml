@@ -16,7 +16,7 @@
                         <TextBlock.Text>
                             <MultiBinding StringFormat="{}{0} ({1:D})">
                                 <Binding Path="DisplayName"/>
-                                <Binding Path="Count"/>
+                                <Binding Path="Documents.Count"/>
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>

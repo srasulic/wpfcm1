@@ -1,30 +1,94 @@
 ﻿using Caliburn.Micro;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
-using wpfcm1.DataAccess;
+using System.Windows.Threading;
 using wpfcm1.Model;
 
 namespace wpfcm1.ViewModels
 {
     public class FolderViewModel : Screen
     {
-        protected DocumentRepository _repository;
+        protected string[] Extensions = { ".pdf", ".ack" };
+        protected FileSystemWatcher _watcher;
+        private readonly Dispatcher _dispatcher;
 
         public FolderViewModel(string path, string name)
         {
-            Path = path;
+            FolderPath = path;
             DisplayName = name;
-            _repository = new DocumentRepository(path);
+            _dispatcher = Dispatcher.CurrentDispatcher;
+
+            InitDocuments();
         }
 
-        public string Path { get; private set; }
+        public string FolderPath { get; private set; }
         public int Count { get { return Documents.Count; } }
-
-        private ObservableCollection<DocumentItem> _documents;
-        public ObservableCollection<DocumentItem> Documents
+        public virtual ObservableCollection<DocumentItem> Documents { get; set; }
+        
+        private bool _isChanged;
+        public bool IsChanged
         {
-            get { return _documents ?? new ObservableCollection<DocumentItem>(_repository.Files.Select(fi => new DocumentItem(fi))); }
-            private set { _documents = value; NotifyOfPropertyChange(() => Documents); }
+            get { return _isChanged; }
+            set { _isChanged = value; NotifyOfPropertyChange(() => IsChanged); }
+        }
+
+        protected virtual void InitDocuments()
+        {
+            Documents = new ObservableCollection<DocumentItem>(
+                 Directory.EnumerateFiles(FolderPath)
+                 .Where(f => Extensions.Contains(Path.GetExtension(f)))
+                 .Select(f => new DocumentItem(new FileInfo(f))));
+            InitWatcher(FolderPath);
+        }
+
+        protected void InitWatcher(string path)
+        {
+            _watcher = new FileSystemWatcher(path) { NotifyFilter = NotifyFilters.Size | NotifyFilters.FileName };
+            _watcher.Changed += Watcher_Changed; 
+            _watcher.Deleted += Watcher_Deleted;
+            _watcher.Created += Watcher_Created;
+            _watcher.Renamed += Watcher_Renamed;
+            _watcher.EnableRaisingEvents = true;
+        }
+
+        private void Watcher_Changed(object sender, FileSystemEventArgs e)
+        {
+
+        }
+
+        private void Watcher_Created(object sender, FileSystemEventArgs e)
+        {
+            IsChanged = true;
+            var action = new System.Action(() => AddFile(e.FullPath));
+            if (_dispatcher.CheckAccess())
+                action();
+            else
+                _dispatcher.BeginInvoke(DispatcherPriority.DataBind, action);
+        }
+
+        protected virtual void AddFile(string filePath)
+        {
+            Documents.Add(new DocumentItem(new FileInfo(filePath)));
+        }
+
+        private void Watcher_Deleted(object sender, FileSystemEventArgs e)
+        {
+            IsChanged = true;
+            var action = new System.Action(() =>
+            {
+                var docToRemove = Documents.FirstOrDefault(f => f.DocumentPath == e.FullPath);
+                if (docToRemove != null) Documents.Remove(docToRemove);
+            });
+            if (_dispatcher.CheckAccess())
+                action();
+            else
+                _dispatcher.BeginInvoke(DispatcherPriority.DataBind, action);
+        }
+
+        private void Watcher_Renamed(object sender, RenamedEventArgs e)
+        {
+
         }
     }
 }
