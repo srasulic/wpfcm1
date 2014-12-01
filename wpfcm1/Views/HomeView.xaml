@@ -6,9 +6,10 @@
     <Grid>
         <Grid.Resources>
             <Style x:Key="SmallTileStyle" TargetType="mah:Tile">
-                <!--<Setter Property="Width" Value="210" />
-                <Setter Property="Height" Value="210" />-->
-                <Setter Property="TitleFontSize" Value="13" />
+                <Setter Property="Width" Value="233" />
+                <Setter Property="Height" Value="233" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TitleFontSize" Value="31" />
             </Style>
             <DataTemplate x:Key="FolderInfoDataTemplate">
                 <StackPanel Orientation="Horizontal">
