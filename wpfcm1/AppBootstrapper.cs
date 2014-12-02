@@ -6,6 +6,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
 using System.Linq;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace wpfcm1
 {
@@ -53,6 +54,16 @@ namespace wpfcm1
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             DisplayRootViewFor<IShell>();
+        }
+
+        protected override void OnExit(object sender, EventArgs e)
+        {
+
+        }
+
+        protected override void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+
         }
     }
 }
