@@ -19,14 +19,14 @@
                 <Image Source="{StaticResource PngAck}" Visibility="{Binding Path=IsAcknowledged, Converter={StaticResource b2vc}}"/>
             </DataTemplate>
         </Grid.Resources>
-        <DataGrid x:Name="Documents" AutoGenerateColumns="False" CanUserAddRows="false" IsReadOnly="True">
+        <DataGrid x:Name="Documents" AutoGenerateColumns="False" CanUserAddRows="false">
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Binding="{Binding IsChecked}" />
-                <DataGridTextColumn Header="Name" Binding="{Binding Path=DocumentInfo.Name}"/>
-                <DataGridTextColumn Header="Date modified" Binding="{Binding Path=DocumentInfo.LastWriteTime}" />
-                <DataGridTextColumn Header="Size" Binding="{Binding Path=DocumentInfo.Length}" />
-                <DataGridTemplateColumn CellTemplate="{StaticResource ImgCol}" MinWidth="32"/>
-                <DataGridTemplateColumn CellTemplate="{StaticResource AckCol}" MinWidth="32"/>
+                <DataGridCheckBoxColumn Binding="{Binding IsChecked}" IsReadOnly="False"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Date modified" Binding="{Binding Path=DocumentInfo.LastWriteTime}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Size" Binding="{Binding Path=DocumentInfo.Length}" IsReadOnly="True"/>
+                <DataGridTemplateColumn CellTemplate="{StaticResource ImgCol}" MinWidth="32" IsReadOnly="True"/>
+                <DataGridTemplateColumn CellTemplate="{StaticResource AckCol}" MinWidth="32" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
