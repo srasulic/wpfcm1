@@ -1,5 +1,4 @@
 ﻿using Caliburn.Micro;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Threading;
@@ -24,7 +23,7 @@ namespace wpfcm1.ViewModels
 
         public string FolderPath { get; private set; }
         public int Count { get { return Documents.Count; } }
-        public virtual ObservableCollection<DocumentItem> Documents { get; set; }
+        public virtual BindableCollection<DocumentItem> Documents { get; set; }
         
         private bool _isChanged;
         public bool IsChanged
@@ -35,7 +34,7 @@ namespace wpfcm1.ViewModels
 
         protected virtual void InitDocuments()
         {
-            Documents = new ObservableCollection<DocumentItem>(
+            Documents = new BindableCollection<DocumentItem>(
                  Directory.EnumerateFiles(FolderPath)
                  .Where(f => Extensions.Contains(Path.GetExtension(f)))
                  .Select(f => new DocumentItem(new FileInfo(f))));
@@ -89,6 +88,11 @@ namespace wpfcm1.ViewModels
         private void Watcher_Renamed(object sender, RenamedEventArgs e)
         {
 
+        }
+
+        protected override void OnViewAttached(object view, object context)
+        {
+            Documents.Refresh(); // nestaje error notification template kada se promeni tab
         }
     }
 }

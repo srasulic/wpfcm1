@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+﻿using Caliburn.Micro;
 using System.IO;
 using System.Linq;
 using wpfcm1.Model;
@@ -13,7 +13,7 @@ namespace wpfcm1.ViewModels
 
         protected override void InitDocuments()
         {
-            Documents = new ObservableCollection<DocumentItem>(
+            Documents = new BindableCollection<DocumentItem>(
                  Directory.EnumerateFiles(FolderPath)
                  .Where(f => Extensions.Contains(Path.GetExtension(f)))
                  .Select(f => new GeneratedDocumentItem(new FileInfo(f))));

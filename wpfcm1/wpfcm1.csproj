@@ -71,6 +71,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppBootstrapper.cs" />
+    <Compile Include="Converters\Converters.cs" />
     <Compile Include="DataAccess\CertificateRepositiory.cs" />
     <Compile Include="DataAccess\FolderManager.cs" />
     <Compile Include="Helpers\CertificateHelpers.cs" />
@@ -187,6 +188,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Entypo-license.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\ack16.png" />
+    <Resource Include="Media\error16.png" />
+    <Resource Include="Media\ok16.png" />
+    <Resource Include="Media\signature32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\SignatureShow.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
