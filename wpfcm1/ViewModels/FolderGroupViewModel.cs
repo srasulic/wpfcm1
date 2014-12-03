@@ -28,5 +28,20 @@ namespace wpfcm1.ViewModels
         }
 
         public IObservableCollection<FolderViewModel> FolderVMs { get; private set; }
+
+        public void ActivateTabItem(int idx)
+        {
+            ActivateItem(FolderVMs[idx]);
+        }
+
+        protected override void OnActivate()
+        {
+            ActivateTabItem(0);
+        }
+
+        protected override void OnDeactivate(bool close)
+        {
+            DeactivateItem(ActiveItem, false);
+        }
     }
 }

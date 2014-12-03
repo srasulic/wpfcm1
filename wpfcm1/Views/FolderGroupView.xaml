@@ -1,9 +1,11 @@
 ﻿<UserControl x:Class="wpfcm1.Views.FolderGroupView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls">
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:cal="http://www.caliburnproject.org">
     <Grid>
-        <TabControl x:Name="FolderVMs" IsSynchronizedWithCurrentItem="True" mah:ControlsHelper.IsUnderlined="True" >
+        <TabControl x:Name="FolderVMs" IsSynchronizedWithCurrentItem="True" mah:ControlsHelper.IsUnderlined="True"
+                    cal:Message.Attach="[Event SelectionChanged] = [Action ActivateTabItem(FolderVms.SelectedIndex)]">
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock>

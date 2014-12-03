@@ -24,5 +24,15 @@ namespace wpfcm1.ViewModels
         {
             Documents.Add(new InboxDocumentItem(new FileInfo(filePath)));
         }
+
+        protected override void OnActivate()
+        {
+
+        }
+
+        protected override void OnDeactivate(bool close)
+        {
+
+        }
     }
 }
