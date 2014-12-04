@@ -93,6 +93,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Toolbar\ToolBarButtonView.xaml.cs">
+      <DependentUpon>ToolBarButtonView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Toolbar\ToolBarButtonViewModel.cs" />
+    <Compile Include="Toolbar\ToolBarView.xaml.cs">
+      <DependentUpon>ToolBarView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Toolbar\ToolBarViewModel.cs" />
     <Compile Include="ViewModels\CertificatesViewModel.cs" />
     <Compile Include="ViewModels\FolderViewModel.cs" />
     <Compile Include="ViewModels\GeneratedFolderViewModel.cs" />
@@ -122,6 +130,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="ShellView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Toolbar\ToolBarButtonView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Toolbar\ToolBarView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -198,6 +214,7 @@
   <ItemGroup>
     <Resource Include="Media\SignatureShow.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

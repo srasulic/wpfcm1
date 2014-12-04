@@ -1,0 +1,13 @@
+﻿<UserControl x:Class="wpfcm1.Toolbar.ToolBarButtonView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Button Style="{DynamicResource MetroCircleButtonStyle}" Width="55" Height="55" >
+        <Rectangle Width="21" Height="21"
+                   Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
+            <Rectangle.OpacityMask>
+                <!--<VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_home_empty}" />-->
+                <VisualBrush Stretch="Fill" Visual="{Binding Path=ButtonImg}" />
+            </Rectangle.OpacityMask>
+        </Rectangle>
+    </Button>
+</UserControl>
