@@ -10,18 +10,21 @@ namespace wpfcm1
     public sealed class ShellViewModel : Conductor<object>, IShell
     {
         [ImportingConstructor]
-        public ShellViewModel(ToolBarViewModel toolBar)
+        public ShellViewModel(ToolBarViewModel toolBar, CertificatesViewModel certs)
         {
+            DisplayName = "Invoices";
+
             ToolBar = toolBar;
-            CertVM = new CertificatesViewModel();
+            CertVM = certs;
+
             HomeVM = new HomeViewModel(this);
             OutboundVM = new FolderGroupViewModel(FolderManager.InvoicesOutboundFolders, "Outbound");
             InboundVM = new FolderGroupViewModel(FolderManager.InvoicesInboundFolders, "Inbound");
-            DisplayName = "Invoices";
 
             ShowHome();
         }
 
+        //Imported components:
         public ToolBarViewModel ToolBar { get; set; }
         public CertificatesViewModel CertVM { get; private set; }
         //Screens:
