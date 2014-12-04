@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="wpfcm1.Toolbar.ToolBarButtonView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Button Style="{DynamicResource MetroCircleButtonStyle}" Width="55" Height="55" >
+    <Button Style="{DynamicResource MetroCircleButtonStyle}" Width="55" Height="55" x:Name="SendMessage">
         <Rectangle Width="21" Height="21"
                    Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
             <Rectangle.OpacityMask>

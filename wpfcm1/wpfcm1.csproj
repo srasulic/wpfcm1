@@ -74,6 +74,7 @@
     <Compile Include="Converters\Converters.cs" />
     <Compile Include="DataAccess\CertificateRepositiory.cs" />
     <Compile Include="DataAccess\FolderManager.cs" />
+    <Compile Include="Events\ButtonMessages.cs" />
     <Compile Include="Helpers\CertificateHelpers.cs" />
     <Compile Include="IShell.cs" />
     <Compile Include="Model\CertificateItem.cs" />

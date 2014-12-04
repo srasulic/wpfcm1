@@ -1,18 +1,20 @@
 ﻿using Caliburn.Micro;
 using System.ComponentModel.Composition;
 using wpfcm1.DataAccess;
+using wpfcm1.Events;
 using wpfcm1.Toolbar;
 using wpfcm1.ViewModels;
 
 namespace wpfcm1
 {
     [Export(typeof(IShell))]
-    public sealed class ShellViewModel : Conductor<object>, IShell
+    public sealed class ShellViewModel : Conductor<object>, IShell, IHandle<MessageShowHome>
     {
         [ImportingConstructor]
-        public ShellViewModel(ToolBarViewModel toolBar, CertificatesViewModel certs)
+        public ShellViewModel(IEventAggregator events, ToolBarViewModel toolBar, CertificatesViewModel certs)
         {
             DisplayName = "Invoices";
+            events.Subscribe(this);
 
             ToolBar = toolBar;
             CertVM = certs;
@@ -45,6 +47,11 @@ namespace wpfcm1
         public void ShowInbound()
         {
             ActivateItem(InboundVM);
+        }
+
+        public void Handle(MessageShowHome message)
+        {
+            ShowHome();
         }
     }
 }
