@@ -42,7 +42,10 @@ namespace wpfcm1.ViewModels
         protected override void OnActivate()
         {
             //_events.PublishOnUIThread(new ViewModelActivatedMessage(GetType().Name));
-            ActivateTabItem(0);
+            if (ActiveItem == null)
+                ActivateTabItem(0);
+            else
+                ActivateItem(ActiveItem);
         }
 
         protected override void OnDeactivate(bool close)

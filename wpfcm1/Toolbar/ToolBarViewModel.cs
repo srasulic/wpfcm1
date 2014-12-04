@@ -21,7 +21,7 @@ namespace wpfcm1.Toolbar
             Buttons.Add(new ToolBarButtonViewModel(events, "appbar_page_delete"));
             Buttons.Add(new ToolBarButtonViewModel(events, "appbar_page_check"));
             Buttons.Add(new ToolBarButtonViewModel(events, "appbar_page_arrow"));
-            //var ba = new BitArray(new byte[]{3});
+
             _activeButtons = new ButtonVisibilityManager(this, events);
         }
 

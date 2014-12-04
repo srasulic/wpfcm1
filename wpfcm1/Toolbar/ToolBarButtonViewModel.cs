@@ -25,6 +25,13 @@ namespace wpfcm1.Toolbar
             set { _buttonImg = value; NotifyOfPropertyChange(() => ButtonImg); }
         }
 
+        private bool _buttonVisibility;
+        public bool ButtonVisibility
+        {
+            get { return _buttonVisibility; }
+            set { _buttonVisibility = value; NotifyOfPropertyChange(() => ButtonVisibility); }
+        }
+
         public void SendMessage()
         {
             if (_msg != null)
