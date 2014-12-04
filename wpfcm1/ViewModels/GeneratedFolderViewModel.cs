@@ -34,10 +34,9 @@ namespace wpfcm1.ViewModels
 
         protected override void OnDeactivate(bool close)
         {
-            //var v = GetView() as UserControl;
-            //var dg = v.FindName("Documents") as DataGrid;
-            //dg.CommitEdit();
-            //dg.CancelEdit();
+            var v = GetView() as UserControl;
+            var dg = v.FindName("Documents") as DataGrid;
+            dg.CommitEdit(DataGridEditingUnit.Row, true);
         }
     }
 }
