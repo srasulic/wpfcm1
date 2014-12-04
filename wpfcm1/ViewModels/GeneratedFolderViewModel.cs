@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using System.IO;
 using System.Linq;
+using System.Windows.Controls;
 using wpfcm1.Events;
 using wpfcm1.Model;
 
@@ -33,7 +34,10 @@ namespace wpfcm1.ViewModels
 
         protected override void OnDeactivate(bool close)
         {
-
+            //var v = GetView() as UserControl;
+            //var dg = v.FindName("Documents") as DataGrid;
+            //dg.CommitEdit();
+            //dg.CancelEdit();
         }
     }
 }
