@@ -10,18 +10,21 @@ namespace wpfcm1
     [Export(typeof(IShell))]
     public sealed class ShellViewModel : Conductor<object>, IShell, IHandle<MessageShowHome>
     {
+        private readonly IEventAggregator _events;
+
         [ImportingConstructor]
         public ShellViewModel(IEventAggregator events, ToolBarViewModel toolBar, CertificatesViewModel certs)
         {
             DisplayName = "Invoices";
-            events.Subscribe(this);
+            _events = events;
+            _events.Subscribe(this);
 
             ToolBar = toolBar;
             CertVM = certs;
 
             HomeVM = new HomeViewModel(this);
-            OutboundVM = new FolderGroupViewModel(FolderManager.InvoicesOutboundFolders, "Outbound");
-            InboundVM = new FolderGroupViewModel(FolderManager.InvoicesInboundFolders, "Inbound");
+            OutboundVM = new FolderGroupViewModel(FolderManager.InvoicesOutboundFolders, "Outbound", events);
+            InboundVM = new FolderGroupViewModel(FolderManager.InvoicesInboundFolders, "Inbound", events);
 
             ShowHome();
         }
@@ -37,6 +40,7 @@ namespace wpfcm1
         public void ShowHome()
         {
             ActivateItem(HomeVM);
+            _events.PublishOnUIThread(new ViewModelActivatedMessage(ActiveItem.GetType().Name));
         }
 
         public void ShowOutbound()

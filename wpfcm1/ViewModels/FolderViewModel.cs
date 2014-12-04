@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Windows.Threading;
+using wpfcm1.Events;
 using wpfcm1.Model;
 
 namespace wpfcm1.ViewModels
@@ -11,12 +12,15 @@ namespace wpfcm1.ViewModels
         protected string[] Extensions = { ".pdf", ".ack" };
         protected FileSystemWatcher _watcher;
         private readonly Dispatcher _dispatcher;
+        protected readonly IEventAggregator _events;
 
-        public FolderViewModel(string path, string name)
+        public FolderViewModel(string path, string name, IEventAggregator events)
         {
             FolderPath = path;
             DisplayName = name;
             _dispatcher = Dispatcher.CurrentDispatcher;
+            _events = events;
+            _events.Subscribe(this);
 
             InitDocuments();
         }
@@ -24,7 +28,6 @@ namespace wpfcm1.ViewModels
         public string FolderPath { get; private set; }
         public int Count { get { return Documents.Count; } }
         public virtual BindableCollection<DocumentItem> Documents { get; set; }
-        
         private bool _isChanged;
         public bool IsChanged
         {
@@ -41,6 +44,27 @@ namespace wpfcm1.ViewModels
             InitWatcher(FolderPath);
         }
 
+        protected override void OnActivate()
+        {
+            _events.PublishOnUIThread(new ViewModelActivatedMessage(GetType().Name));
+        }
+
+        protected override void OnDeactivate(bool close)
+        {
+
+        }
+
+        protected override void OnViewAttached(object view, object context)
+        {
+            Documents.Refresh(); // nestaje error notification template kada se promeni tab
+        }
+
+        protected virtual void AddFile(string filePath)
+        {
+            Documents.Add(new DocumentItem(new FileInfo(filePath)));
+        }
+
+        #region FileSystemwatcher
         protected void InitWatcher(string path)
         {
             _watcher = new FileSystemWatcher(path) { NotifyFilter = NotifyFilters.Size | NotifyFilters.FileName };
@@ -66,11 +90,6 @@ namespace wpfcm1.ViewModels
                 _dispatcher.BeginInvoke(DispatcherPriority.DataBind, action);
         }
 
-        protected virtual void AddFile(string filePath)
-        {
-            Documents.Add(new DocumentItem(new FileInfo(filePath)));
-        }
-
         private void Watcher_Deleted(object sender, FileSystemEventArgs e)
         {
             IsChanged = true;
@@ -89,10 +108,6 @@ namespace wpfcm1.ViewModels
         {
 
         }
-
-        protected override void OnViewAttached(object view, object context)
-        {
-            Documents.Refresh(); // nestaje error notification template kada se promeni tab
-        }
+        #endregion
     }
 }

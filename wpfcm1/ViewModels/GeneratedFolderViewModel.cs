@@ -1,13 +1,14 @@
 ﻿using Caliburn.Micro;
 using System.IO;
 using System.Linq;
+using wpfcm1.Events;
 using wpfcm1.Model;
 
 namespace wpfcm1.ViewModels
 {
     public class GeneratedFolderViewModel : FolderViewModel
     {
-        public GeneratedFolderViewModel(string path, string name) : base(path, name)
+        public GeneratedFolderViewModel(string path, string name, IEventAggregator events) : base(path, name, events)
         {
         }
 
@@ -27,7 +28,7 @@ namespace wpfcm1.ViewModels
 
         protected override void OnActivate()
         {
-
+            _events.PublishOnUIThread(new ViewModelActivatedMessage(GetType().Name));
         }
 
         protected override void OnDeactivate(bool close)
