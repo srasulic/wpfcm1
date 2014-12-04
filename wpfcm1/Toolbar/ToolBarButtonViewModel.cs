@@ -6,8 +6,11 @@ namespace wpfcm1.Toolbar
 {
     public class ToolBarButtonViewModel : PropertyChangedBase
     {
-        public ToolBarButtonViewModel(string resName)
+        private readonly IEventAggregator _events;
+
+        public ToolBarButtonViewModel(IEventAggregator events, string resName)
         {
+            _events = events;
             var res = Application.Current.Resources[resName];
             ButtonImg = res as Canvas;
         }

@@ -28,7 +28,6 @@ namespace wpfcm1
             var batch = new CompositionBatch();
             batch.AddExportedValue<IWindowManager>(new WindowManager());
             batch.AddExportedValue<IEventAggregator>(new EventAggregator());
-            batch.AddExportedValue(new ToolBarViewModel());
             batch.AddExportedValue(_container);
             batch.AddExportedValue(catalog);
 
