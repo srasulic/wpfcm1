@@ -1,13 +1,14 @@
-﻿using System.IO;
+﻿using Caliburn.Micro;
+using System.IO;
 using System.Linq;
 using System.Windows.Controls;
-using Caliburn.Micro;
+using wpfcm1.Dialogs;
 using wpfcm1.Events;
 using wpfcm1.Model;
 
 namespace wpfcm1.FolderTypes
 {
-    public class GeneratedFolderViewModel : FolderViewModel, IHandle<CertificateModel>
+    public class GeneratedFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>
     {
         private readonly IWindowManager _windowManager;
 
@@ -45,6 +46,12 @@ namespace wpfcm1.FolderTypes
         public void Handle(CertificateModel message)
         {
 
+        }
+
+        public void Handle(MessageSign message)
+        {
+            //if (IsActive)
+            //var result = _windowManager.ShowDialog(new DialogSyncViewModel());
         }
     }
 }

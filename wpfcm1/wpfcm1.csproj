@@ -75,6 +75,10 @@
     <Compile Include="Converters\Converters.cs" />
     <Compile Include="DataAccess\CertificateRepositiory.cs" />
     <Compile Include="DataAccess\FolderManager.cs" />
+    <Compile Include="Dialogs\DialogSyncView.xaml.cs">
+      <DependentUpon>DialogSyncView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DialogSyncViewModel.cs" />
     <Compile Include="Events\ButtonMessages.cs" />
     <Compile Include="Events\ViewModelActivatedMessage.cs" />
     <Compile Include="Helpers\CertificateHelpers.cs" />
@@ -128,6 +132,14 @@
     <Compile Include="FolderTypes\InboxFolderView.xaml.cs">
       <DependentUpon>InboxFolderView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\DialogResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\DialogSyncView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Icons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -217,9 +229,7 @@
   <ItemGroup>
     <Resource Include="Media\SignatureShow.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Dialogs\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

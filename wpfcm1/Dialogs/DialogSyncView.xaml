@@ -1,0 +1,19 @@
+﻿<mah:MetroWindow x:Class="wpfcm1.Dialogs.DialogSyncView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+    ShowTitleBar="True" ShowCloseButton="False" ShowMaxRestoreButton="False" ShowMinButton="False" 
+    WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+    Height="300" Width="500">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBox AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="4" HorizontalAlignment="Right">
+            <Button Content="Close" Width="96" Height="32" x:Name="OnClose" />
+            <Button Content="Cancel" Width="96" Height="32" x:Name="OnCancel" />
+        </StackPanel>
+    </Grid>
+</mah:MetroWindow>

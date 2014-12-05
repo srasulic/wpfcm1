@@ -1,7 +1,8 @@
-﻿using System.ComponentModel.Composition;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
+using System.ComponentModel.Composition;
 using wpfcm1.Certificates;
 using wpfcm1.DataAccess;
+using wpfcm1.Dialogs;
 using wpfcm1.Events;
 using wpfcm1.FolderGroups;
 using wpfcm1.Toolbar;
@@ -11,9 +12,10 @@ namespace wpfcm1.Shell
     public interface IShell { }
 
     [Export(typeof(IShell))]
-    public sealed class ShellViewModel : Conductor<object>, IShell, IHandle<MessageShowHome>
+    public sealed class ShellViewModel : Conductor<object>, IShell, IHandle<MessageShowHome>, IHandle<MessageSync>
     {
         private readonly IEventAggregator _events;
+        private readonly IWindowManager _windowManager;
 
         [ImportingConstructor]
         public ShellViewModel(IEventAggregator events, IWindowManager windowManager, ToolBarViewModel toolBar, CertificatesViewModel certs)
@@ -21,13 +23,14 @@ namespace wpfcm1.Shell
             DisplayName = "Invoices";
             _events = events;
             _events.Subscribe(this);
+            _windowManager = windowManager;
 
             ToolBar = toolBar;
             CertVM = certs;
 
             HomeVM = new HomeViewModel(this);
-            OutboundVM = new FolderGroupViewModel(FolderManager.InvoicesOutboundFolders, "Outbound", events, windowManager);
-            InboundVM = new FolderGroupViewModel(FolderManager.InvoicesInboundFolders, "Inbound", events, windowManager);
+            OutboundVM = new FolderGroupViewModel(FolderManager.InvoicesOutboundFolders, "Outbound", events, _windowManager);
+            InboundVM = new FolderGroupViewModel(FolderManager.InvoicesInboundFolders, "Inbound", events, _windowManager);
 
             ShowHome();
         }
@@ -59,6 +62,11 @@ namespace wpfcm1.Shell
         public void Handle(MessageShowHome message)
         {
             ShowHome();
+        }
+
+        public void Handle(MessageSync message)
+        {
+            var result = _windowManager.ShowDialog(new DialogSyncViewModel());
         }
     }
 }
