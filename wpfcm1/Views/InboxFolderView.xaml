@@ -19,7 +19,7 @@
                 <Image Source="{StaticResource PngAck}" Visibility="{Binding Path=IsAcknowledged, Converter={StaticResource b2vc}}"/>
             </DataTemplate>
         </Grid.Resources>
-        <DataGrid x:Name="Documents" AutoGenerateColumns="False" CanUserAddRows="false">
+        <DataGrid x:Name="Documents" AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Binding="{Binding IsChecked}" IsReadOnly="False"/>
                 <DataGridTextColumn Header="Name" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True"/>

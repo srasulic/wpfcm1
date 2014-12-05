@@ -2,7 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Grid>
-        <DataGrid x:Name="Documents" AutoGenerateColumns="False" CanUserAddRows="false" IsReadOnly="True">
+        <DataGrid x:Name="Documents" AutoGenerateColumns="False" 
+                  CanUserAddRows="false" CanUserDeleteRows="False" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Path=DocumentInfo.Name}"/>
                 <DataGridTextColumn Header="Date modified" Binding="{Binding Path=DocumentInfo.LastWriteTime}" />
