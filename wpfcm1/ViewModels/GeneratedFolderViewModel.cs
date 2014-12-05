@@ -7,7 +7,7 @@ using wpfcm1.Model;
 
 namespace wpfcm1.ViewModels
 {
-    public class GeneratedFolderViewModel : FolderViewModel
+    public class GeneratedFolderViewModel : FolderViewModel, IHandle<CertificateItem>
     {
         public GeneratedFolderViewModel(string path, string name, IEventAggregator events) : base(path, name, events)
         {
@@ -37,6 +37,11 @@ namespace wpfcm1.ViewModels
             var v = GetView() as UserControl;
             var dg = v.FindName("Documents") as DataGrid;
             dg.CommitEdit(DataGridEditingUnit.Row, true);
+        }
+
+        public void Handle(CertificateItem message)
+        {
+
         }
     }
 }

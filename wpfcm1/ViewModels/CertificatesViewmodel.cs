@@ -19,6 +19,11 @@ namespace wpfcm1.ViewModels
             Certificates = new ObservableCollection<CertificateItem>(certificateRepositiory.CertificateItems);
         }
 
-        public ObservableCollection<CertificateItem> Certificates { get; private set; } 
+        public ObservableCollection<CertificateItem> Certificates { get; private set; }
+
+        public void OnSelection(CertificateItem certificate)
+        {
+            _events.PublishOnUIThread(certificate);
+        }
     }
 }
