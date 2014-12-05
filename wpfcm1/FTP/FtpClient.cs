@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Invoices.FTP
+namespace wpfcm1.FTP
 {
     public class FtpClient
     {
-        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         public string Uri { get; private set; }
         public string User { get; private set; }
         public string Pass { get; private set; }
@@ -29,31 +26,22 @@ namespace Invoices.FTP
         public async Task<IEnumerable<string>> ListDirectoryAsync(string ftpDir = "")
         {
             var uri = string.Format("{0}/{1}", Uri, ftpDir);
-            Log.Info(string.Format("Fetching file list from {0}", uri));
 
             var result = new List<string>();
-            try
-            {
-                var ftpReq = (FtpWebRequest)WebRequest.Create(uri);
-                ftpReq.Proxy = null;
-                ftpReq.Credentials = new NetworkCredential(User, Pass);
-                ftpReq.Method = WebRequestMethods.Ftp.ListDirectory;
+            var ftpReq = (FtpWebRequest)WebRequest.Create(uri);
+            ftpReq.Proxy = null;
+            ftpReq.Credentials = new NetworkCredential(User, Pass);
+            ftpReq.Method = WebRequestMethods.Ftp.ListDirectory;
 
-                using (var resp = ftpReq.GetResponse())
-                using (var reader = new StreamReader(resp.GetResponseStream()))
-                {
-                    while (reader.Peek() >= 0)
-                    {
-                        var l = await reader.ReadLineAsync();
-                        //TODO: ubaci filter za tip fajlova?
-                        result.Add(l);
-                    }
-                }
-            }
-            catch (Exception e)
+            using (var resp = ftpReq.GetResponse())
+            using (var reader = new StreamReader(resp.GetResponseStream()))
             {
-                Log.Error(string.Format("ListDirectoryAsync failed: {0}", ftpDir), e);
-                throw;
+                while (reader.Peek() >= 0)
+                {
+                    var l = await reader.ReadLineAsync();
+                    //TODO: ubaci filter za tip fajlova?
+                    result.Add(l);
+                }
             }
             return result;
         }
@@ -69,15 +57,8 @@ namespace Invoices.FTP
         {
             var wc = new WebClient {Proxy = null, Credentials = new NetworkCredential(User, Pass)};
             var uri = string.Format(@"{0}{1}{2}", Uri, dir, fileName);
-            try
-            {
-                await wc.DownloadFileTaskAsync(uri, destFilePath);
-            }
-            catch (Exception e)
-            {
-                Log.Error(string.Format("DownloadFileAsync error {0}", destFilePath), e);
-                throw;
-            } 
+
+            await wc.DownloadFileTaskAsync(uri, destFilePath);
         }
 
         /// <summary>
@@ -91,30 +72,22 @@ namespace Invoices.FTP
         {
             var ftpFileName = string.IsNullOrEmpty(newFileName) ? Path.GetFileName(filePath) : newFileName;
             var relUri = string.Format(@"{0}{1}/{2}", Uri, dir, ftpFileName);
-            try
+            var req = (FtpWebRequest)WebRequest.Create(relUri);
+            req.Proxy = null;
+            req.Credentials = new NetworkCredential(User, Pass);
+            //req.KeepAlive = false;
+            //req.ReadWriteTimeout = 10000;
+            req.Method = WebRequestMethods.Ftp.UploadFile;
+
+            using (var reqStream = req.GetRequestStream())
             {
-                var req = (FtpWebRequest)WebRequest.Create(relUri);
-                req.Proxy = null;
-                req.Credentials = new NetworkCredential(User, Pass);
-                //req.KeepAlive = false;
-                //req.ReadWriteTimeout = 10000;
-                req.Method = WebRequestMethods.Ftp.UploadFile;
-
-                using (var reqStream = req.GetRequestStream())
-                {
-                    var bytes = File.ReadAllBytes(filePath);
-                    reqStream.Write(bytes, 0, bytes.Length);
-                }
-
-                using (var resp = (FtpWebResponse) req.GetResponse())
-                {
-                    //Log.Info(resp.StatusDescription);
-                }
+                var bytes = File.ReadAllBytes(filePath);
+                reqStream.Write(bytes, 0, bytes.Length);
             }
-            catch (Exception e)
+
+            using (var resp = (FtpWebResponse) req.GetResponse())
             {
-                Log.Error(string.Format("UploadFile error {0}", filePath), e);
-                throw;
+                //Log.Info(resp.StatusDescription);
             }
         }
 
@@ -133,23 +106,15 @@ namespace Invoices.FTP
         /// <param name="newFileName">New file name for <paramref name="ftpFileUri"/></param>
         public void RenameFile(string ftpFileUri, string newFileName)
         {
-            try
-            {
-                var req = (FtpWebRequest)WebRequest.Create(ftpFileUri);
-                req.Proxy = null;
-                req.Credentials = new NetworkCredential(User, Pass);
-                req.Method = WebRequestMethods.Ftp.Rename;
-                req.RenameTo = newFileName;
+            var req = (FtpWebRequest)WebRequest.Create(ftpFileUri);
+            req.Proxy = null;
+            req.Credentials = new NetworkCredential(User, Pass);
+            req.Method = WebRequestMethods.Ftp.Rename;
+            req.RenameTo = newFileName;
 
-                using (var resp = (FtpWebResponse) req.GetResponse())
-                {
-                    //Log.Info(resp.StatusDescription);
-                }
-            }
-            catch (Exception e)
+            using (var resp = (FtpWebResponse) req.GetResponse())
             {
-                Log.Error(string.Format("RenameFile error"), e);
-                throw;
+                //Log.Info(resp.StatusDescription);
             }
         }
     }

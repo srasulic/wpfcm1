@@ -81,6 +81,7 @@
     <Compile Include="Dialogs\DialogSyncViewModel.cs" />
     <Compile Include="Events\ButtonMessages.cs" />
     <Compile Include="Events\ViewModelActivatedMessage.cs" />
+    <Compile Include="FTP\FtpClient.cs" />
     <Compile Include="Helpers\CertificateHelpers.cs" />
     <Compile Include="Model\CertificateModel.cs" />
     <Compile Include="Model\DocumentModel.cs" />
@@ -90,6 +91,11 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Folders.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\User.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>User.settings</DependentUpon>
     </Compile>
     <Compile Include="Shell\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
@@ -205,6 +211,10 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="Settings\User.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>User.Designer.cs</LastGenOutput>
+    </None>
     <Resource Include="Resources\Entypo.ttf" />
     <None Include="Settings\Folders.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
