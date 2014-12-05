@@ -78,19 +78,19 @@
     <Compile Include="Events\ButtonMessages.cs" />
     <Compile Include="Events\ViewModelActivatedMessage.cs" />
     <Compile Include="Helpers\CertificateHelpers.cs" />
-    <Compile Include="Model\CertificateItem.cs" />
-    <Compile Include="Model\DocumentItem.cs" />
-    <Compile Include="Model\GeneratedDocumentItem.cs" />
-    <Compile Include="Model\InboxDocumentItem.cs" />
+    <Compile Include="Model\CertificateModel.cs" />
+    <Compile Include="Model\DocumentModel.cs" />
+    <Compile Include="Model\GeneratedDocumentModel.cs" />
+    <Compile Include="Model\InboxDocumentModel.cs" />
     <Compile Include="Settings\Folders.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Folders.settings</DependentUpon>
     </Compile>
-    <Compile Include="ShellView.xaml.cs">
+    <Compile Include="Shell\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ShellViewModel.cs" />
+    <Compile Include="Shell\ShellViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -104,35 +104,35 @@
       <DependentUpon>ToolBarView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Toolbar\ToolBarViewModel.cs" />
-    <Compile Include="ViewModels\CertificatesViewModel.cs" />
-    <Compile Include="ViewModels\FolderViewModel.cs" />
-    <Compile Include="ViewModels\GeneratedFolderViewModel.cs" />
-    <Compile Include="ViewModels\HomeViewModel.cs" />
-    <Compile Include="ViewModels\FolderGroupViewModel.cs" />
-    <Compile Include="ViewModels\InboxFolderViewModel.cs" />
-    <Compile Include="Views\CertificatesView.xaml.cs">
+    <Compile Include="Certificates\CertificatesViewModel.cs" />
+    <Compile Include="FolderTypes\FolderViewModel.cs" />
+    <Compile Include="FolderTypes\GeneratedFolderViewModel.cs" />
+    <Compile Include="FolderGroups\HomeViewModel.cs" />
+    <Compile Include="FolderGroups\FolderGroupViewModel.cs" />
+    <Compile Include="FolderTypes\InboxFolderViewModel.cs" />
+    <Compile Include="Certificates\CertificatesView.xaml.cs">
       <DependentUpon>CertificatesView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\FolderView.xaml.cs">
+    <Compile Include="FolderTypes\FolderView.xaml.cs">
       <DependentUpon>FolderView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\GeneratedFolderView.xaml.cs">
+    <Compile Include="FolderTypes\GeneratedFolderView.xaml.cs">
       <DependentUpon>GeneratedFolderView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\HomeView.xaml.cs">
+    <Compile Include="FolderGroups\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\FolderGroupView.xaml.cs">
+    <Compile Include="FolderGroups\FolderGroupView.xaml.cs">
       <DependentUpon>FolderGroupView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\InboxFolderView.xaml.cs">
+    <Compile Include="FolderTypes\InboxFolderView.xaml.cs">
       <DependentUpon>InboxFolderView.xaml</DependentUpon>
     </Compile>
     <Page Include="Resources\Icons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ShellView.xaml">
+    <Page Include="Shell\ShellView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -144,27 +144,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\CertificatesView.xaml">
+    <Page Include="Certificates\CertificatesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\FolderView.xaml">
+    <Page Include="FolderTypes\FolderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\GeneratedFolderView.xaml">
+    <Page Include="FolderTypes\GeneratedFolderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\HomeView.xaml">
+    <Page Include="FolderGroups\HomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\FolderGroupView.xaml">
+    <Page Include="FolderGroups\FolderGroupView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\InboxFolderView.xaml">
+    <Page Include="FolderTypes\InboxFolderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

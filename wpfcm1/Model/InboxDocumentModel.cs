@@ -2,13 +2,13 @@
 
 namespace wpfcm1.Model
 {
-    public class InboxDocumentItem : DocumentItem
+    public class InboxDocumentModel : DocumentModel
     {
-        public InboxDocumentItem()
+        public InboxDocumentModel()
         {
         }
 
-        public InboxDocumentItem(FileInfo fi) : base(fi)
+        public InboxDocumentModel(FileInfo fi) : base(fi)
         {
         }
 

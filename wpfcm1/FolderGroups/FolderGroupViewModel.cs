@@ -1,8 +1,9 @@
-﻿using Caliburn.Micro;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Caliburn.Micro;
 using wpfcm1.DataAccess;
+using wpfcm1.FolderTypes;
 
-namespace wpfcm1.ViewModels
+namespace wpfcm1.FolderGroups
 {
     public class FolderGroupViewModel : Conductor<IScreen>.Collection.OneActive
     {
@@ -17,10 +18,10 @@ namespace wpfcm1.ViewModels
             foreach (var wsFolder in wsFolders)
                 switch (FolderManager.FolderTypeMap[wsFolder.Key].Name)
                 {
-                    case "GeneratedDocumentItem":
+                    case "GeneratedDocumentModel":
                         FolderVMs.Add(new GeneratedFolderViewModel(wsFolder.Value, FolderManager.FolderNameMap[wsFolder.Key], _events, windowManager));
                         break;
-                    case "InboxDocumentItem":
+                    case "InboxDocumentModel":
                         FolderVMs.Add(new InboxFolderViewModel(wsFolder.Value, FolderManager.FolderNameMap[wsFolder.Key], _events, windowManager));
                         break;
                     default:

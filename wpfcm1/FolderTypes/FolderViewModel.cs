@@ -1,11 +1,11 @@
-﻿using Caliburn.Micro;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Windows.Threading;
+using Caliburn.Micro;
 using wpfcm1.Events;
 using wpfcm1.Model;
 
-namespace wpfcm1.ViewModels
+namespace wpfcm1.FolderTypes
 {
     public class FolderViewModel : Screen
     {
@@ -27,7 +27,7 @@ namespace wpfcm1.ViewModels
 
         public string FolderPath { get; private set; }
         public int Count { get { return Documents.Count; } }
-        public virtual BindableCollection<DocumentItem> Documents { get; set; }
+        public virtual BindableCollection<DocumentModel> Documents { get; set; }
         private bool _isChanged;
         public bool IsChanged
         {
@@ -37,10 +37,10 @@ namespace wpfcm1.ViewModels
 
         protected virtual void InitDocuments()
         {
-            Documents = new BindableCollection<DocumentItem>(
+            Documents = new BindableCollection<DocumentModel>(
                  Directory.EnumerateFiles(FolderPath)
                  .Where(f => Extensions.Contains(Path.GetExtension(f)))
-                 .Select(f => new DocumentItem(new FileInfo(f))));
+                 .Select(f => new DocumentModel(new FileInfo(f))));
             InitWatcher(FolderPath);
         }
 
@@ -61,7 +61,7 @@ namespace wpfcm1.ViewModels
 
         protected virtual void AddFile(string filePath)
         {
-            Documents.Add(new DocumentItem(new FileInfo(filePath)));
+            Documents.Add(new DocumentModel(new FileInfo(filePath)));
         }
 
         #region FileSystemwatcher

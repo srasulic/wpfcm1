@@ -7,6 +7,7 @@ using System.ComponentModel.Composition.Primitives;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
+using wpfcm1.Shell;
 
 namespace wpfcm1
 {

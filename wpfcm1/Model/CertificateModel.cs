@@ -7,7 +7,7 @@ using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 
 namespace wpfcm1.Model
 {
-    public class CertificateItem
+    public class CertificateModel
     {
         public X509Certificate2 Certificate { get; private set; }
         public string CertificateSimpleName { get; private set; }
@@ -15,7 +15,7 @@ namespace wpfcm1.Model
         public List<string> Errors { get; private set; }
         public bool IsQualified { get; private set; }
 
-        public CertificateItem(X509Certificate2 certificate)
+        public CertificateModel(X509Certificate2 certificate)
         {
             Certificate = certificate;
             CertificateSimpleName = Certificate.GetNameInfo(X509NameType.SimpleName, false);

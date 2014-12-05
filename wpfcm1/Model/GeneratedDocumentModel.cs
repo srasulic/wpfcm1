@@ -3,13 +3,13 @@ using System.Text.RegularExpressions;
 
 namespace wpfcm1.Model
 {
-    public class GeneratedDocumentItem : DocumentItem
+    public class GeneratedDocumentModel : DocumentModel
     {
-        public GeneratedDocumentItem()
+        public GeneratedDocumentModel()
         {
         }
 
-        public GeneratedDocumentItem(FileInfo fi) : base(fi)
+        public GeneratedDocumentModel(FileInfo fi) : base(fi)
         {
         }
 

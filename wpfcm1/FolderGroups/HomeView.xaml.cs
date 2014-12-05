@@ -1,10 +1,10 @@
 ﻿using System.Windows.Controls;
 
-namespace wpfcm1.Views
+namespace wpfcm1.FolderGroups
 {
-    public partial class FolderView : UserControl
+    public partial class HomeView : UserControl
     {
-        public FolderView()
+        public HomeView()
         {
             InitializeComponent();
         }

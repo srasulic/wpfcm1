@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace wpfcm1.Views
+namespace wpfcm1.Certificates
 {
     public partial class CertificatesView : UserControl
     {

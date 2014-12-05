@@ -5,13 +5,13 @@ using System.Xml.Serialization;
 
 namespace wpfcm1.Model
 {
-    public class DocumentItem : PropertyChangedBase, IDataErrorInfo
+    public class DocumentModel : PropertyChangedBase, IDataErrorInfo
     {
-        public DocumentItem()
+        public DocumentModel()
         {
         }
 
-        public DocumentItem(FileInfo fi)
+        public DocumentModel(FileInfo fi)
         {
             DocumentInfo = fi;
         }

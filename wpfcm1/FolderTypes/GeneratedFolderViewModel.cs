@@ -1,13 +1,13 @@
-﻿using Caliburn.Micro;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Windows.Controls;
+using Caliburn.Micro;
 using wpfcm1.Events;
 using wpfcm1.Model;
 
-namespace wpfcm1.ViewModels
+namespace wpfcm1.FolderTypes
 {
-    public class GeneratedFolderViewModel : FolderViewModel, IHandle<CertificateItem>
+    public class GeneratedFolderViewModel : FolderViewModel, IHandle<CertificateModel>
     {
         private readonly IWindowManager _windowManager;
 
@@ -18,16 +18,16 @@ namespace wpfcm1.ViewModels
 
         protected override void InitDocuments()
         {
-            Documents = new BindableCollection<DocumentItem>(
+            Documents = new BindableCollection<DocumentModel>(
                 Directory.EnumerateFiles(FolderPath)
                 .Where(f => Extensions.Contains(Path.GetExtension(f)))
-                .Select(f => new GeneratedDocumentItem(new FileInfo(f))));
+                .Select(f => new GeneratedDocumentModel(new FileInfo(f))));
             InitWatcher(FolderPath);
         }
 
         protected override void AddFile(string filePath)
         {
-            Documents.Add(new GeneratedDocumentItem(new FileInfo(filePath)));
+            Documents.Add(new GeneratedDocumentModel(new FileInfo(filePath)));
         }
 
         protected override void OnActivate()
@@ -42,7 +42,7 @@ namespace wpfcm1.ViewModels
             dg.CommitEdit(DataGridEditingUnit.Row, true);
         }
 
-        public void Handle(CertificateItem message)
+        public void Handle(CertificateModel message)
         {
 
         }

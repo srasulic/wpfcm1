@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
+using wpfcm1.Shell;
 
-namespace wpfcm1.ViewModels
+namespace wpfcm1.FolderGroups
 {
     public class HomeViewModel : Screen
     {

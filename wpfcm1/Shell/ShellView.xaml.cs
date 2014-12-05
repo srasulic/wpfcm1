@@ -1,6 +1,6 @@
 ﻿using MahApps.Metro.Controls;
 
-namespace wpfcm1
+namespace wpfcm1.Shell
 {
     public partial class ShellView : MetroWindow
     {

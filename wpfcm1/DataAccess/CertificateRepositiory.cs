@@ -12,13 +12,13 @@ namespace wpfcm1.DataAccess
             CertificateItems = LoadCertificateItems();
         }
 
-        public List<CertificateItem> CertificateItems { get; private set; }
+        public List<CertificateModel> CertificateItems { get; private set; }
 
-        private static List<CertificateItem> LoadCertificateItems()
+        private static List<CertificateModel> LoadCertificateItems()
         {
             var store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
             store.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
-            var certificateItems = (from X509Certificate2 certificate in store.Certificates select new CertificateItem(certificate)).ToList();
+            var certificateItems = (from X509Certificate2 certificate in store.Certificates select new CertificateModel(certificate)).ToList();
             return certificateItems;
         }
     }

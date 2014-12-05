@@ -1,10 +1,10 @@
-﻿using Caliburn.Micro;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
+using Caliburn.Micro;
 using wpfcm1.DataAccess;
 using wpfcm1.Model;
 
-namespace wpfcm1.ViewModels
+namespace wpfcm1.Certificates
 {
     [Export(typeof(CertificatesViewModel))]
     public class CertificatesViewModel : PropertyChangedBase
@@ -16,12 +16,12 @@ namespace wpfcm1.ViewModels
         {
             _events = events;
             var certificateRepositiory = new CertificateRepositiory();
-            Certificates = new ObservableCollection<CertificateItem>(certificateRepositiory.CertificateItems);
+            Certificates = new ObservableCollection<CertificateModel>(certificateRepositiory.CertificateItems);
         }
 
-        public ObservableCollection<CertificateItem> Certificates { get; private set; }
+        public ObservableCollection<CertificateModel> Certificates { get; private set; }
 
-        public void OnSelection(CertificateItem certificate)
+        public void OnSelection(CertificateModel certificate)
         {
             _events.PublishOnUIThread(certificate);
         }

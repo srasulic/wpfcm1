@@ -39,15 +39,15 @@ namespace wpfcm1.DataAccess
 
         public static readonly Dictionary<string, Type> FolderTypeMap = new Dictionary<string, Type>()
         {
-            {"OutboundErpIfaceFolder", typeof(GeneratedDocumentItem)},
-            {"OutboundOutboxFolder", typeof(DocumentItem)},
-            {"OutboundSentFolder", typeof(DocumentItem)},
-            {"OutboundPendFolder", typeof(DocumentItem)},
-            {"OutboundConfirmedFolder", typeof(DocumentItem)},
-            {"InboundInboxFolder", typeof(InboxDocumentItem)},
-            {"InboundOutboxFolder", typeof(DocumentItem)},
-            {"InboundSentFolder", typeof(DocumentItem)},
-            {"InboundConfirmedFolder", typeof(DocumentItem)}
+            {"OutboundErpIfaceFolder", typeof(GeneratedDocumentModel)},
+            {"OutboundOutboxFolder", typeof(DocumentModel)},
+            {"OutboundSentFolder", typeof(DocumentModel)},
+            {"OutboundPendFolder", typeof(DocumentModel)},
+            {"OutboundConfirmedFolder", typeof(DocumentModel)},
+            {"InboundInboxFolder", typeof(InboxDocumentModel)},
+            {"InboundOutboxFolder", typeof(DocumentModel)},
+            {"InboundSentFolder", typeof(DocumentModel)},
+            {"InboundConfirmedFolder", typeof(DocumentModel)}
         };
 
         static FolderManager()

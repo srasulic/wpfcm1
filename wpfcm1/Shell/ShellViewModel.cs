@@ -1,11 +1,12 @@
-﻿using Caliburn.Micro;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
+using Caliburn.Micro;
+using wpfcm1.Certificates;
 using wpfcm1.DataAccess;
 using wpfcm1.Events;
+using wpfcm1.FolderGroups;
 using wpfcm1.Toolbar;
-using wpfcm1.ViewModels;
 
-namespace wpfcm1
+namespace wpfcm1.Shell
 {
     public interface IShell { }
 
