@@ -8,7 +8,7 @@ namespace wpfcm1.ViewModels
     {
         private readonly IEventAggregator _events;
 
-        public FolderGroupViewModel(Dictionary<string,string> wsFolders, string name, IEventAggregator events)
+        public FolderGroupViewModel(Dictionary<string,string> wsFolders, string name, IEventAggregator events, IWindowManager windowManager)
         {
             DisplayName = name;
             _events = events;
@@ -18,16 +18,13 @@ namespace wpfcm1.ViewModels
                 switch (FolderManager.FolderTypeMap[wsFolder.Key].Name)
                 {
                     case "GeneratedDocumentItem":
-                        FolderVMs.Add(new GeneratedFolderViewModel(wsFolder.Value,
-                            FolderManager.FolderNameMap[wsFolder.Key], _events));
+                        FolderVMs.Add(new GeneratedFolderViewModel(wsFolder.Value, FolderManager.FolderNameMap[wsFolder.Key], _events, windowManager));
                         break;
                     case "InboxDocumentItem":
-                        FolderVMs.Add(new InboxFolderViewModel(wsFolder.Value, FolderManager.FolderNameMap[wsFolder.Key],
-                            _events));
+                        FolderVMs.Add(new InboxFolderViewModel(wsFolder.Value, FolderManager.FolderNameMap[wsFolder.Key], _events, windowManager));
                         break;
                     default:
-                        FolderVMs.Add(new FolderViewModel(wsFolder.Value, FolderManager.FolderNameMap[wsFolder.Key],
-                            _events));
+                        FolderVMs.Add(new FolderViewModel(wsFolder.Value, FolderManager.FolderNameMap[wsFolder.Key], _events));
                         break;
                 }
         }

@@ -7,13 +7,15 @@ using wpfcm1.ViewModels;
 
 namespace wpfcm1
 {
+    public interface IShell { }
+
     [Export(typeof(IShell))]
     public sealed class ShellViewModel : Conductor<object>, IShell, IHandle<MessageShowHome>
     {
         private readonly IEventAggregator _events;
 
         [ImportingConstructor]
-        public ShellViewModel(IEventAggregator events, ToolBarViewModel toolBar, CertificatesViewModel certs)
+        public ShellViewModel(IEventAggregator events, IWindowManager windowManager, ToolBarViewModel toolBar, CertificatesViewModel certs)
         {
             DisplayName = "Invoices";
             _events = events;
@@ -23,8 +25,8 @@ namespace wpfcm1
             CertVM = certs;
 
             HomeVM = new HomeViewModel(this);
-            OutboundVM = new FolderGroupViewModel(FolderManager.InvoicesOutboundFolders, "Outbound", events);
-            InboundVM = new FolderGroupViewModel(FolderManager.InvoicesInboundFolders, "Inbound", events);
+            OutboundVM = new FolderGroupViewModel(FolderManager.InvoicesOutboundFolders, "Outbound", events, windowManager);
+            InboundVM = new FolderGroupViewModel(FolderManager.InvoicesInboundFolders, "Inbound", events, windowManager);
 
             ShowHome();
         }

@@ -9,16 +9,19 @@ namespace wpfcm1.ViewModels
 {
     public class GeneratedFolderViewModel : FolderViewModel, IHandle<CertificateItem>
     {
-        public GeneratedFolderViewModel(string path, string name, IEventAggregator events) : base(path, name, events)
+        private readonly IWindowManager _windowManager;
+
+        public GeneratedFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
         {
+            _windowManager = winMgr;
         }
 
         protected override void InitDocuments()
         {
             Documents = new BindableCollection<DocumentItem>(
-                 Directory.EnumerateFiles(FolderPath)
-                 .Where(f => Extensions.Contains(Path.GetExtension(f)))
-                 .Select(f => new GeneratedDocumentItem(new FileInfo(f))));
+                Directory.EnumerateFiles(FolderPath)
+                .Where(f => Extensions.Contains(Path.GetExtension(f)))
+                .Select(f => new GeneratedDocumentItem(new FileInfo(f))));
             InitWatcher(FolderPath);
         }
 

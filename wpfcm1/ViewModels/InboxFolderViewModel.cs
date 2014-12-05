@@ -9,16 +9,19 @@ namespace wpfcm1.ViewModels
 {
     public class InboxFolderViewModel : FolderViewModel, IHandle<CertificateItem>
     {
-        public InboxFolderViewModel(string path, string name, IEventAggregator events) : base(path, name, events)
+        private readonly IWindowManager _windowManager;
+
+        public InboxFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
         {
+            _windowManager = winMgr;
         }
 
         protected override void InitDocuments()
         {
             Documents = new BindableCollection<DocumentItem>(
-                 Directory.EnumerateFiles(FolderPath)
-                 .Where(f => Extensions.Contains(Path.GetExtension(f)))
-                 .Select(f => new InboxDocumentItem(new FileInfo(f))));
+                Directory.EnumerateFiles(FolderPath)
+                .Where(f => Extensions.Contains(Path.GetExtension(f)))
+                .Select(f => new InboxDocumentItem(new FileInfo(f))));
             InitWatcher(FolderPath);
         }
 

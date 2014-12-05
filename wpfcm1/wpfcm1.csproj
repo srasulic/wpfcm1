@@ -78,7 +78,6 @@
     <Compile Include="Events\ButtonMessages.cs" />
     <Compile Include="Events\ViewModelActivatedMessage.cs" />
     <Compile Include="Helpers\CertificateHelpers.cs" />
-    <Compile Include="IShell.cs" />
     <Compile Include="Model\CertificateItem.cs" />
     <Compile Include="Model\DocumentItem.cs" />
     <Compile Include="Model\GeneratedDocumentItem.cs" />
@@ -218,7 +217,9 @@
   <ItemGroup>
     <Resource Include="Media\SignatureShow.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Dialogs\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
