@@ -20,11 +20,11 @@ namespace wpfcm1.Model
 
         public string DocumentPath { get { return DocumentInfo.FullName; } }
 
-        private bool _needsProcessing;
-        public bool NeedsProcessing
+        private bool _processed;
+        public bool Processed
         {
-            get { return _needsProcessing; }
-            set { _needsProcessing = value; NotifyOfPropertyChange(() => NeedsProcessing); }
+            get { return _processed; }
+            set { _processed = value; NotifyOfPropertyChange(() => Processed); }
         }
 
         private bool _isChecked;

@@ -26,12 +26,12 @@ namespace wpfcm1.Settings {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Name {
+        public string UserName {
             get {
-                return ((string)(this["Name"]));
+                return ((string)(this["UserName"]));
             }
             set {
-                this["Name"] = value;
+                this["UserName"] = value;
             }
         }
         

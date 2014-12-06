@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Controls;
@@ -53,8 +54,20 @@ namespace wpfcm1.FolderTypes
         {
             if (IsActive)
             {
+                var certificateOk = _certificate != null && _certificate.IsQualified;
+                if (!certificateOk) return;
+                var validDocuments = GetDocumentsForSigning();
+                if (!validDocuments.Any()) return;
+
                 var result = _windowManager.ShowDialog(new DialogSignViewModel());
             }
+        }
+
+        private IEnumerable<InboxDocumentModel> GetDocumentsForSigning()
+        {
+            var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<InboxDocumentModel>();
+            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault()).ToList(); // izbaco ACKovane fajlove
+            return validDocuments;
         }
     }
 }

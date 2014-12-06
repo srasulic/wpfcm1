@@ -16,10 +16,10 @@ namespace wpfcm1.Dialogs
             set { Folders.Default.RootFolder = value; }
         }
 
-        public string Name
+        public string UserName
         {
-            get { return User.Default.Name; }
-            set { User.Default.Name = value; }
+            get { return User.Default.UserName; }
+            set { User.Default.UserName = value; }
         }
 
         public string PIB

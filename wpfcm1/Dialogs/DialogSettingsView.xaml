@@ -31,7 +31,7 @@
         <TextBlock Grid.Row="5" Grid.Column="0" Text="FTP password" VerticalAlignment="Center"/>
         <TextBlock Grid.Row="6" Grid.Column="0" Text="Timestamp server" VerticalAlignment="Center"/>
         <TextBox Grid.Row="0" Grid.Column="1" x:Name="RootFolder"/>
-        <TextBox Grid.Row="1" Grid.Column="1" x:Name="Name"/>
+        <TextBox Grid.Row="1" Grid.Column="1" x:Name="UserName"/>
         <TextBox Grid.Row="2" Grid.Column="1" x:Name="PIB"/>
         <TextBox Grid.Row="3" Grid.Column="1" x:Name="FtpServer"/>
         <TextBox Grid.Row="4" Grid.Column="1" x:Name="FtpUserName"/>
