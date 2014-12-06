@@ -50,8 +50,10 @@ namespace wpfcm1.FolderTypes
 
         public void Handle(MessageSign message)
         {
-            //if (IsActive)
-            //var result = _windowManager.ShowDialog(new DialogSyncViewModel());
+            if (IsActive)
+            {
+                var result = _windowManager.ShowDialog(new DialogSignViewModel());
+            }
         }
     }
 }

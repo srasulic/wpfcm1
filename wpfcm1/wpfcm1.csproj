@@ -79,6 +79,10 @@
       <DependentUpon>DialogSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\DialogSettingsViewModel.cs" />
+    <Compile Include="Dialogs\DialogSignView.xaml.cs">
+      <DependentUpon>DialogSignView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DialogSignViewModel.cs" />
     <Compile Include="Dialogs\DialogSyncView.xaml.cs">
       <DependentUpon>DialogSyncView.xaml</DependentUpon>
     </Compile>
@@ -147,6 +151,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\DialogSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\DialogSignView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

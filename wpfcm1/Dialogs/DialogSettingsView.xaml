@@ -4,9 +4,11 @@
     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     ShowCloseButton="False" ShowMinButton="False" ShowMaxRestoreButton="False"
     WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+    BorderBrush="{DynamicResource AccentColorBrush}"
+    BorderThickness="1"
     Width="500" Height="300"
     >
-    <Grid Margin="8">
+    <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition  Height="Auto"/>
             <RowDefinition  Height="Auto"/>
@@ -35,6 +37,8 @@
         <TextBox Grid.Row="4" Grid.Column="1" x:Name="FtpUserName"/>
         <TextBox Grid.Row="5" Grid.Column="1" x:Name="FtpPassword"/>
         <TextBox Grid.Row="6" Grid.Column="1" x:Name="TimestampServer"/>
-        <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="96" Height="32" x:Name="OnClose" Content="OK"/>
+        <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" 
+                Width="96" Height="32" Margin="3,3,0,3"
+                x:Name="OnClose" Content="OK"/>
     </Grid>
 </mah:MetroWindow>
