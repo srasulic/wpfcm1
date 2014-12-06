@@ -59,6 +59,11 @@ namespace wpfcm1.Shell
             ActivateItem(InboundVM);
         }
 
+        public void ShowSettings()
+        {
+            
+        }
+
         public void Handle(MessageShowHome message)
         {
             ShowHome();
