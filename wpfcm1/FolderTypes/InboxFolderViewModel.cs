@@ -11,6 +11,7 @@ namespace wpfcm1.FolderTypes
     public class InboxFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>
     {
         private readonly IWindowManager _windowManager;
+        private CertificateModel _certificate;
 
         public InboxFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
         {
@@ -45,7 +46,7 @@ namespace wpfcm1.FolderTypes
 
         public void Handle(CertificateModel message)
         {
-
+            _certificate = message;
         }
 
         public void Handle(MessageSign message)
