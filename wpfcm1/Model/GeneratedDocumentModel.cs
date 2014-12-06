@@ -38,6 +38,7 @@ namespace wpfcm1.Model
         {
             get
             {
+                IsValid = true;
                 switch (columnName)
                 {
                     case "Pib":
@@ -45,11 +46,17 @@ namespace wpfcm1.Model
                             return "Pib must have 9 numbers";
                         var regexPib = new Regex(@"\b\d{9}\b");
                         if (!regexPib.IsMatch(Pib))
+                        {
+                            IsValid = false;
                             return "Pib must have 9 numbers";
+                        }
                         break;
                     case "InvoiceNo":
                         if (string.IsNullOrWhiteSpace(InvoiceNo))
+                        {
+                            IsValid = false;
                             return "InvoiceNo cannot be empty";
+                        }
                         break;
                     default:
                         return base[columnName];

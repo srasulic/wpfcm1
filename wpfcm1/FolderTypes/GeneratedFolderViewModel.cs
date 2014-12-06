@@ -95,7 +95,7 @@ namespace wpfcm1.FolderTypes
         private IList<GeneratedDocumentModel> GetDocumentsForSigning()
         {
             var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<GeneratedDocumentModel>();
-            var validDocuments = checkedDocuments.Where(d => d.Processed).ToList(); //TODO: proveri greske u textbox-ovima (ubaci property u GeneratedDocumentModel) (state)
+            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault()).ToList();
             return validDocuments;
         }
     }
