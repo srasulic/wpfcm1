@@ -55,7 +55,7 @@ namespace wpfcm1.Dialogs
         public void OnClose()
         {
             User.Default.Save();
-            //Folders.Default.Save();
+            Folders.Default.Save();
             TryClose(true);
         }
     }
