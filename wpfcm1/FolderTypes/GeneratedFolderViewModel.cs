@@ -59,7 +59,7 @@ namespace wpfcm1.FolderTypes
                 var validDocuments = GetDocumentsForSigning();
                 if (!validDocuments.Any()) return;
 
-                var result = _windowManager.ShowDialog(new DialogSignViewModel());
+                var result = _windowManager.ShowDialog(new DialogSignGeneratedViewModel());
             }
         }
 

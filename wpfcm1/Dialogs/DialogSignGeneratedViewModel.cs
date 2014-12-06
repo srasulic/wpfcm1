@@ -2,9 +2,9 @@
 
 namespace wpfcm1.Dialogs
 {
-    public class DialogSignViewModel : Screen
+    public class DialogSignGeneratedViewModel : Screen
     {
-        public DialogSignViewModel()
+        public DialogSignGeneratedViewModel()
         {
             DisplayName = "";
         }

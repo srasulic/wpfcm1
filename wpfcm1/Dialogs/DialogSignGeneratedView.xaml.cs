@@ -2,9 +2,9 @@
 
 namespace wpfcm1.Dialogs
 {
-    public partial class DialogSignView : MetroWindow
+    public partial class DialogSignGeneratedView : MetroWindow
     {
-        public DialogSignView()
+        public DialogSignGeneratedView()
         {
             InitializeComponent();
         }
