@@ -20,7 +20,7 @@ namespace wpfcm1.Model
 
         public string DocumentPath { get { return DocumentInfo.FullName; } }
 
-        //TODO: zameni sa IsValid???
+        //TODO: zameni sa IsValid??? neka ostane da moze da prikaze npr. nove fajlove u drugim dir
         private bool _processed;
         public bool Processed
         {

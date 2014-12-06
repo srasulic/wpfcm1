@@ -9,6 +9,7 @@
             <BitmapImage x:Key="PngAck" UriSource="../Media/ack16.png" />
             <BooleanToVisibilityConverter x:Key="b2vc" />
             <conv:InverseBooleanToVisibilityConverter x:Key="ib2vc" />
+            <conv:InverseBooleanToBoldConverter x:Key="ib2bc" />
             <DataTemplate x:Key="ImgCol">
                 <StackPanel>
                     <Image Source="{StaticResource PngOk}" Visibility="{Binding Path=IsValid, Converter={StaticResource b2vc}}"/>
@@ -22,7 +23,13 @@
         <DataGrid x:Name="Documents" AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Binding="{Binding IsChecked}" IsReadOnly="False"/>
-                <DataGridTextColumn Header="Name" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="FontWeight" Value="{Binding Processed, Converter={StaticResource ib2bc}}" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
                 <DataGridTextColumn Header="Date modified" Binding="{Binding Path=DocumentInfo.LastWriteTime}" IsReadOnly="True" />
                 <DataGridTextColumn Header="Size" Binding="{Binding Path=DocumentInfo.Length}" IsReadOnly="True"/>
                 <DataGridTemplateColumn CellTemplate="{StaticResource ImgCol}" MinWidth="32" IsReadOnly="True"/>

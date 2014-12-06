@@ -78,7 +78,7 @@ namespace wpfcm1.FolderTypes
         private IEnumerable<InboxDocumentModel> GetDocumentsForSigning()
         {
             var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<InboxDocumentModel>();
-            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault()).ToList(); //TODO: izbaco ACKovane fajlove (state)
+            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).ToList(); //TODO: izbaco ACKovane fajlove (state)
             return validDocuments;
         }
     }

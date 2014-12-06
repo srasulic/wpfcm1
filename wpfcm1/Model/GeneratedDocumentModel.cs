@@ -27,6 +27,13 @@ namespace wpfcm1.Model
             set { _invoiceNo = value; NotifyOfPropertyChange(() => InvoiceNo); }
         }
 
+        private bool? _isValid;
+        public bool? IsValid
+        {
+            get { return _isValid; }
+            set { _isValid = value; NotifyOfPropertyChange(() => IsValid); }
+        }
+
         public override string this[string columnName]
         {
             get
