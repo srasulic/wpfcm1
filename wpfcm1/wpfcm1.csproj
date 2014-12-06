@@ -75,6 +75,10 @@
     <Compile Include="Converters\Converters.cs" />
     <Compile Include="DataAccess\CertificateRepositiory.cs" />
     <Compile Include="DataAccess\FolderManager.cs" />
+    <Compile Include="Dialogs\DialogSettingsView.xaml.cs">
+      <DependentUpon>DialogSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DialogSettingsViewModel.cs" />
     <Compile Include="Dialogs\DialogSyncView.xaml.cs">
       <DependentUpon>DialogSyncView.xaml</DependentUpon>
     </Compile>
@@ -139,6 +143,10 @@
       <DependentUpon>InboxFolderView.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\DialogResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\DialogSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

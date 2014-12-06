@@ -50,12 +50,12 @@ namespace wpfcm1.Settings {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string FtpUsername {
+        public string FtpUserName {
             get {
-                return ((string)(this["FtpUsername"]));
+                return ((string)(this["FtpUserName"]));
             }
             set {
-                this["FtpUsername"] = value;
+                this["FtpUserName"] = value;
             }
         }
         

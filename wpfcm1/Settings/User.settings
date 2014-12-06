@@ -8,7 +8,7 @@
     <Setting Name="PIB" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="FtpUsername" Type="System.String" Scope="User">
+    <Setting Name="FtpUserName" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="FtpPassword" Type="System.String" Scope="User">

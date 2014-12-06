@@ -61,7 +61,7 @@ namespace wpfcm1.Shell
 
         public void ShowSettings()
         {
-            
+            var result = _windowManager.ShowDialog(new DialogSettingsViewModel());
         }
 
         public void Handle(MessageShowHome message)
