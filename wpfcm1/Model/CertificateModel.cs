@@ -2,7 +2,7 @@
 using Org.BouncyCastle.Security;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
-using wpfcm1.Helpers;
+using wpfcm1.Certificates;
 using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 
 namespace wpfcm1.Model

@@ -90,11 +90,14 @@
     <Compile Include="Events\ButtonMessages.cs" />
     <Compile Include="Events\ViewModelActivatedMessage.cs" />
     <Compile Include="FTP\FtpClient.cs" />
-    <Compile Include="Helpers\CertificateHelpers.cs" />
+    <Compile Include="Certificates\CertificateHelpers.cs" />
     <Compile Include="Model\CertificateModel.cs" />
     <Compile Include="Model\DocumentModel.cs" />
     <Compile Include="Model\GeneratedDocumentModel.cs" />
     <Compile Include="Model\InboxDocumentModel.cs" />
+    <Compile Include="PDF\PdfHelpers.cs" />
+    <Compile Include="PDF\PdfRules.cs" />
+    <Compile Include="PDF\PdfSign.cs" />
     <Compile Include="Settings\Folders.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>

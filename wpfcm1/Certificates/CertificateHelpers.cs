@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 
-namespace wpfcm1.Helpers
+namespace wpfcm1.Certificates
 {
     public static class CertificateHelpers
     {
@@ -156,6 +156,5 @@ namespace wpfcm1.Helpers
 
             return l == j[12];
         }
-
     }
 }
