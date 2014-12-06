@@ -6,10 +6,11 @@ using System.Windows.Controls;
 using wpfcm1.Dialogs;
 using wpfcm1.Events;
 using wpfcm1.Model;
+using wpfcm1.PDF;
 
 namespace wpfcm1.FolderTypes
 {
-    public class InboxFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>
+    public class InboxFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageValidate>
     {
         private readonly IWindowManager _windowManager;
         private CertificateModel _certificate;
@@ -63,10 +64,21 @@ namespace wpfcm1.FolderTypes
             }
         }
 
+        public async void Handle(MessageValidate message)
+        {
+            var documents = Documents.Where(d => !d.Processed).Cast<InboxDocumentModel>();
+            foreach (var document in documents)
+            {
+                var isValid = await PdfHelpers.ValidatePdfCertificatesAsync(document.DocumentPath);
+                document.IsValid = isValid;
+                document.Processed = true;
+            }
+        }
+
         private IEnumerable<InboxDocumentModel> GetDocumentsForSigning()
         {
             var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<InboxDocumentModel>();
-            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault()).ToList(); // izbaco ACKovane fajlove
+            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault()).ToList(); //TODO: izbaco ACKovane fajlove (state)
             return validDocuments;
         }
     }

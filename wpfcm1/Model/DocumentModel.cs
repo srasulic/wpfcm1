@@ -20,6 +20,7 @@ namespace wpfcm1.Model
 
         public string DocumentPath { get { return DocumentInfo.FullName; } }
 
+        //TODO: zameni sa IsValid???
         private bool _processed;
         public bool Processed
         {
