@@ -63,7 +63,7 @@ namespace wpfcm1.FolderTypes
                 var validDocuments = GetDocumentsForSigning();
                 if (!validDocuments.Any()) return;
 
-                var result = _windowManager.ShowDialog(new DialogSignGeneratedViewModel(_certificate, validDocuments));
+                var result = _windowManager.ShowDialog(new DialogSignViewModel(_certificate, this));
             }
         }
 
@@ -105,10 +105,10 @@ namespace wpfcm1.FolderTypes
             }
         }
 
-        private IList<GeneratedDocumentModel> GetDocumentsForSigning()
+        public IList<DocumentModel> GetDocumentsForSigning()
         {
             var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<GeneratedDocumentModel>();
-            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault()).ToList();
+            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault()).Cast<DocumentModel>().ToList();
             return validDocuments;
         }
     }
