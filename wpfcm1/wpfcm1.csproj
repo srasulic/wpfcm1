@@ -89,6 +89,8 @@
     <Compile Include="Dialogs\DialogSyncViewModel.cs" />
     <Compile Include="Events\ButtonMessages.cs" />
     <Compile Include="Events\ViewModelActivatedMessage.cs" />
+    <Compile Include="Extensions\DependencyObjectExtensions.cs" />
+    <Compile Include="Extensions\TaskCancellationExtensions.cs" />
     <Compile Include="FTP\FtpClient.cs" />
     <Compile Include="Certificates\CertificateHelpers.cs" />
     <Compile Include="Model\CertificateModel.cs" />
