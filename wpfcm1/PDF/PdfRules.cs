@@ -39,16 +39,18 @@ namespace wpfcm1.PDF
 
     public static class FtpSucessTransferRules
     {
-        public static Dictionary<string, string> TransferMap = new Dictionary<string, string>()
+        public static Dictionary<string, string> Map = new Dictionary<string, string>()
         {
             {FolderManager.OutboundOutboxFolder, FolderManager.OutboundSentFolder},
             {FolderManager.InboundOutboxFolder, FolderManager.InboundSentFolder}
         };
     }
 
-    public static class FtpSyncRules
+    public static class FtpTransferRules
     {
-        public static Dictionary<string, string> TransferMap = new Dictionary<string, string>()
+        public enum TransferAction { Upload, Sync };
+
+        public static Dictionary<string, string> Map = new Dictionary<string, string>()
         {
             {FolderManager.OutboundOutboxFolder, "edokument/faktura/outbound/outbox/"},
             {FolderManager.OutboundPendFolder, "edokument/faktura/outbound/pend/"},
@@ -56,6 +58,16 @@ namespace wpfcm1.PDF
             {FolderManager.InboundInboxFolder, "edokument/faktura/inbound/inbox/"},
             {FolderManager.InboundOutboxFolder, "edokument/faktura/inbound/outbox/"},
             {FolderManager.InboundConfirmedFolder, "edokument/faktura/inbound/confirmed/"}
+        };
+
+        public static Dictionary<string, TransferAction> Action = new Dictionary<string, TransferAction>()
+        {
+            {FolderManager.OutboundOutboxFolder, TransferAction.Upload},
+            {FolderManager.OutboundPendFolder, TransferAction.Sync},
+            {FolderManager.OutboundConfirmedFolder, TransferAction.Sync},
+            {FolderManager.InboundInboxFolder, TransferAction.Sync},
+            {FolderManager.InboundOutboxFolder, TransferAction.Upload},
+            {FolderManager.InboundConfirmedFolder, TransferAction.Sync}
         };
     }
 }

@@ -64,14 +64,14 @@ namespace wpfcm1.FTP
         /// <summary>
         /// Upload file to FTP, eventually provide new file name
         /// </summary>
-        /// <param name="dir">FTP directory upload destination</param>
-        /// <param name="filePath">Source file path</param>
+        /// <param name="sourceFilePath">Source file path</param>
+        /// <param name="destinationDir">FTP directory upload destination</param>
         /// <param name="newFileName">Optional new file name</param>
         /// <returns></returns>
-        public void UploadFile(string dir, string filePath, string newFileName="")
+        public void UploadFile(string sourceFilePath, string destinationDir, string newFileName = "")
         {
-            var ftpFileName = string.IsNullOrEmpty(newFileName) ? Path.GetFileName(filePath) : newFileName;
-            var relUri = string.Format(@"{0}{1}/{2}", Uri, dir, ftpFileName);
+            var ftpFileName = string.IsNullOrEmpty(newFileName) ? Path.GetFileName(sourceFilePath) : newFileName;
+            var relUri = string.Format(@"{0}{1}/{2}", Uri, destinationDir, ftpFileName);
             var req = (FtpWebRequest)WebRequest.Create(relUri);
             req.Proxy = null;
             req.Credentials = new NetworkCredential(User, Pass);
@@ -81,7 +81,7 @@ namespace wpfcm1.FTP
 
             using (var reqStream = req.GetRequestStream())
             {
-                var bytes = File.ReadAllBytes(filePath);
+                var bytes = File.ReadAllBytes(sourceFilePath);
                 reqStream.Write(bytes, 0, bytes.Length);
             }
 
@@ -94,9 +94,9 @@ namespace wpfcm1.FTP
         /// <summary>
         /// Async wrapper for UploadFile
         /// </summary>
-        public Task UploadFileAsync(string dir, string filePath, string newFileName = "")
+        public Task UploadFileAsync(string sourceFilePath, string destinationDir, string newFileName = "")
         {
-            return Task.Run(() => UploadFile(dir, filePath, newFileName));
+            return Task.Run(() => UploadFile(sourceFilePath, destinationDir, newFileName));
         }
 
         /// <summary>

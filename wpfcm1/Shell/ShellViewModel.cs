@@ -1,10 +1,12 @@
-﻿using Caliburn.Micro;
+﻿using System.Collections.Generic;
+using Caliburn.Micro;
 using System.ComponentModel.Composition;
 using wpfcm1.Certificates;
 using wpfcm1.DataAccess;
 using wpfcm1.Dialogs;
 using wpfcm1.Events;
 using wpfcm1.FolderGroups;
+using wpfcm1.FolderTypes;
 using wpfcm1.Toolbar;
 
 namespace wpfcm1.Shell
@@ -71,7 +73,16 @@ namespace wpfcm1.Shell
 
         public void Handle(MessageSync message)
         {
-            var result = _windowManager.ShowDialog(new DialogSyncViewModel());
+            var foldersToSync = new Dictionary<string, FolderViewModel>()
+            {
+                {FolderManager.OutboundOutboxFolder, OutboundVM.FolderVMs[1]},
+                {FolderManager.OutboundPendFolder, OutboundVM.FolderVMs[3]},
+                {FolderManager.OutboundConfirmedFolder, OutboundVM.FolderVMs[4]},
+                {FolderManager.InboundInboxFolder, InboundVM.FolderVMs[0]},
+                {FolderManager.InboundOutboxFolder, InboundVM.FolderVMs[1]},
+                {FolderManager.InboundConfirmedFolder, InboundVM.FolderVMs[3]}
+            };
+            var result = _windowManager.ShowDialog(new DialogSyncViewModel(foldersToSync));
         }
     }
 }
