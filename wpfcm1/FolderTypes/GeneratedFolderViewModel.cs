@@ -12,7 +12,7 @@ using wpfcm1.Settings;
 
 namespace wpfcm1.FolderTypes
 {
-    public class GeneratedFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageExtractData>
+    public class GeneratedFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageExtractData>, IHandle<MessageReject>
     {
         private readonly IWindowManager _windowManager;
         private CertificateModel _certificate;
@@ -43,6 +43,7 @@ namespace wpfcm1.FolderTypes
 
         protected override void OnDeactivate(bool close)
         {
+            //TODO: hack: checkbox checkmark moze da se izgubi prilikom promene taba, ako promena nije komitovana
             var v = GetView() as UserControl;
             var dg = v.FindName("Documents") as DataGrid;
             dg.CommitEdit(DataGridEditingUnit.Row, true);
@@ -88,6 +89,19 @@ namespace wpfcm1.FolderTypes
                 document.InvoiceNo = matchResults.Item2.Count > 0 ? matchResults.Item2[0].Value : "";
                 document.InvoiceNo = document.InvoiceNo.Replace('/', '-');
                 document.Processed = true;
+            }
+        }
+
+        public void Handle(MessageReject message)
+        {
+            var checkedDocuments = Documents.Where(d => d.IsChecked);
+            var destinationDir = ProcessedTransferRules.Map[FolderPath];
+            foreach (var document in checkedDocuments)
+            {
+                var sourceFilePath = document.DocumentPath;
+                var fileName = Path.GetFileName(sourceFilePath);
+                var destinationFilePath = Path.Combine(destinationDir, fileName);
+                File.Move(sourceFilePath, destinationFilePath);
             }
         }
 

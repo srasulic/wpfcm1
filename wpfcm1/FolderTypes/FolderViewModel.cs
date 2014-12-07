@@ -56,7 +56,7 @@ namespace wpfcm1.FolderTypes
 
         protected override void OnViewAttached(object view, object context)
         {
-            Documents.Refresh(); // nestaje error notification template kada se promeni tab
+            Documents.Refresh(); //TODO: hack: nestajao error notification template kada se promeni tab
         }
 
         protected virtual void AddFile(string filePath)

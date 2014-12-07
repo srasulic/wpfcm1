@@ -41,6 +41,7 @@ namespace wpfcm1.FolderTypes
 
         protected override void OnDeactivate(bool close)
         {
+            //TODO: hack: checkbox checkmark moze da se izgubi prilikom promene taba, ako promena nije komitovana
             var v = GetView() as UserControl;
             var dg = v.FindName("Documents") as DataGrid;
             dg.CommitEdit(DataGridEditingUnit.Row, true);
