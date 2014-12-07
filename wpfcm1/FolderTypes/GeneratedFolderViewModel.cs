@@ -69,7 +69,6 @@ namespace wpfcm1.FolderTypes
         public async void Handle(MessageExtractData message)
         {
             var documents = Documents.Where(d => !d.Processed).Cast<GeneratedDocumentModel>();
-            //var documents = Documents.Cast<GeneratedDocumentModel>();
             var pib = User.Default.PIB;
             if (string.IsNullOrEmpty(pib))
                 throw new ApplicationException("PIB korisnika nije unet!");

@@ -10,7 +10,7 @@ using wpfcm1.PDF;
 
 namespace wpfcm1.FolderTypes
 {
-    public class InboxFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageValidate>
+    public class InboxFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageValidate>, IHandle<MessageAck>
     {
         private readonly IWindowManager _windowManager;
         private CertificateModel _certificate;
@@ -72,6 +72,20 @@ namespace wpfcm1.FolderTypes
                 var isValid = await PdfHelpers.ValidatePdfCertificatesAsync(document.DocumentPath);
                 document.IsValid = isValid;
                 document.Processed = true;
+            }
+        }
+
+        public void Handle(MessageAck message)
+        {
+            var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<InboxDocumentModel>();
+            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).ToList();
+            var destinationDir = SignedTransferRules.Map[FolderPath];
+            foreach (var document in validDocuments)
+            {
+                var fileName = Path.GetFileName(document.DocumentPath);
+                var destinationFilePath = Path.Combine(destinationDir, fileName + ".ack");
+                File.Create(destinationFilePath).Dispose();
+                document.IsAcknowledged = true;
             }
         }
 
