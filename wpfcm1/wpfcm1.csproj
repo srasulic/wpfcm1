@@ -100,6 +100,10 @@
     <Compile Include="PDF\PdfHelpers.cs" />
     <Compile Include="PDF\PdfRules.cs" />
     <Compile Include="PDF\PdfSign.cs" />
+    <Compile Include="Preview\PreviewView.xaml.cs">
+      <DependentUpon>PreviewView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Preview\PreviewViewModel.cs" />
     <Compile Include="Settings\Folders.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -164,6 +168,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\DialogSyncView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Preview\PreviewView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
