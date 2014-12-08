@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Controls;
+using System.Xml.Serialization;
 using wpfcm1.Dialogs;
 using wpfcm1.Events;
 using wpfcm1.Model;
@@ -18,6 +19,7 @@ namespace wpfcm1.FolderTypes
         public InboxFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
         {
             _windowManager = winMgr;
+            var state = Deserialize();
         }
 
         protected override void InitDocuments()
@@ -26,7 +28,20 @@ namespace wpfcm1.FolderTypes
                 Directory.EnumerateFiles(FolderPath)
                 .Where(f => Extensions.Contains(Path.GetExtension(f)))
                 .Select(f => new InboxDocumentModel(new FileInfo(f))));
+            
             InitWatcher(FolderPath);
+
+            var states = Deserialize();
+            foreach (var state in states)
+            {
+                var found = Documents.First(d => d.DocumentPath == state.DocumentPath) as InboxDocumentModel;
+                if (found == null) continue;
+                found.IsChecked = state.IsChecked;
+                found.IsValid = state.IsValid;
+                found.Processed = state.Processed;
+                found.IsAcknowledged = state.IsAcknowledged;
+            }
+
         }
 
         protected override void AddFile(string filePath)
@@ -95,6 +110,32 @@ namespace wpfcm1.FolderTypes
             var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<InboxDocumentModel>();
             var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).Cast<DocumentModel>().ToList();
             return validDocuments;
+        }
+
+        public override void Dispose()
+        {
+            Serialize();
+        }
+
+        private void Serialize()
+        {
+            var filePath = Path.Combine(FolderPath, "state.xml");
+            var file = File.Create(filePath);
+            List<InboxDocumentModel> items = Documents.Cast<InboxDocumentModel>().ToList();
+            var xs = new XmlSerializer(typeof(List<InboxDocumentModel>));
+            using (Stream s = file)
+                xs.Serialize(s, items);
+        }
+
+        private List<InboxDocumentModel> Deserialize()
+        {
+            var oldList = new List<InboxDocumentModel>();
+            var xs = new XmlSerializer(typeof(List<InboxDocumentModel>));
+            var file = Path.Combine(FolderPath, "state.xml");
+            if (!File.Exists(file)) return oldList;
+            using (Stream s = File.OpenRead(file))
+                oldList = (List<InboxDocumentModel>) xs.Deserialize(s);
+            return oldList;
         }
     }
 }

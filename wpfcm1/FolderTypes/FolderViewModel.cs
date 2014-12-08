@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Windows.Threading;
 using Caliburn.Micro;
@@ -7,7 +8,7 @@ using wpfcm1.Model;
 
 namespace wpfcm1.FolderTypes
 {
-    public class FolderViewModel : Screen
+    public class FolderViewModel : Screen, IDisposable
     {
         protected string[] Extensions = { ".pdf", ".ack" };
         protected FileSystemWatcher _watcher;
@@ -109,5 +110,10 @@ namespace wpfcm1.FolderTypes
 
         }
         #endregion
+
+        public virtual void Dispose()
+        {
+
+        }
     }
 }

@@ -14,11 +14,12 @@ namespace wpfcm1.Model
         public DocumentModel(FileInfo fi)
         {
             DocumentInfo = fi;
+            DocumentPath = fi.FullName; //za serijalizaciju
         }
 
         [XmlIgnore] public FileInfo DocumentInfo { get; set; }
 
-        public string DocumentPath { get { return DocumentInfo.FullName; } }
+        public string DocumentPath { get; set; }
 
         //TODO: zameni sa IsValid??? neka ostane da moze da prikaze npr. nove fajlove u drugim dir
         private bool _processed;

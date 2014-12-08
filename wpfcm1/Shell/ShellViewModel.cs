@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using wpfcm1.Certificates;
 using wpfcm1.DataAccess;
@@ -83,6 +83,12 @@ namespace wpfcm1.Shell
                 {FolderManager.InboundConfirmedFolder, InboundVM.FolderVMs[3]}
             };
             var result = _windowManager.ShowDialog(new DialogSyncViewModel(foldersToSync));
+        }
+
+        protected override void OnDeactivate(bool close)
+        {
+            InboundVM.Dispose();
+            OutboundVM.Dispose();
         }
     }
 }

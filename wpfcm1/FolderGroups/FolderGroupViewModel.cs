@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
+using System;
+using System.Collections.Generic;
 using wpfcm1.DataAccess;
 using wpfcm1.FolderTypes;
 
 namespace wpfcm1.FolderGroups
 {
-    public class FolderGroupViewModel : Conductor<IScreen>.Collection.OneActive
+    public class FolderGroupViewModel : Conductor<IScreen>.Collection.OneActive, IDisposable
     {
         private readonly IEventAggregator _events;
 
@@ -49,6 +50,15 @@ namespace wpfcm1.FolderGroups
         protected override void OnDeactivate(bool close)
         {
             DeactivateItem(ActiveItem, false);
+        }
+
+        public void Dispose()
+        {
+            foreach (var folder in FolderVMs)
+            {
+                if (folder is InboxFolderViewModel || folder is GeneratedFolderViewModel)
+                    folder.Dispose();
+            }
         }
     }
 }
