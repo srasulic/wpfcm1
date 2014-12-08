@@ -31,17 +31,18 @@ namespace wpfcm1.FolderTypes
             
             InitWatcher(FolderPath);
 
+            if (Documents.Count == 0) return;
             var states = Deserialize();
             foreach (var state in states)
             {
-                var found = Documents.First(d => d.DocumentPath == state.DocumentPath) as InboxDocumentModel;
+                var found = Documents.FirstOrDefault(d => d.DocumentPath == state.DocumentPath);
                 if (found == null) continue;
-                found.IsChecked = state.IsChecked;
-                found.IsValid = state.IsValid;
-                found.Processed = state.Processed;
-                found.IsAcknowledged = state.IsAcknowledged;
+                var old = found as InboxDocumentModel;
+                old.IsChecked = state.IsChecked;
+                old.IsValid = state.IsValid;
+                old.Processed = state.Processed;
+                old.IsAcknowledged = state.IsAcknowledged;
             }
-
         }
 
         protected override void AddFile(string filePath)
