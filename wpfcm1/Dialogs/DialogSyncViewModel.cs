@@ -32,19 +32,45 @@ namespace wpfcm1.Dialogs
         }
 
         public BindableCollection<string> Reports { get; set; }
+        private bool _inProgress;
+        public bool InProgress
+        {
+            get { return _inProgress; }
+            set
+            {
+                _inProgress = value;
+                NotifyOfPropertyChange(() => InProgress);
+                NotifyOfPropertyChange(() => CanOnClose);
+                NotifyOfPropertyChange(() => CanOnStart);
+            }
+        }
 
         void _reporter_ProgressChanged(object sender, string e)
         {
             Reports.Add(e);
         }
 
+        public void OnClose()
+        {
+            TryClose(true);
+        }
+
+        public bool CanOnClose { get { return !InProgress; } }
+
+        public void OnCancel()
+        {
+            if (_cancellation != null) _cancellation.Cancel();
+        }
+
+        public bool CanOnStart { get { return !InProgress; } }
+
         public async void OnStart()
         {
             try
             {
                 _cancellation = new CancellationTokenSource();
-                var token = _cancellation.Token;
-                await SyncAllAsync(_reporter, token).WithCancellation(_cancellation.Token);
+                InProgress = true;
+                await SyncAllAsync(_reporter, _cancellation.Token).WithCancellation(_cancellation.Token);
             }
             catch (OperationCanceledException ex)
             {
@@ -67,18 +93,8 @@ namespace wpfcm1.Dialogs
             }
             finally
             {
-
+                InProgress = false;
             }
-        }
-
-        public void OnClose()
-        {
-            TryClose(true);
-        }
-
-        public void OnCancel()
-        {
-            if (_cancellation != null) _cancellation.Cancel();
         }
 
         public async Task SyncAllAsync(IProgress<string> reporter = null, CancellationToken token = default(CancellationToken))
@@ -123,12 +139,15 @@ namespace wpfcm1.Dialogs
                 var sourceFilePath = document.DocumentPath;
                 var sourceFileName = Path.GetFileName(sourceFilePath);
                 var tempFileName = sourceFileName + ".tmp";
-                reporter.Report(string.Format("Uploading: {0}", sourceFileName));
+
+                token.ThrowIfCancellationRequested();
+                if (reporter != null) reporter.Report(string.Format("Uploading: {0}", sourceFileName));
 
                 await ftpClient.UploadFileAsync(sourceFilePath, destinationDir, tempFileName);
 
-                var destinationFtpUri = string.Format("{0}{1}{2}", ftpClient.Uri, destinationDir, tempFileName);
+                token.ThrowIfCancellationRequested();
 
+                var destinationFtpUri = string.Format("{0}{1}{2}", ftpClient.Uri, destinationDir, tempFileName);
                 ftpClient.RenameFile(destinationFtpUri, sourceFileName);
 
                 var destinationFilePath = Path.Combine(FtpSucessTransferRules.Map[sourceDir], Path.GetFileName(sourceFileName));
@@ -152,6 +171,7 @@ namespace wpfcm1.Dialogs
                 var filePath = Path.Combine(sourceDir, fileName);
                 reporter.Report(string.Format("Download: {0}", fileName));
 
+                token.ThrowIfCancellationRequested();
                 await ftpClient.DownloadFileAsync(destinationDir, fileName, filePath);
             }
 

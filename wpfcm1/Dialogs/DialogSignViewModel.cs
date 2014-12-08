@@ -21,8 +21,8 @@ namespace wpfcm1.Dialogs
     public class DialogSignViewModel : Screen
     {
         private readonly CertificateModel _certificate;
-        private FolderViewModel _folder;
-        private Progress<string> _reporter;
+        private readonly FolderViewModel _folder;
+        private readonly Progress<string> _reporter;
         private CancellationTokenSource _cancellation;
 
         public DialogSignViewModel(CertificateModel certificate, FolderViewModel folder)
@@ -36,13 +36,13 @@ namespace wpfcm1.Dialogs
         }
 
         public BindableCollection<string> Reports { get; set; }
-        private bool _isActive;
-        public bool IsActive
+        private bool _inProgress;
+        public bool InProgress
         {
-            get { return _isActive; }
+            get { return _inProgress; }
             set { 
-                _isActive = value; 
-                NotifyOfPropertyChange(()=>IsActive);
+                _inProgress = value; 
+                NotifyOfPropertyChange(()=>InProgress);
                 NotifyOfPropertyChange(() => CanOnClose);
                 NotifyOfPropertyChange(() => CanOnStart);
             }
@@ -58,21 +58,21 @@ namespace wpfcm1.Dialogs
             TryClose(true);
         }
 
-        public bool CanOnClose { get { return !IsActive; } }
+        public bool CanOnClose { get { return !InProgress; } }
 
         public void OnCancel()
         {
             if (_cancellation != null) _cancellation.Cancel();
         }
 
-        public bool CanOnStart { get { return !IsActive; } }
+        public bool CanOnStart { get { return !InProgress; } }
 
         public async void OnStart()
         {
             try
             {
                 _cancellation = new CancellationTokenSource();
-                IsActive = true;
+                InProgress = true;
                 // shallow documents copy, always updated, even if cancel was pressed
                 var documents = GetDocumentsForSigning(_folder);
                 var sourceDir = GetSourceDir(_folder);
@@ -103,7 +103,7 @@ namespace wpfcm1.Dialogs
             }
             finally
             {
-                IsActive = false;
+                InProgress = false;
             }
         }
 
