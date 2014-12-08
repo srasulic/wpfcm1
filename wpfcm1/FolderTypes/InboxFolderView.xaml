@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:conv="clr-namespace:wpfcm1.Converters">
     <Grid>
-    <Grid.Resources>
+        <Grid.Resources>
             <BitmapImage x:Key="PngError" UriSource="../Media/error16.png" />
             <BitmapImage x:Key="PngOk" UriSource="../Media/ok16.png" />
             <BitmapImage x:Key="PngAck" UriSource="../Media/ack16.png" />
@@ -20,6 +20,12 @@
                 <Image Source="{StaticResource PngAck}" Visibility="{Binding Path=IsAcknowledged, Converter={StaticResource b2vc}}"/>
             </DataTemplate>
         </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" Name="PreviewColumn"/>
+        </Grid.ColumnDefinitions>
+
         <DataGrid x:Name="Documents" AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Binding="{Binding IsChecked}" IsReadOnly="False"/>
@@ -36,5 +42,8 @@
                 <DataGridTemplateColumn CellTemplate="{StaticResource AckCol}" MinWidth="32" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
+
+        <GridSplitter Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="2" />
+        <ContentControl Grid.Row="0" Grid.Column="2" x:Name="Preview" />
     </Grid>
 </UserControl>

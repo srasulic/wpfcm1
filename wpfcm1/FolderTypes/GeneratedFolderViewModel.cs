@@ -149,8 +149,15 @@ namespace wpfcm1.FolderTypes
             var xs = new XmlSerializer(typeof(List<GeneratedDocumentModel>));
             var file = Path.Combine(FolderPath, "state.xml");
             if (!File.Exists(file)) return oldList;
-            using (Stream s = File.OpenRead(file))
-                oldList = (List<GeneratedDocumentModel>) xs.Deserialize(s);
+            try
+            {
+                using (Stream s = File.OpenRead(file))
+                    oldList = (List<GeneratedDocumentModel>) xs.Deserialize(s);
+            }
+            catch
+            {
+                
+            }
             return oldList;
         }
     }

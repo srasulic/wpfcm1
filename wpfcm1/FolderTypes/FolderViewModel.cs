@@ -1,14 +1,15 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Threading;
-using Caliburn.Micro;
 using wpfcm1.Events;
 using wpfcm1.Model;
+using wpfcm1.Preview;
 
 namespace wpfcm1.FolderTypes
 {
-    public class FolderViewModel : Screen, IDisposable
+    public class FolderViewModel : Conductor<object>, IDisposable
     {
         protected string[] Extensions = { ".pdf", ".ack" };
         protected FileSystemWatcher _watcher;
@@ -22,19 +23,18 @@ namespace wpfcm1.FolderTypes
             _dispatcher = Dispatcher.CurrentDispatcher;
             _events = events;
             _events.Subscribe(this);
+            Preview = IoC.Get<PreviewViewModel>();
 
             InitDocuments();
         }
+
+        public PreviewViewModel Preview { get; set; }
 
         public string FolderPath { get; private set; }
         public int Count { get { return Documents.Count; } }
         public virtual BindableCollection<DocumentModel> Documents { get; set; }
         private bool _isChanged;
-        public bool IsChanged
-        {
-            get { return _isChanged; }
-            set { _isChanged = value; NotifyOfPropertyChange(() => IsChanged); }
-        }
+        public bool IsChanged { get { return _isChanged; } set { _isChanged = value; NotifyOfPropertyChange(() => IsChanged); } }
 
         protected virtual void InitDocuments()
         {

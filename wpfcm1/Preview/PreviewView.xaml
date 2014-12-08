@@ -1,7 +1,9 @@
 ﻿<UserControl x:Class="wpfcm1.Preview.PreviewView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Grid>
-        <WebBrowser />
-    </Grid>
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+>
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="b2vc" />
+    </UserControl.Resources>
+    <WebBrowser Visibility="{Binding Path=PreviewVisibility, Converter={StaticResource b2vc}}" MinWidth="144"/>
 </UserControl>

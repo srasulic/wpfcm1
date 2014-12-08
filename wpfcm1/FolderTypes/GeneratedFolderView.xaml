@@ -3,9 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:conv="clr-namespace:wpfcm1.Converters">
     <Grid>
-    <Grid.Resources>
-        <conv:InverseBooleanToBoldConverter x:Key="ib2bc" />
-    </Grid.Resources>
+        <Grid.Resources>
+            <conv:InverseBooleanToBoldConverter x:Key="ib2bc" />
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" Name="PreviewColumn"/>
+        </Grid.ColumnDefinitions>
+
         <DataGrid x:Name="Documents" AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Binding="{Binding IsChecked}" />
@@ -22,5 +28,8 @@
                 <DataGridTextColumn Header="Size" Binding="{Binding Path=DocumentInfo.Length}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
+
+        <GridSplitter Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="2" />
+        <ContentControl Grid.Row="0" Grid.Column="2" x:Name="Preview" />
     </Grid>
 </UserControl>
