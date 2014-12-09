@@ -88,6 +88,7 @@
     </Compile>
     <Compile Include="Dialogs\DialogSyncViewModel.cs" />
     <Compile Include="Events\ButtonMessages.cs" />
+    <Compile Include="Events\PdfPreviewMessage.cs" />
     <Compile Include="Events\ViewModelActivatedMessage.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="Extensions\TaskCancellationExtensions.cs" />

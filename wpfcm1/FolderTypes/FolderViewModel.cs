@@ -2,14 +2,14 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Threading;
 using wpfcm1.Events;
 using wpfcm1.Model;
-using wpfcm1.Preview;
 
 namespace wpfcm1.FolderTypes
 {
-    public class FolderViewModel : Conductor<object>, IDisposable
+    public class FolderViewModel : Screen, IDisposable
     {
         protected string[] Extensions = { ".pdf", ".ack" };
         protected FileSystemWatcher _watcher;
@@ -23,12 +23,9 @@ namespace wpfcm1.FolderTypes
             _dispatcher = Dispatcher.CurrentDispatcher;
             _events = events;
             _events.Subscribe(this);
-            Preview = IoC.Get<PreviewViewModel>();
 
             InitDocuments();
         }
-
-        public PreviewViewModel Preview { get; set; }
 
         public string FolderPath { get; private set; }
         public int Count { get { return Documents.Count; } }
@@ -63,6 +60,21 @@ namespace wpfcm1.FolderTypes
         protected virtual void AddFile(string filePath)
         {
             Documents.Add(new DocumentModel(new FileInfo(filePath)));
+        }
+
+        public virtual void OnSelectionChanged(SelectionChangedEventArgs e)
+        {
+            var message = "about:blank";
+            if (e.AddedItems.Count == 1)
+            {
+                var document = e.AddedItems[0] as DocumentModel;
+                var path = document.DocumentPath;
+                if (path.EndsWith(".pdf"))
+                {
+                    message = string.Format("{0}#toolbar=0&navpanes=0", path);
+                }
+            }
+            _events.PublishOnUIThread(new PdfPreviewMessage(message)); 
         }
 
         #region FileSystemwatcher

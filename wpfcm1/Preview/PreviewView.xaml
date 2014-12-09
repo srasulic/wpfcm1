@@ -5,5 +5,5 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="b2vc" />
     </UserControl.Resources>
-    <WebBrowser Visibility="{Binding Path=PreviewVisibility, Converter={StaticResource b2vc}}" MinWidth="144"/>
+    <WebBrowser Visibility="{Binding Path=PreviewVisibility, Converter={StaticResource b2vc}}" MinWidth="144" Name="PdfBrowser"/>
 </UserControl>

@@ -1,12 +1,16 @@
 ﻿using Caliburn.Micro;
+using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
+using System.Windows.Controls;
 using wpfcm1.DataAccess;
+using wpfcm1.Events;
 using wpfcm1.FolderTypes;
+using wpfcm1.Preview;
 
 namespace wpfcm1.FolderGroups
 {
-    public class FolderGroupViewModel : Conductor<IScreen>.Collection.OneActive, IDisposable
+    public class FolderGroupViewModel : Conductor<IScreen>.Collection.OneActive, IDisposable, IHandle<PdfPreviewMessage>
     {
         private readonly IEventAggregator _events;
 
@@ -14,6 +18,8 @@ namespace wpfcm1.FolderGroups
         {
             DisplayName = name;
             _events = events;
+            _events.Subscribe(this);
+            Preview = IoC.Get<PreviewViewModel>();
 
             FolderVMs = new BindableCollection<FolderViewModel>();
             foreach (var wsFolder in wsFolders)
@@ -31,6 +37,7 @@ namespace wpfcm1.FolderGroups
                 }
         }
 
+        public PreviewViewModel Preview { get; set; }
         public IObservableCollection<FolderViewModel> FolderVMs { get; private set; }
 
         public void ActivateTabItem(int idx)
@@ -58,6 +65,17 @@ namespace wpfcm1.FolderGroups
             {
                 if (folder is InboxFolderViewModel || folder is GeneratedFolderViewModel)
                     folder.Dispose();
+            }
+        }
+
+        public void Handle(PdfPreviewMessage message)
+        {
+            var v = GetView();
+            if (v != null)
+            {
+                var myView = v as FolderGroupView;
+                var pdfBrowser = myView.FindChild<WebBrowser>("PdfBrowser");
+                if (pdfBrowser.IsVisible) pdfBrowser.Navigate(message.DocumentPath);
             }
         }
     }

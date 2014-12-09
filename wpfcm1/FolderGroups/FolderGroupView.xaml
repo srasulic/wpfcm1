@@ -4,6 +4,12 @@
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:cal="http://www.caliburnproject.org">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" Name="PreviewColumn"/>
+        </Grid.ColumnDefinitions>
+
         <TabControl x:Name="FolderVMs" IsSynchronizedWithCurrentItem="True" mah:TabControlHelper.IsUnderlined="True"
                     cal:Message.Attach="[Event SelectionChanged] = [Action ActivateTabItem(FolderVms.SelectedIndex)]">
             <TabControl.ItemTemplate>
@@ -19,5 +25,8 @@
                 </DataTemplate>
             </TabControl.ItemTemplate>
         </TabControl>
+        
+        <GridSplitter Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="2" Margin="0,11,0,0"/>
+        <ContentControl Grid.Row="0" Grid.Column="2" x:Name="Preview" Margin="0,11,0,0"/>
     </Grid>
 </UserControl>
