@@ -1,7 +1,9 @@
-﻿using Caliburn.Micro;
+﻿using System.Windows;
+using Caliburn.Micro;
 using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Controls;
 using wpfcm1.DataAccess;
 using wpfcm1.Events;
@@ -10,7 +12,7 @@ using wpfcm1.Preview;
 
 namespace wpfcm1.FolderGroups
 {
-    public class FolderGroupViewModel : Conductor<IScreen>.Collection.OneActive, IDisposable, IHandle<PdfPreviewMessage>
+    public class FolderGroupViewModel : Conductor<IScreen>.Collection.OneActive, IDisposable, IHandle<MessageShowPdf>
     {
         private readonly IEventAggregator _events;
 
@@ -40,18 +42,15 @@ namespace wpfcm1.FolderGroups
         public PreviewViewModel Preview { get; set; }
         public IObservableCollection<FolderViewModel> FolderVMs { get; private set; }
 
-        public void ActivateTabItem(int idx)
+        public void ActivateTabItem(SelectionChangedEventArgs e)
         {
-            ActivateItem(FolderVMs[idx]);
+            var item = e.AddedItems[0] as FolderViewModel;
+            if (item != null) ActivateItem(item);
         }
 
         protected override void OnActivate()
         {
-            //_events.PublishOnUIThread(new ViewModelActivatedMessage(GetType().Name));
-            if (ActiveItem == null)
-                ActivateTabItem(0);
-            else
-                ActivateItem(ActiveItem);
+            ActivateItem(ActiveItem ?? FolderVMs[0]);
         }
 
         protected override void OnDeactivate(bool close)
@@ -61,21 +60,20 @@ namespace wpfcm1.FolderGroups
 
         public void Dispose()
         {
-            foreach (var folder in FolderVMs)
+            foreach (var folder in FolderVMs.Where(folder => folder is InboxFolderViewModel || folder is GeneratedFolderViewModel))
             {
-                if (folder is InboxFolderViewModel || folder is GeneratedFolderViewModel)
-                    folder.Dispose();
+                folder.Dispose();
             }
         }
 
-        public void Handle(PdfPreviewMessage message)
+        public void Handle(MessageShowPdf message)
         {
             var v = GetView();
-            if (v != null)
+            if (v == null) return;
+            var pdfBrowser = (v as FolderGroupView).FindChild<WebBrowser>("PdfBrowser");
+            if (pdfBrowser != null && pdfBrowser.Visibility == Visibility.Visible)
             {
-                var myView = v as FolderGroupView;
-                var pdfBrowser = myView.FindChild<WebBrowser>("PdfBrowser");
-                if (pdfBrowser.IsVisible) pdfBrowser.Navigate(message.DocumentPath);
+                pdfBrowser.Navigate(message.Uri);
             }
         }
     }

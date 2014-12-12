@@ -1,9 +1,9 @@
 ﻿
 namespace wpfcm1.Events
 {
-    public class ViewModelActivatedMessage
+    public class MessageViewModelActivated
     {
-        public ViewModelActivatedMessage(string typeName)
+        public MessageViewModelActivated(string typeName)
         {
             Name = typeName;
         }

@@ -7,7 +7,7 @@ using wpfcm1.Events;
 
 namespace wpfcm1.Toolbar
 {
-    public class ButtonVisibilityManager : IHandle<ViewModelActivatedMessage>
+    public class ButtonVisibilityManager : IHandle<MessageViewModelActivated>
     {
         private readonly ToolBarViewModel _toolBar;
 
@@ -25,9 +25,9 @@ namespace wpfcm1.Toolbar
             events.Subscribe(this);
         }
 
-        public void Handle(ViewModelActivatedMessage message)
+        public void Handle(MessageViewModelActivated message)
         {
-            Debug.WriteLine(message.Name);
+            //Debug.WriteLine(message.Name);
             Debug.Assert(WorkspaceToButtonVisibility.ContainsKey(message.Name));
             SetButtonsvisibility(WorkspaceToButtonVisibility[message.Name]);
         }

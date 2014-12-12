@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using wpfcm1.Events;
 using wpfcm1.Model;
+using wpfcm1.Preview;
 
 namespace wpfcm1.FolderTypes
 {
@@ -44,12 +45,12 @@ namespace wpfcm1.FolderTypes
 
         protected override void OnActivate()
         {
-            _events.PublishOnUIThread(new ViewModelActivatedMessage(GetType().Name));
+            _events.PublishOnUIThread(new MessageViewModelActivated(GetType().Name));
         }
 
         protected override void OnDeactivate(bool close)
         {
-
+            _events.PublishOnUIThread(new MessageShowPdf(PreviewViewModel.Empty));
         }
 
         protected override void OnViewAttached(object view, object context)
@@ -64,17 +65,15 @@ namespace wpfcm1.FolderTypes
 
         public virtual void OnSelectionChanged(SelectionChangedEventArgs e)
         {
-            var message = "about:blank";
+            var message = PreviewViewModel.Empty;
             if (e.AddedItems.Count == 1)
             {
                 var document = e.AddedItems[0] as DocumentModel;
                 var path = document.DocumentPath;
                 if (path.EndsWith(".pdf"))
-                {
-                    message = string.Format("{0}#toolbar=0&navpanes=0", path);
-                }
+                    message = path;
             }
-            _events.PublishOnUIThread(new PdfPreviewMessage(message)); 
+            _events.PublishOnUIThread(new MessageShowPdf(message)); 
         }
 
         #region FileSystemwatcher

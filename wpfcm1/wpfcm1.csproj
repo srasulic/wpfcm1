@@ -88,8 +88,8 @@
     </Compile>
     <Compile Include="Dialogs\DialogSyncViewModel.cs" />
     <Compile Include="Events\ButtonMessages.cs" />
-    <Compile Include="Events\PdfPreviewMessage.cs" />
-    <Compile Include="Events\ViewModelActivatedMessage.cs" />
+    <Compile Include="Events\MessageShowPdf.cs" />
+    <Compile Include="Events\MessageViewModelActivated.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="Extensions\TaskCancellationExtensions.cs" />
     <Compile Include="FTP\FtpClient.cs" />

@@ -48,7 +48,7 @@ namespace wpfcm1.Shell
         public void ShowHome()
         {
             ActivateItem(HomeVM);
-            _events.PublishOnUIThread(new ViewModelActivatedMessage(ActiveItem.GetType().Name));
+            _events.PublishOnUIThread(new MessageViewModelActivated(ActiveItem.GetType().Name));
         }
 
         public void ShowOutbound()

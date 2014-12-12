@@ -15,7 +15,7 @@ namespace wpfcm1.Toolbar
             Buttons = new BindableCollection<ToolBarButtonViewModel>();
             Buttons.Add(new ToolBarButtonViewModel(events, "appbar_home_empty", new MessageShowHome()));
             Buttons.Add(new ToolBarButtonViewModel(events, "appbar_refresh", new MessageSync()));
-            Buttons.Add(new ToolBarButtonViewModel(events, "appbar_page_search", new MessagePreview()));
+            Buttons.Add(new ToolBarButtonViewModel(events, "appbar_page_search", new MessageTogglePreview()));
             Buttons.Add(new ToolBarButtonViewModel(events, "appbar_page_edit", new MessageSign()));
             Buttons.Add(new ToolBarButtonViewModel(events, "appbar_page_upload", new MessageExtractData()));
             Buttons.Add(new ToolBarButtonViewModel(events, "appbar_page_delete", new MessageReject()));

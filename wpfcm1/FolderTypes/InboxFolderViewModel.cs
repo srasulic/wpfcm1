@@ -52,11 +52,12 @@ namespace wpfcm1.FolderTypes
 
         protected override void OnActivate()
         {
-            _events.PublishOnUIThread(new ViewModelActivatedMessage(GetType().Name));
+            _events.PublishOnUIThread(new MessageViewModelActivated(GetType().Name));
         }
 
         protected override void OnDeactivate(bool close)
         {
+            base.OnDeactivate(close);
             //TODO: hack: checkbox checkmark moze da se izgubi prilikom promene taba, ako promena nije komitovana
             var v = GetView() as UserControl;
             var dg = v.FindName("Documents") as DataGrid;

@@ -4,14 +4,18 @@
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:cal="http://www.caliburnproject.org">
     <Grid>
+        <Grid.Resources>
+            <BooleanToVisibilityConverter x:Key="b2vc" />
+        </Grid.Resources>
+
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" Name="FolderColumn"/>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" Name="PreviewColumn"/>
+            <ColumnDefinition Width="Auto" Name="PreviewColumn" />
         </Grid.ColumnDefinitions>
 
         <TabControl x:Name="FolderVMs" IsSynchronizedWithCurrentItem="True" mah:TabControlHelper.IsUnderlined="True"
-                    cal:Message.Attach="[Event SelectionChanged] = [Action ActivateTabItem(FolderVms.SelectedIndex)]">
+                    cal:Message.Attach="[Event SelectionChanged] = [Action ActivateTabItem($eventArgs)]">
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock>
@@ -27,6 +31,8 @@
         </TabControl>
         
         <GridSplitter Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="2" Margin="0,11,0,0"/>
-        <ContentControl Grid.Row="0" Grid.Column="2" x:Name="Preview" Margin="0,11,0,0"/>
+        <ContentControl Grid.Row="0" Grid.Column="2" x:Name="Preview" Margin="0,11,0,0" 
+                        Visibility="{Binding Path=Preview.PreviewVisibility, Converter={StaticResource b2vc}}"
+                        IsVisibleChanged="Preview_OnIsVisibleChanged" />
     </Grid>
 </UserControl>
