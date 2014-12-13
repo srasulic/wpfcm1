@@ -4,7 +4,7 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="b2vc"/>
     </UserControl.Resources>
-    <Button Style="{DynamicResource MetroCircleButtonStyle}" Width="55" Height="55" x:Name="SendMessage"
+    <Button Style="{DynamicResource MetroCircleButtonStyle}" Width="55" Height="55" x:Name="SendMessage" ToolTip="{Binding Description}"
             Visibility="{Binding Path=ButtonVisibility, Converter={StaticResource b2vc}}">
         <Rectangle Width="21" Height="21"
                    Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
