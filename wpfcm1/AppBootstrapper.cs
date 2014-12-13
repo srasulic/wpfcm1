@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -14,6 +13,8 @@ namespace wpfcm1
 {
     public class AppBootstrapper : BootstrapperBase 
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         CompositionContainer _container;
 
         public AppBootstrapper()
@@ -56,16 +57,17 @@ namespace wpfcm1
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             DisplayRootViewFor<IShell>();
+            Log.Info("Session started!");
         }
 
         protected override void OnExit(object sender, EventArgs e)
         {
-
+            Log.Info("Session ended!");
         }
 
         protected override void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            Trace.WriteLine(e.Exception);
+            Log.Error("Unhandled exception", e.Exception);
             e.Handled = true;
         }
     }
