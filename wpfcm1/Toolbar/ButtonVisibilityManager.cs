@@ -27,7 +27,6 @@ namespace wpfcm1.Toolbar
 
         public void Handle(MessageViewModelActivated message)
         {
-            //Debug.WriteLine(message.Name);
             Debug.Assert(WorkspaceToButtonVisibility.ContainsKey(message.Name));
             SetButtonsvisibility(WorkspaceToButtonVisibility[message.Name]);
         }

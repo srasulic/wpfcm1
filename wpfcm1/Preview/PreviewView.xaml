@@ -3,10 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 >
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="b2vc" />
+        <!--<BooleanToVisibilityConverter x:Key="b2vc" />-->
     </UserControl.Resources>
-    <!--<WebBrowser MinWidth="144" Name="PdfBrowser"
-                Visibility="{Binding Path=PreviewVisibility, Converter={StaticResource b2vc}}" 
-                />-->
     <WebBrowser MinWidth="144" Name="PdfBrowser" />
 </UserControl>

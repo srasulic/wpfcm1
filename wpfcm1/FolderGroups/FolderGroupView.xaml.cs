@@ -1,13 +1,13 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using MahApps.Metro.Controls;
 using wpfcm1.Preview;
 
 namespace wpfcm1.FolderGroups
 {
     public partial class FolderGroupView : UserControl
     {
+        private bool _firstPass;
+
         public FolderGroupView()
         {
             InitializeComponent();
@@ -21,17 +21,25 @@ namespace wpfcm1.FolderGroups
             }
             if ((bool) e.NewValue)
             {
-                var cc = sender as ContentControl;
-                var pv = cc.Content as PreviewView;
                 FolderColumn.Width = new GridLength(60, GridUnitType.Star); ;
                 PreviewColumn.Width = new GridLength(40, GridUnitType.Star); ;
-                
-                var pdfBrowser = pv.PdfBrowser;
-                if (pdfBrowser == null) return;
 
-                var fgvm = cc.DataContext as FolderGroupViewModel;
-                var preview = fgvm.Preview;
-                pdfBrowser.Navigate(preview.CurrentDocument);
+                //TODO: ovo je uzasno ali trenutno ne znam kako drugacije
+                // ovoje potrebno samo kada browser postane vidljiv po prvi put, 
+                //tad Handle(MessageShowPdf) ne radi jer pdfBrowser jos uvek nije vidljiv
+                if (!_firstPass)
+                {
+                    var cc = sender as ContentControl;
+                    var pv = cc.Content as PreviewView;
+                    var pdfBrowser = pv.PdfBrowser;
+                    if (pdfBrowser == null) return;
+
+                    var fgvm = cc.DataContext as FolderGroupViewModel;
+                    var preview = fgvm.Preview;
+                    pdfBrowser.Navigate(preview.CurrentDocument);
+
+                    _firstPass = true;
+                }
             }
         }
     }

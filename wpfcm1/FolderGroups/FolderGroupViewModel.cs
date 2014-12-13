@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
@@ -44,8 +43,11 @@ namespace wpfcm1.FolderGroups
 
         public void ActivateTabItem(SelectionChangedEventArgs e)
         {
-            var item = e.AddedItems[0] as FolderViewModel;
-            if (item != null) ActivateItem(item);
+            if (e.AddedItems.Count > 0)
+            {
+                var item = e.AddedItems[0] as FolderViewModel;
+                if (item != null) ActivateItem(item);
+            }
         }
 
         protected override void OnActivate()
@@ -71,8 +73,14 @@ namespace wpfcm1.FolderGroups
             var v = GetView();
             if (v == null) return;
             var pdfBrowser = (v as FolderGroupView).FindChild<WebBrowser>("PdfBrowser");
-            if (pdfBrowser != null && pdfBrowser.Visibility == Visibility.Visible)
+            if (pdfBrowser != null && pdfBrowser.IsVisible)
             {
+                //TODO: srediti ovaj haos sa webbrowserom
+                //browser zabaguje ako mu se proslediisti dokument
+                var oldUri = pdfBrowser.Source.AbsolutePath;
+                var newUri = new Uri(message.Uri).AbsolutePath;
+                if (String.Compare(oldUri, newUri, StringComparison.OrdinalIgnoreCase) == 0) return;
+
                 pdfBrowser.Navigate(message.Uri);
             }
         }

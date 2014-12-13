@@ -4,6 +4,7 @@ using wpfcm1.Events;
 
 namespace wpfcm1.Preview
 {
+    //vazno je da ova klasa bude singleton, zbog stanja visibility flega
     [Export(typeof(PreviewViewModel))]
     public class PreviewViewModel : PropertyChangedBase, IHandle<MessageTogglePreview>, IHandle<MessageShowPdf>
     {
@@ -38,8 +39,8 @@ namespace wpfcm1.Preview
 
         public void Handle(MessageShowPdf message)
         {
-            var uri = message.Uri == Empty ? Empty : string.Format("{0}#toolbar=0&navpanes=0", message.Uri);
-            CurrentDocument = uri;
+            //var uri = message.Uri == Empty ? Empty : string.Format("{0}#toolbar=0&navpanes=0", message.Uri);
+            CurrentDocument = message.Uri;
         }
     }
 }
