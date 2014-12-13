@@ -31,6 +31,7 @@ namespace wpfcm1.Dialogs
         }
 
         public BindableCollection<string> Reports { get; set; }
+
         private bool _inProgress;
         public bool InProgress
         {
@@ -110,9 +111,9 @@ namespace wpfcm1.Dialogs
             foreach (var folder in _folders)
             {
                 var sourceDir = folder.Key;
-                var destinationDir = FtpTransferRules.Map[sourceDir];
-                var ftpAction = FtpTransferRules.Action[sourceDir];
+                var destinationDir = FtpTransferRules.FtpMap[sourceDir];
                 var documents = new List<DocumentModel>(folder.Value.Documents); //shallow copy, cannot iterate collection that is going to be modified
+                var ftpAction = FtpTransferRules.Action[sourceDir];
                 switch (ftpAction)
                 {
                     case FtpTransferRules.TransferAction.Upload:
@@ -153,7 +154,7 @@ namespace wpfcm1.Dialogs
                 var destinationFtpUri = string.Format("{0}{1}{2}", ftpClient.Uri, destinationDir, tempFileName);
                 ftpClient.RenameFile(destinationFtpUri, sourceFileName);
 
-                var destinationFilePath = Path.Combine(FtpSucessTransferRules.Map[sourceDir], Path.GetFileName(sourceFileName));
+                var destinationFilePath = Path.Combine(FtpTransferRules.LocalMap[sourceDir], Path.GetFileName(sourceFileName));
                 File.Move(sourceFilePath, destinationFilePath);
             }
         }

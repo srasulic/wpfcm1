@@ -9,7 +9,6 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using wpfcm1.Certificates;
-using wpfcm1.DataAccess;
 using wpfcm1.Extensions;
 using wpfcm1.FolderTypes;
 using wpfcm1.Model;
@@ -118,7 +117,7 @@ namespace wpfcm1.Dialogs
             var ocspClient = new OcspClientBouncyCastle();
             var tsaClient = new TSAClientBouncyCastle(tsServer, "", "", 0, DigestAlgorithms.SHA1);
 
-            var destinationDir = SignedTransferRules.Map[sourceDir];
+            var destinationDir = SigningTransferRules.LocalMap[sourceDir];
             var signatureLocation = SignatureRules.Map[sourceDir];
 
             token.ThrowIfCancellationRequested();
@@ -159,17 +158,18 @@ namespace wpfcm1.Dialogs
                     throw;
                 }
 
-                if (sourceDir == FolderManager.InvoicesInboundInboxFolder || sourceDir == FolderManager.IosInboundInboxFolder)
+                var finalAction = SigningTransferRules.OnFinished[sourceDir];
+                switch (finalAction)
                 {
-                    var destinationAckFilePath = Path.Combine(destinationDir, sourceFileName + ".ack");
-                    File.Create(destinationAckFilePath).Dispose();
-                }
-
-                if (sourceDir == FolderManager.InvoicesOutboundErpIfaceFolder || sourceDir == FolderManager.IosOutboundErpIfaceFolder)
-                {
-                    var processedDir = ProcessedTransferRules.Map[sourceDir];
-                    var processedFilePath = Path.Combine(processedDir, sourceFileName);
-                    File.Copy(sourceFilePath, processedFilePath);
+                    case SigningTransferRules.FinalAction.Acknowledge:
+                        var destinationAckFilePath = Path.Combine(destinationDir, sourceFileName + ".ack");
+                        File.Create(destinationAckFilePath).Dispose();
+                        break;
+                    case SigningTransferRules.FinalAction.Store:
+                        var processedDir = SigningTransferRules.ProcessedMap[sourceDir];
+                        var processedFilePath = Path.Combine(processedDir, sourceFileName);
+                        File.Copy(sourceFilePath, processedFilePath);
+                        break;
                 }
 
                 File.Delete(sourceFilePath);

@@ -95,7 +95,7 @@ namespace wpfcm1.FolderTypes
         {
             var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<InboxDocumentModel>();
             var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).ToList();
-            var destinationDir = SignedTransferRules.Map[FolderPath];
+            var destinationDir = SigningTransferRules.LocalMap[FolderPath];
             foreach (var document in validDocuments)
             {
                 var fileName = Path.GetFileName(document.DocumentPath);
