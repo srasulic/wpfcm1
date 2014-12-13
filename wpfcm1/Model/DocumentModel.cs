@@ -29,6 +29,13 @@ namespace wpfcm1.Model
             set { _processed = value; NotifyOfPropertyChange(() => Processed); }
         }
 
+        private bool? _isValid;
+        public bool? IsValid
+        {
+            get { return _isValid; }
+            set { _isValid = value; NotifyOfPropertyChange(() => IsValid); }
+        }
+
         private bool _isChecked;
         [XmlIgnore]
         public bool IsChecked
