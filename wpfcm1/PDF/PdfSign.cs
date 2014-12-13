@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.text.pdf.security;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
-using iTextSharp.text.pdf.security;
 using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 
 namespace wpfcm1.PDF
@@ -19,7 +19,8 @@ namespace wpfcm1.PDF
             ICollection<ICrlClient> crlList,
             IOcspClient ocspClient,
             ITSAClient tsaClient,
-            SignatureRules.SignatureLocation sigLocation)
+            SignatureRules.SignatureLocation sigLocation,
+            string reason = "")
         {
             using (var reader = new PdfReader(src))
             using (var fs = new FileStream(dst, FileMode.Create))
@@ -27,11 +28,11 @@ namespace wpfcm1.PDF
             {
                 case SignatureRules.SignatureLocation.UpperLeft:
                     using (var stamper = PdfStamper.CreateSignature(reader, fs, '\0'))
-                        CreateSignature(cert, chain, crlList, ocspClient, tsaClient, stamper, reader, sigLocation, true);
+                        CreateSignature(cert, chain, crlList, ocspClient, tsaClient, stamper, reader, sigLocation, true, reason);
                     break;
                 case SignatureRules.SignatureLocation.UpperRight:
                     using (var stamper = PdfStamper.CreateSignature(reader, fs, '\0', null, true))
-                        CreateSignature(cert, chain, crlList, ocspClient, tsaClient, stamper, reader, sigLocation, false);
+                        CreateSignature(cert, chain, crlList, ocspClient, tsaClient, stamper, reader, sigLocation, false, reason);
                     break;
             }
         }
@@ -45,12 +46,13 @@ namespace wpfcm1.PDF
             PdfStamper stamper,
             PdfReader reader,
             SignatureRules.SignatureLocation sigLocation,
-            bool provideCertificationLevel)
+            bool provideCertificationLevel,
+            string reason)
         {
             PdfSignatureAppearance appearance = stamper.SignatureAppearance;
-            appearance.Reason = "REASON";
-            appearance.Location = "LOCATION";
-            appearance.Contact = "CONTACT";
+            appearance.Reason = reason;
+            //appearance.Location = location;
+            //appearance.Contact = contact;
             if (provideCertificationLevel)
                 appearance.CertificationLevel = PdfSignatureAppearance.CERTIFIED_FORM_FILLING_AND_ANNOTATIONS;
             var rect = GetSignatureRect(reader, sigLocation);
@@ -86,10 +88,11 @@ namespace wpfcm1.PDF
             ICollection<ICrlClient> crlList,
             IOcspClient ocspClient,
             ITSAClient tsaClient,
-            SignatureRules.SignatureLocation sigLocation)
+            SignatureRules.SignatureLocation sigLocation,
+            string reason = "")
         {
             return Task.Run(() => 
-                SignPdf(src, dst, cert, chain, crlList, ocspClient, tsaClient, sigLocation)
+                SignPdf(src, dst, cert, chain, crlList, ocspClient, tsaClient, sigLocation, reason)
             );
         }
     }
