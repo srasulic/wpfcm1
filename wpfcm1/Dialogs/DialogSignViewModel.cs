@@ -35,7 +35,16 @@ namespace wpfcm1.Dialogs
         }
 
         public BindableCollection<string> Reports { get; set; }
+
+        private string _reason;
+        public string Reason
+        {
+            get { return _reason; }
+            set { _reason = value; NotifyOfPropertyChange(() => InProgress); }
+        }
+
         private bool _inProgress;
+
         public bool InProgress
         {
             get { return _inProgress; }
@@ -141,7 +150,8 @@ namespace wpfcm1.Dialogs
                         crlList,
                         ocspClient,
                         tsaClient,
-                        signatureLocation
+                        signatureLocation,
+                        Reason
                         );
                     token.ThrowIfCancellationRequested();
                 }
