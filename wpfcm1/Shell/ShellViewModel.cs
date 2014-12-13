@@ -75,12 +75,12 @@ namespace wpfcm1.Shell
         {
             var foldersToSync = new Dictionary<string, FolderViewModel>()
             {
-                {FolderManager.OutboundOutboxFolder, OutboundVM.FolderVMs[1]},
-                {FolderManager.OutboundPendFolder, OutboundVM.FolderVMs[3]},
-                {FolderManager.OutboundConfirmedFolder, OutboundVM.FolderVMs[4]},
-                {FolderManager.InboundInboxFolder, InboundVM.FolderVMs[0]},
-                {FolderManager.InboundOutboxFolder, InboundVM.FolderVMs[1]},
-                {FolderManager.InboundConfirmedFolder, InboundVM.FolderVMs[3]}
+                {FolderManager.InvoicesOutboundOutboxFolder, OutboundVM.FolderVMs[1]},
+                {FolderManager.InvoicesOutboundPendFolder, OutboundVM.FolderVMs[3]},
+                {FolderManager.InvoicesOutboundConfirmedFolder, OutboundVM.FolderVMs[4]},
+                {FolderManager.InvoicesInboundInboxFolder, InboundVM.FolderVMs[0]},
+                {FolderManager.InvoicesInboundOutboxFolder, InboundVM.FolderVMs[1]},
+                {FolderManager.InvoicesInboundConfirmedFolder, InboundVM.FolderVMs[3]}
             };
             var result = _windowManager.ShowDialog(new DialogSyncViewModel(foldersToSync));
         }

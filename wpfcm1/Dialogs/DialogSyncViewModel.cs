@@ -123,7 +123,7 @@ namespace wpfcm1.Dialogs
                         break;
                     case FtpTransferRules.TransferAction.Sync:
                         reporter.Report(string.Format("Sync:\t{0} <-> {1}", sourceDir, destinationDir));
-                        var deleteLocal = folder.Key == FolderManager.InboundInboxFolder || folder.Key == FolderManager.OutboundPendFolder;
+                        var deleteLocal = folder.Key == FolderManager.InvoicesInboundInboxFolder || folder.Key == FolderManager.InvoicesOutboundPendFolder;
                         await Sync(ftpClient, documents, sourceDir, destinationDir, deleteLocal, reporter, token);
                         reporter.Report("OK");
                         break;
