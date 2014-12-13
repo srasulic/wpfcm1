@@ -10,7 +10,9 @@ namespace wpfcm1.PDF
         public static Dictionary<string, SignatureLocation> Map = new Dictionary<string, SignatureLocation>()
         {
             {FolderManager.InvoicesOutboundErpIfaceFolder, SignatureLocation.UpperLeft},
-            {FolderManager.InvoicesInboundInboxFolder, SignatureLocation.UpperRight}
+            {FolderManager.InvoicesInboundInboxFolder, SignatureLocation.UpperRight},
+            {FolderManager.IosOutboundErpIfaceFolder, SignatureLocation.UpperLeft},
+            {FolderManager.IosInboundInboxFolder, SignatureLocation.UpperRight}
         };
 
         public static Dictionary<SignatureLocation, string> SignatureName = new Dictionary<SignatureLocation, string>()
@@ -25,7 +27,9 @@ namespace wpfcm1.PDF
         public static Dictionary<string, string> Map = new Dictionary<string, string>()
         {
             {FolderManager.InvoicesOutboundErpIfaceFolder, FolderManager.InvoicesOutboundOutboxFolder},
-            {FolderManager.InvoicesInboundInboxFolder, FolderManager.InvoicesInboundOutboxFolder}
+            {FolderManager.InvoicesInboundInboxFolder, FolderManager.InvoicesInboundOutboxFolder},
+            {FolderManager.IosOutboundErpIfaceFolder, FolderManager.IosOutboundOutboxFolder},
+            {FolderManager.IosInboundInboxFolder, FolderManager.IosInboundOutboxFolder}
         };
     }
 
@@ -33,7 +37,8 @@ namespace wpfcm1.PDF
     {
         public static Dictionary<string, string> Map = new Dictionary<string, string>()
         {
-            {FolderManager.InvoicesOutboundErpIfaceFolder, FolderManager.InvoicesOutboundErpProcFolder}
+            {FolderManager.InvoicesOutboundErpIfaceFolder, FolderManager.InvoicesOutboundErpProcFolder},
+            {FolderManager.IosOutboundErpIfaceFolder, FolderManager.IosOutboundErpProcFolder}
         };
     }
 
@@ -42,7 +47,9 @@ namespace wpfcm1.PDF
         public static Dictionary<string, string> Map = new Dictionary<string, string>()
         {
             {FolderManager.InvoicesOutboundOutboxFolder, FolderManager.InvoicesOutboundSentFolder},
-            {FolderManager.InvoicesInboundOutboxFolder, FolderManager.InvoicesInboundSentFolder}
+            {FolderManager.InvoicesInboundOutboxFolder, FolderManager.InvoicesInboundSentFolder},
+            {FolderManager.IosOutboundOutboxFolder, FolderManager.IosOutboundSentFolder},
+            {FolderManager.IosInboundOutboxFolder, FolderManager.IosInboundSentFolder}
         };
     }
 
@@ -57,7 +64,13 @@ namespace wpfcm1.PDF
             {FolderManager.InvoicesOutboundConfirmedFolder, "edokument/faktura/outbound/confirmed/"},
             {FolderManager.InvoicesInboundInboxFolder, "edokument/faktura/inbound/inbox/"},
             {FolderManager.InvoicesInboundOutboxFolder, "edokument/faktura/inbound/outbox/"},
-            {FolderManager.InvoicesInboundConfirmedFolder, "edokument/faktura/inbound/confirmed/"}
+            {FolderManager.InvoicesInboundConfirmedFolder, "edokument/faktura/inbound/confirmed/"},
+            {FolderManager.IosOutboundOutboxFolder, "edokument/ios/outbound/outbox/"},
+            {FolderManager.IosOutboundPendFolder, "edokument/ios/outbound/pend/"},
+            {FolderManager.IosOutboundConfirmedFolder, "edokument/ios/outbound/confirmed/"},
+            {FolderManager.IosInboundInboxFolder, "edokument/ios/inbound/inbox/"},
+            {FolderManager.IosInboundOutboxFolder, "edokument/ios/inbound/outbox/"},
+            {FolderManager.IosInboundConfirmedFolder, "edokument/ios/inbound/confirmed/"}
         };
 
         public static Dictionary<string, TransferAction> Action = new Dictionary<string, TransferAction>()
@@ -67,7 +80,13 @@ namespace wpfcm1.PDF
             {FolderManager.InvoicesOutboundConfirmedFolder, TransferAction.Sync},
             {FolderManager.InvoicesInboundInboxFolder, TransferAction.Sync},
             {FolderManager.InvoicesInboundOutboxFolder, TransferAction.Upload},
-            {FolderManager.InvoicesInboundConfirmedFolder, TransferAction.Sync}
+            {FolderManager.InvoicesInboundConfirmedFolder, TransferAction.Sync},
+            {FolderManager.IosOutboundOutboxFolder, TransferAction.Upload},
+            {FolderManager.IosOutboundPendFolder, TransferAction.Sync},
+            {FolderManager.IosOutboundConfirmedFolder, TransferAction.Sync},
+            {FolderManager.IosInboundInboxFolder, TransferAction.Sync},
+            {FolderManager.IosInboundOutboxFolder, TransferAction.Upload},
+            {FolderManager.IosInboundConfirmedFolder, TransferAction.Sync}
         };
     }
 }
