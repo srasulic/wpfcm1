@@ -4,11 +4,17 @@
              xmlns:conv="clr-namespace:wpfcm1.Converters">
     <Grid>
     <Grid.Resources>
-        <conv:InverseBooleanToBoldConverter x:Key="ib2bc" />
-    </Grid.Resources>
-        <DataGrid x:Name="Documents" AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False">
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="FolderResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <conv:InverseBooleanToBoldConverter x:Key="ib2bc" />
+            </ResourceDictionary>
+        </Grid.Resources>
+        <DataGrid x:Name="Documents" AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False" >
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Binding="{Binding IsChecked}" />
+                <DataGridCheckBoxColumn Binding="{Binding IsChecked}" HeaderStyle="{StaticResource CheckBoxHeaderStyle}">
+                </DataGridCheckBoxColumn>
                 <DataGridTextColumn Header="Name" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">

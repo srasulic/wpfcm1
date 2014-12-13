@@ -3,26 +3,31 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:conv="clr-namespace:wpfcm1.Converters">
     <Grid>
-    <Grid.Resources>
-            <BitmapImage x:Key="PngError" UriSource="../Media/error16.png" />
-            <BitmapImage x:Key="PngOk" UriSource="../Media/ok16.png" />
-            <BitmapImage x:Key="PngAck" UriSource="../Media/ack16.png" />
-            <BooleanToVisibilityConverter x:Key="b2vc" />
-            <conv:InverseBooleanToVisibilityConverter x:Key="ib2vc" />
-            <conv:InverseBooleanToBoldConverter x:Key="ib2bc" />
-            <DataTemplate x:Key="ImgCol">
-                <StackPanel>
-                    <Image Source="{StaticResource PngOk}" Visibility="{Binding Path=IsValid, Converter={StaticResource b2vc}}"/>
-                    <Image Source="{StaticResource PngError}" Visibility="{Binding Path=IsValid, Converter={StaticResource ib2vc}}"/>
-                </StackPanel>
-            </DataTemplate>
-            <DataTemplate x:Key="AckCol">
-                <Image Source="{StaticResource PngAck}" Visibility="{Binding Path=IsAcknowledged, Converter={StaticResource b2vc}}"/>
-            </DataTemplate>
+        <Grid.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="FolderResources.xaml" />
+                </ResourceDictionary.MergedDictionaries>
+                <BitmapImage x:Key="PngError" UriSource="../Media/error16.png" />
+                <BitmapImage x:Key="PngOk" UriSource="../Media/ok16.png" />
+                <BitmapImage x:Key="PngAck" UriSource="../Media/ack16.png" />
+                <BooleanToVisibilityConverter x:Key="b2vc" />
+                <conv:InverseBooleanToVisibilityConverter x:Key="ib2vc" />
+                <conv:InverseBooleanToBoldConverter x:Key="ib2bc" />
+                <DataTemplate x:Key="ImgCol">
+                    <StackPanel>
+                        <Image Source="{StaticResource PngOk}" Visibility="{Binding Path=IsValid, Converter={StaticResource b2vc}}"/>
+                        <Image Source="{StaticResource PngError}" Visibility="{Binding Path=IsValid, Converter={StaticResource ib2vc}}"/>
+                    </StackPanel>
+                </DataTemplate>
+                <DataTemplate x:Key="AckCol">
+                    <Image Source="{StaticResource PngAck}" Visibility="{Binding Path=IsAcknowledged, Converter={StaticResource b2vc}}"/>
+                </DataTemplate>
+            </ResourceDictionary>
         </Grid.Resources>
         <DataGrid x:Name="Documents" AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False">
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Binding="{Binding IsChecked}" IsReadOnly="False"/>
+                <DataGridCheckBoxColumn Binding="{Binding IsChecked}" HeaderStyle="{StaticResource CheckBoxHeaderStyle}"/>
                 <DataGridTextColumn Header="Name" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">

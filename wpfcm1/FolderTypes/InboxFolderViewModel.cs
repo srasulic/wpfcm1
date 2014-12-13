@@ -19,7 +19,6 @@ namespace wpfcm1.FolderTypes
         public InboxFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
         {
             _windowManager = winMgr;
-            var state = Deserialize();
         }
 
         protected override void InitDocuments()
@@ -137,6 +136,21 @@ namespace wpfcm1.FolderTypes
             using (Stream s = File.OpenRead(file))
                 oldList = (List<InboxDocumentModel>) xs.Deserialize(s);
             return oldList;
+        }
+
+        public override void OnCheck(object e)
+        {
+            var ec = e as ActionExecutionContext;
+            var cb = ec.Source as CheckBox;
+
+            var view = ec.View as InboxFolderView;
+            var dg = view.Documents;
+            var items = dg.SelectedItems;
+            foreach (var item in items)
+            {
+                var doc = item as DocumentModel;
+                doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+            }
         }
     }
 }
