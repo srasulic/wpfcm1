@@ -9,6 +9,8 @@ namespace wpfcm1.DataAccess
 {
     public class FolderManager
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public static readonly string OutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundErpIfaceFolder);
         public static readonly string OutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundErpProcFolder);
         public static readonly string OutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundOutboxFolder);
@@ -78,6 +80,7 @@ namespace wpfcm1.DataAccess
         {
             foreach (var folder in folders.Where(folder => !Directory.Exists(folder.Value)))
             {
+                Log.Info(string.Format("Creating {0}", folder.Value));
                 Directory.CreateDirectory(folder.Value);
             }
         }

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -68,7 +67,7 @@ namespace wpfcm1
 
         protected override void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            Trace.WriteLine(e.Exception);
+            Log.Error("Unhandled exception", e.Exception);
             e.Handled = true;
         }
     }
