@@ -75,7 +75,7 @@ namespace wpfcm1.Dialogs
                 InProgress = true;
                 // shallow documents copy, always updated, even if cancel was pressed
                 var documents = GetDocumentsForSigning(_folder);
-                var sourceDir = GetSourceDir(_folder);
+                var sourceDir = _folder.FolderPath;
                 await SignAsync(documents, sourceDir, _reporter, _cancellation.Token).WithCancellation(_cancellation.Token);
             }
             catch (OperationCanceledException ex)
@@ -159,13 +159,13 @@ namespace wpfcm1.Dialogs
                     throw;
                 }
 
-                if (sourceDir == FolderManager.InvoicesInboundInboxFolder)
+                if (sourceDir == FolderManager.InvoicesInboundInboxFolder || sourceDir == FolderManager.IosInboundInboxFolder)
                 {
                     var destinationAckFilePath = Path.Combine(destinationDir, sourceFileName + ".ack");
                     File.Create(destinationAckFilePath).Dispose();
                 }
 
-                if (sourceDir == FolderManager.InvoicesOutboundErpIfaceFolder)
+                if (sourceDir == FolderManager.InvoicesOutboundErpIfaceFolder || sourceDir == FolderManager.IosOutboundErpIfaceFolder)
                 {
                     var processedDir = ProcessedTransferRules.Map[sourceDir];
                     var processedFilePath = Path.Combine(processedDir, sourceFileName);
@@ -206,19 +206,6 @@ namespace wpfcm1.Dialogs
                 return (folder as InboxFolderViewModel).GetDocumentsForSigning(); 
             }
             throw new ArgumentException("folder)");
-        }
-
-        private string GetSourceDir(FolderViewModel folder)
-        {
-            if (folder is GeneratedFolderViewModel)
-            {
-                return FolderManager.InvoicesOutboundErpIfaceFolder;
-            }
-            if (folder is InboxFolderViewModel)
-            {
-                return FolderManager.InvoicesInboundInboxFolder;
-            }
-            throw new ArgumentException("folder");
         }
     }
 }

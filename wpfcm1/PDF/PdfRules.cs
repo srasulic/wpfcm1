@@ -55,7 +55,7 @@ namespace wpfcm1.PDF
 
     public static class FtpTransferRules
     {
-        public enum TransferAction { Upload, Sync };
+        public enum TransferAction { Upload, Download, Sync };
 
         public static Dictionary<string, string> Map = new Dictionary<string, string>()
         {
@@ -77,16 +77,16 @@ namespace wpfcm1.PDF
         {
             {FolderManager.InvoicesOutboundOutboxFolder, TransferAction.Upload},
             {FolderManager.InvoicesOutboundPendFolder, TransferAction.Sync},
-            {FolderManager.InvoicesOutboundConfirmedFolder, TransferAction.Sync},
+            {FolderManager.InvoicesOutboundConfirmedFolder, TransferAction.Download},
             {FolderManager.InvoicesInboundInboxFolder, TransferAction.Sync},
             {FolderManager.InvoicesInboundOutboxFolder, TransferAction.Upload},
-            {FolderManager.InvoicesInboundConfirmedFolder, TransferAction.Sync},
+            {FolderManager.InvoicesInboundConfirmedFolder, TransferAction.Download},
             {FolderManager.IosOutboundOutboxFolder, TransferAction.Upload},
             {FolderManager.IosOutboundPendFolder, TransferAction.Sync},
-            {FolderManager.IosOutboundConfirmedFolder, TransferAction.Sync},
+            {FolderManager.IosOutboundConfirmedFolder, TransferAction.Download},
             {FolderManager.IosInboundInboxFolder, TransferAction.Sync},
             {FolderManager.IosInboundOutboxFolder, TransferAction.Upload},
-            {FolderManager.IosInboundConfirmedFolder, TransferAction.Sync}
+            {FolderManager.IosInboundConfirmedFolder, TransferAction.Download}
         };
     }
 }
