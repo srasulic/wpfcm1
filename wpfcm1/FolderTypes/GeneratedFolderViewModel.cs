@@ -112,7 +112,7 @@ namespace wpfcm1.FolderTypes
         public void Handle(MessageReject message)
         {
             var checkedDocuments = Documents.Where(d => d.IsChecked);
-            var destinationDir = ProcessedTransferRules.Map[FolderPath];
+            var destinationDir = SigningTransferRules.ProcessedMap[FolderPath];
             foreach (var document in checkedDocuments)
             {
                 var sourceFilePath = document.DocumentPath;

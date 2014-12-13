@@ -9,7 +9,6 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using wpfcm1.Certificates;
-using wpfcm1.DataAccess;
 using wpfcm1.Extensions;
 using wpfcm1.FolderTypes;
 using wpfcm1.Model;
@@ -75,7 +74,7 @@ namespace wpfcm1.Dialogs
                 InProgress = true;
                 // shallow documents copy, always updated, even if cancel was pressed
                 var documents = GetDocumentsForSigning(_folder);
-                var sourceDir = GetSourceDir(_folder);
+                var sourceDir = _folder.FolderPath;
                 await SignAsync(documents, sourceDir, _reporter, _cancellation.Token).WithCancellation(_cancellation.Token);
             }
             catch (OperationCanceledException ex)
@@ -118,7 +117,7 @@ namespace wpfcm1.Dialogs
             var ocspClient = new OcspClientBouncyCastle();
             var tsaClient = new TSAClientBouncyCastle(tsServer, "", "", 0, DigestAlgorithms.SHA1);
 
-            var destinationDir = SignedTransferRules.Map[sourceDir];
+            var destinationDir = SigningTransferRules.LocalMap[sourceDir];
             var signatureLocation = SignatureRules.Map[sourceDir];
 
             token.ThrowIfCancellationRequested();
@@ -159,17 +158,18 @@ namespace wpfcm1.Dialogs
                     throw;
                 }
 
-                if (sourceDir == FolderManager.InvoicesInboundInboxFolder)
+                var finalAction = SigningTransferRules.OnFinished[sourceDir];
+                switch (finalAction)
                 {
-                    var destinationAckFilePath = Path.Combine(destinationDir, sourceFileName + ".ack");
-                    File.Create(destinationAckFilePath).Dispose();
-                }
-
-                if (sourceDir == FolderManager.InvoicesOutboundErpIfaceFolder)
-                {
-                    var processedDir = ProcessedTransferRules.Map[sourceDir];
-                    var processedFilePath = Path.Combine(processedDir, sourceFileName);
-                    File.Copy(sourceFilePath, processedFilePath);
+                    case SigningTransferRules.FinalAction.Acknowledge:
+                        var destinationAckFilePath = Path.Combine(destinationDir, sourceFileName + ".ack");
+                        File.Create(destinationAckFilePath).Dispose();
+                        break;
+                    case SigningTransferRules.FinalAction.Store:
+                        var processedDir = SigningTransferRules.ProcessedMap[sourceDir];
+                        var processedFilePath = Path.Combine(processedDir, sourceFileName);
+                        File.Copy(sourceFilePath, processedFilePath);
+                        break;
                 }
 
                 File.Delete(sourceFilePath);
@@ -206,19 +206,6 @@ namespace wpfcm1.Dialogs
                 return (folder as InboxFolderViewModel).GetDocumentsForSigning(); 
             }
             throw new ArgumentException("folder)");
-        }
-
-        private string GetSourceDir(FolderViewModel folder)
-        {
-            if (folder is GeneratedFolderViewModel)
-            {
-                return FolderManager.InvoicesOutboundErpIfaceFolder;
-            }
-            if (folder is InboxFolderViewModel)
-            {
-                return FolderManager.InvoicesInboundInboxFolder;
-            }
-            throw new ArgumentException("folder");
         }
     }
 }

@@ -22,42 +22,42 @@ namespace wpfcm1.PDF
         };
     }
 
-    public static class SignedTransferRules
+    public static class SigningTransferRules
     {
-        public static Dictionary<string, string> Map = new Dictionary<string, string>()
+        public static Dictionary<string, string> LocalMap = new Dictionary<string, string>()
         {
             {FolderManager.InvoicesOutboundErpIfaceFolder, FolderManager.InvoicesOutboundOutboxFolder},
             {FolderManager.InvoicesInboundInboxFolder, FolderManager.InvoicesInboundOutboxFolder},
             {FolderManager.IosOutboundErpIfaceFolder, FolderManager.IosOutboundOutboxFolder},
             {FolderManager.IosInboundInboxFolder, FolderManager.IosInboundOutboxFolder}
         };
-    }
 
-    public static class ProcessedTransferRules
-    {
-        public static Dictionary<string, string> Map = new Dictionary<string, string>()
+        public static Dictionary<string, string> ProcessedMap= new Dictionary<string, string>()
         {
             {FolderManager.InvoicesOutboundErpIfaceFolder, FolderManager.InvoicesOutboundErpProcFolder},
             {FolderManager.IosOutboundErpIfaceFolder, FolderManager.IosOutboundErpProcFolder}
         };
-    }
 
-    public static class FtpSucessTransferRules
-    {
-        public static Dictionary<string, string> Map = new Dictionary<string, string>()
+        public enum FinalAction
         {
-            {FolderManager.InvoicesOutboundOutboxFolder, FolderManager.InvoicesOutboundSentFolder},
-            {FolderManager.InvoicesInboundOutboxFolder, FolderManager.InvoicesInboundSentFolder},
-            {FolderManager.IosOutboundOutboxFolder, FolderManager.IosOutboundSentFolder},
-            {FolderManager.IosInboundOutboxFolder, FolderManager.IosInboundSentFolder}
+            Acknowledge,
+            Store
+        };
+
+        public static Dictionary<string, FinalAction> OnFinished = new Dictionary<string, FinalAction>()
+        {
+            {FolderManager.InvoicesOutboundErpIfaceFolder, FinalAction.Store},
+            {FolderManager.InvoicesInboundInboxFolder, FinalAction.Acknowledge},
+            {FolderManager.IosOutboundErpIfaceFolder, FinalAction.Store},
+            {FolderManager.IosInboundInboxFolder, FinalAction.Acknowledge}
         };
     }
 
     public static class FtpTransferRules
     {
-        public enum TransferAction { Upload, Sync };
+        public enum TransferAction { Upload, Download, Sync };
 
-        public static Dictionary<string, string> Map = new Dictionary<string, string>()
+        public static Dictionary<string, string> FtpMap = new Dictionary<string, string>()
         {
             {FolderManager.InvoicesOutboundOutboxFolder, "edokument/faktura/outbound/outbox/"},
             {FolderManager.InvoicesOutboundPendFolder, "edokument/faktura/outbound/pend/"},
@@ -77,16 +77,24 @@ namespace wpfcm1.PDF
         {
             {FolderManager.InvoicesOutboundOutboxFolder, TransferAction.Upload},
             {FolderManager.InvoicesOutboundPendFolder, TransferAction.Sync},
-            {FolderManager.InvoicesOutboundConfirmedFolder, TransferAction.Sync},
+            {FolderManager.InvoicesOutboundConfirmedFolder, TransferAction.Download},
             {FolderManager.InvoicesInboundInboxFolder, TransferAction.Sync},
             {FolderManager.InvoicesInboundOutboxFolder, TransferAction.Upload},
-            {FolderManager.InvoicesInboundConfirmedFolder, TransferAction.Sync},
+            {FolderManager.InvoicesInboundConfirmedFolder, TransferAction.Download},
             {FolderManager.IosOutboundOutboxFolder, TransferAction.Upload},
             {FolderManager.IosOutboundPendFolder, TransferAction.Sync},
-            {FolderManager.IosOutboundConfirmedFolder, TransferAction.Sync},
+            {FolderManager.IosOutboundConfirmedFolder, TransferAction.Download},
             {FolderManager.IosInboundInboxFolder, TransferAction.Sync},
             {FolderManager.IosInboundOutboxFolder, TransferAction.Upload},
-            {FolderManager.IosInboundConfirmedFolder, TransferAction.Sync}
+            {FolderManager.IosInboundConfirmedFolder, TransferAction.Download}
+        };
+
+        public static Dictionary<string, string> LocalMap = new Dictionary<string, string>()
+        {
+            {FolderManager.InvoicesOutboundOutboxFolder, FolderManager.InvoicesOutboundSentFolder},
+            {FolderManager.InvoicesInboundOutboxFolder, FolderManager.InvoicesInboundSentFolder},
+            {FolderManager.IosOutboundOutboxFolder, FolderManager.IosOutboundSentFolder},
+            {FolderManager.IosInboundOutboxFolder, FolderManager.IosInboundSentFolder}
         };
     }
 }

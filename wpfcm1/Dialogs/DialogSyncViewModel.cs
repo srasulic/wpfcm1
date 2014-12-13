@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using wpfcm1.DataAccess;
 using wpfcm1.Extensions;
 using wpfcm1.FolderTypes;
 using wpfcm1.FTP;
@@ -32,6 +31,7 @@ namespace wpfcm1.Dialogs
         }
 
         public BindableCollection<string> Reports { get; set; }
+
         private bool _inProgress;
         public bool InProgress
         {
@@ -111,21 +111,25 @@ namespace wpfcm1.Dialogs
             foreach (var folder in _folders)
             {
                 var sourceDir = folder.Key;
-                var destinationDir = FtpTransferRules.Map[sourceDir];
-                var ftpAction = FtpTransferRules.Action[sourceDir];
+                var destinationDir = FtpTransferRules.FtpMap[sourceDir];
                 var documents = new List<DocumentModel>(folder.Value.Documents); //shallow copy, cannot iterate collection that is going to be modified
+                var ftpAction = FtpTransferRules.Action[sourceDir];
                 switch (ftpAction)
                 {
                     case FtpTransferRules.TransferAction.Upload:
-                        reporter.Report(string.Format("Upload:\t{0} -> {1}", sourceDir, destinationDir));
+                        if (reporter != null) reporter.Report(string.Format("Upload:\t{0} -> {1}", sourceDir, destinationDir));
                         await Upload(ftpClient, documents, sourceDir, destinationDir, reporter, token);
-                        reporter.Report("OK");
+                        if (reporter != null) reporter.Report("OK");
                         break;
                     case FtpTransferRules.TransferAction.Sync:
-                        reporter.Report(string.Format("Sync:\t{0} <-> {1}", sourceDir, destinationDir));
-                        var deleteLocal = folder.Key == FolderManager.InvoicesInboundInboxFolder || folder.Key == FolderManager.InvoicesOutboundPendFolder;
-                        await Sync(ftpClient, documents, sourceDir, destinationDir, deleteLocal, reporter, token);
-                        reporter.Report("OK");
+                        if (reporter != null) reporter.Report(string.Format("Sync:\t{0} <-> {1}", sourceDir, destinationDir));
+                        await Sync(ftpClient, documents, sourceDir, destinationDir, true, reporter, token);
+                        if (reporter != null) reporter.Report("OK");
+                        break;
+                    case FtpTransferRules.TransferAction.Download:
+                        if (reporter != null) reporter.Report(string.Format("Sync:\t{0} <-> {1}", sourceDir, destinationDir));
+                        await Sync(ftpClient, documents, sourceDir, destinationDir, false, reporter, token);
+                        if (reporter != null) reporter.Report("OK");
                         break;
                 }
             }
@@ -150,7 +154,7 @@ namespace wpfcm1.Dialogs
                 var destinationFtpUri = string.Format("{0}{1}{2}", ftpClient.Uri, destinationDir, tempFileName);
                 ftpClient.RenameFile(destinationFtpUri, sourceFileName);
 
-                var destinationFilePath = Path.Combine(FtpSucessTransferRules.Map[sourceDir], Path.GetFileName(sourceFileName));
+                var destinationFilePath = Path.Combine(FtpTransferRules.LocalMap[sourceDir], Path.GetFileName(sourceFileName));
                 File.Move(sourceFilePath, destinationFilePath);
             }
         }
@@ -169,7 +173,7 @@ namespace wpfcm1.Dialogs
             foreach (var fileName in diffRemote)
             {
                 var filePath = Path.Combine(sourceDir, fileName);
-                reporter.Report(string.Format("Download: {0}", fileName));
+                if (reporter != null) reporter.Report(string.Format("Download: {0}", fileName));
 
                 token.ThrowIfCancellationRequested();
                 await ftpClient.DownloadFileAsync(destinationDir, fileName, filePath);
@@ -180,7 +184,7 @@ namespace wpfcm1.Dialogs
                 foreach (var fileName in diffLocal)
                 {
                     var filePath = Path.Combine(sourceDir, fileName);
-                    reporter.Report(string.Format("Delete: {0}", fileName));
+                    if (reporter != null) reporter.Report(string.Format("Delete: {0}", fileName));
                     File.Delete(filePath);
                 }
             }
