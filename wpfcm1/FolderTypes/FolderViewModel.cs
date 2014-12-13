@@ -126,5 +126,10 @@ namespace wpfcm1.FolderTypes
         {
 
         }
+
+        public virtual void OnCheck(object e)
+        {
+
+        }
     }
 }

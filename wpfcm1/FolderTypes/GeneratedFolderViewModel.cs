@@ -161,5 +161,20 @@ namespace wpfcm1.FolderTypes
             }
             return oldList;
         }
+
+        public override void OnCheck(object e)
+        {
+            var ec = e as ActionExecutionContext;
+            var cb = ec.Source as CheckBox;
+            
+            var view = ec.View as GeneratedFolderView;
+            var dg = view.Documents;
+            var items = dg.SelectedItems;
+            foreach (var item in items)
+            {
+                var doc = item as DocumentModel;
+                doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+            }
+        }
     }
 }

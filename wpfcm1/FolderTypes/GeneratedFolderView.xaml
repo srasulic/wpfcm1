@@ -5,13 +5,19 @@
              xmlns:cal="http://www.caliburnproject.org">
     <Grid>
         <Grid.Resources>
-            <conv:InverseBooleanToBoldConverter x:Key="ib2bc" />
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="FolderResources.xaml" />
+                </ResourceDictionary.MergedDictionaries>
+                <conv:InverseBooleanToBoldConverter x:Key="ib2bc" />
+            </ResourceDictionary>
         </Grid.Resources>
 
         <DataGrid x:Name="Documents" cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChanged($eventArgs)]" 
                   AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False">
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Binding="{Binding IsChecked}" />
+                <DataGridCheckBoxColumn Binding="{Binding IsChecked}" HeaderStyle="{StaticResource CheckBoxHeaderStyle}">
+                </DataGridCheckBoxColumn>
                 <DataGridTextColumn Header="Name" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
