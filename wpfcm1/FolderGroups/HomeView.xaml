@@ -45,6 +45,12 @@
             <mah:Tile Title="{Binding Path=Svm.InboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowInbound">
                 <ItemsControl ItemsSource="{Binding Path=Svm.InboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}"/>
             </mah:Tile>
+            <mah:Tile Title="{Binding Path=Svm.IosOutboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowIosOutbound">
+                <ItemsControl ItemsSource="{Binding Path=Svm.IosOutboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}" />
+            </mah:Tile>
+            <mah:Tile Title="{Binding Path=Svm.IosInboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowIosInbound">
+                <ItemsControl ItemsSource="{Binding Path=Svm.IosInboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}"/>
+            </mah:Tile>
         </WrapPanel>
     </Grid>
 </UserControl>

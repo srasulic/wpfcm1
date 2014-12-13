@@ -33,6 +33,8 @@ namespace wpfcm1.Shell
             HomeVM = new HomeViewModel(this);
             OutboundVM = new FolderGroupViewModel(FolderManager.InvoicesOutboundFolders, "Outbound", events, _windowManager);
             InboundVM = new FolderGroupViewModel(FolderManager.InvoicesInboundFolders, "Inbound", events, _windowManager);
+            IosOutboundVM = new FolderGroupViewModel(FolderManager.IosOutboundFolders, "IOS Outbound", events, _windowManager);
+            IosInboundVM = new FolderGroupViewModel(FolderManager.IosInboundFolders, "IOS Inbound", events, _windowManager);
 
             ShowHome();
         }
@@ -44,6 +46,8 @@ namespace wpfcm1.Shell
         public HomeViewModel HomeVM { get; private set; }
         public FolderGroupViewModel OutboundVM { get; private set; }
         public FolderGroupViewModel InboundVM { get; private set; }
+        public FolderGroupViewModel IosOutboundVM { get; private set; }
+        public FolderGroupViewModel IosInboundVM { get; private set; }
 
         public void ShowHome()
         {
@@ -59,6 +63,16 @@ namespace wpfcm1.Shell
         public void ShowInbound()
         {
             ActivateItem(InboundVM);
+        }
+
+        public void ShowIosOutbound()
+        {
+            ActivateItem(IosOutboundVM);
+        }
+
+        public void ShowIosInbound()
+        {
+            ActivateItem(IosInboundVM);
         }
 
         public void ShowSettings()
@@ -80,7 +94,13 @@ namespace wpfcm1.Shell
                 {FolderManager.InvoicesOutboundConfirmedFolder, OutboundVM.FolderVMs[4]},
                 {FolderManager.InvoicesInboundInboxFolder, InboundVM.FolderVMs[0]},
                 {FolderManager.InvoicesInboundOutboxFolder, InboundVM.FolderVMs[1]},
-                {FolderManager.InvoicesInboundConfirmedFolder, InboundVM.FolderVMs[3]}
+                {FolderManager.InvoicesInboundConfirmedFolder, InboundVM.FolderVMs[3]},
+                {FolderManager.IosOutboundOutboxFolder, IosOutboundVM.FolderVMs[1]},
+                {FolderManager.IosOutboundPendFolder, IosOutboundVM.FolderVMs[3]},
+                {FolderManager.IosOutboundConfirmedFolder, IosOutboundVM.FolderVMs[4]},
+                {FolderManager.IosInboundInboxFolder, IosInboundVM.FolderVMs[0]},
+                {FolderManager.IosInboundOutboxFolder, IosInboundVM.FolderVMs[1]},
+                {FolderManager.IosInboundConfirmedFolder, IosInboundVM.FolderVMs[3]}
             };
             var result = _windowManager.ShowDialog(new DialogSyncViewModel(foldersToSync));
         }
@@ -89,6 +109,8 @@ namespace wpfcm1.Shell
         {
             InboundVM.Dispose();
             OutboundVM.Dispose();
+            IosInboundVM.Dispose();
+            IosOutboundVM.Dispose();
         }
     }
 }
