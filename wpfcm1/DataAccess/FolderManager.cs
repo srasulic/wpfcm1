@@ -11,69 +11,69 @@ namespace wpfcm1.DataAccess
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public static readonly string OutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundErpIfaceFolder);
-        public static readonly string OutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundErpProcFolder);
-        public static readonly string OutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundOutboxFolder);
-        public static readonly string OutboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundSentFolder);
-        public static readonly string OutboundPendFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundPendFolder);
-        public static readonly string OutboundConfirmedFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundConfirmedFolder);
-        public static readonly string InboundInboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundInboxFolder);
-        public static readonly string InboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundOutboxFolder);
-        public static readonly string InboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundSentFolder);
-        public static readonly string InboundConfirmedFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundConfirmedFolder);
+        public static readonly string InvoicesOutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundErpIfaceFolder);
+        public static readonly string InvoicesOutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundErpProcFolder);
+        public static readonly string InvoicesOutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundOutboxFolder);
+        public static readonly string InvoicesOutboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundSentFolder);
+        public static readonly string InvoicesOutboundPendFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundPendFolder);
+        public static readonly string InvoicesOutboundConfirmedFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundConfirmedFolder);
+        public static readonly string InvoicesInboundInboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundInboxFolder);
+        public static readonly string InvoicesInboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundOutboxFolder);
+        public static readonly string InvoicesInboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundSentFolder);
+        public static readonly string InvoicesInboundConfirmedFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundConfirmedFolder);
 
         public static Dictionary<string, string> InvoicesOutboundFolders { get; private set; } 
         public static Dictionary<string, string> InvoicesInboundFolders { get; private set; }
 
         public static Dictionary<string, string> FolderNameMap = new Dictionary<string, string>
         {
-            {"OutboundErpIfaceFolder", "Generated"},
-            {"OutboundErpProcFolder", "Processed"},
-            {"OutboundOutboxFolder", "Outbox"},
-            {"OutboundSentFolder", "Sent"},
-            {"OutboundPendFolder", "Pend"},
-            {"OutboundConfirmedFolder", "Confirmed"},
-            {"InboundInboxFolder", "Inbox"},
-            {"InboundOutboxFolder", "Outbox"},
-            {"InboundSentFolder", "Sent"},
-            {"InboundConfirmedFolder", "Confirmed"}
+            {"InvoicesOutboundErpIfaceFolder", "Generated"},
+            {"InvoicesOutboundErpProcFolder", "Processed"},
+            {"InvoicesOutboundOutboxFolder", "Outbox"},
+            {"InvoicesOutboundSentFolder", "Sent"},
+            {"InvoicesOutboundPendFolder", "Pend"},
+            {"InvoicesOutboundConfirmedFolder", "Confirmed"},
+            {"InvoicesInboundInboxFolder", "Inbox"},
+            {"InvoicesInboundOutboxFolder", "Outbox"},
+            {"InvoicesInboundSentFolder", "Sent"},
+            {"InvoicesInboundConfirmedFolder", "Confirmed"}
         };
 
         public static readonly Dictionary<string, Type> FolderTypeMap = new Dictionary<string, Type>()
         {
-            {"OutboundErpIfaceFolder", typeof(GeneratedDocumentModel)},
-            {"OutboundOutboxFolder", typeof(DocumentModel)},
-            {"OutboundSentFolder", typeof(DocumentModel)},
-            {"OutboundPendFolder", typeof(DocumentModel)},
-            {"OutboundConfirmedFolder", typeof(DocumentModel)},
-            {"InboundInboxFolder", typeof(InboxDocumentModel)},
-            {"InboundOutboxFolder", typeof(DocumentModel)},
-            {"InboundSentFolder", typeof(DocumentModel)},
-            {"InboundConfirmedFolder", typeof(DocumentModel)}
+            {"InvoicesOutboundErpIfaceFolder", typeof(GeneratedDocumentModel)},
+            {"InvoicesOutboundOutboxFolder", typeof(DocumentModel)},
+            {"InvoicesOutboundSentFolder", typeof(DocumentModel)},
+            {"InvoicesOutboundPendFolder", typeof(DocumentModel)},
+            {"InvoicesOutboundConfirmedFolder", typeof(DocumentModel)},
+            {"InvoicesInboundInboxFolder", typeof(InboxDocumentModel)},
+            {"InvoicesInboundOutboxFolder", typeof(DocumentModel)},
+            {"InvoicesInboundSentFolder", typeof(DocumentModel)},
+            {"InvoicesInboundConfirmedFolder", typeof(DocumentModel)}
         };
 
         static FolderManager()
         {
             InvoicesOutboundFolders = new Dictionary<string, string>
             {
-                {"OutboundErpIfaceFolder", OutboundErpIfaceFolder},
+                {"InvoicesOutboundErpIfaceFolder", InvoicesOutboundErpIfaceFolder},
                 //{"OutboundErpProcFolder", OutboundErpProcFolder},
-                {"OutboundOutboxFolder", OutboundOutboxFolder},
-                {"OutboundSentFolder", OutboundSentFolder},
-                {"OutboundPendFolder", OutboundPendFolder},
-                {"OutboundConfirmedFolder", OutboundConfirmedFolder}
+                {"InvoicesOutboundOutboxFolder", InvoicesOutboundOutboxFolder},
+                {"InvoicesOutboundSentFolder", InvoicesOutboundSentFolder},
+                {"InvoicesOutboundPendFolder", InvoicesOutboundPendFolder},
+                {"InvoicesOutboundConfirmedFolder", InvoicesOutboundConfirmedFolder}
             };
             CheckFolders(InvoicesOutboundFolders);
             InvoicesInboundFolders = new Dictionary<string, string>
             {
-                {"InboundInboxFolder", InboundInboxFolder},
-                {"InboundOutboxFolder", InboundOutboxFolder},
-                {"InboundSentFolder", InboundSentFolder},
-                {"InboundConfirmedFolder", InboundConfirmedFolder}
+                {"InvoicesInboundInboxFolder", InvoicesInboundInboxFolder},
+                {"InvoicesInboundOutboxFolder", InvoicesInboundOutboxFolder},
+                {"InvoicesInboundSentFolder", InvoicesInboundSentFolder},
+                {"InvoicesInboundConfirmedFolder", InvoicesInboundConfirmedFolder}
             };
             CheckFolders(InvoicesInboundFolders);
 
-            if (!Directory.Exists(OutboundErpProcFolder)) Directory.CreateDirectory(OutboundErpProcFolder);
+            if (!Directory.Exists(InvoicesOutboundErpProcFolder)) Directory.CreateDirectory(InvoicesOutboundErpProcFolder);
         }
 
         private static void CheckFolders(Dictionary<string,string> folders)

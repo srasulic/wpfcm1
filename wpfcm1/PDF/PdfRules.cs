@@ -9,8 +9,8 @@ namespace wpfcm1.PDF
 
         public static Dictionary<string, SignatureLocation> Map = new Dictionary<string, SignatureLocation>()
         {
-            {FolderManager.OutboundErpIfaceFolder, SignatureLocation.UpperLeft},
-            {FolderManager.InboundInboxFolder, SignatureLocation.UpperRight}
+            {FolderManager.InvoicesOutboundErpIfaceFolder, SignatureLocation.UpperLeft},
+            {FolderManager.InvoicesInboundInboxFolder, SignatureLocation.UpperRight}
         };
 
         public static Dictionary<SignatureLocation, string> SignatureName = new Dictionary<SignatureLocation, string>()
@@ -24,8 +24,8 @@ namespace wpfcm1.PDF
     {
         public static Dictionary<string, string> Map = new Dictionary<string, string>()
         {
-            {FolderManager.OutboundErpIfaceFolder, FolderManager.OutboundOutboxFolder},
-            {FolderManager.InboundInboxFolder, FolderManager.InboundOutboxFolder}
+            {FolderManager.InvoicesOutboundErpIfaceFolder, FolderManager.InvoicesOutboundOutboxFolder},
+            {FolderManager.InvoicesInboundInboxFolder, FolderManager.InvoicesInboundOutboxFolder}
         };
     }
 
@@ -33,7 +33,7 @@ namespace wpfcm1.PDF
     {
         public static Dictionary<string, string> Map = new Dictionary<string, string>()
         {
-            {FolderManager.OutboundErpIfaceFolder, FolderManager.OutboundErpProcFolder}
+            {FolderManager.InvoicesOutboundErpIfaceFolder, FolderManager.InvoicesOutboundErpProcFolder}
         };
     }
 
@@ -41,8 +41,8 @@ namespace wpfcm1.PDF
     {
         public static Dictionary<string, string> Map = new Dictionary<string, string>()
         {
-            {FolderManager.OutboundOutboxFolder, FolderManager.OutboundSentFolder},
-            {FolderManager.InboundOutboxFolder, FolderManager.InboundSentFolder}
+            {FolderManager.InvoicesOutboundOutboxFolder, FolderManager.InvoicesOutboundSentFolder},
+            {FolderManager.InvoicesInboundOutboxFolder, FolderManager.InvoicesInboundSentFolder}
         };
     }
 
@@ -52,22 +52,22 @@ namespace wpfcm1.PDF
 
         public static Dictionary<string, string> Map = new Dictionary<string, string>()
         {
-            {FolderManager.OutboundOutboxFolder, "edokument/faktura/outbound/outbox/"},
-            {FolderManager.OutboundPendFolder, "edokument/faktura/outbound/pend/"},
-            {FolderManager.OutboundConfirmedFolder, "edokument/faktura/outbound/confirmed/"},
-            {FolderManager.InboundInboxFolder, "edokument/faktura/inbound/inbox/"},
-            {FolderManager.InboundOutboxFolder, "edokument/faktura/inbound/outbox/"},
-            {FolderManager.InboundConfirmedFolder, "edokument/faktura/inbound/confirmed/"}
+            {FolderManager.InvoicesOutboundOutboxFolder, "edokument/faktura/outbound/outbox/"},
+            {FolderManager.InvoicesOutboundPendFolder, "edokument/faktura/outbound/pend/"},
+            {FolderManager.InvoicesOutboundConfirmedFolder, "edokument/faktura/outbound/confirmed/"},
+            {FolderManager.InvoicesInboundInboxFolder, "edokument/faktura/inbound/inbox/"},
+            {FolderManager.InvoicesInboundOutboxFolder, "edokument/faktura/inbound/outbox/"},
+            {FolderManager.InvoicesInboundConfirmedFolder, "edokument/faktura/inbound/confirmed/"}
         };
 
         public static Dictionary<string, TransferAction> Action = new Dictionary<string, TransferAction>()
         {
-            {FolderManager.OutboundOutboxFolder, TransferAction.Upload},
-            {FolderManager.OutboundPendFolder, TransferAction.Sync},
-            {FolderManager.OutboundConfirmedFolder, TransferAction.Sync},
-            {FolderManager.InboundInboxFolder, TransferAction.Sync},
-            {FolderManager.InboundOutboxFolder, TransferAction.Upload},
-            {FolderManager.InboundConfirmedFolder, TransferAction.Sync}
+            {FolderManager.InvoicesOutboundOutboxFolder, TransferAction.Upload},
+            {FolderManager.InvoicesOutboundPendFolder, TransferAction.Sync},
+            {FolderManager.InvoicesOutboundConfirmedFolder, TransferAction.Sync},
+            {FolderManager.InvoicesInboundInboxFolder, TransferAction.Sync},
+            {FolderManager.InvoicesInboundOutboxFolder, TransferAction.Upload},
+            {FolderManager.InvoicesInboundConfirmedFolder, TransferAction.Sync}
         };
     }
 }

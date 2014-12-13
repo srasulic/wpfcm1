@@ -159,13 +159,13 @@ namespace wpfcm1.Dialogs
                     throw;
                 }
 
-                if (sourceDir == FolderManager.InboundInboxFolder)
+                if (sourceDir == FolderManager.InvoicesInboundInboxFolder)
                 {
                     var destinationAckFilePath = Path.Combine(destinationDir, sourceFileName + ".ack");
                     File.Create(destinationAckFilePath).Dispose();
                 }
 
-                if (sourceDir == FolderManager.OutboundErpIfaceFolder)
+                if (sourceDir == FolderManager.InvoicesOutboundErpIfaceFolder)
                 {
                     var processedDir = ProcessedTransferRules.Map[sourceDir];
                     var processedFilePath = Path.Combine(processedDir, sourceFileName);
@@ -212,11 +212,11 @@ namespace wpfcm1.Dialogs
         {
             if (folder is GeneratedFolderViewModel)
             {
-                return FolderManager.OutboundErpIfaceFolder;
+                return FolderManager.InvoicesOutboundErpIfaceFolder;
             }
             if (folder is InboxFolderViewModel)
             {
-                return FolderManager.InboundInboxFolder;
+                return FolderManager.InvoicesInboundInboxFolder;
             }
             throw new ArgumentException("folder");
         }
