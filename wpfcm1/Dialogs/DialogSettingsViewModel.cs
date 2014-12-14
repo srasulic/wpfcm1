@@ -50,7 +50,16 @@ namespace wpfcm1.Dialogs
             get { return User.Default.TimestampServer; }
             set { User.Default.TimestampServer = value; }
         }
-
+        public string TimestampUserName
+        {
+            get { return User.Default.TimestampUserName; }
+            set { User.Default.TimestampUserName = value; }
+        }
+        public string TimestampPassword
+        {
+            get { return User.Default.TimestampPassword; }
+            set { User.Default.TimestampPassword = value; }
+        }
 
         public void OnClose()
         {

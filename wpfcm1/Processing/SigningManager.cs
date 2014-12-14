@@ -31,12 +31,14 @@ namespace wpfcm1.Processing
         {
             var tsServer = User.Default.TimestampServer;
             if (string.IsNullOrEmpty(tsServer)) throw new ApplicationException("Timestamp server korisnika nije unet!");
+            var tsUser = User.Default.TimestampUserName;
+            var tsPass = User.Default.TimestampPassword;
             var pib = User.Default.PIB;
             if (string.IsNullOrEmpty(pib)) throw new ApplicationException("PIB korisnika nije unet!");
 
             var crlList = await CertificateHelpers.GetCrlClentsOfflineAsync(Certificate.ChainElements);
             var ocspClient = new OcspClientBouncyCastle();
-            var tsaClient = new TSAClientBouncyCastle(tsServer, "", "", 0, DigestAlgorithms.SHA1);
+            var tsaClient = new TSAClientBouncyCastle(tsServer, tsUser, tsPass, 0, DigestAlgorithms.SHA1);
 
             var destinationDir = SigningTransferRules.LocalMap[SourceDir];
             var signatureLocation = SignatureRules.Map[SourceDir];

@@ -94,5 +94,29 @@ namespace wpfcm1.Settings {
                 this["TimestampServer"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TimestampUserName {
+            get {
+                return ((string)(this["TimestampUserName"]));
+            }
+            set {
+                this["TimestampUserName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TimestampPassword {
+            get {
+                return ((string)(this["TimestampPassword"]));
+            }
+            set {
+                this["TimestampPassword"] = value;
+            }
+        }
     }
 }
