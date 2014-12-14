@@ -7,9 +7,7 @@ namespace wpfcm1.FTP
 {
     public class FtpClient
     {
-        public string Uri { get; private set; }
-        public string User { get; private set; }
-        public string Pass { get; private set; }
+        //private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public FtpClient(string uri, string user, string pass)
         {
@@ -17,6 +15,10 @@ namespace wpfcm1.FTP
             User = user;
             Pass = pass;
         }
+
+        public string Uri { get; private set; }
+        public string User { get; private set; }
+        public string Pass { get; private set; }
 
         /// <summary>
         /// List FTP directory files
@@ -28,12 +30,12 @@ namespace wpfcm1.FTP
             var uri = string.Format("{0}/{1}", Uri, ftpDir);
 
             var result = new List<string>();
-            var ftpReq = (FtpWebRequest)WebRequest.Create(uri);
-            ftpReq.Proxy = null;
-            ftpReq.Credentials = new NetworkCredential(User, Pass);
-            ftpReq.Method = WebRequestMethods.Ftp.ListDirectory;
+            var req = (FtpWebRequest)WebRequest.Create(uri);
+            req.Proxy = null;
+            req.Credentials = new NetworkCredential(User, Pass);
+            req.Method = WebRequestMethods.Ftp.ListDirectory;
 
-            using (var resp = ftpReq.GetResponse())
+            using (var resp = req.GetResponse())
             using (var reader = new StreamReader(resp.GetResponseStream()))
             {
                 while (reader.Peek() >= 0)
