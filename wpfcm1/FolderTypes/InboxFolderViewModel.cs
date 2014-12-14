@@ -8,6 +8,7 @@ using wpfcm1.Dialogs;
 using wpfcm1.Events;
 using wpfcm1.Model;
 using wpfcm1.PDF;
+using wpfcm1.Preview;
 
 namespace wpfcm1.FolderTypes
 {
@@ -77,6 +78,8 @@ namespace wpfcm1.FolderTypes
                 var validDocuments = GetDocumentsForSigning();
                 if (!validDocuments.Any()) return;
 
+                //TODO: ovo mora drugacije
+                _events.PublishOnUIThread(new MessageShowPdf(PreviewViewModel.Empty));
                 var result = _windowManager.ShowDialog(new DialogSignViewModel(_certificate, this));
             }
         }

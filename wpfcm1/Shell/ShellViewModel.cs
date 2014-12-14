@@ -7,6 +7,7 @@ using wpfcm1.Dialogs;
 using wpfcm1.Events;
 using wpfcm1.FolderGroups;
 using wpfcm1.FolderTypes;
+using wpfcm1.Preview;
 using wpfcm1.Toolbar;
 
 namespace wpfcm1.Shell
@@ -102,6 +103,9 @@ namespace wpfcm1.Shell
                 {FolderManager.IosInboundOutboxFolder, IosInboundVM.FolderVMs[1]},
                 {FolderManager.IosInboundConfirmedFolder, IosInboundVM.FolderVMs[3]}
             };
+
+            //TODO: ovo mora drugacije
+            _events.PublishOnUIThread(new MessageShowPdf(PreviewViewModel.Empty));
             var result = _windowManager.ShowDialog(new DialogSyncViewModel(foldersToSync));
         }
 
