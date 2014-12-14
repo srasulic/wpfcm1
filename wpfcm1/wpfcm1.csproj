@@ -104,6 +104,7 @@
     <Compile Include="PDF\PdfRules.cs" />
     <Compile Include="PDF\PdfSign.cs" />
     <Compile Include="Processing\SigningManager.cs" />
+    <Compile Include="Processing\SyncManager.cs" />
     <Compile Include="Settings\Folders.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
