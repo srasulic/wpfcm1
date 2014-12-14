@@ -104,6 +104,7 @@
     <Compile Include="PDF\PdfHelpers.cs" />
     <Compile Include="PDF\PdfRules.cs" />
     <Compile Include="PDF\PdfSign.cs" />
+    <Compile Include="Processing\SigningManager.cs" />
     <Compile Include="Preview\PreviewView.xaml.cs">
       <DependentUpon>PreviewView.xaml</DependentUpon>
     </Compile>
