@@ -32,10 +32,10 @@ namespace wpfcm1.Shell
             CertVM = certs;
 
             HomeVM = new HomeViewModel(this);
-            OutboundVM = new FolderGroupViewModel(FolderManager.InvoicesOutboundFolders, "Outbound", events, _windowManager);
-            InboundVM = new FolderGroupViewModel(FolderManager.InvoicesInboundFolders, "Inbound", events, _windowManager);
-            IosOutboundVM = new FolderGroupViewModel(FolderManager.IosOutboundFolders, "IOS Outbound", events, _windowManager);
-            IosInboundVM = new FolderGroupViewModel(FolderManager.IosInboundFolders, "IOS Inbound", events, _windowManager);
+            OutboundVM = new FolderGroupViewModel(FolderManager.InvoicesOutboundFolders, "Izlazne Fakture", events, _windowManager);
+            InboundVM = new FolderGroupViewModel(FolderManager.InvoicesInboundFolders, "Ulazne Fakture", events, _windowManager);
+            IosOutboundVM = new FolderGroupViewModel(FolderManager.IosOutboundFolders, "Izlazni IOS", events, _windowManager);
+            IosInboundVM = new FolderGroupViewModel(FolderManager.IosInboundFolders, "Ulazni IOS", events, _windowManager);
 
             ShowHome();
         }
