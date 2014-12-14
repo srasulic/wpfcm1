@@ -16,6 +16,7 @@ namespace wpfcm1.Dialogs
 {
     public class DialogSyncViewModel : Screen
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly Dictionary<string, FolderViewModel> _folders;
         private readonly Progress<string> _reporter;
         private CancellationTokenSource _cancellation;
@@ -69,25 +70,31 @@ namespace wpfcm1.Dialogs
             {
                 _cancellation = new CancellationTokenSource();
                 InProgress = true;
+                Log.Info("Ftp sync started...");
                 await SyncAllAsync(_reporter, _cancellation.Token).WithCancellation(_cancellation.Token);
+                Log.Info("Ftp sync finished...");
             }
             catch (OperationCanceledException ex)
             {
+                Log.Error("Signing cancelled...", ex);
                 (_reporter as IProgress<string>).Report("Operation cancelled");
                 (_reporter as IProgress<string>).Report(ex.Message);
             }
             catch (WebException ex)
             {
+                Log.Error("Network error..", ex); 
                 (_reporter as IProgress<string>).Report("Network error");
                 (_reporter as IProgress<string>).Report(ex.Message);
             }
             catch (UriFormatException ex)
             {
+                Log.Error("Cryptographic error...", ex);
                 (_reporter as IProgress<string>).Report("Cryptographic error.");
                 (_reporter as IProgress<string>).Report(ex.Message);
             }
             catch (Exception ex)
             {
+                Log.Error("Error while signing...", ex);
                 (_reporter as IProgress<string>).Report(ex.Message);
             }
             finally
@@ -114,6 +121,7 @@ namespace wpfcm1.Dialogs
                 var documents = new List<DocumentModel>(folder.Value.Documents); //shallow copy, cannot iterate collection that is going to be modified
                 var ftpAction = FtpTransferRules.Action[sourceDir];
                 var syncMgr = new SyncManager();
+                Log.Info(string.Format("Syncing {0} with {1}", sourceDir, destinationDir));
                 switch (ftpAction)
                 {
                     case FtpTransferRules.TransferAction.Upload:

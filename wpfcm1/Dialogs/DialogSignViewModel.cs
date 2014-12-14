@@ -14,6 +14,7 @@ namespace wpfcm1.Dialogs
 {
     public class DialogSignViewModel : Screen
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly CertificateModel _certificate;
         private readonly FolderViewModel _folder;
         private readonly Progress<string> _reporter;
@@ -80,29 +81,36 @@ namespace wpfcm1.Dialogs
                 var documents = GetDocumentsForSigning(_folder);
                 var sourceDir = _folder.FolderPath;
                 var signingMgr = new SigningManager(_certificate, documents, sourceDir);
+                Log.Info("Signing started...");
                 await signingMgr.SignAsync(Reason, _reporter, _cancellation.Token).WithCancellation(_cancellation.Token);
+                Log.Info("Signing finished...");
             }
             catch (OperationCanceledException ex)
             {
+                Log.Error("Signing cancelled...", ex);
                 (_reporter as IProgress<string>).Report("Operation cancelled");
                 (_reporter as IProgress<string>).Report(ex.Message);
             }
             catch (WebException ex)
             {
+                Log.Error("Network error..", ex); 
                 (_reporter as IProgress<string>).Report("Network error");
                 (_reporter as IProgress<string>).Report(ex.Message);
             }
             catch (CryptographicException ex)
             {
-                (_reporter as IProgress<string>).Report("Cryptographic error.");
+                Log.Error("Cryptographic error...", ex);
+                (_reporter as IProgress<string>).Report("Cryptographic error");
                 (_reporter as IProgress<string>).Report(ex.Message);
             }
             catch (COMException ex)
             {
+                Log.Error("Error while signing...", ex);
                 (_reporter as IProgress<string>).Report(ex.Message); 
             }
             catch (Exception ex)
             {
+                Log.Error("Error while signing...", ex);
                 (_reporter as IProgress<string>).Report(ex.Message);
             }
             finally

@@ -12,6 +12,8 @@ namespace wpfcm1.Processing
 {
     public class SyncManager
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public async Task Upload(
             FtpClient ftpClient, IEnumerable<DocumentModel> documents, string sourceDir, string destinationDir,
             IProgress<string> reporter = null, CancellationToken token = default(CancellationToken))
@@ -24,6 +26,7 @@ namespace wpfcm1.Processing
 
                 token.ThrowIfCancellationRequested();
                 if (reporter != null) reporter.Report(string.Format("Uploading: {0}", sourceFileName));
+                Log.Info(string.Format("Uploading {0}", sourceFilePath));
 
                 await ftpClient.UploadFileAsync(sourceFilePath, destinationDir, tempFileName);
 
@@ -33,6 +36,7 @@ namespace wpfcm1.Processing
                 ftpClient.RenameFile(destinationFtpUri, sourceFileName);
 
                 var destinationFilePath = Path.Combine(FtpTransferRules.LocalMap[sourceDir], Path.GetFileName(sourceFileName));
+                Log.Info(string.Format("Moving to {0}", destinationFilePath));
                 File.Move(sourceFilePath, destinationFilePath);
             }
         }
@@ -41,6 +45,7 @@ namespace wpfcm1.Processing
             FtpClient ftpClient, IEnumerable<DocumentModel> documents, string sourceDir, string destinationDir, bool deleteLocal,
             IProgress<string> reporter = null, CancellationToken token = default(CancellationToken))
         {
+            Log.Info(string.Format("Listing directory {0}", destinationDir));
             var localFileNames = documents.Select(di => di.DocumentInfo.Name);
             var remoteFileNames = await ftpClient.ListDirectoryAsync(destinationDir);
 
@@ -53,6 +58,7 @@ namespace wpfcm1.Processing
             {
                 var filePath = Path.Combine(sourceDir, fileName);
                 if (reporter != null) reporter.Report(string.Format("Download: {0}", fileName));
+                Log.Info(string.Format("Downloading {0}", filePath));
 
                 token.ThrowIfCancellationRequested();
                 await ftpClient.DownloadFileAsync(destinationDir, fileName, filePath);
@@ -64,6 +70,7 @@ namespace wpfcm1.Processing
                 {
                     var filePath = Path.Combine(sourceDir, fileName);
                     if (reporter != null) reporter.Report(string.Format("Delete: {0}", fileName));
+                    Log.Info(string.Format("Deleting {0}", filePath));
                     File.Delete(filePath);
                 }
             }

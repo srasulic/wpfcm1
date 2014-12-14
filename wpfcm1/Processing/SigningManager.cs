@@ -14,6 +14,8 @@ namespace wpfcm1.Processing
 {
     public class SigningManager
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public SigningManager(CertificateModel certificate, IList<DocumentModel> documents, string sourceDir)
         {
             Certificate = certificate;
@@ -48,7 +50,8 @@ namespace wpfcm1.Processing
                 var destinationFileName = CreateSignedPdfFileName(document, User.Default.PIB);
                 var destinationFilePath = Path.Combine(destinationDir, destinationFileName);
 
-                if (reporter != null) reporter.Report(string.Format("Signing: {0}", sourceFileName));
+                if (reporter != null) reporter.Report(string.Format("Potpisivanje: {0}", sourceFileName));
+                Log.Info(string.Format("Signing src file: {0}", sourceFilePath));
 
                 try
                 {
@@ -83,18 +86,22 @@ namespace wpfcm1.Processing
                 {
                     case SigningTransferRules.FinalAction.Acknowledge:
                         var destinationAckFilePath = Path.Combine(destinationDir, sourceFileName + ".ack");
+                        if (reporter != null) reporter.Report(string.Format("Potvrdjen kao: {0}", destinationAckFilePath));
+                        Log.Info(string.Format("Acknowledged: {0}", destinationAckFilePath));
                         File.Create(destinationAckFilePath).Dispose();
                         break;
                     case SigningTransferRules.FinalAction.Store:
                         var processedDir = SigningTransferRules.ProcessedMap[SourceDir];
                         var processedFilePath = Path.Combine(processedDir, sourceFileName);
+                        Log.Info(string.Format("Copying: {0}", processedFilePath));
                         File.Copy(sourceFilePath, processedFilePath);
                         break;
                 }
 
+                Log.Info(string.Format("Deleting: {0}", sourceFilePath));
                 File.Delete(sourceFilePath);
 
-                if (reporter != null) reporter.Report(string.Format("Signed:  {0}", destinationFileName));
+                if (reporter != null) reporter.Report(string.Format("Potpisan kao:  {0}", destinationFileName));
             }
             if (reporter != null) reporter.Report("OK");
         }
