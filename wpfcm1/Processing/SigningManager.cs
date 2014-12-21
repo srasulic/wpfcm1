@@ -70,16 +70,10 @@ namespace wpfcm1.Processing
                     );
                     token.ThrowIfCancellationRequested();
                 }
-                catch (OperationCanceledException)
+                catch (Exception)
                 {
                     if (File.Exists(destinationFilePath))
-                        File.Delete(destinationFilePath); //itext maybe created dest file
-                    throw;
-                }
-                catch (CryptographicException)
-                {
-                    if (File.Exists(destinationFilePath))
-                        File.Delete(destinationFilePath); //itext already created dest file
+                        File.Delete(destinationFilePath); // dest file already created
                     throw;
                 }
 
