@@ -6,6 +6,7 @@
     WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
     BorderBrush="{DynamicResource AccentColorBrush}"
     BorderThickness="1"
+                 Loaded="DialogSettingsView_OnLoaded"
     Width="610" Height="377"
     >
     <Grid Margin="5">
@@ -34,17 +35,18 @@
         <TextBlock Grid.Row="6" Grid.Column="0" Text="Timestamp server" VerticalAlignment="Center"/>
         <TextBlock Grid.Row="7" Grid.Column="0" Text="Timestamp username" VerticalAlignment="Center"/>
         <TextBlock Grid.Row="8" Grid.Column="0" Text="Timestamp password" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="0" Grid.Column="1" x:Name="RootFolder"/>
-        <TextBox Grid.Row="1" Grid.Column="1" x:Name="UserName"/>
-        <TextBox Grid.Row="2" Grid.Column="1" x:Name="PIB"/>
-        <TextBox Grid.Row="3" Grid.Column="1" x:Name="FtpServer"/>
-        <TextBox Grid.Row="4" Grid.Column="1" x:Name="FtpUserName"/>
-        <TextBox Grid.Row="5" Grid.Column="1" x:Name="FtpPassword"/>
-        <TextBox Grid.Row="6" Grid.Column="1" x:Name="TimestampServer"/>
-        <TextBox Grid.Row="7" Grid.Column="1" x:Name="TimestampUserName"/>
-        <TextBox Grid.Row="8" Grid.Column="1" x:Name="TimestampPassword"/>
-        <Button Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" 
-                Width="96" Height="32" Margin="3,3,0,3"
-                x:Name="OnClose" Content="OK"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=UserTemp.RootFolder, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=UserTemp.UserName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=UserTemp.PIB, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=UserTemp.FtpServer, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Path=UserTemp.FtpUserName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <PasswordBox Name="passwdBox" Grid.Row="5" Grid.Column="1" PasswordChanged="PasswordBox_OnPasswordChanged"/>
+        <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Path=UserTemp.TimestampServer, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Path=UserTemp.TimestampUserName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding Path=UserTemp.TimestampPassword, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <StackPanel Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <Button Content="OK" Width="96" Height="32" x:Name="OnClose" Margin="3"/>
+            <Button Content="Cancel" Width="96" Height="32" x:Name="OnCancel" Margin="3,3,0,3"/>
+        </StackPanel>
     </Grid>
 </mah:MetroWindow>

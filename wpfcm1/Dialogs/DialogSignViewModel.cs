@@ -40,7 +40,6 @@ namespace wpfcm1.Dialogs
         }
 
         private bool _inProgress;
-
         public bool InProgress
         {
             get { return _inProgress; }
