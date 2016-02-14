@@ -59,7 +59,7 @@ namespace wpfcm1.PDF
             var sigName = SignatureRules.SignatureName[sigLocation]; 
             appearance.SetVisibleSignature(rect, 1, sigName);
 
-            IExternalSignature pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA256);
+            IExternalSignature pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA1);
             MakeSignature.SignDetached(appearance, pks, chain, crlList, ocspClient, tsaClient, 0, CryptoStandard.CMS);
         }
 
