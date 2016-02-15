@@ -16,6 +16,8 @@ namespace wpfcm1.Dialogs
         private string _timestampServer;
         private string _timestampUserName;
         private string _timestampPassword;
+        private float _llxPib, _llyPib, _urxPib, _uryPib;
+        private float _llxNo, _llyNo, _urxNo, _uryNo;
 
         public UserModel()
         {
@@ -26,11 +28,19 @@ namespace wpfcm1.Dialogs
             UserName = user.UserName;
             PIB = user.PIB;
             FtpServer = user.FtpServer;
-            FtpUserName = user.UserName;
+            FtpUserName = user.FtpUserName;
             FtpPassword = user.FtpPassword;
             TimestampServer = user.TimestampServer;
             TimestampUserName = user.TimestampUserName;
             TimestampPassword = user.TimestampPassword;
+            LlxPib = user.LlxPib;
+            LlyPib = user.LlyPib;
+            UrxPib = user.UrxPib;
+            UryPib = user.UryPib;
+            LlxNo = user.LlxNo;
+            LlyNo = user.LlyNo;
+            UrxNo = user.UrxNo;
+            UryNo = user.UryNo;
         }
 
         public string RootFolder
@@ -132,6 +142,54 @@ namespace wpfcm1.Dialogs
             }
         }
 
+        public float LlxPib
+        {
+            get { return _llxPib; }
+            set { _llxPib = value; NotifyOfPropertyChange(() => LlxPib); }
+        }
+
+        public float LlyPib
+        {
+            get { return _llyPib; }
+            set { _llyPib = value; NotifyOfPropertyChange(() => LlyPib); }
+        }
+
+        public float UrxPib
+        {
+            get { return _urxPib; }
+            set { _urxPib = value; NotifyOfPropertyChange(() => UrxPib); }
+        }
+
+        public float UryPib
+        {
+            get { return _uryPib; }
+            set { _uryPib = value; NotifyOfPropertyChange(() => UryPib); }
+        }
+
+        public float LlxNo
+        {
+            get { return _llxNo; }
+            set { _llxNo = value; NotifyOfPropertyChange(() => LlxNo); }
+        }
+
+        public float LlyNo
+        {
+            get { return _llyNo; }
+            set { _llyNo = value; NotifyOfPropertyChange(() => LlyNo); }
+        }
+
+        public float UrxNo
+        {
+            get { return _urxNo; }
+            set { _urxNo = value; NotifyOfPropertyChange(() => UrxNo); }
+        }
+
+        public float UryNo
+        {
+            get { return _uryNo; }
+            set { _uryNo = value; NotifyOfPropertyChange(() => UryNo); }
+        }
+
         public string this[string columnName]
         {
             get
@@ -191,6 +249,14 @@ namespace wpfcm1.Dialogs
             User.Default.TimestampServer = UserTemp.TimestampServer;
             User.Default.TimestampUserName = UserTemp.TimestampUserName;
             User.Default.TimestampPassword = UserTemp.TimestampPassword;
+            User.Default.LlxPib = UserTemp.LlxPib;
+            User.Default.LlyPib = UserTemp.LlyPib;
+            User.Default.UrxPib = UserTemp.UrxPib;
+            User.Default.UryPib = UserTemp.UryPib;
+            User.Default.LlxNo = UserTemp.LlxNo;
+            User.Default.LlyNo = UserTemp.LlyNo;
+            User.Default.UrxNo = UserTemp.UrxNo;
+            User.Default.UryNo = UserTemp.UryNo;
         }
     }
 }

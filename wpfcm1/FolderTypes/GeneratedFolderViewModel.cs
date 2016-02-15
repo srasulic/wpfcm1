@@ -97,17 +97,8 @@ namespace wpfcm1.FolderTypes
             foreach (var document in documents)
             {
                 var matchResults = await PdfHelpers.ExtractTextAsync(document.DocumentPath);
-                string pibMatch = "";
-                foreach (var match in matchResults.Item1)
-                {
-                    if (match.ToString() == pib)
-                        continue;
-                    pibMatch = match.ToString();
-                    break;
-                }
-                document.Pib = pibMatch;
-                document.InvoiceNo = matchResults.Item2.Count > 0 ? matchResults.Item2[0].Value : "";
-                document.InvoiceNo = document.InvoiceNo.Replace('/', '-');
+                document.Pib = matchResults.Item1;
+                document.InvoiceNo = matchResults.Item2;
                 document.Processed = true;
             }
         }
