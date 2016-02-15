@@ -227,8 +227,6 @@ namespace wpfcm1.Dialogs
 
         public void OnClose()
         {
-            //User.Default.Save();
-            //Folders.Default.Save();
             SaveUser();
             TryClose(true);
         }
@@ -257,6 +255,9 @@ namespace wpfcm1.Dialogs
             User.Default.LlyNo = UserTemp.LlyNo;
             User.Default.UrxNo = UserTemp.UrxNo;
             User.Default.UryNo = UserTemp.UryNo;
+
+            User.Default.Save();
+            Folders.Default.Save();
         }
     }
 }

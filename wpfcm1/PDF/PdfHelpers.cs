@@ -6,57 +6,34 @@ using Org.BouncyCastle.X509;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using iTextSharp.text;
 using wpfcm1.Certificates;
+using wpfcm1.Settings;
 using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 
 namespace wpfcm1.PDF
 {
     public class PdfHelpers
     {
-        //public static Tuple<MatchCollection, MatchCollection> ExtractText(string path)
-        //{
-        //    using (var reader = new PdfReader(path))
-        //    {
-        //        var parser = new PdfReaderContentParser(reader);
-
-        //        ITextExtractionStrategy strategy = parser.ProcessContent(1, new LocationTextExtractionStrategy());
-        //        var text = strategy.GetResultantText();
-
-        //        var regexPib = new Regex(@"\b\d{9}\b", RegexOptions.Multiline);
-        //        var matchesPib = regexPib.Matches(text);
-        //        var regexNo = new Regex(@"\b(\w*(-\w*)*(\/\d+))\b", RegexOptions.Multiline);
-        //        var matchesNo = regexNo.Matches(text);
-
-        //        return Tuple.Create(matchesPib, matchesNo);
-        //    }
-        //}
-
-        //public static Task<Tuple<MatchCollection, MatchCollection>> ExtractTextAsync(string path)
-        //{
-        //    return Task.Run(() => ExtractText(path));
-        //}
-
         public static Tuple<string, string> ExtractText(string path)
         {
             using (var reader = new PdfReader(path))
             {
-                Rectangle rectPib = new Rectangle(240, 615, 295, 630)
+                Rectangle rectPib = new Rectangle(User.Default.LlxPib, User.Default.LlyPib, User.Default.UrxPib, User.Default.UryPib)
                 {
                     Border = Rectangle.BOX,
                     BorderColor = BaseColor.RED,
                     BorderWidth = 1
                 };
 
-                //Rectangle rectNo = new Rectangle(476, 680, 570, 735)
-                Rectangle rectNo = new Rectangle(526, 680, 570, 705)
+                Rectangle rectNo = new Rectangle(User.Default.LlxNo, User.Default.LlyNo, User.Default.UrxNo, User.Default.UryNo)
                 {
                     Border = Rectangle.BOX,
                     BorderColor = BaseColor.RED,
                     BorderWidth = 1
                 };
+
                 RenderFilter filterPib = new RegionTextRenderFilter(rectPib);
                 ITextExtractionStrategy strategyPib = new FilteredTextRenderListener(new LocationTextExtractionStrategy(), filterPib);
 
