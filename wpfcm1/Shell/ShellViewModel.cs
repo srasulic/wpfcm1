@@ -36,6 +36,10 @@ namespace wpfcm1.Shell
             InboundVM = new FolderGroupViewModel(FolderManager.InvoicesInboundFolders, "Ulazne Fakture", events, _windowManager);
             IosOutboundVM = new FolderGroupViewModel(FolderManager.IosOutboundFolders, "Izlazni IOS", events, _windowManager);
             IosInboundVM = new FolderGroupViewModel(FolderManager.IosInboundFolders, "Ulazni IOS", events, _windowManager);
+            KpOutboundVM = new FolderGroupViewModel(FolderManager.KpOutboundFolders, "Izlazna KP", events, _windowManager);
+            KpInboundVM = new FolderGroupViewModel(FolderManager.KpInboundFolders, "Ulazna KP", events, _windowManager);
+            OtherOutboundVM = new FolderGroupViewModel(FolderManager.OtherOutboundFolders, "Ostali Izlazni", events, _windowManager);
+            OtherInboundVM = new FolderGroupViewModel(FolderManager.OtherInboundFolders, "Ostali Ulazni", events, _windowManager);
 
             ShowHome();
         }
@@ -44,11 +48,15 @@ namespace wpfcm1.Shell
         public ToolBarViewModel ToolBar { get; set; }
         public CertificatesViewModel CertVM { get; private set; }
         //Screens:
-        public HomeViewModel HomeVM { get; private set; }
-        public FolderGroupViewModel OutboundVM { get; private set; }
-        public FolderGroupViewModel InboundVM { get; private set; }
-        public FolderGroupViewModel IosOutboundVM { get; private set; }
-        public FolderGroupViewModel IosInboundVM { get; private set; }
+        public HomeViewModel HomeVM { get; }
+        public FolderGroupViewModel OutboundVM { get; }
+        public FolderGroupViewModel InboundVM { get; }
+        public FolderGroupViewModel IosOutboundVM { get; }
+        public FolderGroupViewModel IosInboundVM { get; }
+        public FolderGroupViewModel KpOutboundVM { get; }
+        public FolderGroupViewModel KpInboundVM { get; }
+        public FolderGroupViewModel OtherOutboundVM { get; }
+        public FolderGroupViewModel OtherInboundVM { get; }
 
         public void ShowHome()
         {
@@ -76,6 +84,26 @@ namespace wpfcm1.Shell
             ActivateItem(IosInboundVM);
         }
 
+        public void ShowKpOutbound()
+        {
+            ActivateItem(KpOutboundVM);
+        }
+
+        public void ShowKpInbound()
+        {
+            ActivateItem(KpInboundVM);
+        }
+
+        public void ShowOtherOutbound()
+        {
+            ActivateItem(OtherOutboundVM);
+        }
+
+        public void ShowOtherInbound()
+        {
+            ActivateItem(OtherInboundVM);
+        }
+
         public void ShowSettings()
         {
             var result = _windowManager.ShowDialog(new DialogSettingsViewModel());
@@ -101,7 +129,19 @@ namespace wpfcm1.Shell
                 {FolderManager.IosOutboundConfirmedFolder, IosOutboundVM.FolderVMs[4]},
                 {FolderManager.IosInboundInboxFolder, IosInboundVM.FolderVMs[0]},
                 {FolderManager.IosInboundOutboxFolder, IosInboundVM.FolderVMs[1]},
-                {FolderManager.IosInboundConfirmedFolder, IosInboundVM.FolderVMs[3]}
+                {FolderManager.IosInboundConfirmedFolder, IosInboundVM.FolderVMs[3]},
+                {FolderManager.KpOutboundOutboxFolder, KpOutboundVM.FolderVMs[1]},
+                {FolderManager.KpOutboundPendFolder, KpOutboundVM.FolderVMs[3]},
+                {FolderManager.KpOutboundConfirmedFolder, KpOutboundVM.FolderVMs[4]},
+                {FolderManager.KpInboundInboxFolder, KpInboundVM.FolderVMs[0]},
+                {FolderManager.KpInboundOutboxFolder, KpInboundVM.FolderVMs[1]},
+                {FolderManager.KpInboundConfirmedFolder, KpInboundVM.FolderVMs[3]},
+                {FolderManager.OtherOutboundOutboxFolder, OtherOutboundVM.FolderVMs[1]},
+                {FolderManager.OtherOutboundPendFolder, OtherOutboundVM.FolderVMs[3]},
+                {FolderManager.OtherOutboundConfirmedFolder, OtherOutboundVM.FolderVMs[4]},
+                {FolderManager.OtherInboundInboxFolder, OtherInboundVM.FolderVMs[0]},
+                {FolderManager.OtherInboundOutboxFolder, OtherInboundVM.FolderVMs[1]},
+                {FolderManager.OtherInboundConfirmedFolder, OtherInboundVM.FolderVMs[3]}
             };
 
             //TODO: ovo mora drugacije

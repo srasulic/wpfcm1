@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:cal="http://www.caliburnproject.org"
-             WindowStartupLocation="CenterScreen"
+             WindowStartupLocation="CenterScreen" 
+             Icon="../Media/SignatureShow.ico" ShowIconOnTitleBar="False"
              Width="987" Height="610"
              TitleCaps="False">
     
