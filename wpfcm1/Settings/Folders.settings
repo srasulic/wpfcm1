@@ -1,0 +1,51 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="wpfcm1.Settings" GeneratedClassName="Folders">
+  <Profiles />
+  <Settings>
+    <Setting Name="RootFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">c:\eDokument</Value>
+    </Setting>
+    <Setting Name="OutboundErpIfaceFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ERP_outbound_interface</Value>
+    </Setting>
+    <Setting Name="OutboundErpProcFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ERP_outbound_interface\obradjeno</Value>
+    </Setting>
+    <Setting Name="OutboundOutboxFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Outbound\outbox</Value>
+    </Setting>
+    <Setting Name="OutboundSentFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Outbound\local_sent</Value>
+    </Setting>
+    <Setting Name="OutboundPendFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Outbound\pend</Value>
+    </Setting>
+    <Setting Name="OutboundConfirmedFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Outbound\confirmed</Value>
+    </Setting>
+    <Setting Name="InboundInboxFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Inbound\inbox</Value>
+    </Setting>
+    <Setting Name="InboundOutboxFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Inbound\outbox</Value>
+    </Setting>
+    <Setting Name="InboundSentFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Inbound\local_sent</Value>
+    </Setting>
+    <Setting Name="InboundConfirmedFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Inbound\confirmed</Value>
+    </Setting>
+    <Setting Name="InvoicesSubfolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Faktura</Value>
+    </Setting>
+    <Setting Name="IosSubfolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">IOS</Value>
+    </Setting>
+    <Setting Name="KpSubfolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">KP</Value>
+    </Setting>
+    <Setting Name="OtherSubfolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Ostali</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

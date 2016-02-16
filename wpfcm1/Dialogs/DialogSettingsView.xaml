@@ -1,0 +1,100 @@
+﻿<mah:MetroWindow x:Class="wpfcm1.Dialogs.DialogSettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+    ShowCloseButton="False" ShowMinButton="False" ShowMaxRestoreButton="False"
+    WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+    BorderBrush="{DynamicResource AccentColorBrush}"
+    BorderThickness="1"
+    Loaded="DialogSettingsView_OnLoaded"
+    Width="754" Height="466"
+    >
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.4*"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Root folder" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Name" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="PIB" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="3" Grid.Column="0"  Text="FTP server address" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="FTP username" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="FTP password" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="Timestamp server" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="7" Grid.Column="0" Text="Timestamp username" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="8" Grid.Column="0" Text="Timestamp password" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="9" Grid.Column="0" Text="koordinate PIB-a" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="10" Grid.Column="0" Text="Koordinate otpremnice" VerticalAlignment="Center"/>
+        
+        <TextBox Grid.Row="0" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.RootFolder, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.UserName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.PIB, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.FtpServer, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="4" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.FtpUserName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <PasswordBox Name="passwdBox" Grid.Row="5" Grid.Column="1" Margin="3" PasswordChanged="PasswordBox_OnPasswordChanged"/>
+        <TextBox Grid.Row="6" Grid.Column="1"  Margin="3" Text="{Binding Path=UserTemp.TimestampServer, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="7" Grid.Column="1"  Margin="3" Text="{Binding Path=UserTemp.TimestampUserName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="8" Grid.Column="1"  Margin="3" Text="{Binding Path=UserTemp.TimestampPassword, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        
+        <Grid Grid.Row="9" Grid.Column="1" Margin="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="llx:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBox Grid.Column="1" VerticalAlignment="Center" Text="{Binding Path=UserTemp.LlxPib, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Column="2" Text="lly:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBox Grid.Column="3" VerticalAlignment="Center" Text="{Binding Path=UserTemp.LlyPib, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Column="4" Text="urx:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBox Grid.Column="5" VerticalAlignment="Center" Text="{Binding Path=UserTemp.UrxPib, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Column="6" Text="ury:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBox Grid.Column="7" VerticalAlignment="Center" Text="{Binding Path=UserTemp.UryPib, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
+
+        <Grid Grid.Row="10" Grid.Column="1" Margin="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="llx:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBox Grid.Column="1" VerticalAlignment="Center" Text="{Binding Path=UserTemp.LlxNo, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Column="2" Text="lly:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBox Grid.Column="3" VerticalAlignment="Center" Text="{Binding Path=UserTemp.LlyNo, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Column="4" Text="urx:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBox Grid.Column="5" VerticalAlignment="Center" Text="{Binding Path=UserTemp.UrxNo, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Column="6" Text="ury:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBox Grid.Column="7" VerticalAlignment="Center" Text="{Binding Path=UserTemp.UryNo, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
+
+        <StackPanel Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <Button Content="OK" Width="96" Height="32" x:Name="OnClose" Margin="3"/>
+            <Button Content="Cancel" Width="96" Height="32" x:Name="OnCancel" Margin="3,3,0,3"/>
+        </StackPanel>
+    </Grid>
+</mah:MetroWindow>

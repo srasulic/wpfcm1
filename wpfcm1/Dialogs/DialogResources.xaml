@@ -1,0 +1,17 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Templejt koji na dnu sadrzi ok i cancel button -->
+    <ControlTemplate x:Key="Decorator" TargetType="ContentControl">
+        <Grid Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <ContentPresenter />
+            <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+                <Button Content="Close" Width="96" Height="32" x:Name="OnClose" Margin="3"/>
+                <Button Content="Cancel" Width="96" Height="32" x:Name="OnCancel" Margin="3,3,0,3"/>
+            </StackPanel>
+        </Grid>
+    </ControlTemplate>
+</ResourceDictionary>

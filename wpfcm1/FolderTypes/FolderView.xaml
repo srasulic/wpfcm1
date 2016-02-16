@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="wpfcm1.FolderTypes.FolderView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:cal="http://www.caliburnproject.org">
+    <Grid>
+        <DataGrid x:Name="Documents"  cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChanged($eventArgs)]"
+                  AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Path=DocumentInfo.Name}"/>
+                <DataGridTextColumn Header="Date modified" Binding="{Binding Path=DocumentInfo.LastWriteTime}" />
+                <DataGridTextColumn Header="Size" Binding="{Binding Path=DocumentInfo.Length}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

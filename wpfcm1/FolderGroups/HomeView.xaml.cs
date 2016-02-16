@@ -1,10 +1,10 @@
 ﻿using System.Windows.Controls;
 
-namespace wpfcm1.Views
+namespace wpfcm1.FolderGroups
 {
-    public partial class ShellView : UserControl
+    public partial class HomeView : UserControl
     {
-        public ShellView()
+        public HomeView()
         {
             InitializeComponent();
         }
