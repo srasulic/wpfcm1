@@ -212,7 +212,7 @@ namespace wpfcm1.Dialogs
             }
         }
 
-        public string Error { get; }
+        public string Error { get; set; }
     }
 
     public class DialogSettingsViewModel : Screen

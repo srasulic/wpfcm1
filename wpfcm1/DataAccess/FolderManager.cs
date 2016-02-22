@@ -57,14 +57,14 @@ namespace wpfcm1.DataAccess
         public static readonly string OtherInboundConfirmedFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtherSubfolder, Folders.Default.InboundConfirmedFolder);
 
         //grupe foldera
-        public static Dictionary<string, string> InvoicesOutboundFolders { get; } 
-        public static Dictionary<string, string> InvoicesInboundFolders { get; }
-        public static Dictionary<string, string> IosOutboundFolders { get; } 
-        public static Dictionary<string, string> IosInboundFolders { get; }
-        public static Dictionary<string, string> KpOutboundFolders { get; }
-        public static Dictionary<string, string> KpInboundFolders { get; }
-        public static Dictionary<string, string> OtherOutboundFolders { get; }
-        public static Dictionary<string, string> OtherInboundFolders { get; }
+        public static Dictionary<string, string> InvoicesOutboundFolders { get; set; }
+        public static Dictionary<string, string> InvoicesInboundFolders { get; set; }
+        public static Dictionary<string, string> IosOutboundFolders { get; set; }
+        public static Dictionary<string, string> IosInboundFolders { get; set; }
+        public static Dictionary<string, string> KpOutboundFolders { get; set; }
+        public static Dictionary<string, string> KpInboundFolders { get; set; }
+        public static Dictionary<string, string> OtherOutboundFolders { get; set; }
+        public static Dictionary<string, string> OtherInboundFolders { get; set; }
 
         public static Dictionary<string, string> FolderNameMap = new Dictionary<string, string>
         {

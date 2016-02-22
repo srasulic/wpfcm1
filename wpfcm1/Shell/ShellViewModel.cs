@@ -48,15 +48,15 @@ namespace wpfcm1.Shell
         public ToolBarViewModel ToolBar { get; set; }
         public CertificatesViewModel CertVM { get; private set; }
         //Screens:
-        public HomeViewModel HomeVM { get; }
-        public FolderGroupViewModel OutboundVM { get; }
-        public FolderGroupViewModel InboundVM { get; }
-        public FolderGroupViewModel IosOutboundVM { get; }
-        public FolderGroupViewModel IosInboundVM { get; }
-        public FolderGroupViewModel KpOutboundVM { get; }
-        public FolderGroupViewModel KpInboundVM { get; }
-        public FolderGroupViewModel OtherOutboundVM { get; }
-        public FolderGroupViewModel OtherInboundVM { get; }
+        public HomeViewModel HomeVM { get; set; }
+        public FolderGroupViewModel OutboundVM { get; set; }
+        public FolderGroupViewModel InboundVM { get; set; }
+        public FolderGroupViewModel IosOutboundVM { get; set; }
+        public FolderGroupViewModel IosInboundVM { get; set; }
+        public FolderGroupViewModel KpOutboundVM { get; set; }
+        public FolderGroupViewModel KpInboundVM { get; set; }
+        public FolderGroupViewModel OtherOutboundVM { get; set; }
+        public FolderGroupViewModel OtherInboundVM { get; set; }
 
         public void ShowHome()
         {
