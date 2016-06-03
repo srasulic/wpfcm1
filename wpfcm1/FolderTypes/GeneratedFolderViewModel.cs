@@ -112,7 +112,7 @@ namespace wpfcm1.FolderTypes
                 
 
 
-                Regex regexAllowedCharacters = new Regex(@"[^0-9][^a-z][^A-Z]");
+                Regex regexAllowedCharacters = new Regex(@"[^0-9a-zA-Z]");
                 document.InvoiceNo = regexAllowedCharacters.Replace(document.InvoiceNo, @"-");
 
                 document.Processed = true;
