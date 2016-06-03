@@ -11,6 +11,8 @@ using wpfcm1.Model;
 using wpfcm1.PDF;
 using wpfcm1.Preview;
 using wpfcm1.Settings;
+using System.Text.RegularExpressions;
+
 
 namespace wpfcm1.FolderTypes
 {
@@ -97,8 +99,22 @@ namespace wpfcm1.FolderTypes
             foreach (var document in documents)
             {
                 var matchResults = await PdfHelpers.ExtractTextAsync(document.DocumentPath);
-                document.Pib = matchResults.Item1;
-                document.InvoiceNo = matchResults.Item2;
+                document.Pib = Regex.Match(matchResults.Item1, @"[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
+
+                document.InvoiceNo = Regex.Match(matchResults.Item2, @"F[0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
+                
+                if (string.IsNullOrEmpty(document.InvoiceNo))
+                    document.InvoiceNo = Regex.Match(matchResults.Item2, @"[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
+                if (string.IsNullOrEmpty(document.InvoiceNo))
+                    document.InvoiceNo = Regex.Match(matchResults.Item2, @"KO-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
+                if (string.IsNullOrEmpty(document.InvoiceNo))
+                    document.InvoiceNo = Regex.Match(matchResults.Item2, @"PPDV-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
+                
+
+
+                Regex regexAllowedCharacters = new Regex(@"[^0-9][^a-z][^A-Z]");
+                document.InvoiceNo = regexAllowedCharacters.Replace(document.InvoiceNo, @"-");
+
                 document.Processed = true;
             }
         }
