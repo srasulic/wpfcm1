@@ -102,9 +102,13 @@ namespace wpfcm1.FolderTypes
                 document.Pib = Regex.Match(matchResults.Item1, @"[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
 
                 document.InvoiceNo = Regex.Match(matchResults.Item2, @"F[0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
-                
+
+//                if (string.IsNullOrEmpty(document.InvoiceNo))
+//                    document.InvoiceNo = Regex.Match(matchResults.Item2, @"[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
                 if (string.IsNullOrEmpty(document.InvoiceNo))
-                    document.InvoiceNo = Regex.Match(matchResults.Item2, @"[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
+                    document.InvoiceNo = Regex.Match(matchResults.Item2, @"[0-9]{1,3}-[0-9]+").Value;
+                if (string.IsNullOrEmpty(document.InvoiceNo))
+                    document.InvoiceNo = Regex.Match(matchResults.Item2, @"DPTR[0-9]{1,3}-[0-9]+").Value;
                 if (string.IsNullOrEmpty(document.InvoiceNo))
                     document.InvoiceNo = Regex.Match(matchResults.Item2, @"KO-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
                 if (string.IsNullOrEmpty(document.InvoiceNo))

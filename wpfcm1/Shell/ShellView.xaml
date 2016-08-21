@@ -5,7 +5,7 @@
              xmlns:cal="http://www.caliburnproject.org"
              WindowStartupLocation="CenterScreen" 
              Icon="../Media/SignatureShow.ico" ShowIconOnTitleBar="False"
-             Width="987" Height="610"
+             Width="1100" Height="640"
              TitleCaps="False">
     
     <mah:MetroWindow.RightWindowCommands>
