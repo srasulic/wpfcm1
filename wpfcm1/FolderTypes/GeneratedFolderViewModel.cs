@@ -113,8 +113,8 @@ namespace wpfcm1.FolderTypes
                     document.InvoiceNo = Regex.Match(matchResults.Item2, @"KO-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
                 if (string.IsNullOrEmpty(document.InvoiceNo))
                     document.InvoiceNo = Regex.Match(matchResults.Item2, @"PPDV-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
-                
-
+ 
+               
 
                 Regex regexAllowedCharacters = new Regex(@"[^0-9a-zA-Z]");
                 document.InvoiceNo = regexAllowedCharacters.Replace(document.InvoiceNo, @"-");

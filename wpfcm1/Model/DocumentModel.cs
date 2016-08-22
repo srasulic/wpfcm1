@@ -15,13 +15,16 @@ namespace wpfcm1.Model
         {
             DocumentInfo = fi;
             DocumentPath = fi.FullName; //za serijalizaciju
+            double len = fi.Length;
+            LengthKB = System.Math.Round(len / 1024);
+
         }
 
         [XmlIgnore] public FileInfo DocumentInfo { get; set; }
 
         public string DocumentPath { get; set; }
 
-        //TODO: zameni sa IsValid??? neka ostane da moze da prikaze npr. nove fajlove u drugim dir
+                //TODO: zameni sa IsValid??? neka ostane da moze da prikaze npr. nove fajlove u drugim dir
         private bool _processed;
         public bool Processed
         {
@@ -42,6 +45,13 @@ namespace wpfcm1.Model
         {
             get { return _isChecked; }
             set { _isChecked = value; NotifyOfPropertyChange(() => IsChecked); }
+        }
+
+        private double _lengthKB;
+        public double LengthKB
+        {
+            get { return _lengthKB; }
+            set { _lengthKB = value; NotifyOfPropertyChange(() => LengthKB); }
         }
 
         public virtual string this[string columnName]

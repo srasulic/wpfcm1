@@ -39,7 +39,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="Date modified" Binding="{Binding Path=DocumentInfo.LastWriteTime}" IsReadOnly="True" />
-                <DataGridTextColumn Header="Size" Binding="{Binding Path=DocumentInfo.Length}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Size" Binding="{Binding Path=LengthKB, StringFormat='\{0:N0\} KB'}" IsReadOnly="True"/>
                 <DataGridTemplateColumn CellTemplate="{StaticResource ImgCol}" MinWidth="32" IsReadOnly="True"/>
                 <DataGridTemplateColumn CellTemplate="{StaticResource AckCol}" MinWidth="32" IsReadOnly="True"/>
             </DataGrid.Columns>

@@ -28,7 +28,7 @@
                 <DataGridTextColumn Header="PIB" Binding="{Binding Path=Pib, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MinWidth="85"/>
                 <DataGridTextColumn Header="Invoice No" Binding="{Binding Path=InvoiceNo, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MinWidth="85"/>
                 <DataGridTextColumn Header="Date modified" Binding="{Binding Path=DocumentInfo.LastWriteTime}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Size" Binding="{Binding Path=DocumentInfo.Length}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Size" Binding="{Binding Path=LengthKB, StringFormat='\{0:N0\} KB'}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
