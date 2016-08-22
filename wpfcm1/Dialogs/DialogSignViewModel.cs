@@ -22,7 +22,7 @@ namespace wpfcm1.Dialogs
 
         public DialogSignViewModel(CertificateModel certificate, FolderViewModel folder)
         {
-            DisplayName = "";
+            DisplayName = "PoliSign - potpisivanje dokumenata";
             _certificate = certificate;
             _folder = folder;
             _reporter = new Progress<string>();

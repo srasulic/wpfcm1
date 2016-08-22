@@ -23,7 +23,7 @@ namespace wpfcm1.Dialogs
 
         public DialogSyncViewModel(Dictionary<string, FolderViewModel> folders)
         {
-            DisplayName = "";
+            DisplayName = "PoliSign - sinhronizacija sa serverom";
             _folders = folders;
             _reporter = new Progress<string>();
             _reporter.ProgressChanged += _reporter_ProgressChanged;

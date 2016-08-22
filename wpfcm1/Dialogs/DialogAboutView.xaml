@@ -1,0 +1,20 @@
+﻿<mah:MetroWindow x:Class="wpfcm1.Dialogs.DialogAboutView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+    ShowTitleBar="True" ShowCloseButton="False" ShowMaxRestoreButton="False" ShowMinButton="False" 
+    WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+    BorderBrush="{DynamicResource AccentColorBrush}"
+    BorderThickness="1"
+    Height="300" Width="500">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBox x:Name="Reports" Text="eDokument PoliSign ver 1001.01.01&#xA;&#xA;Opšti uslovi: &#xA;--------------&#xA;https://edokument.aserta.rs/resources/Opsti_uslovi_eDokument.pdf&#xA;&#xA;Licenciranje:&#xA;-------------&#xA;eDokument PoliSign je free/opensource softver koji se licencira prema pravilima &#xA;GNU Affero General Public License (AGPL) (https://www.gnu.org/licenses/agpl.txt). &#xA;eDokumentPolSign se može slobodno i besplatno koristiti za potpisivanje &#xA;dokumenata. &#xD;&#xA;eDokument PoliSign se može koristiti kao klijent za razmenu dokumenata &#xD;&#xA;putem eDokument Kliring Servera. Usluga transporta dokumenata i &#xD;&#xA;održavanje eDokument Kliring servera su komercijalne usluge preduzeća &#xD;&#xA;Aserta doo i njihovo korišćenje se zasebno ugovara (kontakt: office@aserta.rs).&#xD;&#xA;&#xD;&#xA;Eksterni alati:&#xD;&#xA;--------------&#xD;&#xA;iText (AGPL)&#xD;&#xA;mahapps (Ms-PL)&#xA;&#xA;--&#xA;Podrška: &#x9;e-dokument@aserta.rs&#xA;Autor: &#x9;Sergej Petrovski&#xA;Sponzor:&#x9;Aserta doo, 2016&#xD;&#xA;&#x9;http://www.aserta.rs&#xD;&#xA;&#x9;https://edokument.aserta.rs&#xD;&#xA;" FontStyle="Italic" />
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+            <Button Content="Close" Width="96" Height="32" x:Name="OnClose" Margin="3"/>
+        </StackPanel>
+    </Grid>
+</mah:MetroWindow>

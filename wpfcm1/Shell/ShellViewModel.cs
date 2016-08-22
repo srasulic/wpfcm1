@@ -109,6 +109,11 @@ namespace wpfcm1.Shell
             var result = _windowManager.ShowDialog(new DialogSettingsViewModel());
         }
 
+        public void ShowAbout()
+        {
+            var result = _windowManager.ShowDialog(new DialogAboutViewModel());
+        }
+
         public void Handle(MessageShowHome message)
         {
             ShowHome();

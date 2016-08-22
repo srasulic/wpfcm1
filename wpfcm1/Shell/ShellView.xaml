@@ -12,6 +12,7 @@
         <mah:WindowCommands>
             <!--x:name doesnt work with caliburn. use attach instead. -->
             <Button Content="settings" cal:Message.Attach="ShowSettings"/>
+            <Button Content="about" cal:Message.Attach="ShowAbout"/>
         </mah:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
     
