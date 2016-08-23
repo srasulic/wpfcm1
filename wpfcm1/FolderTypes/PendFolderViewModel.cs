@@ -14,13 +14,12 @@ using System.Text.RegularExpressions;
 
 namespace wpfcm1.FolderTypes
 {
-    public class InboxFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageValidate>, IHandle<MessageAck>, IHandle<MessageXls>
+    public class PendFolderViewModel : FolderViewModel, IHandle<MessageXls>
     {
         private readonly IWindowManager _windowManager;
-        private CertificateModel _certificate;
         private string _expList;
 
-        public InboxFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
+        public PendFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
         {
             _windowManager = winMgr;
         }
@@ -67,11 +66,6 @@ namespace wpfcm1.FolderTypes
             dg.CommitEdit(DataGridEditingUnit.Row, true);
         }
 
-        public void Handle(CertificateModel message)
-        {
-            _certificate = message;
-        }
-
         public void Handle(MessageXls message)
         {
             if (!IsActive) return;
@@ -109,46 +103,6 @@ namespace wpfcm1.FolderTypes
             catch
             {
 
-            }
-        }
-
-        public void Handle(MessageSign message)
-        {
-            if (IsActive)
-            {
-                var certificateOk = _certificate != null && _certificate.IsQualified;
-                if (!certificateOk) return;
-                var validDocuments = GetDocumentsForSigning();
-                if (!validDocuments.Any()) return;
-
-                //TODO: ovo mora drugacije
-                _events.PublishOnUIThread(new MessageShowPdf(PreviewViewModel.Empty));
-                var result = _windowManager.ShowDialog(new DialogSignViewModel(_certificate, this));
-            }
-        }
-
-        public async void Handle(MessageValidate message)
-        {
-            var documents = Documents.Where(d => !d.Processed).Cast<InboxDocumentModel>();
-            foreach (var document in documents)
-            {
-                var isValid = await PdfHelpers.ValidatePdfCertificatesAsync(document.DocumentPath);
-                document.IsValid = isValid;
-                document.Processed = true;
-            }
-        }
-
-        public void Handle(MessageAck message)
-        {
-            var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<InboxDocumentModel>();
-            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).ToList();
-            var destinationDir = SigningTransferRules.LocalMap[FolderPath];
-            foreach (var document in validDocuments)
-            {
-                var fileName = Path.GetFileName(document.DocumentPath);
-                var destinationFilePath = Path.Combine(destinationDir, fileName + ".ack");
-                File.Create(destinationFilePath).Dispose();
-                document.IsAcknowledged = true;
             }
         }
 
@@ -197,7 +151,7 @@ namespace wpfcm1.FolderTypes
             var ec = e as ActionExecutionContext;
             var cb = ec.Source as CheckBox;
 
-            var view = ec.View as InboxFolderView;
+            var view = ec.View as PendFolderView;
             var dg = view.Documents;
             var items = dg.SelectedItems;
             foreach (var item in items)

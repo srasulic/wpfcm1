@@ -20,6 +20,13 @@ namespace wpfcm1.Model
             Certificate = certificate;
             CertificateSimpleName = Certificate.GetNameInfo(X509NameType.SimpleName, false);
 
+            // ako nema private key, nije kvalifikovan. Ubrzava se start aplikacije jer se ne bilduju bespotrebni sertifikati
+            if (!Certificate.HasPrivateKey)
+            {
+                IsQualified = false;
+                return;
+            }
+
             var chainBuildInfo = CertificateHelpers.GetChain(Certificate);
             var chain = chainBuildInfo.Item1;
             ChainElements = CertificateHelpers.GetChainElements(chain);

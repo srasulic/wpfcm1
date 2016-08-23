@@ -1,7 +1,9 @@
 ﻿using Caliburn.Micro;
 using System.ComponentModel;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Xml.Serialization;
+using System;
 
 namespace wpfcm1.Model
 {
@@ -17,7 +19,24 @@ namespace wpfcm1.Model
             DocumentPath = fi.FullName; //za serijalizaciju
             double len = fi.Length;
             LengthKB = System.Math.Round(len / 1024);
-
+            // ovo nece raditi za Generated fajlove jer oni jos nemaju ime po konvenciji
+            if ( Regex.IsMatch(fi.Name, @"[0-9]{9}_[0-9]{9}_.+_.+" ) )
+            {
+                string[] nameParts = fi.Name.Split('_');
+                namePib1 = nameParts[0];
+                namePib2 = nameParts[1];
+                nameDocNum = nameParts[2];
+                string datum = Regex.Match(nameParts[3], @"[0-9]{8}").ToString();
+      //          nameDate = string.Concat(datum[6], datum[7], "/", datum[4], datum[5], "/", datum[0], datum[1], datum[2], datum[3]);
+                nameDate = string.Concat(datum[0], datum[1], datum[2], datum[3], "-", datum[4], datum[5], "-", datum[6], datum[7]);
+            }
+            else
+            {
+                namePib1 = "";
+                namePib2 = "";
+                nameDocNum = "";
+                nameDate = fi.LastWriteTime.ToShortDateString();
+            }
         }
 
         [XmlIgnore] public FileInfo DocumentInfo { get; set; }
@@ -53,6 +72,37 @@ namespace wpfcm1.Model
             get { return _lengthKB; }
             set { _lengthKB = value; NotifyOfPropertyChange(() => LengthKB); }
         }
+
+
+        private string _namePib1;
+        public string namePib1
+        {
+            get { return _namePib1; }
+            set { _namePib1 = value; NotifyOfPropertyChange(() => namePib1); }
+        }
+
+
+        private string _namePib2;
+        public string namePib2
+        {
+            get { return _namePib2; }
+            set { _namePib2 = value; NotifyOfPropertyChange(() => namePib2); }
+        }
+
+        private string _nameDocNum;
+        public string nameDocNum
+        {
+            get { return _nameDocNum; }
+            set { _nameDocNum = value; NotifyOfPropertyChange(() => nameDocNum); }
+        }
+
+        private string _nameDate;
+        public string nameDate
+        {
+            get { return _nameDate; }
+            set { _nameDate = value; NotifyOfPropertyChange(() => nameDate); }
+        }
+
 
         public virtual string this[string columnName]
         {

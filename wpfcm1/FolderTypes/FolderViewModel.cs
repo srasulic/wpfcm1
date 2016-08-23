@@ -12,12 +12,13 @@ namespace wpfcm1.FolderTypes
 {
     public class FolderViewModel : Screen, IDisposable
     {
-        protected string[] Extensions = { ".pdf", ".ack" };
+        // protected string[] Extensions = { ".pdf", ".ack" };
+        protected string[] Extensions = { ".pdf" };
         protected FileSystemWatcher _watcher;
         private readonly Dispatcher _dispatcher;
         protected readonly IEventAggregator _events;
 
-        public FolderViewModel(string path, string name, IEventAggregator events)
+        public FolderViewModel(string path, string name, IEventAggregator events) 
         {
             FolderPath = path;
             DisplayName = name;

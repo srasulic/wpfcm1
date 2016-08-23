@@ -6,11 +6,11 @@
     </UserControl.Resources>
     <Button Style="{DynamicResource MetroCircleButtonStyle}" Width="55" Height="55" x:Name="SendMessage" ToolTip="{Binding Description}"
             Visibility="{Binding Path=ButtonVisibility, Converter={StaticResource b2vc}}">
-        <Rectangle Width="21" Height="21"
+        <Rectangle Width="22" Height="22"
                    Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
             <Rectangle.OpacityMask>
                 <!--<VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_home_empty}" />-->
-                <VisualBrush Stretch="Fill" Visual="{Binding Path=ButtonImg}" />
+                <VisualBrush Visual="{Binding Path=ButtonImg}" Stretch="Uniform" />
             </Rectangle.OpacityMask>
         </Rectangle>
     </Button>

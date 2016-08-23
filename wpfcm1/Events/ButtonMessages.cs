@@ -10,4 +10,5 @@ namespace wpfcm1.Events
     public class MessageReject :IButtonMessage { }
     public class MessageValidate :IButtonMessage { }
     public class MessageAck :IButtonMessage { }
+    public class MessageXls :IButtonMessage { }
 }

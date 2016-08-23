@@ -12,14 +12,16 @@ using wpfcm1.PDF;
 using wpfcm1.Preview;
 using wpfcm1.Settings;
 using System.Text.RegularExpressions;
+using System.Windows;
 
 
 namespace wpfcm1.FolderTypes
 {
-    public class GeneratedFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageExtractData>, IHandle<MessageReject>
+    public class GeneratedFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageExtractData>, IHandle<MessageReject>, IHandle<MessageXls>
     {
         private readonly IWindowManager _windowManager;
         private CertificateModel _certificate;
+        private string _expList;
 
         public GeneratedFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
         {
@@ -72,6 +74,52 @@ namespace wpfcm1.FolderTypes
         public void Handle(CertificateModel message)
         {
             _certificate = message;
+        }
+
+        public void Handle(MessageXls message)
+        {
+            if (!IsActive) return;
+            try
+            {
+                var documents = Documents.Cast<GeneratedDocumentModel>();
+                _expList = "\"Mark\",\"Pib primalac\",\"Fajl\",\"KB\",\"Br Dok\"\r\n";
+                foreach (var document in documents)
+                {
+                    string[] fileNameParts = document.DocumentPath.Split('\\');
+                    _expList = string.Concat(_expList, "\"", document.IsChecked.ToString(), "\",\"", document.Pib, "\",\"", fileNameParts.Last() , "\",\"", document.LengthKB, "\",\"", document.InvoiceNo, "\"\r\n");
+                }
+
+                // proveriti sadrzaj clipboarda pre ovoga
+//                string clip = Clipboard.GetText();
+//                clip = clip.Replace("\t", @""",""");
+//                clip = clip.Replace("\r\n", "\"\r\n\"");
+//                clip = string.Concat("\"", clip);
+//                clip = clip.Remove(clip.Length - 1);
+                string filename = string.Concat(Guid.NewGuid().ToString(), @".csv");
+                filename = string.Concat(Path.GetTempPath(), filename);
+                try
+                {
+                    System.Text.Encoding utf16 = System.Text.Encoding.GetEncoding(1254);
+ //                   byte[] output = utf16.GetBytes(clip);
+                    byte[] output = utf16.GetBytes(_expList);
+                    FileStream fs = new FileStream(filename, FileMode.Create);
+                    BinaryWriter bw = new BinaryWriter(fs);
+                    bw.Write(output, 0, output.Length); //write the encoded file
+                    bw.Flush();
+                    bw.Close();
+                    fs.Close();
+                }
+                catch
+                {
+
+                }
+                                
+                System.Diagnostics.Process.Start(filename);
+            }
+            catch
+            {
+
+            }
         }
 
         public void Handle(MessageSign message)

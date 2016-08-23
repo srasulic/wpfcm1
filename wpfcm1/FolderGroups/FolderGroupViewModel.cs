@@ -32,6 +32,9 @@ namespace wpfcm1.FolderGroups
                     case "InboxDocumentModel":
                         FolderVMs.Add(new InboxFolderViewModel(wsFolder.Value, FolderManager.FolderNameMap[wsFolder.Key], _events, windowManager));
                         break;
+                    case "PendDocumentModel":
+                        FolderVMs.Add(new PendFolderViewModel(wsFolder.Value, FolderManager.FolderNameMap[wsFolder.Key], _events, windowManager));
+                        break;
                     default:
                         FolderVMs.Add(new FolderViewModel(wsFolder.Value, FolderManager.FolderNameMap[wsFolder.Key], _events));
                         break;
@@ -62,7 +65,7 @@ namespace wpfcm1.FolderGroups
 
         public void Dispose()
         {
-            foreach (var folder in FolderVMs.Where(folder => folder is InboxFolderViewModel || folder is GeneratedFolderViewModel))
+            foreach (var folder in FolderVMs.Where(folder => folder is InboxFolderViewModel || folder is GeneratedFolderViewModel || folder is PendFolderViewModel))
             {
                 folder.Dispose();
             }
