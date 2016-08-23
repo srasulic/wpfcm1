@@ -179,7 +179,8 @@ namespace wpfcm1.FolderTypes
             {
                 var sourceFilePath = document.DocumentPath;
                 var fileName = Path.GetFileName(sourceFilePath);
-                var destinationFilePath = Path.Combine(destinationDir, fileName);
+                var destinationFileName = string.Format("X_{0}_{1}", DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"), fileName);
+                var destinationFilePath = Path.Combine(destinationDir, destinationFileName);
                 File.Move(sourceFilePath, destinationFilePath);
             }
         }

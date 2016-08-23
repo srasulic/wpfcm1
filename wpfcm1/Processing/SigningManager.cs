@@ -88,7 +88,9 @@ namespace wpfcm1.Processing
                         break;
                     case SigningTransferRules.FinalAction.Store:
                         var processedDir = SigningTransferRules.ProcessedMap[SourceDir];
-                        var processedFilePath = Path.Combine(processedDir, sourceFileName);
+                        // ovako cemo obezbediti da se ne desi da je u Obradjeno vec postoji takav fajl 
+                        var processedFileName = string.Format("{0}_{1}", DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"), sourceFileName);
+                        var processedFilePath = Path.Combine(processedDir, processedFileName);
                         Log.Info(string.Format("Copying: {0}", processedFilePath));
                         File.Copy(sourceFilePath, processedFilePath);
                         break;
