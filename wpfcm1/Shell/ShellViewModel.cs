@@ -160,6 +160,10 @@ namespace wpfcm1.Shell
             OutboundVM.Dispose();
             IosInboundVM.Dispose();
             IosOutboundVM.Dispose();
+            KpInboundVM.Dispose();
+            KpOutboundVM.Dispose();
+            OtherInboundVM.Dispose();
+            OtherOutboundVM.Dispose();
         }
     }
 }
