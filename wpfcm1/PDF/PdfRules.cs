@@ -46,7 +46,11 @@ namespace wpfcm1.PDF
             {FolderManager.InvoicesOutboundErpIfaceFolder, FolderManager.InvoicesOutboundErpProcFolder},
             {FolderManager.IosOutboundErpIfaceFolder, FolderManager.IosOutboundErpProcFolder},
             {FolderManager.KpOutboundErpIfaceFolder, FolderManager.KpOutboundErpProcFolder},
-            {FolderManager.OtherOutboundErpIfaceFolder, FolderManager.OtherOutboundErpProcFolder}
+            {FolderManager.OtherOutboundErpIfaceFolder, FolderManager.OtherOutboundErpProcFolder},
+            {FolderManager.InvoicesOutboundOutboxFolder, FolderManager.InvoicesOutboundErpProcFolder},
+            {FolderManager.IosOutboundOutboxFolder, FolderManager.IosOutboundErpProcFolder},
+            {FolderManager.KpOutboundOutboxFolder, FolderManager.KpOutboundErpProcFolder},
+            {FolderManager.OtherOutboundOutboxFolder, FolderManager.OtherOutboundErpProcFolder}
         };
 
         public enum FinalAction

@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,17 +10,19 @@ using wpfcm1.Events;
 using wpfcm1.Model;
 using wpfcm1.PDF;
 using wpfcm1.Preview;
-using System;
+using wpfcm1.Settings;
 using System.Text.RegularExpressions;
+using System.Windows;
+
 
 namespace wpfcm1.FolderTypes
 {
-    public class PendFolderViewModel : FolderViewModel, IHandle<MessageXls>
+    public class OutboxFolderViewModel : FolderViewModel, IHandle<MessageReject>, IHandle<MessageXls>
     {
         private readonly IWindowManager _windowManager;
         private string _expList;
 
-        public PendFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
+        public OutboxFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
         {
             _windowManager = winMgr;
         }
@@ -29,8 +32,8 @@ namespace wpfcm1.FolderTypes
             Documents = new BindableCollection<DocumentModel>(
                 Directory.EnumerateFiles(FolderPath)
                 .Where(f => Extensions.Contains(Path.GetExtension(f)))
-                .Select(f => new PendDocumentModel(new FileInfo(f))));
-            
+                .Select(f => new OutboxDocumentModel(new FileInfo(f))));
+
             InitWatcher(FolderPath);
 
             if (Documents.Count == 0) return;
@@ -39,17 +42,16 @@ namespace wpfcm1.FolderTypes
             {
                 var found = Documents.FirstOrDefault(d => d.DocumentPath == state.DocumentPath);
                 if (found == null) continue;
-                var old = found as PendDocumentModel;
+                var old = found as OutboxDocumentModel;
                 old.IsChecked = state.IsChecked;
                 old.IsValid = state.IsValid;
                 old.Processed = state.Processed;
-                old.IsAcknowledged = state.IsAcknowledged;
             }
         }
 
         protected override void AddFile(string filePath)
         {
-            Documents.Add(new PendDocumentModel(new FileInfo(filePath)));
+            Documents.Add(new OutboxDocumentModel(new FileInfo(filePath)));
         }
 
         protected override void OnActivate()
@@ -66,12 +68,13 @@ namespace wpfcm1.FolderTypes
             dg.CommitEdit(DataGridEditingUnit.Row, true);
         }
 
+
         public void Handle(MessageXls message)
         {
             if (!IsActive) return;
             try
             {
-                var documents = Documents.Cast<PendDocumentModel>();
+                var documents = Documents.Cast<OutboxDocumentModel>();
                 _expList = "\"Mark\",\"Pib izdavalac\",\"Pib primalac\",\"Fajl\",\"KB\",\"Br Dok\"\r\n";
                 foreach (var document in documents)
                 {
@@ -97,7 +100,7 @@ namespace wpfcm1.FolderTypes
                 {
 
                 }
-
+                                
                 System.Diagnostics.Process.Start(filename);
             }
             catch
@@ -106,12 +109,26 @@ namespace wpfcm1.FolderTypes
             }
         }
 
-        public IList<DocumentModel> GetDocumentsForSigning()
+        public void Handle(MessageReject message)
         {
-            var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<PendDocumentModel>();
-            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).Cast<DocumentModel>().ToList();
-            return validDocuments;
+            var checkedDocuments = Documents.Where(d => d.IsChecked);
+            var destinationDir = SigningTransferRules.ProcessedMap[FolderPath];
+            foreach (var document in checkedDocuments)
+            {
+                var sourceFilePath = document.DocumentPath;
+                var fileName = Path.GetFileName(sourceFilePath);
+                var destinationFileName = string.Format("S_X_{0}_{1}", DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"), fileName);
+                var destinationFilePath = Path.Combine(destinationDir, destinationFileName);
+                File.Move(sourceFilePath, destinationFilePath);
+            }
         }
+
+        //public IList<DocumentModel> GetDocumentsForSigning()
+        //{
+        //    var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<OutboxDocumentModel>();
+        //    var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault()).Cast<DocumentModel>().ToList();
+        //    return validDocuments;
+        //}
 
         public override void Dispose()
         {
@@ -122,22 +139,22 @@ namespace wpfcm1.FolderTypes
         {
             var filePath = Path.Combine(FolderPath, "state.xml");
             var file = File.Create(filePath);
-            List<PendDocumentModel> items = Documents.Cast<PendDocumentModel>().ToList();
-            var xs = new XmlSerializer(typeof(List<PendDocumentModel>));
+            List<OutboxDocumentModel> items = Documents.Cast<OutboxDocumentModel>().ToList();
+            var xs = new XmlSerializer(typeof(List<OutboxDocumentModel>));
             using (Stream s = file)
                 xs.Serialize(s, items);
         }
 
-        private List<PendDocumentModel> Deserialize()
+        private List<OutboxDocumentModel> Deserialize()
         {
-            var oldList = new List<PendDocumentModel>();
-            var xs = new XmlSerializer(typeof(List<PendDocumentModel>));
+            var oldList = new List<OutboxDocumentModel>();
+            var xs = new XmlSerializer(typeof(List<OutboxDocumentModel>));
             var file = Path.Combine(FolderPath, "state.xml");
             if (!File.Exists(file)) return oldList;
             try
             {
                 using (Stream s = File.OpenRead(file))
-                    oldList = (List<PendDocumentModel>)xs.Deserialize(s);
+                    oldList = (List<OutboxDocumentModel>)xs.Deserialize(s);
             }
             catch
             {
@@ -150,8 +167,8 @@ namespace wpfcm1.FolderTypes
         {
             var ec = e as ActionExecutionContext;
             var cb = ec.Source as CheckBox;
-
-            var view = ec.View as PendFolderView;
+            
+            var view = ec.View as OutboxFolderView;
             var dg = view.Documents;
             var items = dg.SelectedItems;
             foreach (var item in items)
