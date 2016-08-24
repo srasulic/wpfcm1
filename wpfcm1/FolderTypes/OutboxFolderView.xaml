@@ -18,13 +18,7 @@
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Binding="{Binding IsChecked}" HeaderStyle="{StaticResource CheckBoxHeaderStyle}">
                 </DataGridCheckBoxColumn>
-                <DataGridTextColumn Header="Naziv fajla" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="FontWeight" Value="{Binding Processed, Converter={StaticResource ib2bc}}" />
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
+                <DataGridTextColumn Header="Naziv fajla" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="PIB" Binding="{Binding Path=Pib, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MinWidth="85"/>
                 <DataGridTextColumn Header="Br Dok" Binding="{Binding Path=InvoiceNo, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MinWidth="85"/>
                 <DataGridTextColumn Header="Datum" Binding="{Binding Path=DocumentInfo.LastWriteTime}" IsReadOnly="True"/>

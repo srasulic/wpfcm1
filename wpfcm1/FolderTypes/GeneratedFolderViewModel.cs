@@ -71,14 +71,8 @@ namespace wpfcm1.FolderTypes
             dg.CommitEdit(DataGridEditingUnit.Row, true);
         }
 
-        public void Handle(CertificateModel message)
-        {
-            _certificate = message;
-        }
-
-        public void Handle(MessageXls message)
-        {
-            if (!IsActive) return;
+        private void XlsExport()
+        { 
             try
             {
                 var documents = Documents.Cast<GeneratedDocumentModel>();
@@ -89,18 +83,11 @@ namespace wpfcm1.FolderTypes
                     _expList = string.Concat(_expList, "\"", document.IsChecked.ToString(), "\",\"", document.Pib, "\",\"", fileNameParts.Last() , "\",\"", document.LengthKB, "\",\"", document.InvoiceNo, "\"\r\n");
                 }
 
-                // proveriti sadrzaj clipboarda pre ovoga
-//                string clip = Clipboard.GetText();
-//                clip = clip.Replace("\t", @""",""");
-//                clip = clip.Replace("\r\n", "\"\r\n\"");
-//                clip = string.Concat("\"", clip);
-//                clip = clip.Remove(clip.Length - 1);
                 string filename = string.Concat(Guid.NewGuid().ToString(), @".csv");
                 filename = string.Concat(Path.GetTempPath(), filename);
                 try
                 {
                     System.Text.Encoding utf16 = System.Text.Encoding.GetEncoding(1254);
- //                   byte[] output = utf16.GetBytes(clip);
                     byte[] output = utf16.GetBytes(_expList);
                     FileStream fs = new FileStream(filename, FileMode.Create);
                     BinaryWriter bw = new BinaryWriter(fs);
@@ -122,10 +109,23 @@ namespace wpfcm1.FolderTypes
             }
         }
 
+        public void Handle(CertificateModel message)
+        {
+            _certificate = message;
+        }
+
+        public void Handle(MessageXls message)
+        {
+            if (!IsActive) return;
+            XlsExport();
+            
+        }
+
         public void Handle(MessageSign message)
         {
             if (IsActive)
             {
+                PsKillPdfHandlers(); // workaround - pskill ubija sve procese koji rade nad PDF-ovima u eDokument
                 var certificateOk = _certificate != null && _certificate.IsQualified;
                 if (!certificateOk) return;
                 var validDocuments = GetDocumentsForSigning();
@@ -139,6 +139,7 @@ namespace wpfcm1.FolderTypes
 
         public async void Handle(MessageExtractData message)
         {
+            if (!IsActive) return;
             var documents = Documents.Where(d => !d.Processed).Cast<GeneratedDocumentModel>();
             var pib = User.Default.PIB;
             if (string.IsNullOrEmpty(pib))
@@ -173,16 +174,9 @@ namespace wpfcm1.FolderTypes
 
         public void Handle(MessageReject message)
         {
-            var checkedDocuments = Documents.Where(d => d.IsChecked);
-            var destinationDir = SigningTransferRules.ProcessedMap[FolderPath];
-            foreach (var document in checkedDocuments)
-            {
-                var sourceFilePath = document.DocumentPath;
-                var fileName = Path.GetFileName(sourceFilePath);
-                var destinationFileName = string.Format("X_{0}_{1}", DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"), fileName);
-                var destinationFilePath = Path.Combine(destinationDir, destinationFileName);
-                File.Move(sourceFilePath, destinationFilePath);
-            }
+            if (!IsActive) return;
+            PsKillPdfHandlers(); // workaround - pskill ubija sve procese koji rade nad PDF-ovima u eDokument
+            RejectDocument();
         }
 
         public IList<DocumentModel> GetDocumentsForSigning()

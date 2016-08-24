@@ -18,7 +18,6 @@ namespace wpfcm1.FolderTypes
     {
         private readonly IWindowManager _windowManager;
         private CertificateModel _certificate;
-        private string _expList;
 
         public InboxFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
         {
@@ -75,47 +74,15 @@ namespace wpfcm1.FolderTypes
         public void Handle(MessageXls message)
         {
             if (!IsActive) return;
-            try
-            {
-                var documents = Documents.Cast<InboxDocumentModel>();
-                _expList = "\"Mark\",\"Pib izdavalac\",\"Pib primalac\",\"Fajl\",\"KB\",\"Br Dok\"\r\n";
-                foreach (var document in documents)
-                {
-                    string[] fileNameParts = document.DocumentPath.Split('\\');
-                    string[] parts = fileNameParts.Last().Split('_');
-                    _expList = string.Concat(_expList, "\"", document.IsChecked.ToString(), "\",\"", parts[0], "\",\"", parts[1], "\",\"", fileNameParts.Last(), "\",\"", document.LengthKB, "\",\"", parts[2], "\"\r\n");
-                }
+            XlsExport();
 
-                string filename = string.Concat(Guid.NewGuid().ToString(), @".csv");
-                filename = string.Concat(Path.GetTempPath(), filename);
-                try
-                {
-                    System.Text.Encoding utf16 = System.Text.Encoding.GetEncoding(1254);
-                    byte[] output = utf16.GetBytes(_expList);
-                    FileStream fs = new FileStream(filename, FileMode.Create);
-                    BinaryWriter bw = new BinaryWriter(fs);
-                    bw.Write(output, 0, output.Length); //write the encoded file
-                    bw.Flush();
-                    bw.Close();
-                    fs.Close();
-                }
-                catch
-                {
-
-                }
-
-                System.Diagnostics.Process.Start(filename);
-            }
-            catch
-            {
-
-            }
         }
 
         public void Handle(MessageSign message)
         {
             if (IsActive)
             {
+                PsKillPdfHandlers(); // workaround - pskill ubija sve procese koji rade nad PDF-ovima u eDokument
                 var certificateOk = _certificate != null && _certificate.IsQualified;
                 if (!certificateOk) return;
                 var validDocuments = GetDocumentsForSigning();
@@ -129,6 +96,7 @@ namespace wpfcm1.FolderTypes
 
         public async void Handle(MessageValidate message)
         {
+            if (!IsActive) return;
             var documents = Documents.Where(d => !d.Processed).Cast<InboxDocumentModel>();
             foreach (var document in documents)
             {
@@ -140,6 +108,7 @@ namespace wpfcm1.FolderTypes
 
         public void Handle(MessageAck message)
         {
+            if (!IsActive) return;
             var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<InboxDocumentModel>();
             var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).ToList();
             var destinationDir = SigningTransferRules.LocalMap[FolderPath];

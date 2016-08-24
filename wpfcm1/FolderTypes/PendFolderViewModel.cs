@@ -17,7 +17,6 @@ namespace wpfcm1.FolderTypes
     public class PendFolderViewModel : FolderViewModel, IHandle<MessageXls>
     {
         private readonly IWindowManager _windowManager;
-        private string _expList;
 
         public PendFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
         {
@@ -69,41 +68,7 @@ namespace wpfcm1.FolderTypes
         public void Handle(MessageXls message)
         {
             if (!IsActive) return;
-            try
-            {
-                var documents = Documents.Cast<PendDocumentModel>();
-                _expList = "\"Mark\",\"Pib izdavalac\",\"Pib primalac\",\"Fajl\",\"KB\",\"Br Dok\"\r\n";
-                foreach (var document in documents)
-                {
-                    string[] fileNameParts = document.DocumentPath.Split('\\');
-                    string[] parts = fileNameParts.Last().Split('_');
-                    _expList = string.Concat(_expList, "\"", document.IsChecked.ToString(), "\",\"", parts[0], "\",\"", parts[1], "\",\"", fileNameParts.Last(), "\",\"", document.LengthKB, "\",\"", parts[2], "\"\r\n");
-                }
-
-                string filename = string.Concat(Guid.NewGuid().ToString(), @".csv");
-                filename = string.Concat(Path.GetTempPath(), filename);
-                try
-                {
-                    System.Text.Encoding utf16 = System.Text.Encoding.GetEncoding(1254);
-                    byte[] output = utf16.GetBytes(_expList);
-                    FileStream fs = new FileStream(filename, FileMode.Create);
-                    BinaryWriter bw = new BinaryWriter(fs);
-                    bw.Write(output, 0, output.Length); //write the encoded file
-                    bw.Flush();
-                    bw.Close();
-                    fs.Close();
-                }
-                catch
-                {
-
-                }
-
-                System.Diagnostics.Process.Start(filename);
-            }
-            catch
-            {
-
-            }
+            XlsExport();
         }
 
         public IList<DocumentModel> GetDocumentsForSigning()

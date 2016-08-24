@@ -6,17 +6,20 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using wpfcm1.Events;
 using wpfcm1.Model;
+using wpfcm1.PDF;
 using wpfcm1.Preview;
 
 namespace wpfcm1.FolderTypes
 {
     public class FolderViewModel : Screen, IDisposable
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         // protected string[] Extensions = { ".pdf", ".ack" };
         protected string[] Extensions = { ".pdf" };
         protected FileSystemWatcher _watcher;
         private readonly Dispatcher _dispatcher;
         protected readonly IEventAggregator _events;
+        private string _expList;
 
         public FolderViewModel(string path, string name, IEventAggregator events) 
         {
@@ -42,6 +45,87 @@ namespace wpfcm1.FolderTypes
                  .Where(f => Extensions.Contains(Path.GetExtension(f)))
                  .Select(f => new DocumentModel(new FileInfo(f))));
             InitWatcher(FolderPath);
+        }
+
+        protected void PsKillPdfHandlers()
+        {   // Srdjan - da pustimo u pozadini neke alatke da pobiju eventualne procese koji drze sapu na PDF fajlovima
+            //          Zbog brzine aplikaciji hadle.exe prosledjujemo deo naziva file handlera (bez ovoga traje 10-ak sekundi)
+            //          Podrzavamo (ocekujemo) Foxit Reader ili Adobe Acrobat Reader
+            try
+            {
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                startInfo.FileName = "cmd.exe";
+
+                startInfo.Arguments = @" /C for /f ""tokens=3"" %G IN ('c:\edokument\bin\handle.exe /accepteula eDokument\ -p Fox ^| findstr /i /r /c:"".*pid:.*pdf$""') DO c:\edokument\bin\pskill.exe /accepteula %G";
+                process.StartInfo = startInfo;
+                process.Start();
+                process.WaitForExit();
+
+                startInfo.Arguments = @" /C for /f ""tokens=3"" %G IN ('c:\edokument\bin\handle.exe /accepteula eDokument\ -p Acro ^| findstr /i /r /c:"".*pid:.*pdf$""') DO c:\edokument\bin\pskill.exe /accepteula %G";
+                process.StartInfo = startInfo;
+                process.Start();
+                process.WaitForExit();
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error while running PSTOOLS...", ex);
+            }
+        }
+        
+        protected void RejectDocument ()
+        {
+            var checkedDocuments = Documents.Where(d => d.IsChecked);
+            var destinationDir = SigningTransferRules.ProcessedMap[FolderPath];
+            foreach (var document in checkedDocuments)
+            {
+                var sourceFilePath = document.DocumentPath;
+                var fileName = Path.GetFileName(sourceFilePath);
+                var destinationFileName = string.Format("X_{0}_{1}", DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"), fileName);
+                var destinationFilePath = Path.Combine(destinationDir, destinationFileName);
+                File.Move(sourceFilePath, destinationFilePath);
+            }
+        }
+
+        protected void XlsExport()
+        {
+            try
+            {
+                var documents = Documents.Cast<DocumentModel>();
+                _expList = "\"Mark\",\"Pib izdavalac\",\"Pib primalac\",\"Fajl\",\"KB\",\"Br Dok\"\r\n";
+                foreach (var document in documents)
+                {
+                    string[] fileNameParts = document.DocumentPath.Split('\\');
+                    string[] parts = fileNameParts.Last().Split('_');
+                    _expList = string.Concat(_expList, "\"", document.IsChecked.ToString(), "\",\"", parts[0], "\",\"", parts[1], "\",\"", fileNameParts.Last(), "\",\"", document.LengthKB, "\",\"", parts[2], "\"\r\n");
+                }
+
+                string filename = string.Concat(Guid.NewGuid().ToString(), @".csv");
+                filename = string.Concat(Path.GetTempPath(), filename);
+                try
+                {
+                    System.Text.Encoding utf16 = System.Text.Encoding.GetEncoding(1254);
+                    byte[] output = utf16.GetBytes(_expList);
+                    FileStream fs = new FileStream(filename, FileMode.Create);
+                    BinaryWriter bw = new BinaryWriter(fs);
+                    bw.Write(output, 0, output.Length); //write the encoded file
+                    bw.Flush();
+                    bw.Close();
+                    fs.Close();
+                }
+                catch
+                {
+
+                }
+
+                System.Diagnostics.Process.Start(filename);
+            }
+            catch
+            {
+
+            }
         }
 
         protected override void OnActivate()

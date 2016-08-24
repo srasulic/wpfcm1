@@ -72,33 +72,6 @@ namespace wpfcm1.Dialogs
 
         public async void OnStart()
         {
-            // Srdjan - da pustimo u pozadini neke alatke da pobiju eventualne procese koji drze sapu na PDF fajlovima
-            //          Zbog brzine aplikaciji hadle.exe prosledjujemo deo naziva file handlera (bez ovoga traje 10-ak sekundi)
-            //          Podrzavamo (ocekujemo) Foxit Reader ili Adobe Acrobat Reader
-
-            //System.Diagnostics.Process.Start(@"cmd.exe", @" /C for /f ""tokens=3"" %G IN ('c:\edokument\bin\handle.exe /accepteula eDokument\ ^| findstr /i /r /c:"".*pid:.*pdf$""') DO c:\edokument\bin\pskill.exe %G");
-            try
-            {
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = "cmd.exe";
-
-                startInfo.Arguments = @" /C for /f ""tokens=3"" %G IN ('c:\edokument\bin\handle.exe /accepteula eDokument\ -p Fox ^| findstr /i /r /c:"".*pid:.*pdf$""') DO c:\edokument\bin\pskill.exe %G";
-                process.StartInfo = startInfo;
-                process.Start();
-                process.WaitForExit();
-
-                startInfo.Arguments = @" /C for /f ""tokens=3"" %G IN ('c:\edokument\bin\handle.exe /accepteula eDokument\ -p Acro ^| findstr /i /r /c:"".*pid:.*pdf$""') DO c:\edokument\bin\pskill.exe %G";
-                process.StartInfo = startInfo;
-                process.Start();
-                process.WaitForExit();
-
-            } catch (Exception ex)
-            {
-                Log.Error("Error while running PSTOOLS...", ex);
-            }
-
             try
             {
                 _cancellation = new CancellationTokenSource();

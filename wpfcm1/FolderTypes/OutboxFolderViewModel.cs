@@ -20,7 +20,6 @@ namespace wpfcm1.FolderTypes
     public class OutboxFolderViewModel : FolderViewModel, IHandle<MessageReject>, IHandle<MessageXls>
     {
         private readonly IWindowManager _windowManager;
-        private string _expList;
 
         public OutboxFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
         {
@@ -72,55 +71,14 @@ namespace wpfcm1.FolderTypes
         public void Handle(MessageXls message)
         {
             if (!IsActive) return;
-            try
-            {
-                var documents = Documents.Cast<OutboxDocumentModel>();
-                _expList = "\"Mark\",\"Pib izdavalac\",\"Pib primalac\",\"Fajl\",\"KB\",\"Br Dok\"\r\n";
-                foreach (var document in documents)
-                {
-                    string[] fileNameParts = document.DocumentPath.Split('\\');
-                    string[] parts = fileNameParts.Last().Split('_');
-                    _expList = string.Concat(_expList, "\"", document.IsChecked.ToString(), "\",\"", parts[0], "\",\"", parts[1], "\",\"", fileNameParts.Last(), "\",\"", document.LengthKB, "\",\"", parts[2], "\"\r\n");
-                }
-
-                string filename = string.Concat(Guid.NewGuid().ToString(), @".csv");
-                filename = string.Concat(Path.GetTempPath(), filename);
-                try
-                {
-                    System.Text.Encoding utf16 = System.Text.Encoding.GetEncoding(1254);
-                    byte[] output = utf16.GetBytes(_expList);
-                    FileStream fs = new FileStream(filename, FileMode.Create);
-                    BinaryWriter bw = new BinaryWriter(fs);
-                    bw.Write(output, 0, output.Length); //write the encoded file
-                    bw.Flush();
-                    bw.Close();
-                    fs.Close();
-                }
-                catch
-                {
-
-                }
-                                
-                System.Diagnostics.Process.Start(filename);
-            }
-            catch
-            {
-
-            }
+            XlsExport();
         }
 
         public void Handle(MessageReject message)
         {
-            var checkedDocuments = Documents.Where(d => d.IsChecked);
-            var destinationDir = SigningTransferRules.ProcessedMap[FolderPath];
-            foreach (var document in checkedDocuments)
-            {
-                var sourceFilePath = document.DocumentPath;
-                var fileName = Path.GetFileName(sourceFilePath);
-                var destinationFileName = string.Format("S_X_{0}_{1}", DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"), fileName);
-                var destinationFilePath = Path.Combine(destinationDir, destinationFileName);
-                File.Move(sourceFilePath, destinationFilePath);
-            }
+            if (!IsActive) return;
+            PsKillPdfHandlers(); // workaround - pskill ubija sve procese koji rade nad PDF-ovima u eDokument
+            RejectDocument();
         }
 
         //public IList<DocumentModel> GetDocumentsForSigning()
