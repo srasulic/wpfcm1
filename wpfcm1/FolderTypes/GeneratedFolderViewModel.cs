@@ -71,7 +71,7 @@ namespace wpfcm1.FolderTypes
             dg.CommitEdit(DataGridEditingUnit.Row, true);
         }
 
-        private void XlsExport()
+        private new void XlsExport()
         { 
             try
             {

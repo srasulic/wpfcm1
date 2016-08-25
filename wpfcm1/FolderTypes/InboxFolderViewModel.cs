@@ -124,7 +124,8 @@ namespace wpfcm1.FolderTypes
         public IList<DocumentModel> GetDocumentsForSigning()
         {
             var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<InboxDocumentModel>();
-            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).Cast<DocumentModel>().ToList();
+            //var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).Cast<DocumentModel>().ToList();
+            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && d.IsAcknowledged).Cast<DocumentModel>().ToList();
             return validDocuments;
         }
 

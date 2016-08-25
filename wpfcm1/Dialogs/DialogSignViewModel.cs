@@ -28,6 +28,15 @@ namespace wpfcm1.Dialogs
             _reporter = new Progress<string>();
             _reporter.ProgressChanged += _reporter_ProgressChanged;
             Reports = new BindableCollection<string>();
+
+            Reports.Add("Dokumenti obeleženi za potpisivanje:");
+            var Documents = GetDocumentsForSigning(_folder);
+            foreach (var document in Documents)
+            {
+                Reports.Add(document.DocumentInfo.Name);
+                }
+
+
         }
 
         public BindableCollection<string> Reports { get; set; }
@@ -72,6 +81,8 @@ namespace wpfcm1.Dialogs
 
         public async void OnStart()
         {
+            Reports.Clear();
+            Reports.Add("Komunikacija sa čitačem kartice...");
             try
             {
                 _cancellation = new CancellationTokenSource();

@@ -14,10 +14,10 @@ namespace wpfcm1.Toolbar
         private readonly Dictionary<string, BitArray> WorkspaceToButtonVisibility = new Dictionary<string, BitArray>()
         {
             {"HomeViewModel", new BitArray(new byte[]{0x3, 0x0})},
-            {"GeneratedFolderViewModel", new BitArray(new byte[]{0x3F, 0x1})},
-            {"InboxFolderViewModel", new BitArray(new byte[]{0xCF, 0x1})},
+            {"GeneratedFolderViewModel", new BitArray(new byte[]{0xCF, 0x1})},
+            {"InboxFolderViewModel", new BitArray(new byte[]{0x77, 0x1})},
             {"PendFolderViewModel", new BitArray(new byte[]{0x7, 0x1})},
-            {"OutboxFolderViewModel", new BitArray(new byte[]{0x27, 0x1})},
+            {"OutboxFolderViewModel", new BitArray(new byte[]{0x87, 0x1})},
             {"FolderViewModel", new BitArray(new byte[]{0x7, 0x0})},
         }; 
 
