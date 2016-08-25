@@ -42,7 +42,6 @@ namespace wpfcm1.FolderTypes
                 old.IsChecked = state.IsChecked;
                 old.IsValid = state.IsValid;
                 old.Processed = state.Processed;
-                old.IsAcknowledged = state.IsAcknowledged;
             }
         }
 
@@ -69,13 +68,6 @@ namespace wpfcm1.FolderTypes
         {
             if (!IsActive) return;
             XlsExport();
-        }
-
-        public IList<DocumentModel> GetDocumentsForSigning()
-        {
-            var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<PendDocumentModel>();
-            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).Cast<DocumentModel>().ToList();
-            return validDocuments;
         }
 
         public override void Dispose()

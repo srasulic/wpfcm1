@@ -11,18 +11,27 @@
                 </ResourceDictionary.MergedDictionaries>
                 <BitmapImage x:Key="PngError" UriSource="../Media/error16.png" />
                 <BitmapImage x:Key="PngOk" UriSource="../Media/ok16.png" />
+                <BitmapImage x:Key="PngLock" UriSource="../Media/lock16.png" />
+                <BitmapImage x:Key="PngWait" UriSource="../Media/time16.png" />
+                <BitmapImage x:Key="PngGreenPdf" UriSource="../Media/green_pdf_plain16.png" />
                 <BitmapImage x:Key="PngAck" UriSource="../Media/ack16.png" />
                 <BooleanToVisibilityConverter x:Key="b2vc" />
                 <conv:InverseBooleanToVisibilityConverter x:Key="ib2vc" />
                 <conv:InverseBooleanToBoldConverter x:Key="ib2bc" />
                 <DataTemplate x:Key="ImgCol">
                     <StackPanel>
-                        <Image Source="{StaticResource PngOk}" Visibility="{Binding Path=IsValid, Converter={StaticResource b2vc}}"/>
+                        <Image Source="{StaticResource PngGreenPdf}" Visibility="{Binding Path=IsValid, Converter={StaticResource b2vc}}"/>
                         <Image Source="{StaticResource PngError}" Visibility="{Binding Path=IsValid, Converter={StaticResource ib2vc}}"/>
                     </StackPanel>
                 </DataTemplate>
                 <DataTemplate x:Key="AckCol">
                     <Image Source="{StaticResource PngAck}" Visibility="{Binding Path=IsAcknowledged, Converter={StaticResource b2vc}}"/>
+                </DataTemplate>
+                <DataTemplate x:Key="HasSecSign">
+                    <StackPanel>
+                        <Image Source="{StaticResource PngLock}" Visibility="{Binding Path=IsAckedAndSigned, Converter={StaticResource b2vc}}"/>
+                        <Image Source="{StaticResource PngWait}" Visibility="{Binding Path=IsAckedAndSigned, Converter={StaticResource ib2vc}}"/>
+                    </StackPanel>
                 </DataTemplate>
             </ResourceDictionary>
         </Grid.Resources>
@@ -38,10 +47,14 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Datum" Binding="{Binding Path=DocumentInfo.LastWriteTime}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Pib izdavalac" Binding="{Binding Path=namePib1}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Pib primalac" Binding="{Binding Path=namePib2}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Br Dok" Binding="{Binding Path=nameDocNum}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Datum" Binding="{Binding Path=nameDate}" IsReadOnly="True" />
                 <DataGridTextColumn Header="Size" Binding="{Binding Path=LengthKB, StringFormat='\{0:N0\} KB'}" IsReadOnly="True"/>
                 <DataGridTemplateColumn CellTemplate="{StaticResource ImgCol}" MinWidth="32" IsReadOnly="True"/>
                 <DataGridTemplateColumn CellTemplate="{StaticResource AckCol}" MinWidth="32" IsReadOnly="True"/>
+                <DataGridTemplateColumn CellTemplate="{StaticResource HasSecSign}" MinWidth="32" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

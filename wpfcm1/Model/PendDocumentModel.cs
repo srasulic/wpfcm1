@@ -12,12 +12,5 @@ namespace wpfcm1.Model
         {
         }
 
-        private bool _isAcknowledged;
-        public bool IsAcknowledged
-        {
-            get { return _isAcknowledged; }
-            set { _isAcknowledged = value; NotifyOfPropertyChange(() => IsAcknowledged); }
-        }
-
     }
 }

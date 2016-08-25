@@ -103,7 +103,34 @@ namespace wpfcm1.Model
             set { _nameDate = value; NotifyOfPropertyChange(() => nameDate); }
         }
 
+        private bool _isAcknowledged;
+        public bool IsAcknowledged
+        {
+            get { return _isAcknowledged; }
+            set { _isAcknowledged = value; NotifyOfPropertyChange(() => IsAcknowledged); }
+        }
 
+        private bool _isSigned;
+        public bool IsSigned
+        {
+            get { return _isSigned; }
+            set { _isSigned = value; NotifyOfPropertyChange(() => IsSigned); }
+        }
+
+        private bool _isSignedAgain;
+        public bool IsSignedAgain
+        {
+            get { return _isSignedAgain; }
+            set { _isSignedAgain = value; NotifyOfPropertyChange(() => IsSignedAgain); }
+        }
+
+        private bool _hasSecondSigniture;
+        public bool HasSecondSigniture
+        {
+            get { return _hasSecondSigniture; }
+            set { _hasSecondSigniture = value; NotifyOfPropertyChange(() => HasSecondSigniture); }
+        }
+        
         public virtual string this[string columnName]
         {
             //TODO: ovo sad nije bitno, sredi kasnije (error check)

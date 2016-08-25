@@ -44,6 +44,7 @@ namespace wpfcm1.FolderTypes
                 old.IsValid = state.IsValid;
                 old.Processed = state.Processed;
                 old.IsAcknowledged = state.IsAcknowledged;
+                old.HasSecondSigniture = state.HasSecondSigniture;
             }
         }
 
@@ -125,7 +126,7 @@ namespace wpfcm1.FolderTypes
         {
             var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<InboxDocumentModel>();
             //var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).Cast<DocumentModel>().ToList();
-            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && d.IsAcknowledged).Cast<DocumentModel>().ToList();
+            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && d.IsAcknowledged && !d.HasSecondSigniture).Cast<DocumentModel>().ToList();
             return validDocuments;
         }
 

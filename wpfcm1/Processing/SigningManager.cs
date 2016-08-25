@@ -85,6 +85,11 @@ namespace wpfcm1.Processing
                         if (reporter != null) reporter.Report(string.Format("Potvrdjen kao: {0}", destinationAckFilePath));
                         Log.Info(string.Format("Acknowledged: {0}", destinationAckFilePath));
                         File.Create(destinationAckFilePath).Dispose();
+                        document.IsAcknowledged = true;
+                        break;
+                    case SigningTransferRules.FinalAction.SecondSignatureMark:
+                        document.HasSecondSigniture = true;
+                        document.IsSignedAgain = true;
                         break;
                     case SigningTransferRules.FinalAction.Store:
                         var processedDir = SigningTransferRules.ProcessedMap[SourceDir];
@@ -93,11 +98,11 @@ namespace wpfcm1.Processing
                         var processedFilePath = Path.Combine(processedDir, processedFileName);
                         Log.Info(string.Format("Copying: {0}", processedFilePath));
                         File.Copy(sourceFilePath, processedFilePath);
+                        Log.Info(string.Format("Deleting: {0}", sourceFilePath));
+                        File.Delete(sourceFilePath);
+                        document.IsSigned = true;
                         break;
                 }
-
-                Log.Info(string.Format("Deleting: {0}", sourceFilePath));
-                File.Delete(sourceFilePath);
 
                 if (reporter != null) reporter.Report(string.Format("Potpisan kao:  {0}", destinationFileName));
             }
@@ -117,7 +122,12 @@ namespace wpfcm1.Processing
                 var destinationFileName = string.Format("{0}_s{1}", Path.GetFileNameWithoutExtension(document.DocumentInfo.Name), Path.GetExtension(document.DocumentInfo.Name));
                 return destinationFileName;
             }
-            throw new ArgumentException("document");
+            if (document is ConfirmedDocumentModel)
+            {
+                var destinationFileName = string.Format("{0}_s{1}", Path.GetFileNameWithoutExtension(document.DocumentInfo.Name), Path.GetExtension(document.DocumentInfo.Name));
+                return destinationFileName;
+            }
+            throw new ArgumentException("CreateSignedPdfFileName - error.");
         }
     }
 }

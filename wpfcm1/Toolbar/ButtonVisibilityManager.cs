@@ -18,6 +18,7 @@ namespace wpfcm1.Toolbar
             {"InboxFolderViewModel", new BitArray(new byte[]{0x77, 0x1})},
             {"PendFolderViewModel", new BitArray(new byte[]{0x7, 0x1})},
             {"OutboxFolderViewModel", new BitArray(new byte[]{0x87, 0x1})},
+            {"ConfirmedFolderViewModel", new BitArray(new byte[]{0x47, 0x1})},
             {"FolderViewModel", new BitArray(new byte[]{0x7, 0x0})},
         }; 
 

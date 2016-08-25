@@ -77,12 +77,18 @@ namespace wpfcm1.Dialogs
             if (_cancellation != null) _cancellation.Cancel();
         }
 
-        public bool CanOnStart { get { return !InProgress; } }
+        private bool _canOnStart = true;
+        public bool CanOnStart
+        {
+            set { _canOnStart = value; }
+            get { return _canOnStart && !InProgress; } 
+        }
 
         public async void OnStart()
         {
             Reports.Clear();
-            Reports.Add("Komunikacija sa čitačem kartice...");
+            Reports.Add("Priprema za potpisivanje...");
+            CanOnStart = false;
             try
             {
                 _cancellation = new CancellationTokenSource();
@@ -137,7 +143,11 @@ namespace wpfcm1.Dialogs
             }
             if (folder is InboxFolderViewModel)
             {
-                return (folder as InboxFolderViewModel).GetDocumentsForSigning(); 
+                return (folder as InboxFolderViewModel).GetDocumentsForSigning();
+            } 
+            if (folder is ConfirmedFolderViewModel)
+            {
+                return (folder as ConfirmedFolderViewModel).GetDocumentsForSigning();
             }
             throw new ArgumentException("folder)");
         }

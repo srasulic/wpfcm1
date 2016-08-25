@@ -12,11 +12,11 @@ namespace wpfcm1.Model
         {
         }
 
-        private bool _isAcknowledged;
-        public bool IsAcknowledged
+
+        public bool IsAckedAndSigned
         {
-            get { return _isAcknowledged; }
-            set { _isAcknowledged = value; NotifyOfPropertyChange(() => IsAcknowledged); }
+            get { return IsAcknowledged & HasSecondSigniture; }
         }
+
     }
 }
