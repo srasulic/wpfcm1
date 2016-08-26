@@ -144,10 +144,10 @@ namespace wpfcm1.Dialogs
             if (folder is InboxFolderViewModel)
             {
                 return (folder as InboxFolderViewModel).GetDocumentsForSigning();
-            } 
-            if (folder is ConfirmedFolderViewModel)
+            }
+            if (folder is ConfirmedToDoFolderViewModel)
             {
-                return (folder as ConfirmedFolderViewModel).GetDocumentsForSigning();
+                return (folder as ConfirmedToDoFolderViewModel).GetDocumentsForSigning();
             }
             throw new ArgumentException("folder)");
         }

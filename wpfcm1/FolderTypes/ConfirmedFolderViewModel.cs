@@ -14,12 +14,10 @@ using System.Text.RegularExpressions;
 
 namespace wpfcm1.FolderTypes
 {
-    public class ConfirmedFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageXls>
+    public class ConfirmedFolderViewModel : FolderViewModel, IHandle<MessageXls>
     {
         private readonly IWindowManager _windowManager;
         private CertificateModel _certificate;
-        
-        //private BindableCollection<DocumentModel> DocumentsForInit { get; set; }
         
 
         public ConfirmedFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
@@ -67,15 +65,15 @@ namespace wpfcm1.FolderTypes
                 if (Documents[i].IsSignedAgain) Documents.RemoveAt(i);
             }
 
-            var states = Deserialize();
-            foreach (var state in states)
-            {
-                var found = Documents.FirstOrDefault(d => d.DocumentPath == state.DocumentPath);
-                if (found == null) continue;
-                var old = found as DocumentModel;
-                old.Processed = state.Processed;
-                old.IsSignedAgain = state.IsSignedAgain;
-            }
+            //var states = Deserialize();
+            //foreach (var state in states)
+            //{
+            //    var found = Documents.FirstOrDefault(d => d.DocumentPath == state.DocumentPath);
+            //    if (found == null) continue;
+            //    var old = found as DocumentModel;
+            //    old.Processed = state.Processed;
+            //    old.IsSignedAgain = state.IsSignedAgain;
+            //}
         }
     
 
@@ -110,91 +108,52 @@ namespace wpfcm1.FolderTypes
 
         }
 
-        public void Handle(MessageSign message)
-        {
-            if (IsActive)
-            {
-                PsKillPdfHandlers(); // workaround - pskill ubija sve procese koji rade nad PDF-ovima u eDokument
-                var certificateOk = _certificate != null && _certificate.IsQualified;
-                if (!certificateOk) return;
-                var validDocuments = GetDocumentsForSigning();
-                if (!validDocuments.Any()) return;
-
-                //TODO: ovo mora drugacije
-                _events.PublishOnUIThread(new MessageShowPdf(PreviewViewModel.Empty));
-                var result = _windowManager.ShowDialog(new DialogSignViewModel(_certificate, this));
-                //foreach (var document in validDocuments) {
-                //    document.Processed = true;
-                //    document.IsSignedAgain = true;
-                //}
-            }
-        }
-
-        //public async void Handle(MessageValidate message)
+        //public override void Dispose()
         //{
-        //    if (!IsActive) return;
-        //    var documents = Documents.Where(d => !d.Processed).Cast<DocumentModel>();
-        //    foreach (var document in documents)
-        //    {
-        //        var isValid = await PdfHelpers.ValidatePdfCertificatesAsync(document.DocumentPath);
-        //        document.IsValid = isValid;
-        //        document.Processed = true;
-        //    }
+        //    Serialize();
         //}
 
-        public IList<DocumentModel> GetDocumentsForSigning()
-        {
-            var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<DocumentModel>();
-            var validDocuments = checkedDocuments.Where(d => !d.Processed && !d.HasSecondSigniture && !d.IsSignedAgain).Cast<DocumentModel>().ToList();
-            return validDocuments;
-        }
+        //private void Serialize()
+        //{
+        //    var filePath = Path.Combine(FolderPath, "state.xml");
+        //    var file = File.Create(filePath);
+        //    List<ConfirmedDocumentModel> items = Documents.Cast<ConfirmedDocumentModel>().ToList();
+        //    var xs = new XmlSerializer(typeof(List<ConfirmedDocumentModel>));
+        //    using (Stream s = file)
+        //        xs.Serialize(s, items);
+        //}
 
-        public override void Dispose()
-        {
-            Serialize();
-        }
+        //private List<ConfirmedDocumentModel> Deserialize()
+        //{
+        //    var oldList = new List<ConfirmedDocumentModel>();
+        //    var xs = new XmlSerializer(typeof(List<ConfirmedDocumentModel>));
+        //    var file = Path.Combine(FolderPath, "state.xml");
+        //    if (!File.Exists(file)) return oldList;
+        //    try
+        //    {
+        //        using (Stream s = File.OpenRead(file))
+        //            oldList = (List<ConfirmedDocumentModel>)xs.Deserialize(s);
+        //    }
+        //    catch
+        //    {
 
-        private void Serialize()
-        {
-            var filePath = Path.Combine(FolderPath, "state.xml");
-            var file = File.Create(filePath);
-            List<ConfirmedDocumentModel> items = Documents.Cast<ConfirmedDocumentModel>().ToList();
-            var xs = new XmlSerializer(typeof(List<ConfirmedDocumentModel>));
-            using (Stream s = file)
-                xs.Serialize(s, items);
-        }
+        //    }
+        //    return oldList;
+        //}
 
-        private List<ConfirmedDocumentModel> Deserialize()
-        {
-            var oldList = new List<ConfirmedDocumentModel>();
-            var xs = new XmlSerializer(typeof(List<ConfirmedDocumentModel>));
-            var file = Path.Combine(FolderPath, "state.xml");
-            if (!File.Exists(file)) return oldList;
-            try
-            {
-                using (Stream s = File.OpenRead(file))
-                    oldList = (List<ConfirmedDocumentModel>)xs.Deserialize(s);
-            }
-            catch
-            {
-                
-            }
-            return oldList;
-        }
+        //public override void OnCheck(object e)
+        //{
+        //    var ec = e as ActionExecutionContext;
+        //    var cb = ec.Source as CheckBox;
 
-        public override void OnCheck(object e)
-        {
-            var ec = e as ActionExecutionContext;
-            var cb = ec.Source as CheckBox;
-
-            var view = ec.View as ConfirmedFolderView;
-            var dg = view.Documents;
-            var items = dg.SelectedItems;
-            foreach (var item in items)
-            {
-                var doc = item as DocumentModel;
-                doc.IsChecked = cb.IsChecked.GetValueOrDefault();
-            }
-        }
+        //    var view = ec.View as ConfirmedFolderView;
+        //    var dg = view.Documents;
+        //    var items = dg.SelectedItems;
+        //    foreach (var item in items)
+        //    {
+        //        var doc = item as DocumentModel;
+        //        doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+        //    }
+        //}
     }
 }

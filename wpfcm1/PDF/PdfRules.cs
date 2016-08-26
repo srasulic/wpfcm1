@@ -11,12 +11,12 @@ namespace wpfcm1.PDF
         {
             {FolderManager.InvoicesOutboundErpIfaceFolder, SignatureLocation.UpperLeft},
             {FolderManager.InvoicesInboundInboxFolder, SignatureLocation.UpperRight},
-            {FolderManager.InvoicesInboundConfirmedFolder, SignatureLocation.UpperRight},
+            {FolderManager.InvoicesInboundConfirmedToDoFolder, SignatureLocation.UpperRight},
             {FolderManager.IosOutboundErpIfaceFolder, SignatureLocation.UpperLeft},
             {FolderManager.IosInboundInboxFolder, SignatureLocation.UpperRight},
             {FolderManager.KpOutboundErpIfaceFolder, SignatureLocation.UpperLeft},
             {FolderManager.KpInboundInboxFolder, SignatureLocation.UpperRight},
-            {FolderManager.KpInboundConfirmedFolder, SignatureLocation.UpperRight},
+            {FolderManager.KpInboundConfirmedToDoFolder, SignatureLocation.UpperRight},
             {FolderManager.OtherOutboundErpIfaceFolder, SignatureLocation.UpperLeft},
             {FolderManager.OtherInboundInboxFolder, SignatureLocation.UpperRight}
 
@@ -35,12 +35,12 @@ namespace wpfcm1.PDF
         {
             {FolderManager.InvoicesOutboundErpIfaceFolder, FolderManager.InvoicesOutboundOutboxFolder},
             {FolderManager.InvoicesInboundInboxFolder, FolderManager.InvoicesInboundOutboxFolder},
-            {FolderManager.InvoicesInboundConfirmedFolder, FolderManager.InvoicesInboundOutboxFolder},
+            {FolderManager.InvoicesInboundConfirmedToDoFolder, FolderManager.InvoicesInboundOutboxFolder},
             {FolderManager.IosOutboundErpIfaceFolder, FolderManager.IosOutboundOutboxFolder},
             {FolderManager.IosInboundInboxFolder, FolderManager.IosInboundOutboxFolder},
             {FolderManager.KpOutboundErpIfaceFolder, FolderManager.KpOutboundOutboxFolder},
             {FolderManager.KpInboundInboxFolder, FolderManager.KpInboundOutboxFolder},
-            {FolderManager.KpInboundConfirmedFolder, FolderManager.KpInboundOutboxFolder},
+            {FolderManager.KpInboundConfirmedToDoFolder, FolderManager.KpInboundOutboxFolder},
             {FolderManager.OtherOutboundErpIfaceFolder, FolderManager.OtherOutboundOutboxFolder},
             {FolderManager.OtherInboundInboxFolder, FolderManager.OtherInboundOutboxFolder}
         };
@@ -68,12 +68,12 @@ namespace wpfcm1.PDF
         {
             {FolderManager.InvoicesOutboundErpIfaceFolder, FinalAction.Store},
             {FolderManager.InvoicesInboundInboxFolder, FinalAction.SecondSignatureMark},
-            {FolderManager.InvoicesInboundConfirmedFolder, FinalAction.SecondSignatureMark},
+            {FolderManager.InvoicesInboundConfirmedToDoFolder, FinalAction.SecondSignatureMark},
             {FolderManager.IosOutboundErpIfaceFolder, FinalAction.Store},
             {FolderManager.IosInboundInboxFolder, FinalAction.SecondSignatureMark},
             {FolderManager.KpOutboundErpIfaceFolder, FinalAction.Store},
             {FolderManager.KpInboundInboxFolder, FinalAction.SecondSignatureMark},
-            {FolderManager.KpInboundConfirmedFolder, FinalAction.SecondSignatureMark},
+            {FolderManager.KpInboundConfirmedToDoFolder, FinalAction.SecondSignatureMark},
             {FolderManager.OtherOutboundErpIfaceFolder, FinalAction.Store},
             {FolderManager.OtherInboundInboxFolder, FinalAction.SecondSignatureMark}
         };
