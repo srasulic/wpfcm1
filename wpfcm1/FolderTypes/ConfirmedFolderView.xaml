@@ -25,13 +25,7 @@
                   AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Binding="{Binding IsChecked}" HeaderStyle="{StaticResource CheckBoxHeaderStyle}"/>
-                <DataGridTextColumn Header="Naziv fajla" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="FontWeight" Value="{Binding Processed, Converter={StaticResource ib2bc}}" />
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
+                <DataGridTextColumn Header="Naziv fajla" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Pib izdavalac" Binding="{Binding Path=namePib1}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Pib primalac" Binding="{Binding Path=namePib2}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Br Dok" Binding="{Binding Path=nameDocNum}" IsReadOnly="True"/>

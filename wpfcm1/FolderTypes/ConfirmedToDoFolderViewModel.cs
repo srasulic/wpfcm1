@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 
 namespace wpfcm1.FolderTypes
 {
-    public class ConfirmedToDoFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageXls>
+    public class ConfirmedToDoFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageXls>, IHandle<MessageReject>
     {
         private readonly IWindowManager _windowManager;
         private CertificateModel _certificate;
@@ -120,6 +120,20 @@ namespace wpfcm1.FolderTypes
                 //TODO: ovo mora drugacije
                 _events.PublishOnUIThread(new MessageShowPdf(PreviewViewModel.Empty));
                 var result = _windowManager.ShowDialog(new DialogSignViewModel(_certificate, this));
+            }
+        }
+
+        public void Handle(MessageReject message)
+        {
+            if (IsActive)
+            {
+                var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<DocumentModel>();
+                if (!checkedDocuments.Any()) return;
+                // TODO: dodati dijalog, sada radimo bez upozorenja
+                foreach (var document in checkedDocuments)
+                {
+                    document.Processed = true;
+                }
             }
         }
 
