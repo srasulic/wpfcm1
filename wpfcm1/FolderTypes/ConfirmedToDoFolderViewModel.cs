@@ -59,11 +59,6 @@ namespace wpfcm1.FolderTypes
                 }
             }
 
-            for (int i = Documents.Count - 1; i >= 0; i-- )
-            {
-                if (Documents[i].IsSignedAgain) Documents.RemoveAt(i);
-            }
-
             var states = Deserialize();
             foreach (var state in states)
             {
@@ -72,6 +67,11 @@ namespace wpfcm1.FolderTypes
                 var old = found as DocumentModel;
                 old.Processed = state.Processed;
                 old.IsSignedAgain = state.IsSignedAgain;
+            }
+        
+            for (int i = Documents.Count - 1; i >= 0; i--)
+            {
+                if (Documents[i].IsSignedAgain || Documents[i].Processed || Documents[i].HasSecondSigniture) Documents.RemoveAt(i);
             }
         }
     
@@ -127,12 +127,13 @@ namespace wpfcm1.FolderTypes
         {
             if (IsActive)
             {
-                var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<DocumentModel>();
+                var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<ConfirmedToDoDocumentModel>();
                 if (!checkedDocuments.Any()) return;
                 // TODO: dodati dijalog, sada radimo bez upozorenja
                 foreach (var document in checkedDocuments)
                 {
                     document.Processed = true;
+                    document.IsRejected = true;
                 }
             }
         }
@@ -151,9 +152,33 @@ namespace wpfcm1.FolderTypes
 
         private void Serialize()
         {
+            // serijalizujemo ceo folder
+            var AllDocuments = new BindableCollection<DocumentModel>(
+                Directory.EnumerateFiles(FolderPath)
+                .Where(f => Extensions.Contains(Path.GetExtension(f)))
+                .Select(f => new ConfirmedToDoDocumentModel(new FileInfo(f))));
+
+
+            foreach (var document in AllDocuments)
+            {
+                var found = Documents.FirstOrDefault(d => d.DocumentPath == document.DocumentPath);
+                if (found == null)
+                {
+                    document.Processed = true;
+                }
+                else
+                {
+                    var docForSerialization = found as DocumentModel;
+                    document.Processed = docForSerialization.Processed ;
+                    document.IsSignedAgain = docForSerialization.IsSignedAgain;
+                    document.HasSecondSigniture= docForSerialization.HasSecondSigniture;
+                }
+            }
+            
+            // sada su svi koji su bili i ToDo listi zapamceni a svo koji nisu bili tu su obelezeni kao procesirani
             var filePath = Path.Combine(FolderPath, "stateToDo.xml");
             var file = File.Create(filePath);
-            List<ConfirmedToDoDocumentModel> items = Documents.Cast<ConfirmedToDoDocumentModel>().ToList();
+            List<ConfirmedToDoDocumentModel> items = AllDocuments.Cast<ConfirmedToDoDocumentModel>().ToList();
             var xs = new XmlSerializer(typeof(List<ConfirmedToDoDocumentModel>));
             using (Stream s = file)
                 xs.Serialize(s, items);

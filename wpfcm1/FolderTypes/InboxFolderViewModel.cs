@@ -112,6 +112,15 @@ namespace wpfcm1.FolderTypes
             if (!IsActive) return;
             var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<InboxDocumentModel>();
             var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).ToList();
+            //// ako nije bilo cekiranih dokumenata
+            //// dodajemo ih iz liste selektovanih
+            //// NAPOMENA: izbaceno jer moramo proveriti da li ce ih zbuniti dvojako ponasanje programa!
+            //if (!checkedDocuments.Any())
+            //{
+            //    var v = GetView() as UserControl;
+            //    var dg = v.FindName("Documents") as DataGrid;
+            //    validDocuments = dg.SelectedItems.Cast<InboxDocumentModel>().ToList().Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).ToList();
+            //}
             var destinationDir = SigningTransferRules.LocalMap[FolderPath];
             foreach (var document in validDocuments)
             {

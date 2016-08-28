@@ -16,4 +16,5 @@
     <BitmapImage x:Key="PngWait" UriSource="../Media/time16.png" />
     <BitmapImage x:Key="PngGreenPdf" UriSource="../Media/green_pdf_plain16.png" />
     <BitmapImage x:Key="PngAck" UriSource="../Media/ack16.png" />
+    <BitmapImage x:Key="PngMinus" UriSource="../Media/minus16.png" />
 </ResourceDictionary>

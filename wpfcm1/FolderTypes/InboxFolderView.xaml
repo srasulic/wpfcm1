@@ -33,7 +33,7 @@
         <DataGrid x:Name="Documents" cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChanged($eventArgs)]"
                   AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False" >
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Binding="{Binding IsChecked}" HeaderStyle="{StaticResource CheckBoxHeaderStyle}"/>
+                <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}" Binding="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource CheckBoxHeaderStyle}"/>
                 <DataGridTextColumn Header="Naziv fajla" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
