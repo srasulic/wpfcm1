@@ -53,12 +53,27 @@ namespace wpfcm1.Certificates
             var crlList = new List<ICrlClient>();
             foreach (var crlUrl in crlUrls)
             {
-                using (var de = new DirectoryEntry(crlUrl) { AuthenticationType = AuthenticationTypes.Anonymous })
+                if (Regex.IsMatch(crlUrl, @"http.+", RegexOptions.IgnoreCase)) 
                 {
-                    var crlBytes = de.Properties["certificateRevocationList;binary"].Value as byte[];
-                    var ccoff = new CrlClientOffline(crlBytes);
+
+                    System.Net.WebRequest req = System.Net.HttpWebRequest.Create(crlUrl);
+                    System.IO.Stream ins = req.GetResponse().GetResponseStream();
+                    var baos = new System.IO.MemoryStream();
+                    byte[] buf = new byte[1024];
+                    int readedBytes;
+                    while ((readedBytes = ins.Read(buf, 0, 1024)) > 0) baos.Write(buf, 0, readedBytes);
+                    ins.Close();
+                    ICrlClient ccoff = new CrlClientOffline(baos.ToArray());
                     crlList.Add(ccoff);
-                }
+
+                } else {
+                    using (var de = new DirectoryEntry(crlUrl) { AuthenticationType = AuthenticationTypes.Anonymous })
+                    {
+                        var crlBytes = de.Properties["certificateRevocationList;binary"].Value as byte[];
+                        var ccoff = new CrlClientOffline(crlBytes);
+                        crlList.Add(ccoff);
+                    }
+               }
             }
             return crlList;
         }
@@ -87,7 +102,7 @@ namespace wpfcm1.Certificates
             var errors = new List<string>();
 
             var certificateSimpleName = certificate.GetNameInfo(X509NameType.SimpleName, false);
-            var match = Regex.Match(certificateSimpleName, @"\b(\d{9})(-(\d{13}))?\b");
+            var match = Regex.Match(certificateSimpleName, @"\b(\d{6,9})(-(\d{13}))?\b");
             var jmbg = match.Groups[3].Value;
             if (!string.IsNullOrEmpty(jmbg))
             {
