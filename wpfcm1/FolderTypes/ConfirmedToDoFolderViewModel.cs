@@ -101,7 +101,18 @@ namespace wpfcm1.FolderTypes
         protected override void AddFile(string filePath)
         {
             // TODO: dodati provere da se ne dodaju ack, da ss ažurira s, da xml ažurira status...
-            Documents.Add(new DocumentModel(new FileInfo(filePath)));
+            if (Regex.IsMatch(filePath, @".+.pdf.xml$", RegexOptions.IgnoreCase))
+            {
+                var docName = Regex.Replace(filePath, @".xml", "");
+                foreach (var found in Documents.Where(d => d.DocumentPath == docName))
+                {
+                    UpdateIsApprovedForSigningStatus(found);
+                }
+            }
+            else
+            {
+                Documents.Add(new DocumentModel(new FileInfo(filePath)));
+            }
         }
 
         protected override void OnActivate()
