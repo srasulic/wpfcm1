@@ -1,7 +1,9 @@
 ﻿using Caliburn.Micro;
+using iTextSharp.text.pdf.security;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using wpfcm1.Events;
@@ -126,6 +128,65 @@ namespace wpfcm1.FolderTypes
             {
 
             }
+        }
+
+        protected async Task ValidateDocSignituresAsync()
+        {
+//            var documents = Documents.Where(d => !d.Processed).Cast<InboxDocumentModel>();
+            var documents = Documents.Where(d => !d.isValidated).Cast<DocumentModel>();
+            foreach (var document in documents)
+            {
+                var isValid = await PdfHelpers.ValidatePdfCertificatesAsync(document.DocumentPath);
+                document.IsValid = isValid;
+                document.isValidated = true;
+                //document.Processed = true;
+                // PROTOTIP - za sada obradjujemo prvi i drugi potpis na koji naidjemo. Doraditi za ostale!
+                PdfPKCS7 pkcs7 = await PdfHelpers.GetPcks7Async(document.DocumentPath, 1);
+                if (!(pkcs7 == null))
+                {
+                    document.sigReason = pkcs7.Reason;
+                    document.sigTS = pkcs7.TimeStampDate;
+                    document.sigDateSigned = pkcs7.SignDate;
+                    document.sigSignerName = System.Text.RegularExpressions.Regex.Replace(CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"CN"), @"[0-9]", "");
+                    var docFields = CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetFields();
+                    String organization = "";
+                    foreach (var ouField in docFields.Where(f => f.Key == @"OU") ){
+                        foreach (var ou in ouField.Value)
+                            organization = String.Format("{0}, {1}", organization, ou) ;
+                    }
+
+                    organization = String.Format("{0}, {1}", organization, CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"O"));
+                    document.sigOrg = organization;
+                }
+                pkcs7 = await PdfHelpers.GetPcks7Async(document.DocumentPath, 2);
+                if (!(pkcs7 == null))
+                {
+                    document.sigReason2 = pkcs7.Reason;
+                    document.sigTS2 = pkcs7.TimeStampDate;
+                    document.sigDateSigned2 = pkcs7.SignDate;
+                    document.sigSignerName2 = CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"CN");
+                    document.sigOrg2 = String.Format("{0} - {1}", CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"O"), CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"OU"));
+                }
+                SetSigAdditionalInfo(document);
+            }
+        }
+
+        protected void SetSigAdditionalInfo(DocumentModel document)
+        {
+            string strdateTS;
+            string strdateDate;
+            string strdateTS2;
+            string strdateDate2;
+            if (document.sigTS == DateTime.MinValue) strdateTS = ""; else strdateTS = document.sigTS.ToShortDateString();
+            if (document.sigDateSigned == DateTime.MinValue) strdateDate = ""; else strdateDate = document.sigDateSigned.ToShortDateString();
+            if (document.sigTS2 == DateTime.MinValue) strdateTS2 = ""; else strdateTS2 = document.sigTS2.ToShortDateString();
+            if (document.sigDateSigned2 == DateTime.MinValue) strdateDate2 = ""; else strdateDate2 = document.sigDateSigned2.ToShortDateString();
+            document.sigAdditionalInfo = String.Format(@"* Potpis 1:{0}Reason: {1}{0}Potpisao: {2}, {3} {0}TimeStamp datum: {4} {0}Datum potpisa: {5} {0}{0}** Potpis 2:{0}Reason: {6}{0}Potpisao: {7}, {8}{0}TimeStamp datum: {9}{0}Datum potpisa: {10} ",
+                            Environment.NewLine,
+                            document.sigReason, document.sigSignerName, document.sigOrg, strdateTS, strdateDate,
+                            document.sigReason2, document.sigSignerName2, document.sigOrg2, strdateTS2, strdateDate2
+                            );
+
         }
 
         protected override void OnActivate()

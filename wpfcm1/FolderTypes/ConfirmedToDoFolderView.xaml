@@ -13,14 +13,18 @@
                 <BooleanToVisibilityConverter x:Key="b2vc" />
                 <conv:InverseBooleanToVisibilityConverter x:Key="ib2vc" />
                 <conv:InverseBooleanToBoldConverter x:Key="ib2bc" />
-                <DataTemplate x:Key="SSCol">
+                <DataTemplate x:Key="ImgCol">
                     <StackPanel>
-                        <Image Source="{StaticResource PngLock}" Visibility="{Binding Path=HasSecondSigniture, Converter={StaticResource b2vc}}"/>
-                        <Image Source="{StaticResource PngGreenPdf}" Visibility="{Binding Path=HasSecondSigniture, Converter={StaticResource ib2vc}}"/>
+                        <Image Source="{StaticResource PngGreenPdf}" Visibility="{Binding Path=IsValid, Converter={StaticResource b2vc}}"/>
+                        <Image Source="{StaticResource PngError}" Visibility="{Binding Path=IsValid, Converter={StaticResource ib2vc}}"/>
                     </StackPanel>
                 </DataTemplate>
                 <DataTemplate x:Key="SignedAgainCol">
-                    <Image Source="{StaticResource PngOk}" Visibility="{Binding Path=IsSignedAgain, Converter={StaticResource b2vc}}"/>
+                    <StackPanel>
+                        <Image Source="{StaticResource PngOk}" Visibility="{Binding Path=IsSignedAgain, Converter={StaticResource b2vc}}"/>
+                        <Image Source="{StaticResource PngCheck}" Visibility="{Binding Path=IsAcked_NotSigned_Approved, Converter={StaticResource b2vc}}"/>
+                        <Image Source="{StaticResource PngRemove}" Visibility="{Binding Path=IsAcked_NotSigned_NotApproved, Converter={StaticResource b2vc}}"/>
+                    </StackPanel>
                 </DataTemplate>
                 <DataTemplate x:Key="WaitForSrvProcessing">
                     <StackPanel>
@@ -48,9 +52,19 @@
                 <DataGridTextColumn Header="Br Dok" Binding="{Binding Path=nameDocNum}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Datum" Binding="{Binding Path=nameDate}" IsReadOnly="True" />
                 <DataGridTextColumn Header="Size" Binding="{Binding Path=LengthKB, StringFormat='\{0:N0\} KB'}" IsReadOnly="True"/>
-                <DataGridTemplateColumn Header="{StaticResource appbar_draw_pen_reflection16}" CellTemplate="{StaticResource SSCol}" MinWidth="32" IsReadOnly="True"/>
+                <DataGridTemplateColumn Header="{StaticResource appbar_checkmark16}" CellTemplate="{StaticResource ImgCol}" MinWidth="32" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="{Binding sigAdditionalInfo}" />
+                        </Style>
+                    </DataGridTemplateColumn.CellStyle>
+                </DataGridTemplateColumn>
                 <DataGridTemplateColumn  CellTemplate="{StaticResource SignedAgainCol}" MinWidth="32" IsReadOnly="True"/>
                 <DataGridTemplateColumn CellTemplate="{StaticResource WaitForSrvProcessing}" MinWidth="32" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Reason" Binding="{Binding Path=sigReason}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Potpisao" Binding="{Binding Path=sigSignerName}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Organizacija" Binding="{Binding Path=sigOrg}" IsReadOnly="True" />
+                <DataGridTextColumn Header="TS Vreme" Binding="{Binding Path=sigTS}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

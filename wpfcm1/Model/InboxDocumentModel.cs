@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace wpfcm1.Model
 {
@@ -13,10 +14,6 @@ namespace wpfcm1.Model
         }
 
 
-        public bool IsAckedAndSigned
-        {
-            get { return IsAcknowledged & HasSecondSigniture; }
-        }
 
     }
 }

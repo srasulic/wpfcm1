@@ -69,11 +69,11 @@ namespace wpfcm1
         {
             Log.Error("Unhandled exception", e.Exception);
             //TODO: ovo izbrisi pod hitno
-            MessageBox.Show(
-                Application.Current.MainWindow,
-                "Error encountered!" + Environment.NewLine + e.Exception.Message,
-                "Application Error",
-                MessageBoxButton.OK, MessageBoxImage.Error);
+            //MessageBox.Show(
+            //    Application.Current.MainWindow,
+            //    "Error encountered!" + Environment.NewLine + e.Exception.Message,
+            //    "Application Error",
+            //    MessageBoxButton.OK, MessageBoxImage.Error);
 
             e.Handled = true;
         }

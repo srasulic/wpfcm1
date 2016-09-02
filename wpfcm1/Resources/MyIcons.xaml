@@ -10,6 +10,20 @@
     <Canvas x:Key="appbar_checkmark16" Width="16" Height="16" Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
         <Path Width="11" Height="16" Stretch="Uniform" Fill="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Data="F1 M 32.222,33.4875L 39.1886,40.0582L 51.3802,26.1251L 54.7052,29.0542L 39.5845,47.5L 28.897,36.8125L 32.222,33.4875 Z M 24,27L 48.5,27L 45.5,30L 27,30L 27,49L 46,49L 46,42.5L 49,38.75L 49,52L 24,52L 24,27 Z "/>
     </Canvas>
+    <Canvas x:Key="playlist_check24" Width="24" Height="24">
+        <Path Data="M14,10H2V12H14V10M14,6H2V8H14V6M2,16H10V14H2V16M21.5,11.5L23,13L16,20L11.5,15.5L13,14L16,17L21.5,11.5Z" Fill="Black" />
+    </Canvas>
+    <Canvas x:Key="playlist_remove24" Width="24" Height="24">
+        <Path Data="M2,6V8H14V6H2M2,10V12H10V10H2M14.17,10.76L12.76,12.17L15.59,15L12.76,17.83L14.17,19.24L17,16.41L19.83,19.24L21.24,17.83L18.41,15L21.24,12.17L19.83,10.76L17,13.59L14.17,10.76M2,14V16H10V14H2Z" Fill="Black" />
+    </Canvas>
+    <Canvas x:Key="bookmark_check24" Width="24" Height="24">
+        <Path Data="M17,3A2,2 0 0,1 19,5V21L12,18L5,21V5C5,3.89 5.9,3 7,3H17M11,14L17.25,7.76L15.84,6.34L11,11.18L8.41,8.59L7,10L11,14Z" Fill="Black" />
+    </Canvas>
+    <Canvas x:Key="bookmark_remove24" Width="24" Height="24">
+        <Path Data="M17,3A2,2 0 0,1 19,5V21L12,18L5,21V5C5,3.89 5.9,3 7,3H17M8.17,8.58L10.59,11L8.17,13.41L9.59,14.83L12,12.41L14.41,14.83L15.83,13.41L13.41,11L15.83,8.58L14.41,7.17L12,9.58L9.59,7.17L8.17,8.58Z" Fill="Black" />
+    </Canvas>
+    <BitmapImage x:Key="PngRemove" UriSource="../Media/remove16.png" />
+    <BitmapImage x:Key="PngCheck" UriSource="../Media/check16.png" />
     <BitmapImage x:Key="PngError" UriSource="../Media/error16.png" />
     <BitmapImage x:Key="PngOk" UriSource="../Media/ok16.png" />
     <BitmapImage x:Key="PngLock" UriSource="../Media/lock16.png" />

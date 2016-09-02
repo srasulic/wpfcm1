@@ -19,6 +19,7 @@ namespace wpfcm1.Dialogs
         private readonly FolderViewModel _folder;
         private readonly Progress<string> _reporter;
         private CancellationTokenSource _cancellation;
+        private bool _buttonApproveVisible; 
 
         public DialogSignViewModel(CertificateModel certificate, FolderViewModel folder)
         {
@@ -34,9 +35,22 @@ namespace wpfcm1.Dialogs
             foreach (var document in Documents)
             {
                 Reports.Add(document.DocumentInfo.Name);
-                }
+            }
 
+            if (_folder is InboxFolderViewModel)
+            {
+                _buttonApproveVisible = true;
+            }
+            else
+            {
+                _buttonApproveVisible = false;
+            }
 
+        }
+
+        public bool buttonApproveVisible { 
+            get { return _buttonApproveVisible; } 
+            set { }  
         }
 
         public BindableCollection<string> Reports { get; set; }
@@ -132,6 +146,26 @@ namespace wpfcm1.Dialogs
             finally
             {
                 InProgress = false;
+            }
+        }
+
+        public void OnApprove()
+        {
+            if (_folder is InboxFolderViewModel)
+            {
+                (_folder as InboxFolderViewModel).ApproveDocumens(true);
+                Reports.Clear();
+                Reports.Add("Dokumenti su označeni kao ispravni i odobreni za dalju obradu i potpisivanje...");
+            }
+        }
+
+        public void OnApproveNot()
+        {
+            if (_folder is InboxFolderViewModel)
+            {
+                (_folder as InboxFolderViewModel).ApproveDocumens(false);
+                Reports.Clear();
+                Reports.Add("Dokumenti su označeni kao nevalidni za dalju obradu i potpisivanje...");
             }
         }
 

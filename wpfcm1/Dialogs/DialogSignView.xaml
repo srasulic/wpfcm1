@@ -8,6 +8,11 @@
     BorderThickness="1"
     Width="500" Height="300">
     <Grid Margin="5">
+        <Grid.Resources>
+            <ResourceDictionary>
+                <BooleanToVisibilityConverter x:Key="b2vc" />
+            </ResourceDictionary>
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition />
@@ -20,10 +25,37 @@
                  mah:TextBoxHelper.ClearTextButton="True"
                  />
         <ListBox x:Name="Reports" Grid.Row="1" />
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Left">
+            <Button Style="{DynamicResource MetroCircleButtonStyle}" Width="55" Height="55" Visibility="{Binding Path=buttonApproveVisible, Converter={StaticResource b2vc}}"  x:Name="OnApprove" Margin="3,3,3,3" ToolTip="Odobri za potpisivanje">
+                <Rectangle Width="23" Height="23"
+                   Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Uniform" Visual="{DynamicResource playlist_check24}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+            <Button Style="{DynamicResource MetroCircleButtonStyle}" Width="55" Height="55" Visibility="{Binding Path=buttonApproveVisible, Converter={StaticResource b2vc}}"  x:Name="OnApproveNot" Margin="3,3,10,3" ToolTip="Označi dokumente kao neodobrene za potpisivanje">
+                <Rectangle Width="23" Height="23"
+                       Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Uniform" Visual="{DynamicResource playlist_remove24}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+        </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
-            <Button Content="Start" Width="96" Height="32" x:Name="OnStart" Margin="3"/>
-            <Button Content="Close" Width="96" Height="32" x:Name="OnClose" Margin="3"/>
-            <Button Content="Cancel" Width="96" Height="32" x:Name="OnCancel" Margin="3,3,0,3" />
+            <Button Style="{DynamicResource MetroCircleButtonStyle}" Width="55" Height="55"  x:Name="OnStart" Margin="30,3,200,3" ToolTip="Potpiši dokumente odmah">
+                <Rectangle Width="28" Height="28"
+                           Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Uniform" Visual="{DynamicResource appbar_draw_pen_reflection}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
+            <Button Content="Zatvori" Width="80" Height="32" x:Name="OnClose" Margin="60,3,0,3"/>
+            <Button Content="Cancel" Width="80" Height="32" x:Name="OnCancel" Margin="3,3,0,3" />
         </StackPanel>
     </Grid>
 </mah:MetroWindow>

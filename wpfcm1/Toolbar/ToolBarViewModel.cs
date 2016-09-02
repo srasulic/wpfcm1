@@ -13,7 +13,7 @@ namespace wpfcm1.Toolbar
         public ToolBarViewModel(IEventAggregator events)
         {
             Buttons = new BindableCollection<ToolBarButtonViewModel>();
-            Buttons.Add(new ToolBarButtonViewModel(events, "appbar_home_empty", "Početni ekran", new MessageShowHome()));
+            Buttons.Add(new ToolBarButtonViewModel(events, "appbar_home_empty", "Početni ekran", new MessageShowHome())); 
             Buttons.Add(new ToolBarButtonViewModel(events, "appbar_arrow_down_up", "Pošalji i primi dokumente", new MessageSync()));
             Buttons.Add(new ToolBarButtonViewModel(events, "appbar_page_search", "Pregled dokumenta", new MessageTogglePreview()));
            // Buttons.Add(new ToolBarButtonViewModel(events, "appbar_list_gear", "Obrada - Izvlačenje podataka", new MessageExtractData()));

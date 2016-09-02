@@ -26,7 +26,14 @@ namespace wpfcm1.Model
                 IsQualified = false;
                 return;
             }
-
+            //////////
+            // privremeno za TEST
+            //
+            //IsQualified = true;
+            //return;
+            //
+            //
+            /////////
             var chainBuildInfo = CertificateHelpers.GetChain(Certificate);
             var chain = chainBuildInfo.Item1;
             ChainElements = CertificateHelpers.GetChainElements(chain);

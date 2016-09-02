@@ -11,6 +11,7 @@ using wpfcm1.PDF;
 using wpfcm1.Preview;
 using System;
 using System.Text.RegularExpressions;
+using iTextSharp.text.pdf.security;
 
 namespace wpfcm1.FolderTypes
 {
@@ -42,9 +43,28 @@ namespace wpfcm1.FolderTypes
                 var old = found as InboxDocumentModel;
                 old.IsChecked = state.IsChecked;
                 old.IsValid = state.IsValid;
+                old.isValidated = state.isValidated;
                 old.Processed = state.Processed;
                 old.IsAcknowledged = state.IsAcknowledged;
                 old.HasSecondSigniture = state.HasSecondSigniture;
+                old.isApprovedForSigning = state.isApprovedForSigning;
+
+                old.sigReason = state.sigReason;
+                old.sigTS = state.sigTS;
+                old.sigDateSigned = state.sigDateSigned;
+                old.sigSignerName = state.sigSignerName;
+                old.sigOrg = state.sigOrg;
+
+                old.sigReason2 = state.sigReason2;
+                old.sigTS2 = state.sigTS2;
+                old.sigDateSigned2 = state.sigDateSigned2;
+                old.sigSignerName2 = state.sigSignerName2;
+                old.sigOrg2 = state.sigOrg2;
+
+            }
+            foreach (var document in Documents)
+            {
+                SetSigAdditionalInfo(document);
             }
         }
 
@@ -98,13 +118,7 @@ namespace wpfcm1.FolderTypes
         public async void Handle(MessageValidate message)
         {
             if (!IsActive) return;
-            var documents = Documents.Where(d => !d.Processed).Cast<InboxDocumentModel>();
-            foreach (var document in documents)
-            {
-                var isValid = await PdfHelpers.ValidatePdfCertificatesAsync(document.DocumentPath);
-                document.IsValid = isValid;
-                document.Processed = true;
-            }
+            await ValidateDocSignituresAsync();
         }
 
         public void Handle(MessageAck message)
@@ -131,12 +145,46 @@ namespace wpfcm1.FolderTypes
             }
         }
 
+        //public void Handle(MessageToDo message)
+        //{
+        //    if (!IsActive) return;
+        //    var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<InboxDocumentModel>();
+        //    var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).ToList();
+        //    var destinationDir = SigningTransferRules.LocalMap[FolderPath];
+        //    foreach (var document in validDocuments)
+        //    {
+        //        var fileName = Path.GetFileName(document.DocumentPath);
+        //        var destinationFilePath = Path.Combine(destinationDir, fileName + ".ack");
+        //        File.Create(destinationFilePath).Dispose();
+        //        document.IsAcknowledged = true;
+        //    }
+        //}
+
         public IList<DocumentModel> GetDocumentsForSigning()
         {
             var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<InboxDocumentModel>();
             //var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).Cast<DocumentModel>().ToList();
             var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && d.IsAcknowledged && !d.HasSecondSigniture).Cast<DocumentModel>().ToList();
             return validDocuments;
+        }
+
+        public void ApproveDocumens(bool aproved)
+        {
+            if (!IsActive) return;
+            
+            var documents = GetDocumentsForSigning();
+            var destinationDir = SigningTransferRules.LocalMap[FolderPath];
+            foreach (var document in documents)
+            {
+                document.Processed = true;
+                document.isApprovedForSigning = aproved;
+                var fileName = Path.GetFileName(document.DocumentPath);
+                var destinationFilePath = Path.Combine(destinationDir, fileName + ".xml");
+                var file = File.Create(destinationFilePath);
+                var xs = new XmlSerializer(typeof(InboxDocumentModel));
+                using (Stream s = file)
+                    xs.Serialize(s, document);
+            }
         }
 
         public override void Dispose()

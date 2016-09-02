@@ -71,9 +71,31 @@ namespace wpfcm1.PDF
             return isValid;
         }
 
+        public static PdfPKCS7 GetPcks7(string path, int position)
+        {
+            // PROTOTIP: obradjuje samo prvi na koji naidje...
+            var reader = new PdfReader(path);
+            AcroFields fields = reader.AcroFields;
+            var i = 1;
+            foreach (var sigName in fields.GetSignatureNames())
+            {
+                if (i++ == position)
+                {
+                    PdfPKCS7 pkcs7 = fields.VerifySignature(sigName);
+                    return pkcs7;
+                }
+            }
+            return null;
+        }
+
         public static Task<bool> ValidatePdfCertificatesAsync(string path)
         {
             return Task.Run(() => ValidatePdfCertificates(path));
+        }
+        
+        public static Task<PdfPKCS7> GetPcks7Async(string path, int position)
+        {
+            return Task.Run(() => GetPcks7(path, position));
         }
 
         private static void CheckIntegrity(AcroFields fields)
@@ -114,7 +136,7 @@ namespace wpfcm1.PDF
                 X509Certificate issuerCert = (certs.Length > 1 ? certs[1] : null);
 
                 CheckRevocation(pkcs7, signCert, issuerCert, signDate);
-                CheckRevocation(pkcs7, signCert, issuerCert, DateTime.Now);
+                //CheckRevocation(pkcs7, signCert, issuerCert, DateTime.Now);
             }
         }
 
