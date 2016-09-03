@@ -17,6 +17,7 @@ namespace wpfcm1.FolderTypes
     public class PendFolderViewModel : FolderViewModel, IHandle<MessageXls>
     {
         private readonly IWindowManager _windowManager;
+        new protected string[] Extensions = { ".pdf", ".ack", ".xml" };
 
         public PendFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
         {
@@ -28,6 +29,7 @@ namespace wpfcm1.FolderTypes
             Documents = new BindableCollection<DocumentModel>(
                 Directory.EnumerateFiles(FolderPath)
                 .Where(f => Extensions.Contains(Path.GetExtension(f)))
+                .Where(f => !(Regex.IsMatch(Path.GetFileName(f), @".+ate.xml", RegexOptions.IgnoreCase)))
                 .Select(f => new PendDocumentModel(new FileInfo(f))));
             
             InitWatcher(FolderPath);

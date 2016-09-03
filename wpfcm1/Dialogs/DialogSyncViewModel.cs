@@ -1,9 +1,11 @@
 ﻿using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 using wpfcm1.Extensions;
 using wpfcm1.FolderTypes;
 using wpfcm1.FTP;
@@ -11,6 +13,8 @@ using wpfcm1.Model;
 using wpfcm1.PDF;
 using wpfcm1.Processing;
 using wpfcm1.Settings;
+
+
 
 namespace wpfcm1.Dialogs
 {
@@ -20,7 +24,8 @@ namespace wpfcm1.Dialogs
         private readonly Dictionary<string, FolderViewModel> _folders;
         private readonly Progress<string> _reporter;
         private CancellationTokenSource _cancellation;
-
+        
+        
         public DialogSyncViewModel(Dictionary<string, FolderViewModel> folders)
         {
             DisplayName = "PoliSign - sinhronizacija sa serverom";
@@ -116,9 +121,14 @@ namespace wpfcm1.Dialogs
 
             foreach (var folder in _folders)
             {
+
                 var sourceDir = folder.Key;
                 var destinationDir = FtpTransferRules.FtpMap[sourceDir];
-                var documents = new List<DocumentModel>(folder.Value.Documents); //shallow copy, cannot iterate collection that is going to be modified
+                //var documents = new List<DocumentModel>(folder.Value.Documents); //shallow copy, cannot iterate collection that is going to be modified
+                // uzmemo sve fajlove u direktorijumu bez obzira na to sta se nalazi u listama sa kojima korisnik radi
+                var documents = new BindableCollection<DocumentModel>(
+                    Directory.EnumerateFiles(sourceDir)
+                        .Select(f => new DocumentModel(new FileInfo(f))));
                 var ftpAction = FtpTransferRules.Action[sourceDir];
                 var syncMgr = new SyncManager();
                 Log.Info(string.Format("Syncing {0} with {1}", sourceDir, destinationDir));

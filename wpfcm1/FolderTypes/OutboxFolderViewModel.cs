@@ -20,6 +20,8 @@ namespace wpfcm1.FolderTypes
     public class OutboxFolderViewModel : FolderViewModel, IHandle<MessageReject>, IHandle<MessageXls>
     {
         private readonly IWindowManager _windowManager;
+        new protected string[] Extensions = { ".pdf", ".ack", ".xml" };
+
 
         public OutboxFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
         {
@@ -31,6 +33,7 @@ namespace wpfcm1.FolderTypes
             Documents = new BindableCollection<DocumentModel>(
                 Directory.EnumerateFiles(FolderPath)
                 .Where(f => Extensions.Contains(Path.GetExtension(f)))
+                .Where(f => !( Regex.IsMatch(Path.GetFileName(f) , @".+ate.xml",RegexOptions.IgnoreCase) ) )
                 .Select(f => new OutboxDocumentModel(new FileInfo(f))));
 
             InitWatcher(FolderPath);
