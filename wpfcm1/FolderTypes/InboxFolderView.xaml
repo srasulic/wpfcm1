@@ -12,6 +12,11 @@
                 <BooleanToVisibilityConverter x:Key="b2vc" />
                 <conv:InverseBooleanToVisibilityConverter x:Key="ib2vc" />
                 <conv:InverseBooleanToBoldConverter x:Key="ib2bc" />
+
+                <conv:BooleanToColourConverter x:Key="b2cc" />
+                <conv:BooleanToBackgroundColourConverter x:Key="b2bcc" />
+                <conv:BooleanToUnderlineConverter x:Key="b2uc" />
+                
                 <DataTemplate x:Key="ImgCol">
                     <StackPanel>
                         <Image Source="{StaticResource PngGreenPdf}" Visibility="{Binding Path=IsValid, Converter={StaticResource b2vc}}"/>
@@ -42,6 +47,9 @@
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="FontWeight" Value="{Binding isValidated, Converter={StaticResource ib2bc}}" />
+                            <Setter Property="TextDecorations"  Value="{Binding IsChecked, Converter={StaticResource b2uc}}"  />
+                            <Setter Property="Foreground" Value="{Binding IsChecked, Converter={StaticResource b2cc}}" />
+                            <!--     <Setter Property="Background"  Value="{Binding IsChecked, Converter={StaticResource b2bcc}}" /> -->
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
