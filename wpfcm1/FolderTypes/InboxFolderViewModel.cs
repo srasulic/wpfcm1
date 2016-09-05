@@ -46,8 +46,10 @@ namespace wpfcm1.FolderTypes
                 old.isValidated = state.isValidated;
                 old.Processed = state.Processed;
                 old.IsAcknowledged = state.IsAcknowledged;
-                old.HasSecondSigniture = state.HasSecondSigniture;
-                old.isApprovedForSigning = state.isApprovedForSigning;
+                old.IsSignedAgain = state.IsSignedAgain;
+                old.HasSecondSignature = state.HasSecondSignature;
+                old.isApprovedForProcessing = state.isApprovedForProcessing;
+                old.IsRejected = state.IsRejected;
 
                 old.sigReason = state.sigReason;
                 old.sigTS = state.sigTS;
@@ -118,7 +120,7 @@ namespace wpfcm1.FolderTypes
         public async void Handle(MessageValidate message)
         {
             if (!IsActive) return;
-            await ValidateDocSignituresAsync();
+            await ValidateDocSignaturesAsync();
         }
 
         public void Handle(MessageAck message)
@@ -164,26 +166,22 @@ namespace wpfcm1.FolderTypes
         {
             var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<InboxDocumentModel>();
             //var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).Cast<DocumentModel>().ToList();
-            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && d.IsAcknowledged && !d.HasSecondSigniture).Cast<DocumentModel>().ToList();
+            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && d.IsAcknowledged && !d.HasSecondSignature).Cast<DocumentModel>().ToList();
             return validDocuments;
         }
 
-        public void ApproveDocumens(bool aproved)
+        public void SetApproved(bool approved)
         {
             if (!IsActive) return;
             
             var documents = GetDocumentsForSigning();
-            var destinationDir = SigningTransferRules.LocalMap[FolderPath];
             foreach (var document in documents)
             {
+                document.isApprovedForProcessing = approved;
+                document.IsRejected = !approved;
+                if (document.Processed) { document.Processed = false; };
+                SerializeMessage(document);
                 document.Processed = true;
-                document.isApprovedForSigning = aproved;
-                var fileName = Path.GetFileName(document.DocumentPath);
-                var destinationFilePath = Path.Combine(destinationDir, fileName + ".xml");
-                var file = File.Create(destinationFilePath);
-                var xs = new XmlSerializer(typeof(InboxDocumentModel));
-                using (Stream s = file)
-                    xs.Serialize(s, document);
             }
         }
 

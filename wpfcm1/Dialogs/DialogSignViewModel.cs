@@ -153,7 +153,7 @@ namespace wpfcm1.Dialogs
         {
             if (_folder is InboxFolderViewModel)
             {
-                (_folder as InboxFolderViewModel).ApproveDocumens(true);
+                (_folder as InboxFolderViewModel).SetApproved(true);
                 Reports.Clear();
                 Reports.Add("Dokumenti su označeni kao ispravni i odobreni za dalju obradu i potpisivanje...");
             }
@@ -163,7 +163,7 @@ namespace wpfcm1.Dialogs
         {
             if (_folder is InboxFolderViewModel)
             {
-                (_folder as InboxFolderViewModel).ApproveDocumens(false);
+                (_folder as InboxFolderViewModel).SetApproved(false);
                 Reports.Clear();
                 Reports.Add("Dokumenti su označeni kao nevalidni za dalju obradu i potpisivanje...");
             }
@@ -183,6 +183,10 @@ namespace wpfcm1.Dialogs
             {
                 return (folder as ConfirmedToDoFolderViewModel).GetDocumentsForSigning();
             }
+            //if (folder is ConfirmedOutToDoFolderViewModel)
+            //{
+            //    return (folder as ConfirmedOutToDoFolderViewModel).GetDocumentsForSigning();
+            //}
             throw new ArgumentException("folder)");
         }
     }

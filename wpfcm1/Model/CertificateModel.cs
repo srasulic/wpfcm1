@@ -29,8 +29,8 @@ namespace wpfcm1.Model
             //////////
             // privremeno za TEST
             //
-            //IsQualified = true;
-            //return;
+         //   IsQualified = true;
+         //   return;
             //
             //
             /////////

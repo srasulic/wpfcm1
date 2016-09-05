@@ -23,7 +23,8 @@ namespace wpfcm1.Toolbar
             Buttons.Add(new ToolBarButtonViewModel(events, "appbar_reply_email", "Potvrda prijema dokumenta (pošalji povratnicu)", new MessageAck()));
             Buttons.Add(new ToolBarButtonViewModel(events, "appbar_draw_pen_reflection", "Potpisivanje (potpiši čekirane dokumente iz liste)", new MessageSign()));
             Buttons.Add(new ToolBarButtonViewModel(events, "appbar_page_delete", "Odbacivanje dokumenta (izbaci iz obrade čekirane dokumente iz liste)", new MessageReject()));
-            
+
+            Buttons.Add(new ToolBarButtonViewModel(events, "appbar_page_check", "Obrađeno (označi kao obrađene sve čekirane dokumente iz liste)", new MessageProcessed()));
             Buttons.Add(new ToolBarButtonViewModel(events, "appbar_office_excel", "Izvezi listu dokumenata u Excel", new MessageXls()));
 
             _activeButtons = new ButtonVisibilityManager(this, events);

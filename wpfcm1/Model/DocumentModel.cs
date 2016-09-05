@@ -122,11 +122,16 @@ namespace wpfcm1.Model
             set { _isSignedAgain = value; NotifyOfPropertyChange(() => IsSignedAgain); }
         }
 
-        private bool _hasSecondSigniture;
-        public bool HasSecondSigniture
+        private bool _hasSecondSignature;
+        public bool HasSecondSignature
         {
-            get { return _hasSecondSigniture; }
-            set { _hasSecondSigniture = value; NotifyOfPropertyChange(() => HasSecondSigniture);  NotifyOfPropertyChange(() => IsAckedAndSigned); }
+            get { return _hasSecondSignature; }
+            set 
+            { 
+                _hasSecondSignature = value; 
+                NotifyOfPropertyChange(() => HasSecondSignature);  
+                NotifyOfPropertyChange(() => IsValid_HasSS_IsValidated_IsNotValidated2);
+            }
         }
         
         public virtual string this[string columnName]
@@ -231,21 +236,31 @@ namespace wpfcm1.Model
         public bool isValidated
         {
             get { return _isValidated; }
-            set { _isValidated = value; NotifyOfPropertyChange(() => isValidated); }
+            set { 
+                _isValidated = value; 
+                NotifyOfPropertyChange(() => isValidated);
+                NotifyOfPropertyChange(() => IsValid_HasSS_IsValidated_IsNotValidated2);
+                NotifyOfPropertyChange(() => IsValid_HasSS_IsValidated2);
+                NotifyOfPropertyChange(() => IsValid_HasNotSS);
+            }
         }
 
-        private bool _isApprovedForSigning;
-        public bool isApprovedForSigning
+        private bool _isValidated2;
+        public bool isValidated2
         {
-            get { return _isApprovedForSigning; }
+            get { return _isValidated2; }
+            set { _isValidated2 = value; NotifyOfPropertyChange(() => isValidated2); }
+        }
+
+        private bool _isApprovedForProcessing;
+        public bool isApprovedForProcessing
+        {
+            get { return _isApprovedForProcessing; }
             set 
             { 
-                _isApprovedForSigning = value;
-                NotifyOfPropertyChange(() => isApprovedForSigning);
-                NotifyOfPropertyChange(() => IsAcked_NotSigned_Approved_Proccesed);
-                NotifyOfPropertyChange(() => IsAcked_NotSigned_NotApproved_Proccesed);
-                NotifyOfPropertyChange(() => IsAcked_NotSigned_Approved);
-                NotifyOfPropertyChange(() => IsAcked_NotSigned_NotApproved); 
+                _isApprovedForProcessing = value;
+                NotifyOfPropertyChange(() => isApprovedForProcessing);
+                NotifyOfPropertyChange(() => NotSignedAgain_Approved);
             }
         }
 
@@ -257,65 +272,70 @@ namespace wpfcm1.Model
             set { _workflowStatus = value; NotifyOfPropertyChange(() => workflowStatus); }
         }
 
+        private bool _isRejected;
+        public bool IsRejected
+        {
+            get { return _isRejected; }
+            set { _isRejected = value; 
+                NotifyOfPropertyChange(() => IsRejected); 
+                NotifyOfPropertyChange(() => NotSignedAgain_Rejected); 
+            }
+        }
 
         //check sign
-        public bool ShouldSerializeIsAcked_NotSigned_Approved_Proccesed()
-        {
-            return false;
-        }
+        public bool ShouldSerializeNotSignedAgain_Approved() { return false; }
+        
+        public bool NotSignedAgain_Approved  { get { return !IsSignedAgain && isApprovedForProcessing ; } set { }    }
 
-        public bool IsAcked_NotSigned_Approved_Proccesed
-        {
-            get { return IsAcknowledged && !HasSecondSigniture && isApprovedForSigning && Processed; }
-            set { }
-        }
-
-        public bool ShouldSerializeIsAcked_NotSigned_Approved()
-        {
-            return false;
-        }
-
-        public bool IsAcked_NotSigned_Approved
-        {
-            get { return IsAcknowledged && !HasSecondSigniture && isApprovedForSigning; }
-            set { }
-        }
 
         //remove sign
-        public bool ShouldSerializeIsAcked_NotSigned_NotApproved_Proccesed()
-        {
-            return false;
-        }
+        public bool ShouldSerializeNotSignedAgain_Rejected() { return false; }
 
-        public bool IsAcked_NotSigned_NotApproved_Proccesed
+        public bool NotSignedAgain_Rejected { get { return !IsSignedAgain && IsRejected ; } set { }        }
+
+        //
+        public bool ShouldSerializeIsValid_HasSS_IsValidated2() { return false; }
+
+        public bool IsValid_HasSS_IsValidated2
         {
-            get { return IsAcknowledged && !HasSecondSigniture && !isApprovedForSigning && Processed; }
+            get
+            {
+                if (!IsValid.HasValue) return false;
+                return ((bool)IsValid && HasSecondSignature && isValidated2);
+            }
             set { }
         }
 
-        public bool ShouldSerializeIsAcked_NotSigned_NotApproved()
-        {
-            return false;
-        }
+        //
+        public bool ShouldSerializeIsValid_HasNotSS() { return false; }
 
-        public bool IsAcked_NotSigned_NotApproved
+        public bool IsValid_HasNotSS
         {
-            get { return IsAcknowledged && !HasSecondSigniture && !isApprovedForSigning ; }
+            get
+            {
+                if (!IsValid.HasValue) return false;
+                if ((bool)IsValid && !HasSecondSignature) return true;
+                return false;
+            }
             set { }
         }
 
-        //lock sign
-        public bool ShouldSerializeIsAckedAndSigned()
-        {
-            return false;
-        }
 
-        public bool IsAckedAndSigned
+        //
+        public bool ShouldSerializeIsValid_HasSS_IsValidated_IsNotValidated2() { return false; }
+
+        public bool IsValid_HasSS_IsValidated_IsNotValidated2
         {
-            get { return IsAcknowledged && HasSecondSigniture; }
+            get 
+            { 
+                if (!IsValid.HasValue) return false;
+                if ((bool)IsValid && HasSecondSignature && isValidated && !_isValidated2) return true;
+                return false;
+            }
             set { }
         }
 
+ 
         [XmlIgnore]
         public string Error { get; private set; }
     }

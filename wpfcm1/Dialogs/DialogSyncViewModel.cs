@@ -128,6 +128,7 @@ namespace wpfcm1.Dialogs
                 // uzmemo sve fajlove u direktorijumu bez obzira na to sta se nalazi u listama sa kojima korisnik radi
                 var documents = new BindableCollection<DocumentModel>(
                     Directory.EnumerateFiles(sourceDir)
+                        .Where(f => !(System.Text.RegularExpressions.Regex.IsMatch(Path.GetFileName(f), @"stat.+\.xml", System.Text.RegularExpressions.RegexOptions.IgnoreCase)))
                         .Select(f => new DocumentModel(new FileInfo(f))));
                 var ftpAction = FtpTransferRules.Action[sourceDir];
                 var syncMgr = new SyncManager();

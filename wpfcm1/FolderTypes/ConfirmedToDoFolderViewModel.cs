@@ -42,18 +42,18 @@ namespace wpfcm1.FolderTypes
                 }
                 if (Regex.IsMatch(document.DocumentPath, @".+_s_s.pdf$", RegexOptions.IgnoreCase))
                 {
-                    document.HasSecondSigniture = true;
+                    document.HasSecondSignature = true;
                     document.IsSignedAgain = false;
                     document.Processed = true;
                     continue;
                 }
                 var found = Documents.FirstOrDefault(d => d.DocumentPath == Regex.Replace(document.DocumentPath, @"_s.pdf", @"_s_s.pdf", RegexOptions.IgnoreCase));
                 if ( found == null ) {
-                    document.HasSecondSigniture = false;
+                    document.HasSecondSignature = false;
                     document.IsSignedAgain = false;
                     document.Processed = false;
                 } else {
-                    document.HasSecondSigniture = false;
+                    document.HasSecondSignature = false;
                     document.IsSignedAgain = true;
                     document.Processed = true;
                 }
@@ -69,8 +69,9 @@ namespace wpfcm1.FolderTypes
                 old.IsValid = state.IsValid;
                 old.isValidated = state.isValidated;
                 old.IsSignedAgain = state.IsSignedAgain; 
-                old.isApprovedForSigning = state.isApprovedForSigning;
+                old.isApprovedForProcessing = state.isApprovedForProcessing;
                 old.IsAcknowledged = state.IsAcknowledged;
+                old.IsRejected = state.IsRejected;
 
                 old.sigReason = state.sigReason;
                 old.sigTS = state.sigTS;
@@ -87,12 +88,12 @@ namespace wpfcm1.FolderTypes
         
             for (int i = Documents.Count - 1; i >= 0; i--)
             {
-                if (Documents[i].IsSignedAgain || Documents[i].Processed || Documents[i].HasSecondSigniture) Documents.RemoveAt(i);
+                if (Documents[i].IsSignedAgain || Documents[i].Processed || Documents[i].HasSecondSignature) Documents.RemoveAt(i);
             }
 
             foreach (var document in Documents)
             {
-                UpdateIsApprovedForSigningStatus(document);
+                InternalMessengerGetStates(document);
                 SetSigAdditionalInfo(document);
             }
         }
@@ -104,14 +105,28 @@ namespace wpfcm1.FolderTypes
             if (Regex.IsMatch(filePath, @".+.pdf.xml$", RegexOptions.IgnoreCase))
             {
                 var docName = Regex.Replace(filePath, @".xml", "");
-                foreach (var found in Documents.Where(d => d.DocumentPath == docName))
-                {
-                    UpdateIsApprovedForSigningStatus(found);
-                }
+                var found = Documents.Where(d => d.DocumentPath == docName).FirstOrDefault();
+                if (!(found == null)) InternalMessengerGetStates(found);
             }
-            else
+            else if (Regex.IsMatch(filePath, @".+.pdf.ack$", RegexOptions.IgnoreCase))
             {
-                Documents.Add(new DocumentModel(new FileInfo(filePath)));
+                // ovo ne bi smelo da se desi... ove ack-ove nemamo kako da tretiramo, ignorisemo ih
+            }
+            else if (Regex.IsMatch(filePath, @".+_s_s.pdf$", RegexOptions.IgnoreCase))
+            {
+                var docName = Regex.Replace(filePath, @"_s_s", "_s");
+                var found = Documents.Where(d => d.DocumentPath == docName).FirstOrDefault();
+                var newDoc = new ConfirmedToDoDocumentModel(new FileInfo(filePath));
+                newDoc.HasSecondSignature = true;
+                newDoc.IsSignedAgain = false;
+                newDoc.Processed = true;
+                Documents.Add(newDoc);
+                found.IsSignedAgain = true;
+                found.Processed = true;
+            }
+            else   
+            {
+                Documents.Add(new ConfirmedToDoDocumentModel(new FileInfo(filePath)));
             }
         }
 
@@ -132,7 +147,7 @@ namespace wpfcm1.FolderTypes
         public async void Handle(MessageValidate message)
         {
             if (!IsActive) return;
-            await ValidateDocSignituresAsync();
+            await ValidateDocSignaturesAsync();
         }
 
         public void Handle(CertificateModel message)
@@ -165,23 +180,14 @@ namespace wpfcm1.FolderTypes
 
         public void Handle(MessageReject message)
         {
-            if (IsActive)
-            {
-                var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<ConfirmedToDoDocumentModel>();
-                if (!checkedDocuments.Any()) return;
-                // TODO: dodati dijalog, sada radimo bez upozorenja
-                foreach (var document in checkedDocuments)
-                {
-                    document.Processed = true;
-                    document.IsRejected = true;
-                }
-            }
+            if (!IsActive) return;
+            SetRejected();
         }
 
         public IList<DocumentModel> GetDocumentsForSigning()
         {
             var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<DocumentModel>();
-            var validDocuments = checkedDocuments.Where(d => !d.Processed && !d.HasSecondSigniture && !d.IsSignedAgain).Cast<DocumentModel>().ToList();
+            var validDocuments = checkedDocuments.Where(d => !d.Processed && !d.HasSecondSignature && !d.IsSignedAgain).Cast<DocumentModel>().ToList();
             return validDocuments;
         }
 
@@ -211,13 +217,15 @@ namespace wpfcm1.FolderTypes
                     var docForSerialization = found as DocumentModel;
                     document.Processed = docForSerialization.Processed ;
                     document.IsSignedAgain = docForSerialization.IsSignedAgain;
-                    document.HasSecondSigniture= docForSerialization.HasSecondSigniture;
+                    document.HasSecondSignature= docForSerialization.HasSecondSignature;
 
                     document.IsValid = docForSerialization.IsValid;
                     document.isValidated = docForSerialization.isValidated;
 
-                    document.isApprovedForSigning = docForSerialization.isApprovedForSigning;
+                    document.isApprovedForProcessing = docForSerialization.isApprovedForProcessing;
                     document.IsAcknowledged = docForSerialization.IsAcknowledged;
+
+                    document.IsRejected = docForSerialization.IsRejected;
 
                     document.sigReason = docForSerialization.sigReason;
                     document.sigTS = docForSerialization.sigTS;
@@ -243,28 +251,6 @@ namespace wpfcm1.FolderTypes
         }
 
 
-        public void UpdateIsApprovedForSigningStatus(DocumentModel document)
-        {
-            var extDocState = new DocumentModel();
-            var xs = new XmlSerializer(typeof(InboxDocumentModel));
-            
-            var fileName = Path.GetFileName(document.DocumentPath);
-            var file = Path.Combine(FolderPath,  fileName + ".xml");
-            if (!File.Exists(file)) return ;
-            try
-            {
-                using (Stream s = File.OpenRead(file))
-                extDocState = (DocumentModel) xs.Deserialize(s);
-                document.isApprovedForSigning = extDocState.isApprovedForSigning;
-                document.IsAcknowledged = true;
-               // ne sme jer ga koristimo za izbacivanje iz ToDo liste
-                //document.Processed = true;
-            }
-            catch
-            {
-                
-            }
-        }
 
         private List<ConfirmedToDoDocumentModel> Deserialize()
         {

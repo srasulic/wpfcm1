@@ -43,18 +43,18 @@ namespace wpfcm1.FolderTypes
                 }
                 if (Regex.IsMatch(document.DocumentPath, @".+_s_s.pdf$", RegexOptions.IgnoreCase))
                 {
-                    document.HasSecondSigniture = true;
+                    document.HasSecondSignature = true;
                     document.IsSignedAgain = false;
                     document.Processed = true;
                     continue;
                 }
                 var found = Documents.FirstOrDefault(d => d.DocumentPath == Regex.Replace(document.DocumentPath, @"_s.pdf", @"_s_s.pdf", RegexOptions.IgnoreCase));
                 if ( found == null ) {
-                    document.HasSecondSigniture = false;
+                    document.HasSecondSignature = false;
                     document.IsSignedAgain = false;
                     document.Processed = false;
                 } else {
-                    document.HasSecondSigniture = false;
+                    document.HasSecondSignature = false;
                     document.IsSignedAgain = true;
                     document.Processed = true;
                 }

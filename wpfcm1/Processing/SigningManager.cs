@@ -88,7 +88,8 @@ namespace wpfcm1.Processing
                         document.IsAcknowledged = true;
                         break;
                     case SigningTransferRules.FinalAction.SecondSignatureMark:
-                        document.HasSecondSigniture = true;
+                        //document.HasSecondSignature = true;
+                        //document.IsAcknowledged = false;
                         document.IsSignedAgain = true;
                         break;
                     case SigningTransferRules.FinalAction.Store:

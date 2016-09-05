@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using System.Xml.Serialization;
 using wpfcm1.Events;
 using wpfcm1.Model;
 using wpfcm1.PDF;
@@ -117,9 +118,9 @@ namespace wpfcm1.FolderTypes
                     bw.Close();
                     fs.Close();
                 }
-                catch
+                catch (Exception e)
                 {
-
+                    Log.Error("Error while exporting to XLS", e);
                 }
 
                 System.Diagnostics.Process.Start(filename);
@@ -130,7 +131,7 @@ namespace wpfcm1.FolderTypes
             }
         }
 
-        protected async Task ValidateDocSignituresAsync()
+        protected async Task ValidateDocSignaturesAsync()
         {
 //            var documents = Documents.Where(d => !d.Processed).Cast<InboxDocumentModel>();
             var documents = Documents.Where(d => !d.isValidated).Cast<DocumentModel>();
@@ -138,34 +139,46 @@ namespace wpfcm1.FolderTypes
             {
                 var isValid = await PdfHelpers.ValidatePdfCertificatesAsync(document.DocumentPath);
                 document.IsValid = isValid;
-                document.isValidated = true;
+                //document.isValidated = true;
                 //document.Processed = true;
                 // PROTOTIP - za sada obradjujemo prvi i drugi potpis na koji naidjemo. Doraditi za ostale!
-                PdfPKCS7 pkcs7 = await PdfHelpers.GetPcks7Async(document.DocumentPath, 1);
+                // obradjujemo prvo drugi, koji mozda ne postoji, kako bi promena properti-ja na prvom okinula osvezavanje statusa u prikazima 
+                PdfPKCS7 pkcs7 = await PdfHelpers.GetPcks7Async(document.DocumentPath, 2);
                 if (!(pkcs7 == null))
                 {
+                    document.isValidated2 = true;
+                    document.sigReason2 = pkcs7.Reason;
+                    document.sigTS2 = pkcs7.TimeStampDate;
+                    document.sigDateSigned2 = pkcs7.SignDate;
+                    document.sigSignerName2 = System.Text.RegularExpressions.Regex.Replace(CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"CN"), @"[0-9]", "");
+                  //  document.sigOrg2 = String.Format("{0} - {1}", CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"O"), CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"OU"));
+                    var docFields = CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetFields();
+                    String organization = "";
+                    foreach (var ouField in docFields.Where(f => f.Key == @"OU"))
+                    {
+                        foreach (var ou in ouField.Value)
+                            organization = String.Format("{0}, {1}", organization, ou);
+                    }
+                    organization = String.Format("{0}, {1}", organization, CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"O"));
+                    document.sigOrg2 = organization;
+                }
+                pkcs7 = await PdfHelpers.GetPcks7Async(document.DocumentPath, 1);
+                if (!(pkcs7 == null))
+                {
+                    document.isValidated = true;
                     document.sigReason = pkcs7.Reason;
                     document.sigTS = pkcs7.TimeStampDate;
                     document.sigDateSigned = pkcs7.SignDate;
                     document.sigSignerName = System.Text.RegularExpressions.Regex.Replace(CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"CN"), @"[0-9]", "");
                     var docFields = CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetFields();
                     String organization = "";
-                    foreach (var ouField in docFields.Where(f => f.Key == @"OU") ){
+                    foreach (var ouField in docFields.Where(f => f.Key == @"OU"))
+                    {
                         foreach (var ou in ouField.Value)
-                            organization = String.Format("{0}, {1}", organization, ou) ;
+                            organization = String.Format("{0}, {1}", organization, ou);
                     }
-
                     organization = String.Format("{0}, {1}", organization, CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"O"));
                     document.sigOrg = organization;
-                }
-                pkcs7 = await PdfHelpers.GetPcks7Async(document.DocumentPath, 2);
-                if (!(pkcs7 == null))
-                {
-                    document.sigReason2 = pkcs7.Reason;
-                    document.sigTS2 = pkcs7.TimeStampDate;
-                    document.sigDateSigned2 = pkcs7.SignDate;
-                    document.sigSignerName2 = CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"CN");
-                    document.sigOrg2 = String.Format("{0} - {1}", CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"O"), CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"OU"));
                 }
                 SetSigAdditionalInfo(document);
             }
@@ -188,6 +201,128 @@ namespace wpfcm1.FolderTypes
                             );
 
         }
+
+        public void InternalMessengerGetStates(DocumentModel document)
+        {
+            var extDocState = new DocumentModel();
+            var xs = new XmlSerializer(typeof(DocumentModel));
+
+            var fileName = Path.GetFileName(document.DocumentPath);
+            var file = Path.Combine(FolderPath, fileName + ".xml");
+            if (!File.Exists(file)) return;
+            try
+            {
+                using (Stream s = File.OpenRead(file))
+                    extDocState = (DocumentModel)xs.Deserialize(s);
+
+                document.isApprovedForProcessing = extDocState.isApprovedForProcessing;
+                document.IsRejected = extDocState.IsRejected;
+                if (document.Processed == false)  document.Processed = extDocState.Processed;
+
+                document.IsAcknowledged = true; // zloupotrebili smo ga dok još nismo znali da bool može da bude bez vrednosti :)  
+            }
+            catch (Exception e)
+            {
+                Log.Error("Error: InternalMessengerGetStates ", e);
+            }
+        }
+
+
+        //protected void RejectToDoDocument(Type type)
+        //{
+        //    var checkedDocuments = Documents.Where(d => d.IsChecked).Where(d => !d.Processed);
+        //    if (!checkedDocuments.Any()) return;
+        //    var destinationDir = SigningTransferRules.LocalMap[FolderPath];
+        //    // TODO: dodati dijalog, sada radimo bez upozorenja
+        //    foreach (var document in checkedDocuments)
+        //    {
+        //        document.Processed = true;
+        //        document.IsRejected = true;
+        //        var fileName = Path.GetFileName(document.DocumentPath);
+        //        var destinationFilePath = Path.Combine(destinationDir, fileName + ".xml");
+        //        var file = File.Create(destinationFilePath);
+
+        //        var xs = new XmlSerializer(type);
+        //        using (Stream s = file)
+        //            xs.Serialize(s, document);
+        //    }
+        //}
+
+        protected void SetRejected()
+        {
+            if (!IsActive) return;
+            var checkedDocuments = Documents.Where(d => d.IsChecked).Where(d => !d.Processed);
+            if (!checkedDocuments.Any()) return;
+            // TODO: možda dodati dijalog, sada radimo bez upozorenja
+            foreach (var document in checkedDocuments)
+            {
+                document.Processed = true;
+                document.IsRejected = true;
+                SerializeMessage(document);
+            }
+        }
+
+
+        protected void SetProcessed()
+        {
+            if (!IsActive) return;
+            var checkedDocuments = Documents.Where(d => d.IsChecked).Where(d => !d.Processed);
+            if (!checkedDocuments.Any()) return;
+            // TODO: dodati dijalog, sada radimo bez upozorenja
+            foreach (var document in checkedDocuments)
+            {
+                document.Processed = true;
+                document.isApprovedForProcessing = true;
+                SerializeMessage(document);
+            }
+        }
+
+        protected void SerializeMessage(DocumentModel document)
+        {
+            try
+            {
+                // Nisam mogao da kastujem prosleđene klase u DocumentModel, pa pravimo ciljano poruku za razmenu:
+                DocumentModel message = new DocumentModel();
+                message.Processed = document.Processed;
+                message.IsRejected = document.IsRejected;
+                message.isApprovedForProcessing = document.isApprovedForProcessing;
+
+                var destinationDir = SigningTransferRules.LocalMap[FolderPath];
+                var fileName = Path.GetFileName(document.DocumentPath);
+                var destinationFilePath = Path.Combine(destinationDir, fileName + ".xml");
+                var file = File.Create(destinationFilePath);
+
+                var xs = new XmlSerializer(typeof(DocumentModel));
+                using (Stream s = file)
+                    xs.Serialize(s, message);
+            }
+            catch (Exception e)
+            {
+                Log.Error("Error: SerializeMessage ", e);
+            }
+
+        }
+
+        //protected void SetProcessed(Type type)
+        //{
+        //    var checkedDocuments = Documents.Where(d => d.IsChecked).Where(d => !d.Processed);
+        //    if (!checkedDocuments.Any()) return;
+        //    var destinationDir = SigningTransferRules.LocalMap[FolderPath];
+        //    // TODO: dodati dijalog, sada radimo bez upozorenja
+        //    foreach (var document in checkedDocuments)
+        //    {
+        //        document.Processed = true;
+        //        document.isApprovedForProcessing = true;
+
+        //        var fileName = Path.GetFileName(document.DocumentPath);
+        //        var destinationFilePath = Path.Combine(destinationDir, fileName + ".xml");
+        //        var file = File.Create(destinationFilePath);
+
+        //        var xs = new XmlSerializer(type);
+        //        using (Stream s = file)
+        //            xs.Serialize(s, document);
+        //    }
+        //}
 
         protected override void OnActivate()
         {

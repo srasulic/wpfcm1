@@ -34,11 +34,13 @@ namespace wpfcm1.PDF
         public static Dictionary<string, string> LocalMap = new Dictionary<string, string>()
         {
             {FolderManager.InvoicesOutboundErpIfaceFolder, FolderManager.InvoicesOutboundOutboxFolder},
+            {FolderManager.InvoicesOutboundConfirmedOutToDoFolder, FolderManager.InvoicesOutboundOutboxFolder},
             {FolderManager.InvoicesInboundInboxFolder, FolderManager.InvoicesInboundOutboxFolder},
             {FolderManager.InvoicesInboundConfirmedToDoFolder, FolderManager.InvoicesInboundOutboxFolder},
             {FolderManager.IosOutboundErpIfaceFolder, FolderManager.IosOutboundOutboxFolder},
             {FolderManager.IosInboundInboxFolder, FolderManager.IosInboundOutboxFolder},
             {FolderManager.KpOutboundErpIfaceFolder, FolderManager.KpOutboundOutboxFolder},
+            {FolderManager.KpOutboundConfirmedOutToDoFolder, FolderManager.KpOutboundOutboxFolder},
             {FolderManager.KpInboundInboxFolder, FolderManager.KpInboundOutboxFolder},
             {FolderManager.KpInboundConfirmedToDoFolder, FolderManager.KpInboundOutboxFolder},
             {FolderManager.OtherOutboundErpIfaceFolder, FolderManager.OtherOutboundOutboxFolder},

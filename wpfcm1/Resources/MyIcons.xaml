@@ -27,8 +27,11 @@
     <BitmapImage x:Key="PngError" UriSource="../Media/error16.png" />
     <BitmapImage x:Key="PngOk" UriSource="../Media/ok16.png" />
     <BitmapImage x:Key="PngLock" UriSource="../Media/lock16.png" />
+    <BitmapImage x:Key="PngLockQ" UriSource="../Media/lock_question_16.png" />
     <BitmapImage x:Key="PngWait" UriSource="../Media/time16.png" />
     <BitmapImage x:Key="PngGreenPdf" UriSource="../Media/green_pdf_plain16.png" />
+    <BitmapImage x:Key="PngGreenRedPdf" UriSource="../Media/green_red_pdf_plain16.png" />
+    <BitmapImage x:Key="PngGreenQPdf" UriSource="../Media/green_question_pdf_plain16.png" />
     <BitmapImage x:Key="PngAck" UriSource="../Media/ack16.png" />
     <BitmapImage x:Key="PngMinus" UriSource="../Media/minus16.png" />
 </ResourceDictionary>

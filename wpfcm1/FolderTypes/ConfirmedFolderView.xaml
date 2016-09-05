@@ -17,8 +17,8 @@
                 <conv:BooleanToUnderlineConverter x:Key="b2uc" />
                 <DataTemplate x:Key="SignedAgainCol">
                     <StackPanel>
-                        <Image Source="{StaticResource PngLock}" Visibility="{Binding Path=HasSecondSigniture, Converter={StaticResource b2vc}}"/>
-                        <Image Source="{StaticResource PngGreenPdf}" Visibility="{Binding Path=HasSecondSigniture, Converter={StaticResource ib2vc}}"/>
+                        <Image Source="{StaticResource PngLock}" Visibility="{Binding Path=HasSecondSignature, Converter={StaticResource b2vc}}"/>
+                        <Image Source="{StaticResource PngGreenPdf}" Visibility="{Binding Path=HasSecondSignature, Converter={StaticResource ib2vc}}"/>
                     </StackPanel>
                 </DataTemplate>
             </ResourceDictionary>
@@ -27,7 +27,7 @@
         <DataGrid x:Name="Documents" cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChanged($eventArgs)]"
                   AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False">
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}"  Binding="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource CheckBoxHeaderStyle}"/>
+                <!--<DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}"  Binding="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource CheckBoxHeaderStyle}"/>-->
                 <DataGridTextColumn Header="Naziv fajla" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">

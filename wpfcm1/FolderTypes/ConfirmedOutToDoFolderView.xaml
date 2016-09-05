@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="wpfcm1.FolderTypes.ConfirmedToDoFolderView"
+﻿<UserControl x:Class="wpfcm1.FolderTypes.ConfirmedOutToDoFolderView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:conv="clr-namespace:wpfcm1.Converters"
@@ -19,23 +19,16 @@
                 <conv:BooleanToOpacityConverter x:Key="b2oc" />
                 <DataTemplate x:Key="ImgCol">
                     <StackPanel>
-                        <Image Source="{StaticResource PngGreenPdf}" Visibility="{Binding Path=IsValid, Converter={StaticResource b2vc}}">
-                            <Image.ToolTip>
-                                <ToolTip Content="{Binding sigAdditionalInfo}"/>
-                            </Image.ToolTip>
-                        </Image>                        
-                        <Image Source="{StaticResource PngError}" Visibility="{Binding Path=IsValid, Converter={StaticResource ib2vc}}"/>
+                        <Image Source="{StaticResource PngGreenPdf}" Visibility="{Binding Path=IsValid_HasNotSS, Converter={StaticResource b2vc}}" ToolTip="{Binding sigAdditionalInfo}"/>
+                        <Image Source="{StaticResource PngLock}" Visibility="{Binding Path=IsValid_HasSS_IsValidated2, Converter={StaticResource b2vc}}" ToolTip="{Binding sigAdditionalInfo}"/>
+                        <Image Source="{StaticResource PngLockQ}" Visibility="{Binding Path=IsValid_HasSS_IsValidated_IsNotValidated2, Converter={StaticResource b2vc}}" ToolTip="Drugi potpis?"/>
+                        <Image Source="{StaticResource PngError}" Visibility="{Binding Path=IsValid, Converter={StaticResource ib2vc}}" ToolTip="Bar jedan potpis u dokumentu je neispravan."/>
                     </StackPanel>
                 </DataTemplate>
-                <DataTemplate x:Key="SignedAgainCol">
+                <DataTemplate x:Key="StatusCol">
                     <StackPanel>
-                        <Image Source="{StaticResource PngCheck}" Visibility="{Binding Path=isApprovedForProcessing, Converter={StaticResource b2vc}}"/>
-                        <Image Source="{StaticResource PngRemove}" Visibility="{Binding Path=IsRejected, Converter={StaticResource b2vc}}"/>
-                   </StackPanel>
-                </DataTemplate>
-                <DataTemplate x:Key="WaitForSrvProcessing">
-                    <StackPanel>
-                        <Image Source="{StaticResource PngOk}" Visibility="{Binding Path=IsSignedAgain, Converter={StaticResource b2vc}}"/>
+                        <Image Source="{StaticResource PngCheck}" Visibility="{Binding Path=isApprovedForProcessing, Converter={StaticResource b2vc}}" />
+                        <Image Source="{StaticResource PngRemove}" Visibility="{Binding Path=IsRejected, Converter={StaticResource b2vc}}" />
                     </StackPanel>
                 </DataTemplate>
             </ResourceDictionary>
@@ -51,22 +44,22 @@
                             <Setter Property="FontWeight" Value="{Binding Processed, Converter={StaticResource ib2bc}}" />
                             <Setter Property="TextDecorations"  Value="{Binding IsChecked, Converter={StaticResource b2uc}}"  />
                             <Setter Property="Opacity" Value="{Binding Processed, Converter={StaticResource b2oc}}" />
-                        </Style>
+                            <!--            <Setter Property="Foreground" Value="{Binding IsChecked, Converter={StaticResource b2cc}}" />
+                 -->       </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="Size" Binding="{Binding Path=LengthKB, StringFormat='\{0:N0\} KB'}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Pib izdavalac" Binding="{Binding Path=namePib1}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Pib primalac" Binding="{Binding Path=namePib2}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Pib" Binding="{Binding Path=namePib2}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Br Dok" Binding="{Binding Path=nameDocNum}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Datum" Binding="{Binding Path=nameDate}" IsReadOnly="True" />
                 <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}" Binding="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource CheckBoxHeaderStyle}"/>
-                <DataGridTemplateColumn Header="{StaticResource appbar_checkmark16}" CellTemplate="{StaticResource ImgCol}" MinWidth="32" IsReadOnly="True"/>
-                <DataGridTemplateColumn  CellTemplate="{StaticResource SignedAgainCol}" MinWidth="32" IsReadOnly="True"/>
-                <DataGridTemplateColumn CellTemplate="{StaticResource WaitForSrvProcessing}" MinWidth="32" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Reason" Binding="{Binding Path=sigReason}" IsReadOnly="True" />
-                <DataGridTextColumn Header="Potpisao" Binding="{Binding Path=sigSignerName}" IsReadOnly="True" />
-                <DataGridTextColumn Header="Organizacija" Binding="{Binding Path=sigOrg}" IsReadOnly="True" />
-                <DataGridTextColumn Header="TS Vreme" Binding="{Binding Path=sigTS}" IsReadOnly="True"/>
+                <DataGridTemplateColumn Header="{StaticResource appbar_checkmark16}" CellTemplate="{StaticResource ImgCol}" MinWidth="32" IsReadOnly="True">
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn  CellTemplate="{StaticResource StatusCol}" MinWidth="32" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Reason" Binding="{Binding Path=sigReason2}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Potpisao" Binding="{Binding Path=sigSignerName2}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Organizacija" Binding="{Binding Path=sigOrg2}" IsReadOnly="True" />
+                <DataGridTextColumn Header="TS Vreme" Binding="{Binding Path=sigTS2}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

@@ -53,7 +53,20 @@ namespace wpfcm1.Converters
             //            return (bool)value ? "#FF473C8B" : "#FF696969";
             //          return (bool)value ? "#FF008000" : "#FF000000";
             //#FFC1FFC1
-            return (bool)value ? "#FF008000" : "FF000000";
+            return (bool)value ? "#FF00688B" : "FF000000";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class BooleanToOpacityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (bool)value ? 0.5 : 1;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

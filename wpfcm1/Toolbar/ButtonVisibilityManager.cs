@@ -13,17 +13,25 @@ namespace wpfcm1.Toolbar
         private readonly ToolBarViewModel _toolBar;
 
 
+        
         private readonly Dictionary<string, BitArray> WorkspaceToButtonVisibility = new Dictionary<string, BitArray>()
         {
-            {"HomeViewModel",                new BitArray(new byte[]{Convert.ToByte("00000011", 2), 0x0})},
-            {"GeneratedFolderViewModel",     new BitArray(new byte[]{Convert.ToByte("11001111", 2), 0x1})},
-            {"InboxFolderViewModel",         new BitArray(new byte[]{Convert.ToByte("01110111", 2), 0x1})},
-            {"PendFolderViewModel",          new BitArray(new byte[]{Convert.ToByte("00000111", 2), 0x1})},
-            {"OutboxFolderViewModel",        new BitArray(new byte[]{Convert.ToByte("10000111", 2), 0x1})},
-            {"ConfirmedFolderViewModel",     new BitArray(new byte[]{Convert.ToByte("00000111", 2), 0x1})},
-            {"ConfirmedToDoFolderViewModel", new BitArray(new byte[]{Convert.ToByte("11010111", 2), 0x1})},
-            {"FolderViewModel",              new BitArray(new byte[]{Convert.ToByte("00000111", 2), 0x0})},
+            //Reject-Sign-Ack-Validate-ExtractData-TogglePreview-Sync-ShowHome 
+            // - - - - - - -Xls
+            {"HomeViewModel",                   new BitArray(new byte[]{Convert.ToByte("00000011", 2), 0x0})},
+            {"GeneratedFolderViewModel",        new BitArray(new byte[]{Convert.ToByte("11001111", 2), 0x2})},
+            {"InboxFolderViewModel",            new BitArray(new byte[]{Convert.ToByte("01110111", 2), 0x2})},
+            {"PendFolderViewModel",             new BitArray(new byte[]{Convert.ToByte("00000111", 2), 0x2})},
+            {"OutboxFolderViewModel",           new BitArray(new byte[]{Convert.ToByte("10000111", 2), 0x2})},
+            {"ConfirmedFolderViewModel",        new BitArray(new byte[]{Convert.ToByte("00000111", 2), 0x2})},
+            {"ConfirmedToDoFolderViewModel",    new BitArray(new byte[]{Convert.ToByte("11010111", 2), 0x2})},
+            {"ConfirmedOutToDoFolderViewModel", new BitArray(new byte[]{Convert.ToByte("10010111", 2), 0x3})},
+            {"FolderViewModel",                 new BitArray(new byte[]{Convert.ToByte("00000111", 2), 0x0})},
         }; 
+
+
+
+
 
         public ButtonVisibilityManager(ToolBarViewModel toolbar, IEventAggregator events)
         {
