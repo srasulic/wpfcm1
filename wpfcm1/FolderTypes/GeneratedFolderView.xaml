@@ -11,6 +11,7 @@
                 </ResourceDictionary.MergedDictionaries>
                 <conv:InverseBooleanToBoldConverter x:Key="ib2bc" />
                 <conv:BooleanToOpacityConverter x:Key="b2oc" />
+                <conv:BooleanToBackgroundColourConverter x:Key="b2bcc" />
             </ResourceDictionary>
         </Grid.Resources>
 
@@ -28,7 +29,13 @@
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="Size" Binding="{Binding Path=LengthKB, StringFormat='\{0:N0\} KB'}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="PIB" Binding="{Binding Path=Pib, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MinWidth="85"/>
-                <DataGridTextColumn Header="Br Dok" Binding="{Binding Path=InvoiceNo, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MinWidth="85"/>
+                <DataGridTextColumn Header="Br Dok" Binding="{Binding Path=InvoiceNo, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MinWidth="85">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Background" Value="{Binding multipleInvoiceNo, Converter={StaticResource b2bcc}}" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
                 <DataGridTextColumn Header="Datum" Binding="{Binding Path=DocumentInfo.LastWriteTime}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>

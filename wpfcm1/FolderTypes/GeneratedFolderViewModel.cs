@@ -50,16 +50,47 @@ namespace wpfcm1.FolderTypes
                 old.Pib = state.Pib;
                 old.Processed = state.Processed;
             }
+            CheckForDuplicateInvNo();
         }
 
         protected override void AddFile(string filePath)
         {
-            Documents.Add(new GeneratedDocumentModel(new FileInfo(filePath)));
+            var newDoc = new GeneratedDocumentModel(new FileInfo(filePath));
+            Documents.Add(newDoc);
+            //CheckForDuplicateInvNo(newDoc);
         }
 
         protected override void OnActivate()
         {
             _events.PublishOnUIThread(new MessageViewModelActivated(GetType().Name));
+        }
+
+        protected void CheckForDuplicateInvNo()
+        {
+            //if (!IsActive) return;
+            var documents = Documents.Cast<GeneratedDocumentModel>();
+            foreach (GeneratedDocumentModel document in Documents)
+            {
+                int found = documents.Where(d => d.InvoiceNo == document.InvoiceNo).Count();
+                if (found > 1) document.multipleInvoiceNo = true;
+                if (found == 1 && document.multipleInvoiceNo) document.multipleInvoiceNo = false;
+            }
+        }
+
+        protected void CheckForDuplicateInvNo(GeneratedDocumentModel document)
+        {
+            if (!IsActive) return;
+            var documents = Documents.Cast<GeneratedDocumentModel>();
+            int found = documents.Where(d => d.InvoiceNo == document.InvoiceNo).Count();
+            if (found > 1)
+            {
+                //document.multipleInvoiceNo = true;
+                foreach (GeneratedDocumentModel docForUpdate in documents.Where(d => d.InvoiceNo == document.InvoiceNo))
+                {
+                    docForUpdate.multipleInvoiceNo = true;
+                }
+            }
+            if (found == 1 && document.multipleInvoiceNo) document.multipleInvoiceNo = false;
         }
 
         protected override void OnDeactivate(bool close)
@@ -170,6 +201,7 @@ namespace wpfcm1.FolderTypes
 
                 document.Processed = true;
             }
+            CheckForDuplicateInvNo();
         }
 
         public void Handle(MessageReject message)
