@@ -100,6 +100,8 @@ namespace wpfcm1.Dialogs
 
         public async void OnStart()
         {
+            // ToDO: smestiti ovo negde na lepše mesto, za sad je u FolderViewModel... 
+            FolderViewModel.PsKillPdfHandlers();
             Reports.Clear();
             Reports.Add("Priprema za potpisivanje...");
             CanOnStart = false;

@@ -50,7 +50,7 @@ namespace wpfcm1.FolderTypes
             InitWatcher(FolderPath);
         }
 
-        protected void PsKillPdfHandlers()
+        public static void PsKillPdfHandlers()
         {   // Srdjan - da pustimo u pozadini neke alatke da pobiju eventualne procese koji drze sapu na PDF fajlovima
             //          Zbog brzine aplikaciji hadle.exe prosledjujemo deo naziva file handlera (bez ovoga traje 10-ak sekundi)
             //          Podrzavamo (ocekujemo) Foxit Reader ili Adobe Acrobat Reader
@@ -70,7 +70,7 @@ namespace wpfcm1.FolderTypes
                 process.StartInfo = startInfo;
                 process.Start();
                 process.WaitForExit();
-
+                
             }
             catch (Exception ex)
             {
@@ -134,7 +134,7 @@ namespace wpfcm1.FolderTypes
         protected async Task ValidateDocSignaturesAsync()
         {
 //            var documents = Documents.Where(d => !d.Processed).Cast<InboxDocumentModel>();
-            var documents = Documents.Where(d => !d.isValidated).Cast<DocumentModel>();
+            var documents = Documents.Where(d => !d.isValidated || d.IsChecked).Cast<DocumentModel>();
             foreach (var document in documents)
             {
                 var isValid = await PdfHelpers.ValidatePdfCertificatesAsync(document.DocumentPath);

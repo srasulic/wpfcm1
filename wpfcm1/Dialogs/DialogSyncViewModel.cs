@@ -71,6 +71,8 @@ namespace wpfcm1.Dialogs
 
         public async void OnStart()
         {
+            // ToDO: smestiti ovo negde na lepše mesto, za sad je u FolderViewModel... 
+            FolderViewModel.PsKillPdfHandlers();
             try
             {
                 _cancellation = new CancellationTokenSource();
@@ -119,6 +121,8 @@ namespace wpfcm1.Dialogs
 
             var ftpClient = new FtpClient(ftpServer, ftpUsername, ftpPassword);
 
+            PrepareErrorLogForUpload();
+
             foreach (var folder in _folders)
             {
 
@@ -152,6 +156,23 @@ namespace wpfcm1.Dialogs
                         break;
                 }
             }
+            
+        }
+
+        private void PrepareErrorLogForUpload()
+        {
+
+            try
+            {
+                var destinationDir = SigningTransferRules.LocalMap[wpfcm1.DataAccess.FolderManager.OtherOutboundErpIfaceFolder];
+                var fileName = "fakture.log.txt";
+                var destFileName = Path.Combine(destinationDir, DateTime.UtcNow.ToString("yyyyMMddHHmmssfff")) + ".errorlog";
+                File.Copy(fileName, destFileName, true);
+            } catch (Exception e)
+            {
+                Log.Error("ERR: PrepareErrorLogForUpload ", e);
+            }
+  
         }
     }
 }

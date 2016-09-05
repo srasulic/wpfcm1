@@ -166,14 +166,15 @@ namespace wpfcm1.FolderTypes
         {
             if (IsActive)
             {
-                PsKillPdfHandlers(); // workaround - pskill ubija sve procese koji rade nad PDF-ovima u eDokument // TODO izmestiti ovo u dijalog?
+                // izmesteno na OnStart dijaloga
+                //PsKillPdfHandlers(); // workaround - pskill ubija sve procese koji rade nad PDF-ovima u eDokument 
                 var certificateOk = _certificate != null && _certificate.IsQualified;
                 if (!certificateOk) return;
                 var validDocuments = GetDocumentsForSigning();
                 if (!validDocuments.Any()) return;
 
                 //TODO: ovo mora drugacije
-                _events.PublishOnUIThread(new MessageShowPdf(PreviewViewModel.Empty));
+               // _events.PublishOnUIThread(new MessageShowPdf(PreviewViewModel.Empty)); // prebaceno u dijalog na OnStart; tamo se koristi veći čekić (pskill)
                 var result = _windowManager.ShowDialog(new DialogSignViewModel(_certificate, this));
             }
         }
