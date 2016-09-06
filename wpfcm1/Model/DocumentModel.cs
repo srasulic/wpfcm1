@@ -335,6 +335,13 @@ namespace wpfcm1.Model
             set { }
         }
 
+
+        private bool _hasExternalMessage;
+        public bool hasExternalMessage 
+        {   
+            get { return _hasExternalMessage; } 
+            set { _hasExternalMessage = value; NotifyOfPropertyChange(() => hasExternalMessage); } 
+        }
  
         [XmlIgnore]
         public string Error { get; private set; }

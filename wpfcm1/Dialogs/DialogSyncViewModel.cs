@@ -143,16 +143,19 @@ namespace wpfcm1.Dialogs
                         if (reporter != null) reporter.Report(string.Format("Upload:\t{0} -> {1}", sourceDir, destinationDir));
                         await syncMgr.Upload(ftpClient, documents, sourceDir, destinationDir, reporter, token);
                         if (reporter != null) reporter.Report("OK");
+                        File.Create(sourceDir + @"\" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + ".syncstamp").Dispose();
                         break;
                     case FtpTransferRules.TransferAction.Sync:
                         if (reporter != null) reporter.Report(string.Format("Sync:\t{0} <-> {1}", sourceDir, destinationDir));
                         await syncMgr.Sync(ftpClient, documents, sourceDir, destinationDir, true, reporter, token);
                         if (reporter != null) reporter.Report("OK");
+                        File.Create(sourceDir + @"\" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + ".syncstamp").Dispose();
                         break;
                     case FtpTransferRules.TransferAction.Download:
                         if (reporter != null) reporter.Report(string.Format("Sync:\t{0} <-> {1}", sourceDir, destinationDir));
                         await syncMgr.Sync(ftpClient, documents, sourceDir, destinationDir, false, reporter, token);
                         if (reporter != null) reporter.Report("OK");
+                        File.Create(sourceDir + @"\" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + ".syncstamp").Dispose();
                         break;
                 }
             }

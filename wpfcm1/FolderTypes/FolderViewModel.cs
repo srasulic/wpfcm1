@@ -202,6 +202,15 @@ namespace wpfcm1.FolderTypes
 
         }
 
+
+        public void InternalMessengerGetStates()
+        {
+            foreach (var document in Documents.Where(d => d.hasExternalMessage)) {
+                InternalMessengerGetStates (document);
+                document.hasExternalMessage = false;
+            }
+        }
+        
         public void InternalMessengerGetStates(DocumentModel document)
         {
             var extDocState = new DocumentModel();

@@ -101,12 +101,15 @@ namespace wpfcm1.FolderTypes
 
         protected override void AddFile(string filePath)
         {
-            // TODO: dodati provere da se ne dodaju ack, da ss ažurira s, da xml ažurira status...
+            if (Regex.IsMatch(filePath, @".+syncstamp$", RegexOptions.IgnoreCase))
+            {
+                InternalMessengerGetStates();
+            }
             if (Regex.IsMatch(filePath, @".+.pdf.xml$", RegexOptions.IgnoreCase))
             {
                 var docName = Regex.Replace(filePath, @".xml", "");
                 var found = Documents.Where(d => d.DocumentPath == docName).FirstOrDefault();
-                if (!(found == null)) InternalMessengerGetStates(found);
+                if (!(found == null)) found.hasExternalMessage = true;  // ftp ih još ne spusti kada probamo da ih pročitamo... inače zbog sorta xml stiže nakon pdf-a...  InternalMessengerGetStates(found);
             }
             else if (Regex.IsMatch(filePath, @".+.pdf.ack$", RegexOptions.IgnoreCase))
             {
@@ -183,6 +186,21 @@ namespace wpfcm1.FolderTypes
         {
             if (!IsActive) return;
             SetRejected();
+        }
+
+        public void SetApproved(bool approved)
+        {
+            if (!IsActive) return;
+
+            var documents = GetDocumentsForSigning();
+            foreach (var document in documents)
+            {
+                document.isApprovedForProcessing = approved;
+                document.IsRejected = !approved;
+                //if (document.Processed) { document.Processed = false; };
+                SerializeMessage(document);
+                //document.Processed = true;
+            }
         }
 
         public IList<DocumentModel> GetDocumentsForSigning()
