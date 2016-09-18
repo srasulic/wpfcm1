@@ -23,14 +23,14 @@
                             <Image.ToolTip>
                                 <ToolTip Content="{Binding sigAdditionalInfo}"/>
                             </Image.ToolTip>
-                        </Image>                        
-                        <Image Source="{StaticResource PngError}" Visibility="{Binding Path=IsValid, Converter={StaticResource ib2vc}}"/>
+                        </Image>
+                        <Image Source="{StaticResource PngError}" Visibility="{Binding Path=IsValid, Converter={StaticResource ib2vc}}" ToolTip="{Binding sigAdditionalInfo}"/>
                     </StackPanel>
                 </DataTemplate>
                 <DataTemplate x:Key="SignedAgainCol">
                     <StackPanel>
                         <Image Source="{StaticResource PngCheck}" Visibility="{Binding Path=isApprovedForProcessing, Converter={StaticResource b2vc}}"/>
-                        <Image Source="{StaticResource PngRemove}" Visibility="{Binding Path=IsRejected, Converter={StaticResource b2vc}}"/>
+                        <Image Source="{StaticResource PngRemove}" Visibility="{Binding Path=isRejected, Converter={StaticResource b2vc}}"/>
                    </StackPanel>
                 </DataTemplate>
                 <DataTemplate x:Key="WaitForSrvProcessing">

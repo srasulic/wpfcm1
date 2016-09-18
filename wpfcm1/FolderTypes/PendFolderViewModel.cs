@@ -49,7 +49,14 @@ namespace wpfcm1.FolderTypes
 
         protected override void AddFile(string filePath)
         {
-            Documents.Add(new PendDocumentModel(new FileInfo(filePath)));
+            if (Regex.IsMatch(filePath, @".+syncstamp$", RegexOptions.IgnoreCase))
+            {
+                InternalMessengerGetStates();
+            }
+            else
+            {
+                Documents.Add(new PendDocumentModel(new FileInfo(filePath)));
+            }
         }
 
         protected override void OnActivate()

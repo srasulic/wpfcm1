@@ -3,6 +3,7 @@ using iTextSharp.text.pdf.security;
 using System;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -137,8 +138,15 @@ namespace wpfcm1.FolderTypes
             var documents = Documents.Where(d => !d.isValidated || d.IsChecked).Cast<DocumentModel>();
             foreach (var document in documents)
             {
-                var isValid = await PdfHelpers.ValidatePdfCertificatesAsync(document.DocumentPath);
-                document.IsValid = isValid;
+                try
+                {
+                    var isValid = await PdfHelpers.ValidatePdfCertificatesAsync(document.DocumentPath);
+                    document.IsValid = isValid;
+                } catch (Exception e)
+                {
+                    document.IsValid = false;
+                    document.sigValidationInfo = e.Message;
+                }
                 //document.isValidated = true;
                 //document.Processed = true;
                 // PROTOTIP - za sada obradjujemo prvi i drugi potpis na koji naidjemo. Doraditi za ostale!
@@ -194,10 +202,11 @@ namespace wpfcm1.FolderTypes
             if (document.sigDateSigned == DateTime.MinValue) strdateDate = ""; else strdateDate = document.sigDateSigned.ToShortDateString();
             if (document.sigTS2 == DateTime.MinValue) strdateTS2 = ""; else strdateTS2 = document.sigTS2.ToShortDateString();
             if (document.sigDateSigned2 == DateTime.MinValue) strdateDate2 = ""; else strdateDate2 = document.sigDateSigned2.ToShortDateString();
-            document.sigAdditionalInfo = String.Format(@"* Potpis 1:{0}Reason: {1}{0}Potpisao: {2}, {3} {0}TimeStamp datum: {4} {0}Datum potpisa: {5} {0}{0}** Potpis 2:{0}Reason: {6}{0}Potpisao: {7}, {8}{0}TimeStamp datum: {9}{0}Datum potpisa: {10} ",
+            document.sigAdditionalInfo = String.Format(@"{11}{0}* Potpis 1:{0}Reason: {1}{0}Potpisao: {2}, {3} {0}TimeStamp datum: {4} {0}Datum potpisa: {5} {0}{0}** Potpis 2:{0}Reason: {6}{0}Potpisao: {7}, {8}{0}TimeStamp datum: {9}{0}Datum potpisa: {10} ",
                             Environment.NewLine,
                             document.sigReason, document.sigSignerName, document.sigOrg, strdateTS, strdateDate,
-                            document.sigReason2, document.sigSignerName2, document.sigOrg2, strdateTS2, strdateDate2
+                            document.sigReason2, document.sigSignerName2, document.sigOrg2, strdateTS2, strdateDate2,
+                            document.sigValidationInfo
                             );
 
         }
@@ -225,7 +234,7 @@ namespace wpfcm1.FolderTypes
                     extDocState = (DocumentModel)xs.Deserialize(s);
 
                 document.isApprovedForProcessing = extDocState.isApprovedForProcessing;
-                document.IsRejected = extDocState.IsRejected;
+                document.isRejected = extDocState.isRejected;
                 if (document.Processed == false)  document.Processed = extDocState.Processed;
 
                 document.IsAcknowledged = true; // zloupotrebili smo ga dok još nismo znali da bool može da bude bez vrednosti :)  
@@ -246,7 +255,7 @@ namespace wpfcm1.FolderTypes
         //    foreach (var document in checkedDocuments)
         //    {
         //        document.Processed = true;
-        //        document.IsRejected = true;
+        //        document.isRejected = true;
         //        var fileName = Path.GetFileName(document.DocumentPath);
         //        var destinationFilePath = Path.Combine(destinationDir, fileName + ".xml");
         //        var file = File.Create(destinationFilePath);
@@ -266,7 +275,7 @@ namespace wpfcm1.FolderTypes
             foreach (var document in checkedDocuments)
             {
                 document.Processed = true;
-                document.IsRejected = true;
+                document.isRejected = true;
                 SerializeMessage(document);
             }
         }
@@ -293,8 +302,12 @@ namespace wpfcm1.FolderTypes
                 // Nisam mogao da kastujem prosleđene klase u DocumentModel, pa pravimo ciljano poruku za razmenu:
                 DocumentModel message = new DocumentModel();
                 message.Processed = document.Processed;
-                message.IsRejected = document.IsRejected;
+                message.isRejected = document.isRejected;
                 message.isApprovedForProcessing = document.isApprovedForProcessing;
+                message.HasSecondSignature = document.HasSecondSignature;
+                message.IsValid = document.IsValid;
+                message.isValidated = document.isValidated;
+                message.isValidated2 = document.isValidated2;
 
                 var destinationDir = SigningTransferRules.LocalMap[FolderPath];
                 var fileName = Path.GetFileName(document.DocumentPath);
@@ -350,7 +363,14 @@ namespace wpfcm1.FolderTypes
 
         protected virtual void AddFile(string filePath)
         {
-            Documents.Add(new DocumentModel(new FileInfo(filePath)));
+            if (Regex.IsMatch(filePath, @".+syncstamp$", RegexOptions.IgnoreCase))
+            {
+                InternalMessengerGetStates();
+            }
+            else
+            {
+                Documents.Add(new DocumentModel(new FileInfo(filePath)));
+            }
         }
 
         public virtual void OnSelectionChanged(SelectionChangedEventArgs e)

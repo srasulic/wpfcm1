@@ -193,6 +193,13 @@ namespace wpfcm1.Model
             return false;
         }
 
+        private String _sigValidationInfo;
+        public String sigValidationInfo
+        {
+            get { return _sigValidationInfo; }
+            set { _sigValidationInfo = value; NotifyOfPropertyChange(() => sigValidationInfo); }
+        }
+
         private String _sigSignerName2;
         public String sigSignerName2
         {
@@ -273,11 +280,11 @@ namespace wpfcm1.Model
         }
 
         private bool _isRejected;
-        public bool IsRejected
+        public bool isRejected
         {
             get { return _isRejected; }
             set { _isRejected = value; 
-                NotifyOfPropertyChange(() => IsRejected); 
+                NotifyOfPropertyChange(() => isRejected); 
                 NotifyOfPropertyChange(() => NotSignedAgain_Rejected); 
             }
         }
@@ -291,7 +298,7 @@ namespace wpfcm1.Model
         //remove sign
         public bool ShouldSerializeNotSignedAgain_Rejected() { return false; }
 
-        public bool NotSignedAgain_Rejected { get { return !IsSignedAgain && IsRejected ; } set { }        }
+        public bool NotSignedAgain_Rejected { get { return !IsSignedAgain && isRejected ; } set { }        }
 
         //
         public bool ShouldSerializeIsValid_HasSS_IsValidated2() { return false; }

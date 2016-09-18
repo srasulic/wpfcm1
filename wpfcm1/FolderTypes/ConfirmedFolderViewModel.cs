@@ -75,11 +75,18 @@ namespace wpfcm1.FolderTypes
             //    old.IsSignedAgain = state.IsSignedAgain;
             //}
         }
-    
+
 
         protected override void AddFile(string filePath)
         {
-            Documents.Add(new DocumentModel(new FileInfo(filePath)));
+            if (Regex.IsMatch(filePath, @".+syncstamp$", RegexOptions.IgnoreCase))
+            {
+                InternalMessengerGetStates();
+            }
+            else
+            {
+                Documents.Add(new DocumentModel(new FileInfo(filePath)));
+            }
         }
 
         protected override void OnActivate()

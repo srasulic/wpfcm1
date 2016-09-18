@@ -65,7 +65,8 @@ namespace wpfcm1.PDF
                 }
                 catch
                 {
-                    isValid = false;
+                    throw; //////////////
+                    //isValid = false;
                 }
             }
             return isValid;
@@ -118,13 +119,13 @@ namespace wpfcm1.PDF
             {
                 PdfPKCS7 pkcs7 = fields.VerifySignature(sigName);
                 var tsOk = pkcs7.VerifyTimestampImprint();
-                if (!tsOk) throw new Exception();
+                if (!tsOk) throw new Exception("Greška prilikom provere ugrađenog vremenskog žiga / Verification error - VerifyTimestampImprint check failed.");
 
                 var c2 = new X509Certificate2();
                 c2.Import(pkcs7.SigningCertificate.GetEncoded());
                 var c2chain = CertificateHelpers.GetChain(c2);
                 var errors = CertificateHelpers.CheckCertificate(c2, c2chain);
-                if (errors.Count > 0) throw new Exception();
+                if (errors.Count > 0) throw new Exception("Greška u lancu sertifikata. Proverite da li je intaliran root sertifikat u lancu / Certificate chain error. Check if You trust all certificates in chain.");
 
                 var cert = pkcs7.SigningCertificate;
                 DateTime signDate = pkcs7.SignDate;
@@ -157,7 +158,7 @@ namespace wpfcm1.PDF
                 verification.AddRange(verification);
             }
             if (verification.Count == 0)
-                throw  new Exception();
+                throw  new Exception("Nije bilo moguće proveriti da li je sertifikat opozvan / Certificate revocation check failed.");
         }
     }
 }

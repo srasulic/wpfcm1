@@ -55,9 +55,16 @@ namespace wpfcm1.FolderTypes
 
         protected override void AddFile(string filePath)
         {
-            var newDoc = new GeneratedDocumentModel(new FileInfo(filePath));
-            Documents.Add(newDoc);
-            //CheckForDuplicateInvNo(newDoc);
+            if (Regex.IsMatch(filePath, @".+syncstamp$", RegexOptions.IgnoreCase))
+            {
+                InternalMessengerGetStates();
+            }
+            else
+            {
+                var newDoc = new GeneratedDocumentModel(new FileInfo(filePath));
+                Documents.Add(newDoc);
+                //CheckForDuplicateInvNo(newDoc);
+            }
         }
 
         protected override void OnActivate()
@@ -189,10 +196,12 @@ namespace wpfcm1.FolderTypes
                     document.InvoiceNo = Regex.Match(matchResults.Item2, @"[0-9]{1,3}-[0-9]+").Value;
                 if (string.IsNullOrEmpty(document.InvoiceNo))
                     document.InvoiceNo = Regex.Match(matchResults.Item2, @"DPTR[0-9]{1,3}-[0-9]+").Value;
+                //if (string.IsNullOrEmpty(document.InvoiceNo))
+                //    document.InvoiceNo = Regex.Match(matchResults.Item2, @"KO-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
+                //if (string.IsNullOrEmpty(document.InvoiceNo))
+                //    document.InvoiceNo = Regex.Match(matchResults.Item2, @"PPDV-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
                 if (string.IsNullOrEmpty(document.InvoiceNo))
-                    document.InvoiceNo = Regex.Match(matchResults.Item2, @"KO-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
-                if (string.IsNullOrEmpty(document.InvoiceNo))
-                    document.InvoiceNo = Regex.Match(matchResults.Item2, @"PPDV-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
+                    document.InvoiceNo = Regex.Match(matchResults.Item2, @"[A-Z]{2,4}-[0-9]{8,9}").Value;
  
                
 

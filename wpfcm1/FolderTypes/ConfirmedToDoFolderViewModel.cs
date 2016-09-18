@@ -71,7 +71,8 @@ namespace wpfcm1.FolderTypes
                 old.IsSignedAgain = state.IsSignedAgain; 
                 old.isApprovedForProcessing = state.isApprovedForProcessing;
                 old.IsAcknowledged = state.IsAcknowledged;
-                old.IsRejected = state.IsRejected;
+                old.isRejected = state.isRejected;
+                old.sigValidationInfo = state.sigValidationInfo;
 
                 old.sigReason = state.sigReason;
                 old.sigTS = state.sigTS;
@@ -101,20 +102,25 @@ namespace wpfcm1.FolderTypes
 
         protected override void AddFile(string filePath)
         {
+            // ako je zavrsio sinh, azuriraj statuse poruka iz xml fajlova
             if (Regex.IsMatch(filePath, @".+syncstamp$", RegexOptions.IgnoreCase))
             {
                 InternalMessengerGetStates();
             }
+            // ako je stigao xml pronadji njegov pdf u listi i setuj mu status da ima eksternu poruku
+            // (ovde je problem ako nam xml stigne u istoj sinh pre pdf fajla) ?!
             if (Regex.IsMatch(filePath, @".+.pdf.xml$", RegexOptions.IgnoreCase))
             {
                 var docName = Regex.Replace(filePath, @".xml", "");
                 var found = Documents.Where(d => d.DocumentPath == docName).FirstOrDefault();
-                if (!(found == null)) found.hasExternalMessage = true;  // ftp ih još ne spusti kada probamo da ih pročitamo... inače zbog sorta xml stiže nakon pdf-a...  InternalMessengerGetStates(found);
+                if (!(found == null)) found.hasExternalMessage = true;  // ftp ih još ne spusti do kraja kada probamo da ih pročitamo... inače zbog sorta xml stiže nakon pdf-a, tako da ovo radi...  
             }
+            // ack fajl samo ignorisemo
             else if (Regex.IsMatch(filePath, @".+.pdf.ack$", RegexOptions.IgnoreCase))
             {
                 // ovo ne bi smelo da se desi... ove ack-ove nemamo kako da tretiramo, ignorisemo ih
             }
+            // ako je stigao obostrano potpisan, dodajemo ga u listu a njegovom _s fajlu promenimo status
             else if (Regex.IsMatch(filePath, @".+_s_s.pdf$", RegexOptions.IgnoreCase))
             {
                 var docName = Regex.Replace(filePath, @"_s_s", "_s");
@@ -124,10 +130,14 @@ namespace wpfcm1.FolderTypes
                 newDoc.IsSignedAgain = false;
                 newDoc.Processed = true;
                 Documents.Add(newDoc);
-                found.IsSignedAgain = true;
-                found.Processed = true;
+                if (!(found == null))
+                {
+                    found.IsSignedAgain = true;
+                    found.Processed = true;
+                }
             }
-            else   
+            // ostale samo dodamo u listu
+            else
             {
                 Documents.Add(new ConfirmedToDoDocumentModel(new FileInfo(filePath)));
             }
@@ -196,7 +206,7 @@ namespace wpfcm1.FolderTypes
             foreach (var document in documents)
             {
                 document.isApprovedForProcessing = approved;
-                document.IsRejected = !approved;
+                document.isRejected = !approved;
                 //if (document.Processed) { document.Processed = false; };
                 SerializeMessage(document);
                 //document.Processed = true;
@@ -244,7 +254,8 @@ namespace wpfcm1.FolderTypes
                     document.isApprovedForProcessing = docForSerialization.isApprovedForProcessing;
                     document.IsAcknowledged = docForSerialization.IsAcknowledged;
 
-                    document.IsRejected = docForSerialization.IsRejected;
+                    document.isRejected = docForSerialization.isRejected;
+                    document.sigValidationInfo = docForSerialization.sigValidationInfo;
 
                     document.sigReason = docForSerialization.sigReason;
                     document.sigTS = docForSerialization.sigTS;

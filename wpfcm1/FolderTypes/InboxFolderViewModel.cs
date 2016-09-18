@@ -49,7 +49,8 @@ namespace wpfcm1.FolderTypes
                 old.IsSignedAgain = state.IsSignedAgain;
                 old.HasSecondSignature = state.HasSecondSignature;
                 old.isApprovedForProcessing = state.isApprovedForProcessing;
-                old.IsRejected = state.IsRejected;
+                old.isRejected = state.isRejected;
+                old.sigValidationInfo = state.sigValidationInfo;
 
                 old.sigReason = state.sigReason;
                 old.sigTS = state.sigTS;
@@ -72,7 +73,14 @@ namespace wpfcm1.FolderTypes
 
         protected override void AddFile(string filePath)
         {
-            Documents.Add(new InboxDocumentModel(new FileInfo(filePath)));
+            if (Regex.IsMatch(filePath, @".+syncstamp$", RegexOptions.IgnoreCase))
+            {
+                InternalMessengerGetStates();
+            }
+            else
+            {
+                Documents.Add(new InboxDocumentModel(new FileInfo(filePath)));
+            }
         }
 
         protected override void OnActivate()
@@ -178,7 +186,7 @@ namespace wpfcm1.FolderTypes
             foreach (var document in documents)
             {
                 document.isApprovedForProcessing = approved;
-                document.IsRejected = !approved;
+                document.isRejected = !approved;
                 if (document.Processed) { document.Processed = false; };
                 SerializeMessage(document);
                 document.Processed = true;
