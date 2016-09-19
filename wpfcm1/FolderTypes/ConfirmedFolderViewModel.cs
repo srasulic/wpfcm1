@@ -75,6 +75,7 @@ namespace wpfcm1.FolderTypes
                 old.IsAcknowledged = state.IsAcknowledged;
                 old.isRejected = state.isRejected;
                 old.sigValidationInfo = state.sigValidationInfo;
+                old.archiveReady = state.archiveReady;
 
                 old.sigReason = state.sigReason;
                 old.sigTS = state.sigTS;
@@ -98,7 +99,7 @@ namespace wpfcm1.FolderTypes
             foreach (var document in Documents)
             {
                 InternalMessengerGetStates(document);
-                SetSigAdditionalInfo(document);
+                document.sigAdditionalInfo = "refresh";
             }
 
             //var states = Deserialize();

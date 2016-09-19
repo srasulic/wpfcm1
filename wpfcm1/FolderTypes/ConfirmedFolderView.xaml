@@ -33,7 +33,7 @@
                 </DataTemplate>
                 <DataTemplate x:Key="WaitForSrvProcessing">
                     <StackPanel>
-                        <Image Source="{StaticResource PngOk}" Visibility="{Binding Path=IsSignedAgain, Converter={StaticResource b2vc}}"/>
+                        <Image Source="{StaticResource PngBlackLock}" Visibility="{Binding Path=archiveReady, Converter={StaticResource b2vc}}"/>
                     </StackPanel>
                 </DataTemplate>
             </ResourceDictionary>

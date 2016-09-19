@@ -67,7 +67,7 @@ namespace wpfcm1.FolderTypes
             }
             foreach (var document in Documents)
             {
-                SetSigAdditionalInfo(document);
+                document.sigAdditionalInfo = "refresh";
             }
         }
 
@@ -187,9 +187,9 @@ namespace wpfcm1.FolderTypes
             {
                 document.isApprovedForProcessing = approved;
                 document.isRejected = !approved;
-                if (document.Processed) { document.Processed = false; };
-                SerializeMessage(document);
-                document.Processed = true;
+                InternalMessageModel message = new InternalMessageModel(document);
+                message.Processed = null; // ne zelimo da saljemo info na temu procesirano jer je poruka upucena drugom folderu
+                SerializeMessage(message);
             }
         }
 

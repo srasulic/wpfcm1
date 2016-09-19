@@ -42,20 +42,27 @@ namespace wpfcm1.Model
 
         public string DocumentPath { get; set; }
 
+
+        public virtual string this[string columnName]
+        {
+            //TODO: ovo sad nije bitno, sredi kasnije (error check)
+            get { throw new System.NotImplementedException(); }
+        }
+
+        /// <summary>
+        /// 1. statusi koji se koriste prilikom rada sa kolekcijama dokumenata i opšti atributi za prikaz u listama: 
+        /// </summary>
+ 
+        // 1.1. koristi se za promene statusa u listama za vreme obrade dokumenta
         private bool _processed;
         public bool Processed
         {
             get { return _processed; }
             set { _processed = value; NotifyOfPropertyChange(() => Processed); }
         }
+        
 
-        private bool? _isValid;
-        public bool? IsValid
-        {
-            get { return _isValid; }
-            set { _isValid = value; NotifyOfPropertyChange(() => IsValid); }
-        }
-
+         // 1.2 koristi se samo tokom manipulacije dokumentima u listama
         private bool _isChecked;
         [XmlIgnore]
         public bool IsChecked
@@ -64,6 +71,7 @@ namespace wpfcm1.Model
             set { _isChecked = value; NotifyOfPropertyChange(() => IsChecked); }
         }
 
+        // 1.3 veličina fajla u KB
         private double _lengthKB;
         public double LengthKB
         {
@@ -71,7 +79,7 @@ namespace wpfcm1.Model
             set { _lengthKB = value; NotifyOfPropertyChange(() => LengthKB); }
         }
 
-
+        // 1.4 PIB 1 iz imena fajla
         private string _namePib1;
         public string namePib1
         {
@@ -79,7 +87,7 @@ namespace wpfcm1.Model
             set { _namePib1 = value; NotifyOfPropertyChange(() => namePib1); }
         }
 
-
+        // 1.5 Pib 2 iz imena fajla
         private string _namePib2;
         public string namePib2
         {
@@ -87,6 +95,7 @@ namespace wpfcm1.Model
             set { _namePib2 = value; NotifyOfPropertyChange(() => namePib2); }
         }
 
+        // 1.6 broj dokumenta iz imena fajla
         private string _nameDocNum;
         public string nameDocNum
         {
@@ -94,6 +103,7 @@ namespace wpfcm1.Model
             set { _nameDocNum = value; NotifyOfPropertyChange(() => nameDocNum); }
         }
 
+        // 1.7 datum IZ IMENA fajla, treba nam jer se ftp-om menja modify date svakim prenosom
         private string _nameDate;
         public string nameDate
         {
@@ -101,6 +111,7 @@ namespace wpfcm1.Model
             set { _nameDate = value; NotifyOfPropertyChange(() => nameDate); }
         }
 
+        // 1.8 INBOUND INBOX - da li je poslata potvrda uručenja (ack fajl)
         private bool _isAcknowledged;
         public bool IsAcknowledged
         {
@@ -108,13 +119,8 @@ namespace wpfcm1.Model
             set { _isAcknowledged = value; NotifyOfPropertyChange(() => IsAcknowledged); }
         }
 
-        private bool _isSigned;
-        public bool IsSigned
-        {
-            get { return _isSigned; }
-            set { _isSigned = value; NotifyOfPropertyChange(() => IsSigned); }
-        }
-
+        // 1.9 INBOUND inbox ili confirmedToDo - status true ako se na _s dokument stavi jos jedan potpis (izgenerise se fajl _s_s)
+        //     Po pravilu ovakav fajl vise ne prikazujemo u listi jer imamo njegovu novu verziju _s_s
         private bool _isSignedAgain;
         public bool IsSignedAgain
         {
@@ -122,6 +128,7 @@ namespace wpfcm1.Model
             set { _isSignedAgain = value; NotifyOfPropertyChange(() => IsSignedAgain); }
         }
 
+        // 1.10 po pravilu svaki _s_s fajl ima ovaj atribut true. 
         private bool _hasSecondSignature;
         public bool HasSecondSignature
         {
@@ -133,14 +140,13 @@ namespace wpfcm1.Model
                 NotifyOfPropertyChange(() => IsValid_HasSS_IsValidated_IsNotValidated2);
             }
         }
-        
-        public virtual string this[string columnName]
-        {
-            //TODO: ovo sad nije bitno, sredi kasnije (error check)
-            get { throw new System.NotImplementedException(); }
-        }
 
 
+        /// <summary>
+        /// 2. Polja za vrednosti izvučene iz potpisa 1 i potpisa 2 
+        /// </summary>
+ 
+        // 2.1.1 potpis 1 - ime potpisnika
         private String _sigSignerName;
         public String sigSignerName
         {
@@ -148,7 +154,7 @@ namespace wpfcm1.Model
             set { _sigSignerName = value; NotifyOfPropertyChange(() => sigSignerName); }
         }
 
-
+        // 2.1.2. potpis 1 - vreme iz time stampa
         private DateTime _sigTS;
         public DateTime sigTS
         {
@@ -156,7 +162,7 @@ namespace wpfcm1.Model
             set { _sigTS = value; NotifyOfPropertyChange(() => sigTS); }
         }
 
-
+        // 2.1.3. potpis 1 - vreme iz DateSigned polja 
         private DateTime _sigDateSigned;
         public DateTime sigDateSigned
         {
@@ -164,8 +170,7 @@ namespace wpfcm1.Model
             set { _sigDateSigned = value; NotifyOfPropertyChange(() => sigDateSigned); }
         }
 
-
-
+        // 2.1.4. potpis 1 - organizacija na koju glasi sertifikat
         private String _sigOrg;
         public String sigOrg
         {
@@ -173,7 +178,7 @@ namespace wpfcm1.Model
             set { _sigOrg = value; NotifyOfPropertyChange(() => sigOrg); }
         }
 
-
+        // 2.1.5. potpis 1 - reason
         private String _sigReason;
         public String sigReason
         {
@@ -181,25 +186,7 @@ namespace wpfcm1.Model
             set { _sigReason = value; NotifyOfPropertyChange(() => sigReason); }
         }
 
-        private String _sigAdditionalInfo;
-        public String sigAdditionalInfo
-        {
-            get { return _sigAdditionalInfo; }
-            set { _sigAdditionalInfo = value; NotifyOfPropertyChange(() => sigAdditionalInfo); }
-        }
-
-        public bool ShouldSerializesigAdditionalInfo ()
-        {
-            return false;
-        }
-
-        private String _sigValidationInfo;
-        public String sigValidationInfo
-        {
-            get { return _sigValidationInfo; }
-            set { _sigValidationInfo = value; NotifyOfPropertyChange(() => sigValidationInfo); }
-        }
-
+        // 2.2.1. potpis 2 - ime potpisnika
         private String _sigSignerName2;
         public String sigSignerName2
         {
@@ -207,7 +194,7 @@ namespace wpfcm1.Model
             set { _sigSignerName2 = value; NotifyOfPropertyChange(() => sigSignerName2); }
         }
 
-
+        // 2.2.2. potpis 2 - vreme iz time stampa
         private DateTime _sigTS2;
         public DateTime sigTS2
         {
@@ -215,6 +202,7 @@ namespace wpfcm1.Model
             set { _sigTS2 = value; NotifyOfPropertyChange(() => sigTS2); }
         }
 
+        // 2.2.3. potpis 2 - vreme iz DateSigned polja 
         private DateTime _sigDateSigned2;
         public DateTime sigDateSigned2
         {
@@ -222,7 +210,7 @@ namespace wpfcm1.Model
             set { _sigDateSigned2 = value; NotifyOfPropertyChange(() => sigDateSigned2); }
         }
 
-
+        // 2.2.4. potpis 2 - organizacija na koju glasi sertifikat
         private String _sigOrg2;
         public String sigOrg2
         {
@@ -230,7 +218,7 @@ namespace wpfcm1.Model
             set { _sigOrg2 = value; NotifyOfPropertyChange(() => sigOrg2); }
         }
 
-
+        // 2.2.5. potpis 2 - reason
         private String _sigReason2;
         public String sigReason2
         {
@@ -238,13 +226,55 @@ namespace wpfcm1.Model
             set { _sigReason2 = value; NotifyOfPropertyChange(() => sigReason2); }
         }
 
+        // 2.3. namenjeno da se prikaze overview o svim potpisima, npr za tooltip 
+        //      setter je tu samo da uradi notify property change
+        public String sigAdditionalInfo
+        {
+            get
+            { //return _sigAdditionalInfo;
 
+                string strdateTS;
+                string strdateDate;
+                string strdateTS2;
+                string strdateDate2;
+                if (sigTS == DateTime.MinValue) strdateTS = ""; else strdateTS = sigTS.ToShortDateString();
+                if (sigDateSigned == DateTime.MinValue) strdateDate = ""; else strdateDate = sigDateSigned.ToShortDateString();
+                if (sigTS2 == DateTime.MinValue) strdateTS2 = ""; else strdateTS2 = sigTS2.ToShortDateString();
+                if (sigDateSigned2 == DateTime.MinValue) strdateDate2 = ""; else strdateDate2 = sigDateSigned2.ToShortDateString();
+                return String.Format(@"{11}{0}* Potpis 1:{0}Reason: {1}{0}Potpisao: {2}, {3} {0}TimeStamp datum: {4} {0}Datum potpisa: {5} {0}{0}** Potpis 2:{0}Reason: {6}{0}Potpisao: {7}, {8}{0}TimeStamp datum: {9}{0}Datum potpisa: {10} ",
+                                    Environment.NewLine,
+                                    sigReason, sigSignerName, sigOrg, strdateTS, strdateDate,
+                                    sigReason2, sigSignerName2, sigOrg2, strdateTS2, strdateDate2,
+                                    sigValidationInfo
+                                    );
+            }
+            set { if (value == "refresh")  NotifyOfPropertyChange(() => sigAdditionalInfo); }
+        }
+
+        public bool ShouldSerializesigAdditionalInfo()
+        {
+            return false;
+        }
+        /// <summary>
+        /// 3. Statusi prilikom procesa validacije potpisa u dokumentu :
+        /// </summary>
+        
+        // 3.1. rezultat validacije svih potpisa u dokumentu
+        private bool? _isValid;
+        public bool? IsValid
+        {
+            get { return _isValid; }
+            set { _isValid = value; NotifyOfPropertyChange(() => IsValid); }
+        }
+
+        // 3.2. potpis 1 - da li je vrsena validacija potpisa 1
         private bool _isValidated;
         public bool isValidated
         {
             get { return _isValidated; }
-            set { 
-                _isValidated = value; 
+            set
+            {
+                _isValidated = value;
                 NotifyOfPropertyChange(() => isValidated);
                 NotifyOfPropertyChange(() => IsValid_HasSS_IsValidated_IsNotValidated2);
                 NotifyOfPropertyChange(() => IsValid_HasSS_IsValidated2);
@@ -252,13 +282,28 @@ namespace wpfcm1.Model
             }
         }
 
+        // 3.3. potpis 2 - da li je vrsena validacija potpisa 2
         private bool _isValidated2;
         public bool isValidated2
         {
             get { return _isValidated2; }
             set { _isValidated2 = value; NotifyOfPropertyChange(() => isValidated2); }
         }
+        // 3.4. ukoliko je bilo gresaka prilikom validacije ovde treba smestiti info o njima 
+        private String _sigValidationInfo;
+        public String sigValidationInfo
+        {
+            get { return _sigValidationInfo; }
+            set { _sigValidationInfo = value; NotifyOfPropertyChange(() => sigValidationInfo); }
+        }
 
+
+        /// <summary>
+        /// 4. slede statusi za dorade za procese odobravanja
+        /// </summary>
+        /// 
+
+        // 4.1. interna poruka - odobren ili ne
         private bool _isApprovedForProcessing;
         public bool isApprovedForProcessing
         {
@@ -271,7 +316,7 @@ namespace wpfcm1.Model
             }
         }
 
-
+        // 4.2. ne koristi se
         private String _workflowStatus;
         public String workflowStatus
         {
@@ -279,6 +324,15 @@ namespace wpfcm1.Model
             set { _workflowStatus = value; NotifyOfPropertyChange(() => workflowStatus); }
         }
 
+        // 4.3. Za Confirmed, pre svega outbound - oznaka da je dokument spreman za arhiviranje 
+        private bool _archiveReady;
+        public bool archiveReady
+        {
+            get { return _archiveReady; }
+            set { _archiveReady = value; NotifyOfPropertyChange(() => archiveReady); }
+        }
+
+        // 4.4. odbbacen - nije za dalje procesiranje
         private bool _isRejected;
         public bool isRejected
         {
@@ -289,18 +343,31 @@ namespace wpfcm1.Model
             }
         }
 
-        //check sign
+        // 4.5. interna stavr, kada stigne xml oznaci dokument da ima eksternu poruku kako bi se kasnije osvezili podaci o njemu... 
+        private bool _hasExternalMessage;
+        public bool hasExternalMessage
+        {
+            get { return _hasExternalMessage; }
+            set { _hasExternalMessage = value; NotifyOfPropertyChange(() => hasExternalMessage); }
+        }
+
+        /// <summary>
+        /// 5. Ovo mozda treba izmestiti na neko pametnije emsto. Ovo su funkcije koe zavisno od kombinacije statusa vracaju true/false za potrebe prikaza... 
+        /// </summary>
+        /// <returns></returns>
+
+        // 5.1. check sign
         public bool ShouldSerializeNotSignedAgain_Approved() { return false; }
         
         public bool NotSignedAgain_Approved  { get { return !IsSignedAgain && isApprovedForProcessing ; } set { }    }
 
 
-        //remove sign
+        // 5.2. remove sign
         public bool ShouldSerializeNotSignedAgain_Rejected() { return false; }
 
         public bool NotSignedAgain_Rejected { get { return !IsSignedAgain && isRejected ; } set { }        }
 
-        //
+        // 5.3. 
         public bool ShouldSerializeIsValid_HasSS_IsValidated2() { return false; }
 
         public bool IsValid_HasSS_IsValidated2
@@ -313,7 +380,7 @@ namespace wpfcm1.Model
             set { }
         }
 
-        //
+        // 5.4. 
         public bool ShouldSerializeIsValid_HasNotSS() { return false; }
 
         public bool IsValid_HasNotSS
@@ -328,7 +395,7 @@ namespace wpfcm1.Model
         }
 
 
-        //
+        // 5.5. 
         public bool ShouldSerializeIsValid_HasSS_IsValidated_IsNotValidated2() { return false; }
 
         public bool IsValid_HasSS_IsValidated_IsNotValidated2
@@ -343,12 +410,6 @@ namespace wpfcm1.Model
         }
 
 
-        private bool _hasExternalMessage;
-        public bool hasExternalMessage 
-        {   
-            get { return _hasExternalMessage; } 
-            set { _hasExternalMessage = value; NotifyOfPropertyChange(() => hasExternalMessage); } 
-        }
  
         [XmlIgnore]
         public string Error { get; private set; }

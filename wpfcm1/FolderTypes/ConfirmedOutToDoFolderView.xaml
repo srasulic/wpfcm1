@@ -31,6 +31,11 @@
                         <Image Source="{StaticResource PngRemove}" Visibility="{Binding Path=isRejected, Converter={StaticResource b2vc}}" />
                     </StackPanel>
                 </DataTemplate>
+                <DataTemplate x:Key="WaitForSrvProcessing">
+                    <StackPanel>
+                        <Image Source="{StaticResource PngBlackLock}" Visibility="{Binding Path=archiveReady, Converter={StaticResource b2vc}}"/>
+                    </StackPanel>
+                </DataTemplate>
             </ResourceDictionary>
         </Grid.Resources>
 
@@ -56,6 +61,7 @@
                 <DataGridTemplateColumn Header="{StaticResource appbar_checkmark16}" CellTemplate="{StaticResource ImgCol}" MinWidth="32" IsReadOnly="True">
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn  CellTemplate="{StaticResource StatusCol}" MinWidth="32" IsReadOnly="True"/>
+                <DataGridTemplateColumn CellTemplate="{StaticResource WaitForSrvProcessing}" MinWidth="32" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Reason" Binding="{Binding Path=sigReason2}" IsReadOnly="True" />
                 <DataGridTextColumn Header="Potpisao" Binding="{Binding Path=sigSignerName2}" IsReadOnly="True" />
                 <DataGridTextColumn Header="Organizacija" Binding="{Binding Path=sigOrg2}" IsReadOnly="True" />

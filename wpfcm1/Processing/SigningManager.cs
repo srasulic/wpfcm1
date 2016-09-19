@@ -101,7 +101,7 @@ namespace wpfcm1.Processing
                         File.Copy(sourceFilePath, processedFilePath);
                         Log.Info(string.Format("Deleting: {0}", sourceFilePath));
                         File.Delete(sourceFilePath);
-                        document.IsSigned = true;
+                        //document.IsSigned = true;
                         break;
                 }
 

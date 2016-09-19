@@ -93,17 +93,52 @@ namespace wpfcm1.FolderTypes
             }
         }
 
+        public static string BoolToDaNeString(bool value)
+        {
+            return value ? "DA" : "ne";
+        }
+
         protected void XlsExport()
         {
             try
             {
                 var documents = Documents.Cast<DocumentModel>();
-                _expList = "\"Mark\",\"Pib izdavalac\",\"Pib primalac\",\"Fajl\",\"KB\",\"Br Dok\"\r\n";
+                _expList = "\"Obelezen\",\"Fajl\",\"KB\",\"Pib1\",\"Pib2\",\"Br dok\",\"Datum\",\""
+                        + "Reason (napomena prilikom potpisivanja)\",\"Ime potpisnika\",\"Organizacija\",\"Datum potpisivanja\",\"Vremenski žig\",\""
+                        + "Reason 2 (napomena prilikom potpisivanja)\",\"Ime potpisnika 2\",\"Organizacija 2\",\"Datum potpisivanja 2\",\"Vremenski žig 2\",\""
+                        + "Validacija - info\",\"Odobren za obradu\",\"Odbačen\",\"Odobren za arhiviranje\"\r\n";
                 foreach (var document in documents)
                 {
                     string[] fileNameParts = document.DocumentPath.Split('\\');
                     string[] parts = fileNameParts.Last().Split('_');
-                    _expList = string.Concat(_expList, "\"", document.IsChecked.ToString(), "\",\"", parts[0], "\",\"", parts[1], "\",\"", fileNameParts.Last(), "\",\"", document.LengthKB, "\",\"", parts[2], "\"\r\n");
+                    _expList = string.Concat(
+                        _expList, "\"",
+                        BoolToDaNeString(document.IsChecked), "\",\"",
+                        fileNameParts.Last(), "\",\"",
+                        document.LengthKB, "\",\"",
+                        
+                        document.namePib1, "\",\"", 
+                        document.namePib2, "\",\"",
+                        document.nameDocNum, "\",\"",
+                        document.nameDate, "\",\"",
+
+                        document.sigReason, "\",\"",
+                        document.sigSignerName, "\",\"",
+                        document.sigOrg, "\",\"",
+                        document.sigDateSigned, "\",\"",
+                        document.sigTS, "\",\"",
+                        
+                        document.sigReason2, "\",\"",
+                        document.sigSignerName2, "\",\"",
+                        document.sigOrg2, "\",\"",
+                        document.sigDateSigned2, "\",\"",
+                        document.sigTS2, "\",\"",
+                        
+                        document.sigValidationInfo, "\",\"",
+                        BoolToDaNeString(document.isApprovedForProcessing), "\",\"",
+                        BoolToDaNeString(document.isRejected), "\",\"",
+                        BoolToDaNeString(document.archiveReady), "\"\r\n"
+                        );
                 }
 
                 string filename = string.Concat(Guid.NewGuid().ToString(), @".csv");
@@ -189,29 +224,9 @@ namespace wpfcm1.FolderTypes
                     organization = String.Format("{0}, {1}", organization, CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"O"));
                     document.sigOrg = organization;
                 }
-                SetSigAdditionalInfo(document);
+                document.sigAdditionalInfo = "refresh";
             }
         }
-
-        protected void SetSigAdditionalInfo(DocumentModel document)
-        {
-            string strdateTS;
-            string strdateDate;
-            string strdateTS2;
-            string strdateDate2;
-            if (document.sigTS == DateTime.MinValue) strdateTS = ""; else strdateTS = document.sigTS.ToShortDateString();
-            if (document.sigDateSigned == DateTime.MinValue) strdateDate = ""; else strdateDate = document.sigDateSigned.ToShortDateString();
-            if (document.sigTS2 == DateTime.MinValue) strdateTS2 = ""; else strdateTS2 = document.sigTS2.ToShortDateString();
-            if (document.sigDateSigned2 == DateTime.MinValue) strdateDate2 = ""; else strdateDate2 = document.sigDateSigned2.ToShortDateString();
-            document.sigAdditionalInfo = String.Format(@"{11}{0}* Potpis 1:{0}Reason: {1}{0}Potpisao: {2}, {3} {0}TimeStamp datum: {4} {0}Datum potpisa: {5} {0}{0}** Potpis 2:{0}Reason: {6}{0}Potpisao: {7}, {8}{0}TimeStamp datum: {9}{0}Datum potpisa: {10} ",
-                            Environment.NewLine,
-                            document.sigReason, document.sigSignerName, document.sigOrg, strdateTS, strdateDate,
-                            document.sigReason2, document.sigSignerName2, document.sigOrg2, strdateTS2, strdateDate2,
-                            document.sigValidationInfo
-                            );
-
-        }
-
 
         public void InternalMessengerGetStates()
         {
@@ -223,8 +238,8 @@ namespace wpfcm1.FolderTypes
         
         public void InternalMessengerGetStates(DocumentModel document)
         {
-            var extDocState = new DocumentModel();
-            var xs = new XmlSerializer(typeof(DocumentModel));
+            var extDocState = new InternalMessageModel();
+            var xs = new XmlSerializer(typeof(InternalMessageModel));
             // proverimo poruku koja je u samom folderu:
             var fileName = Path.GetFileName(document.DocumentPath);
             var file = Path.Combine(FolderPath, fileName + ".xml");
@@ -233,14 +248,19 @@ namespace wpfcm1.FolderTypes
                 try
                 {
                     using (Stream s = File.OpenRead(file))
-                        extDocState = (DocumentModel)xs.Deserialize(s);
+                        extDocState = (InternalMessageModel)xs.Deserialize(s);
 
-                    document.isApprovedForProcessing = extDocState.isApprovedForProcessing;
-                    document.isRejected = extDocState.isRejected;
-                    if (document.Processed == false) document.Processed = extDocState.Processed;
-
-                    //document.IsAcknowledged = true; // zloupotrebili smo ga dok još nismo znali da bool može da bude bez vrednosti :)  
-
+                    if (extDocState.isApprovedForProcessing.HasValue) { document.isApprovedForProcessing = (bool)extDocState.isApprovedForProcessing; }
+                    if (extDocState.isRejected.HasValue) { document.isRejected = (bool)extDocState.isRejected; }
+                    if (extDocState.archiveReady.HasValue) { document.archiveReady = (bool)extDocState.archiveReady; }
+                    if (extDocState.Processed.HasValue)
+                    {
+                        // ne mozemo da vratimo ovaj status u prethodno stanje
+                        if (document.Processed == false)
+                        {
+                            document.Processed = (bool)extDocState.Processed;
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
@@ -256,14 +276,19 @@ namespace wpfcm1.FolderTypes
                 try
                 {
                     using (Stream s = File.OpenRead(file))
-                        extDocState = (DocumentModel)xs.Deserialize(s);
+                        extDocState = (InternalMessageModel)xs.Deserialize(s);
 
-                    document.isApprovedForProcessing = extDocState.isApprovedForProcessing;
-                    document.isRejected = extDocState.isRejected;
-                    if (document.Processed == false) document.Processed = extDocState.Processed;
-
-                   // document.IsAcknowledged = true; // zloupotrebili smo ga dok još nismo znali da bool može da bude bez vrednosti :)  
-
+                    if (extDocState.isApprovedForProcessing.HasValue) { document.isApprovedForProcessing = (bool)extDocState.isApprovedForProcessing; }
+                    if (extDocState.isRejected.HasValue) { document.isRejected = (bool)extDocState.isRejected; }
+                    if (extDocState.archiveReady.HasValue) { document.archiveReady = (bool)extDocState.archiveReady; }
+                    if (extDocState.Processed.HasValue)
+                    {
+                        // ne mozemo da vratimo ovaj status u prethodno stanje
+                        if (document.Processed == false)
+                        {
+                            document.Processed = (bool)extDocState.Processed;
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
@@ -273,25 +298,24 @@ namespace wpfcm1.FolderTypes
         }
 
 
-        //protected void RejectToDoDocument(Type type)
-        //{
-        //    var checkedDocuments = Documents.Where(d => d.IsChecked).Where(d => !d.Processed);
-        //    if (!checkedDocuments.Any()) return;
-        //    var destinationDir = SigningTransferRules.LocalMap[FolderPath];
-        //    // TODO: dodati dijalog, sada radimo bez upozorenja
-        //    foreach (var document in checkedDocuments)
-        //    {
-        //        document.Processed = true;
-        //        document.isRejected = true;
-        //        var fileName = Path.GetFileName(document.DocumentPath);
-        //        var destinationFilePath = Path.Combine(destinationDir, fileName + ".xml");
-        //        var file = File.Create(destinationFilePath);
+        protected void SerializeMessage(InternalMessageModel message)
+        {
+            try
+            {
+                var destinationDir = SigningTransferRules.LocalMap[FolderPath];
+                var destinationFilePath = Path.Combine(destinationDir, message.MessageFileName);
 
-        //        var xs = new XmlSerializer(type);
-        //        using (Stream s = file)
-        //            xs.Serialize(s, document);
-        //    }
-        //}
+                var file = File.Create(destinationFilePath);
+
+                var xs = new XmlSerializer(typeof(InternalMessageModel));
+                using (Stream s = file)
+                    xs.Serialize(s, message);
+            }
+            catch (Exception e)
+            {
+                Log.Error("Error: SerializeMessage ", e);
+            }
+        }
 
         protected void SetRejected()
         {
@@ -303,75 +327,27 @@ namespace wpfcm1.FolderTypes
             {
                 document.Processed = true;
                 document.isRejected = true;
-                SerializeMessage(document);
+                var message = new InternalMessageModel(document);
+                SerializeMessage(message);
             }
         }
 
 
-        protected void SetProcessed()
+        protected void SetArchived()
         {
             if (!IsActive) return;
-            var checkedDocuments = Documents.Where(d => d.IsChecked).Where(d => !d.Processed);
+            var checkedDocuments = Documents.Where(d => d.IsChecked); //.Where(d => !d.Processed);
             if (!checkedDocuments.Any()) return;
             // TODO: dodati dijalog, sada radimo bez upozorenja
             foreach (var document in checkedDocuments)
             {
                 document.Processed = true;
-                document.isApprovedForProcessing = true;
-                SerializeMessage(document);
+                document.archiveReady = true;
+                if (!(document.isRejected)) document.isApprovedForProcessing = true;
+                var message = new InternalMessageModel(document);
+                SerializeMessage(message);
             }
         }
-
-        protected void SerializeMessage(DocumentModel document)
-        {
-            try
-            {
-                // Nisam mogao da kastujem prosleđene klase u DocumentModel, pa pravimo ciljano poruku za razmenu:
-                DocumentModel message = new DocumentModel();
-                message.Processed = document.Processed;
-                message.isRejected = document.isRejected;
-                message.isApprovedForProcessing = document.isApprovedForProcessing;
-                message.HasSecondSignature = document.HasSecondSignature;
-                message.IsValid = document.IsValid;
-                message.isValidated = document.isValidated;
-                message.isValidated2 = document.isValidated2;
-
-                var destinationDir = SigningTransferRules.LocalMap[FolderPath];
-                var fileName = Path.GetFileName(document.DocumentPath);
-                var destinationFilePath = Path.Combine(destinationDir, fileName + ".xml");
-                var file = File.Create(destinationFilePath);
-
-                var xs = new XmlSerializer(typeof(DocumentModel));
-                using (Stream s = file)
-                    xs.Serialize(s, message);
-            }
-            catch (Exception e)
-            {
-                Log.Error("Error: SerializeMessage ", e);
-            }
-
-        }
-
-        //protected void SetProcessed(Type type)
-        //{
-        //    var checkedDocuments = Documents.Where(d => d.IsChecked).Where(d => !d.Processed);
-        //    if (!checkedDocuments.Any()) return;
-        //    var destinationDir = SigningTransferRules.LocalMap[FolderPath];
-        //    // TODO: dodati dijalog, sada radimo bez upozorenja
-        //    foreach (var document in checkedDocuments)
-        //    {
-        //        document.Processed = true;
-        //        document.isApprovedForProcessing = true;
-
-        //        var fileName = Path.GetFileName(document.DocumentPath);
-        //        var destinationFilePath = Path.Combine(destinationDir, fileName + ".xml");
-        //        var file = File.Create(destinationFilePath);
-
-        //        var xs = new XmlSerializer(type);
-        //        using (Stream s = file)
-        //            xs.Serialize(s, document);
-        //    }
-        //}
 
         protected override void OnActivate()
         {
