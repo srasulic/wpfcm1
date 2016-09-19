@@ -23,7 +23,7 @@ namespace wpfcm1.Toolbar
             {"InboxFolderViewModel",            new BitArray(new byte[]{Convert.ToByte("01110111", 2), 0x2})},
             {"PendFolderViewModel",             new BitArray(new byte[]{Convert.ToByte("00000111", 2), 0x2})},
             {"OutboxFolderViewModel",           new BitArray(new byte[]{Convert.ToByte("10000111", 2), 0x2})},
-            {"ConfirmedFolderViewModel",        new BitArray(new byte[]{Convert.ToByte("00000111", 2), 0x2})},
+            {"ConfirmedFolderViewModel",        new BitArray(new byte[]{Convert.ToByte("00010111", 2), 0x2})},
             {"ConfirmedToDoFolderViewModel",    new BitArray(new byte[]{Convert.ToByte("11010111", 2), 0x2})},
             {"ConfirmedOutToDoFolderViewModel", new BitArray(new byte[]{Convert.ToByte("10010111", 2), 0x3})},
             {"FolderViewModel",                 new BitArray(new byte[]{Convert.ToByte("00000111", 2), 0x0})},

@@ -33,16 +33,23 @@ namespace wpfcm1.PDF
     {
         public static Dictionary<string, string> LocalMap = new Dictionary<string, string>()
         {
-            {FolderManager.InvoicesOutboundErpIfaceFolder, FolderManager.InvoicesOutboundOutboxFolder},
-            {FolderManager.InvoicesOutboundConfirmedOutToDoFolder, FolderManager.InvoicesOutboundOutboxFolder},
-            {FolderManager.InvoicesInboundInboxFolder, FolderManager.InvoicesInboundOutboxFolder},
-            {FolderManager.InvoicesInboundConfirmedToDoFolder, FolderManager.InvoicesInboundOutboxFolder},
+            {FolderManager.InvoicesOutboundErpIfaceFolder,          FolderManager.InvoicesOutboundOutboxFolder},
+            //{FolderManager.InvoicesOutboundConfirmedOutToDoFolder,  FolderManager.InvoicesOutboundOutboxFolder},
+            {FolderManager.InvoicesOutboundConfirmedFolder,         FolderManager.InvoicesOutboundOutboxFolder},
+            {FolderManager.InvoicesInboundInboxFolder,              FolderManager.InvoicesInboundOutboxFolder},
+            //{FolderManager.InvoicesInboundConfirmedToDoFolder,      FolderManager.InvoicesInboundOutboxFolder},
+            {FolderManager.InvoicesInboundConfirmedFolder,          FolderManager.InvoicesInboundOutboxFolder},
+            
             {FolderManager.IosOutboundErpIfaceFolder, FolderManager.IosOutboundOutboxFolder},
             {FolderManager.IosInboundInboxFolder, FolderManager.IosInboundOutboxFolder},
-            {FolderManager.KpOutboundErpIfaceFolder, FolderManager.KpOutboundOutboxFolder},
-            {FolderManager.KpOutboundConfirmedOutToDoFolder, FolderManager.KpOutboundOutboxFolder},
-            {FolderManager.KpInboundInboxFolder, FolderManager.KpInboundOutboxFolder},
-            {FolderManager.KpInboundConfirmedToDoFolder, FolderManager.KpInboundOutboxFolder},
+            
+            {FolderManager.KpOutboundErpIfaceFolder,            FolderManager.KpOutboundOutboxFolder},
+            //{FolderManager.KpOutboundConfirmedOutToDoFolder,    FolderManager.KpOutboundOutboxFolder},
+            {FolderManager.KpOutboundConfirmedFolder,           FolderManager.KpOutboundOutboxFolder},
+            {FolderManager.KpInboundInboxFolder,                FolderManager.KpInboundOutboxFolder},
+            //{FolderManager.KpInboundConfirmedToDoFolder,        FolderManager.KpInboundOutboxFolder},
+            {FolderManager.KpInboundConfirmedFolder,            FolderManager.KpInboundOutboxFolder},
+            
             {FolderManager.OtherOutboundErpIfaceFolder, FolderManager.OtherOutboundOutboxFolder},
             {FolderManager.OtherInboundInboxFolder, FolderManager.OtherInboundOutboxFolder}
         };
@@ -53,6 +60,7 @@ namespace wpfcm1.PDF
             {FolderManager.IosOutboundErpIfaceFolder, FolderManager.IosOutboundErpProcFolder},
             {FolderManager.KpOutboundErpIfaceFolder, FolderManager.KpOutboundErpProcFolder},
             {FolderManager.OtherOutboundErpIfaceFolder, FolderManager.OtherOutboundErpProcFolder},
+            
             {FolderManager.InvoicesOutboundOutboxFolder, FolderManager.InvoicesOutboundErpProcFolder},
             {FolderManager.IosOutboundOutboxFolder, FolderManager.IosOutboundErpProcFolder},
             {FolderManager.KpOutboundOutboxFolder, FolderManager.KpOutboundErpProcFolder},

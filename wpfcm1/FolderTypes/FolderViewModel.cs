@@ -142,6 +142,7 @@ namespace wpfcm1.FolderTypes
                 {
                     var isValid = await PdfHelpers.ValidatePdfCertificatesAsync(document.DocumentPath);
                     document.IsValid = isValid;
+                    document.sigValidationInfo = @"O.K.";
                 } catch (Exception e)
                 {
                     document.IsValid = false;
@@ -224,24 +225,50 @@ namespace wpfcm1.FolderTypes
         {
             var extDocState = new DocumentModel();
             var xs = new XmlSerializer(typeof(DocumentModel));
-
+            // proverimo poruku koja je u samom folderu:
             var fileName = Path.GetFileName(document.DocumentPath);
             var file = Path.Combine(FolderPath, fileName + ".xml");
-            if (!File.Exists(file)) return;
-            try
+            if (File.Exists(file))
             {
-                using (Stream s = File.OpenRead(file))
-                    extDocState = (DocumentModel)xs.Deserialize(s);
+                try
+                {
+                    using (Stream s = File.OpenRead(file))
+                        extDocState = (DocumentModel)xs.Deserialize(s);
 
-                document.isApprovedForProcessing = extDocState.isApprovedForProcessing;
-                document.isRejected = extDocState.isRejected;
-                if (document.Processed == false)  document.Processed = extDocState.Processed;
+                    document.isApprovedForProcessing = extDocState.isApprovedForProcessing;
+                    document.isRejected = extDocState.isRejected;
+                    if (document.Processed == false) document.Processed = extDocState.Processed;
 
-                document.IsAcknowledged = true; // zloupotrebili smo ga dok još nismo znali da bool može da bude bez vrednosti :)  
+                    //document.IsAcknowledged = true; // zloupotrebili smo ga dok još nismo znali da bool može da bude bez vrednosti :)  
+
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Error: InternalMessengerGetStates ", e);
+                }
             }
-            catch (Exception e)
+            // ukoliko postoji i neka poruka koja još nije sinhronizovan asa serverom (interna obrada u aplikaciji)
+            // obradicemo i nju kao najsveziju informaciju
+            var destinationDir = SigningTransferRules.LocalMap[FolderPath];
+            file = Path.Combine(destinationDir, fileName + ".xml");
+            if (File.Exists(file))
             {
-                Log.Error("Error: InternalMessengerGetStates ", e);
+                try
+                {
+                    using (Stream s = File.OpenRead(file))
+                        extDocState = (DocumentModel)xs.Deserialize(s);
+
+                    document.isApprovedForProcessing = extDocState.isApprovedForProcessing;
+                    document.isRejected = extDocState.isRejected;
+                    if (document.Processed == false) document.Processed = extDocState.Processed;
+
+                   // document.IsAcknowledged = true; // zloupotrebili smo ga dok još nismo znali da bool može da bude bez vrednosti :)  
+
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Error: InternalMessengerGetStates ", e);
+                }
             }
         }
 
