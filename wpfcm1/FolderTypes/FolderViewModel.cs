@@ -7,6 +7,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 using wpfcm1.Events;
 using wpfcm1.Model;
@@ -102,7 +104,8 @@ namespace wpfcm1.FolderTypes
         {
             try
             {
-                var documents = Documents.Cast<DocumentModel>();
+                var documents = Documents.Where(d => d.IsChecked).Cast<DocumentModel>();
+                if (!documents.Any()) { documents = Documents.Cast<DocumentModel>(); }
                 _expList = "\"Obelezen\",\"Fajl\",\"KB\",\"Pib1\",\"Pib2\",\"Br dok\",\"Datum\",\""
                         + "Reason (napomena prilikom potpisivanja)\",\"Ime potpisnika\",\"Organizacija\",\"Datum potpisivanja\",\"Vremenski žig\",\""
                         + "Reason 2 (napomena prilikom potpisivanja)\",\"Ime potpisnika 2\",\"Organizacija 2\",\"Datum potpisivanja 2\",\"Vremenski žig 2\",\""
@@ -238,8 +241,8 @@ namespace wpfcm1.FolderTypes
         
         public void InternalMessengerGetStates(DocumentModel document)
         {
-            var extDocState = new InternalMessageModel();
-            var xs = new XmlSerializer(typeof(InternalMessageModel));
+            // promenjen način čitanja atributa, tako da ne zavisi od tipa poruke (ne koristimo deserialize)
+            // Čitamo bilo kakav xml koji ima atribute koje ocekujemo... 
             // proverimo poruku koja je u samom folderu:
             var fileName = Path.GetFileName(document.DocumentPath);
             var file = Path.Combine(FolderPath, fileName + ".xml");
@@ -247,18 +250,29 @@ namespace wpfcm1.FolderTypes
             {
                 try
                 {
-                    using (Stream s = File.OpenRead(file))
-                        extDocState = (InternalMessageModel)xs.Deserialize(s);
-
-                    if (extDocState.isApprovedForProcessing.HasValue) { document.isApprovedForProcessing = (bool)extDocState.isApprovedForProcessing; }
-                    if (extDocState.isRejected.HasValue) { document.isRejected = (bool)extDocState.isRejected; }
-                    if (extDocState.archiveReady.HasValue) { document.archiveReady = (bool)extDocState.archiveReady; }
-                    if (extDocState.Processed.HasValue)
+                    XmlDocument xDoc = new XmlDocument();
+                    xDoc.Load(file);
+                    foreach (XmlNode node in xDoc.DocumentElement.ChildNodes)
                     {
-                        // ne mozemo da vratimo ovaj status u prethodno stanje
-                        if (document.Processed == false)
+                        if (node.Name == "isApprovedForProcessing")
                         {
-                            document.Processed = (bool)extDocState.Processed;
+                            if (node.InnerText == "true") document.isApprovedForProcessing = true;
+                            else if (node.InnerText == "false") document.isApprovedForProcessing = false;
+                        }
+                        else if (node.Name == "isRejected")
+                        {
+                            if (node.InnerText == "true") document.isRejected = true;
+                            else if (node.InnerText == "false") document.isRejected = false;
+                        }
+                        else if (node.Name == "archiveReady")
+                        {
+                            if (node.InnerText == "true") document.archiveReady = true;
+                            else if (node.InnerText == "false") document.archiveReady = false;
+                        }
+                        else if (node.Name == "Processed" && document.Processed == false) // ne mozemo da vratimo dokument u prethodno stanje, moze samo iz false u true
+                        {
+                            if (node.InnerText == "true") document.Processed = true;
+                            else if (node.InnerText == "false") document.Processed = false;
                         }
                     }
                 }
@@ -275,18 +289,29 @@ namespace wpfcm1.FolderTypes
             {
                 try
                 {
-                    using (Stream s = File.OpenRead(file))
-                        extDocState = (InternalMessageModel)xs.Deserialize(s);
-
-                    if (extDocState.isApprovedForProcessing.HasValue) { document.isApprovedForProcessing = (bool)extDocState.isApprovedForProcessing; }
-                    if (extDocState.isRejected.HasValue) { document.isRejected = (bool)extDocState.isRejected; }
-                    if (extDocState.archiveReady.HasValue) { document.archiveReady = (bool)extDocState.archiveReady; }
-                    if (extDocState.Processed.HasValue)
+                    XmlDocument xDoc = new XmlDocument();
+                    xDoc.Load(file);
+                    foreach (XmlNode node in xDoc.DocumentElement.ChildNodes)
                     {
-                        // ne mozemo da vratimo ovaj status u prethodno stanje
-                        if (document.Processed == false)
+                        if (node.Name == "isApprovedForProcessing")
                         {
-                            document.Processed = (bool)extDocState.Processed;
+                            if (node.InnerText == "true") document.isApprovedForProcessing = true;
+                            else if (node.InnerText == "false") document.isApprovedForProcessing = false;
+                        }
+                        else if (node.Name == "isRejected")
+                        {
+                            if (node.InnerText == "true") document.isRejected = true;
+                            else if (node.InnerText == "false") document.isRejected = false;
+                        }
+                        else if (node.Name == "archiveReady")
+                        {
+                            if (node.InnerText == "true") document.archiveReady = true;
+                            else if (node.InnerText == "false") document.archiveReady = false;
+                        }
+                        else if (node.Name == "Processed" && document.Processed == false) // ne mozemo da vratimo dokument u prethodno stanje, moze samo iz false u true
+                        {
+                            if (node.InnerText == "true") document.Processed = true;
+                            else if (node.InnerText == "false") document.Processed = false;
                         }
                     }
                 }
