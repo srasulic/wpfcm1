@@ -123,7 +123,7 @@ namespace wpfcm1.FolderTypes
             }
             // ako je stigao xml pronadji njegov pdf u listi i setuj mu status da ima eksternu poruku
             // (ovde je problem ako nam xml stigne u istoj sinh pre pdf fajla) ?!
-            if (Regex.IsMatch(filePath, @".+.pdf.xml$", RegexOptions.IgnoreCase))
+            else if (Regex.IsMatch(filePath, @".+.pdf.xml$", RegexOptions.IgnoreCase))
             {
                 var docName = Regex.Replace(filePath, @".xml", "");
                 var found = Documents.Where(d => d.DocumentPath == docName).FirstOrDefault();
@@ -131,6 +131,10 @@ namespace wpfcm1.FolderTypes
             }
             // ack fajl samo ignorisemo
             else if (Regex.IsMatch(filePath, @".+.pdf.ack$", RegexOptions.IgnoreCase))
+            {
+                // ovo ne bi smelo da se desi... ove ack-ove nemamo kako da tretiramo, ignorisemo ih
+            }
+            else if (Regex.IsMatch(filePath, @".+.pdf.jpg$", RegexOptions.IgnoreCase))
             {
                 // ovo ne bi smelo da se desi... ove ack-ove nemamo kako da tretiramo, ignorisemo ih
             }

@@ -53,6 +53,11 @@ namespace wpfcm1.FolderTypes
             {
                 InternalMessengerGetStates();
             }
+            // necemo u listu dodavati one koji nisu validno nazvan pdf
+            else if (!Regex.IsMatch(filePath, @".+_s.pdf$", RegexOptions.IgnoreCase))
+            {
+                
+            }
             else
             {
                 Documents.Add(new PendDocumentModel(new FileInfo(filePath)));

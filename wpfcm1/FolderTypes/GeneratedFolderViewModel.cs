@@ -190,19 +190,17 @@ namespace wpfcm1.FolderTypes
 
                 document.InvoiceNo = Regex.Match(matchResults.Item2, @"F[0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
 
-//                if (string.IsNullOrEmpty(document.InvoiceNo))
-//                    document.InvoiceNo = Regex.Match(matchResults.Item2, @"[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
+                // perihard:
+                if (string.IsNullOrEmpty(document.InvoiceNo))
+                    document.InvoiceNo = Regex.Match(matchResults.Item2, @"[0-9]{2}-[0-9]{3}-[0-9]+").Value;
                 if (string.IsNullOrEmpty(document.InvoiceNo))
                     document.InvoiceNo = Regex.Match(matchResults.Item2, @"[0-9]{1,3}-[0-9]+").Value;
                 if (string.IsNullOrEmpty(document.InvoiceNo))
                     document.InvoiceNo = Regex.Match(matchResults.Item2, @"DPTR[0-9]{1,3}-[0-9]+").Value;
-                //if (string.IsNullOrEmpty(document.InvoiceNo))
-                //    document.InvoiceNo = Regex.Match(matchResults.Item2, @"KO-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
-                //if (string.IsNullOrEmpty(document.InvoiceNo))
-                //    document.InvoiceNo = Regex.Match(matchResults.Item2, @"PPDV-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
+                // farmalogist KP
                 if (string.IsNullOrEmpty(document.InvoiceNo))
                     document.InvoiceNo = Regex.Match(matchResults.Item2, @"[A-Z]{2,4}-[0-9]{8,9}").Value;
- 
+
                
 
                 Regex regexAllowedCharacters = new Regex(@"[^0-9a-zA-Z]");
