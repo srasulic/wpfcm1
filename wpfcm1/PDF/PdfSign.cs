@@ -24,14 +24,11 @@ namespace wpfcm1.PDF
         {
             using (var reader = new PdfReader(src))
             using (var fs = new FileStream(dst, FileMode.Create))
-
             switch (sigLocation)
             {
                 case SignatureRules.SignatureLocation.UpperLeft:
                     using (var stamper = PdfStamper.CreateSignature(reader, fs, '\0'))
-                    {
                         CreateSignature(cert, chain, crlList, ocspClient, tsaClient, stamper, reader, sigLocation, true, reason);
-                    }
                     break;
                 case SignatureRules.SignatureLocation.UpperRight:
                     using (var stamper = PdfStamper.CreateSignature(reader, fs, '\0', null, true))
@@ -61,18 +58,6 @@ namespace wpfcm1.PDF
             var rect = GetSignatureRect(reader, sigLocation);
             var sigName = SignatureRules.SignatureName[sigLocation]; 
             appearance.SetVisibleSignature(rect, 1, sigName);
-
- /*           
- //           var fontPath = System.Environment.GetEnvironmentVariable("SystemRoot") + @"\fonts\tt1018m_.ttf";
-
-//            BaseFont fieldFontTest =
-  ///                    BaseFont.CreateFont(  fontPath,
-     //                                       BaseFont.IDENTITY_H,
-       //                                     BaseFont.EMBEDDED);
-
-  //          BaseFont fieldFontTest = BaseFont.CreateFont(BaseFont.COURIER_BOLD, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED);
-  //          stamper.AcroFields.SetFieldProperty("Potpis1", "textfont", fieldFontTest, null);
-*/
 
             IExternalSignature pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA1);
             MakeSignature.SignDetached(appearance, pks, chain, crlList, ocspClient, tsaClient, 0, CryptoStandard.CMS);
