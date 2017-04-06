@@ -48,7 +48,7 @@ namespace wpfcm1.FolderTypes
         {
             Documents = new BindableCollection<DocumentModel>(
                  Directory.EnumerateFiles(FolderPath)
-                 .Where(f => Extensions.Contains(Path.GetExtension(f)))
+                 .Where(f => Extensions.Contains(Path.GetExtension(f).ToLower()))
                  .Select(f => new DocumentModel(new FileInfo(f))));
             InitWatcher(FolderPath);
         }
@@ -408,7 +408,8 @@ namespace wpfcm1.FolderTypes
             {
                 var document = e.AddedItems[0] as DocumentModel;
                 var path = document.DocumentPath;
-                if (path.EndsWith(".pdf"))
+                // da ne bude case sensitive...
+                if (path.ToLower().EndsWith(".pdf"))
                     message = path;
             }
             _events.PublishOnUIThread(new MessageShowPdf(message)); 

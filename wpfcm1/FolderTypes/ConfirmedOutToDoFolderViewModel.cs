@@ -28,7 +28,7 @@ namespace wpfcm1.FolderTypes
         {
             Documents = new BindableCollection<DocumentModel>(
                 Directory.EnumerateFiles(FolderPath) 
-                .Where(f => Extensions.Contains(Path.GetExtension(f)))
+                .Where(f => Extensions.Contains(Path.GetExtension(f).ToLower()))
                 .Select(f => new ConfirmedOutToDoDocumentModel(new FileInfo(f))));
 
             InitWatcher(FolderPath);
@@ -214,7 +214,7 @@ namespace wpfcm1.FolderTypes
             // serijalizujemo ceo folder
             var AllDocuments = new BindableCollection<DocumentModel>(
                 Directory.EnumerateFiles(FolderPath)
-                .Where(f => Extensions.Contains(Path.GetExtension(f)))
+                .Where(f => Extensions.Contains(Path.GetExtension(f).ToLower()))
                 .Select(f => new ConfirmedOutToDoDocumentModel(new FileInfo(f))));
 
 

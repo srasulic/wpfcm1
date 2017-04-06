@@ -29,7 +29,7 @@ namespace wpfcm1.FolderTypes
         {
             Documents = new BindableCollection<DocumentModel>(
                 Directory.EnumerateFiles(FolderPath)
-                .Where(f => Extensions.Contains(Path.GetExtension(f)))
+                .Where(f => Extensions.Contains(Path.GetExtension(f).ToLower()))
                 .Select(f => new InboxDocumentModel(new FileInfo(f))));
             
             InitWatcher(FolderPath);

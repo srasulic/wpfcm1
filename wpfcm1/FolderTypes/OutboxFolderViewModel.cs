@@ -32,7 +32,7 @@ namespace wpfcm1.FolderTypes
         {
             Documents = new BindableCollection<DocumentModel>(
                 Directory.EnumerateFiles(FolderPath)
-                .Where(f => Extensions.Contains(Path.GetExtension(f)))
+                .Where(f => Extensions.Contains(Path.GetExtension(f).ToLower()))
                 .Where(f => !( Regex.IsMatch(Path.GetFileName(f) , @"stat.+\.xml",RegexOptions.IgnoreCase) ) )
                 .Select(f => new OutboxDocumentModel(new FileInfo(f))));
 
