@@ -11,6 +11,7 @@ using wpfcm1.PDF;
 using wpfcm1.Preview;
 using System;
 using System.Text.RegularExpressions;
+using System.Windows.Data;
 
 namespace wpfcm1.FolderTypes
 {
@@ -18,6 +19,8 @@ namespace wpfcm1.FolderTypes
     {
         private readonly IWindowManager _windowManager;
         new protected string[] Extensions = { ".pdf", ".ack", ".xml" };
+
+        public ListCollectionView DocumentsCV { get; set; }
 
         public PendFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
         {
@@ -34,6 +37,9 @@ namespace wpfcm1.FolderTypes
             
             InitWatcher(FolderPath);
 
+            DocumentsCV = CollectionViewSource.GetDefaultView(Documents) as ListCollectionView;
+            DocumentsCV.Filter = new Predicate<object>(FilterDocument);
+
             if (Documents.Count == 0) return;
             var states = Deserialize();
             foreach (var state in states)
@@ -45,6 +51,36 @@ namespace wpfcm1.FolderTypes
                 old.IsValid = state.IsValid;
                 old.Processed = state.Processed;
             }
+        }
+
+        public bool FilterDocument(Object item)
+        {
+            var doc = item as DocumentModel;
+            if (doc != null && FilterText != null)
+            {
+                //if (doc.namePib2.StartsWith(FilterText))
+                if (doc.DocumentInfo.Name.StartsWith(FilterText))
+                    return true;
+                else
+                    return false;
+            }
+            return true;
+        }
+
+        private string _filterText;
+        public string FilterText
+        {
+            get { return _filterText; }
+            set
+            {
+                _filterText = value;
+                OnFilterText();
+            }
+        }
+
+        public void OnFilterText()
+        {
+            DocumentsCV.Refresh();
         }
 
         protected override void AddFile(string filePath)
@@ -74,7 +110,7 @@ namespace wpfcm1.FolderTypes
             base.OnDeactivate(close);
             //TODO: hack: checkbox checkmark moze da se izgubi prilikom promene taba, ako promena nije komitovana
             var v = GetView() as UserControl;
-            var dg = v.FindName("Documents") as DataGrid;
+            var dg = v.FindName("DocumentsCV") as DataGrid;
             dg.CommitEdit(DataGridEditingUnit.Row, true);
         }
 
@@ -123,7 +159,7 @@ namespace wpfcm1.FolderTypes
             var cb = ec.Source as CheckBox;
 
             var view = ec.View as PendFolderView;
-            var dg = view.Documents;
+            var dg = view.DocumentsCV;
             var items = dg.SelectedItems;
             foreach (var item in items)
             {
