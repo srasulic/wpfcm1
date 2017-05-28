@@ -41,7 +41,9 @@ namespace wpfcm1.PDF
             {FolderManager.InvoicesInboundConfirmedFolder,          FolderManager.InvoicesInboundOutboxFolder},
             
             {FolderManager.IosOutboundErpIfaceFolder, FolderManager.IosOutboundOutboxFolder},
-            {FolderManager.IosInboundInboxFolder, FolderManager.IosInboundOutboxFolder},
+            {FolderManager.IosOutboundConfirmedFolder, FolderManager.IosOutboundOutboxFolder},
+            {FolderManager.IosInboundInboxFolder,      FolderManager.IosInboundOutboxFolder},
+            {FolderManager.IosInboundConfirmedFolder,  FolderManager.IosInboundOutboxFolder},
             
             {FolderManager.KpOutboundErpIfaceFolder,            FolderManager.KpOutboundOutboxFolder},
             //{FolderManager.KpOutboundConfirmedOutToDoFolder,    FolderManager.KpOutboundOutboxFolder},
@@ -50,8 +52,11 @@ namespace wpfcm1.PDF
             //{FolderManager.KpInboundConfirmedToDoFolder,        FolderManager.KpInboundOutboxFolder},
             {FolderManager.KpInboundConfirmedFolder,            FolderManager.KpInboundOutboxFolder},
             
-            {FolderManager.OtherOutboundErpIfaceFolder, FolderManager.OtherOutboundOutboxFolder},
-            {FolderManager.OtherInboundInboxFolder, FolderManager.OtherInboundOutboxFolder}
+            {FolderManager.OtherOutboundErpIfaceFolder,   FolderManager.OtherOutboundOutboxFolder},
+            {FolderManager.OtherOutboundConfirmedFolder,  FolderManager.OtherOutboundOutboxFolder},
+            {FolderManager.OtherInboundInboxFolder,       FolderManager.OtherInboundOutboxFolder},
+            {FolderManager.OtherInboundConfirmedFolder,   FolderManager.OtherInboundOutboxFolder},
+
         };
 
         public static Dictionary<string, string> ProcessedMap= new Dictionary<string, string>()
