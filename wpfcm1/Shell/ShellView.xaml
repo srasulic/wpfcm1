@@ -15,8 +15,9 @@
             <Button Content="about" cal:Message.Attach="ShowAbout"/>
         </mah:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
-    
+
     <Grid>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition />

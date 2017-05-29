@@ -31,7 +31,8 @@
             <RowDefinition Height="0.1*"/>
             <RowDefinition />
         </Grid.RowDefinitions>
-        <TextBox x:Name="FilterText" HorizontalAlignment="Left" Width="128"/>
+        <TextBlock Text="Pretraga: " VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" ></TextBlock>
+        <TextBox x:Name="FilterText" VerticalAlignment="Center" HorizontalAlignment="Stretch" Height="8" Margin="60,0,58,0" BorderThickness="0" />
         <DataGrid x:Name="DocumentsCV" Grid.Row="1"
                   cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChanged($eventArgs)]"
                   AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False">

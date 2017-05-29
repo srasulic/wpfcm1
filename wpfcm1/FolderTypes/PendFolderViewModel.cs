@@ -59,7 +59,7 @@ namespace wpfcm1.FolderTypes
             if (doc != null && FilterText != null)
             {
                 //if (doc.namePib2.StartsWith(FilterText))
-                if (doc.DocumentInfo.Name.StartsWith(FilterText))
+                if (doc.DocumentInfo.Name.Contains(FilterText))
                     return true;
                 else
                     return false;
