@@ -57,12 +57,13 @@ namespace wpfcm1.FTP
             using (var resp = req.GetResponse())
             using (var reader = new StreamReader(resp.GetResponseStream()))
             {
-                while (reader.Peek() >= 0)
+                string line = reader.ReadLine();
+                while (!string.IsNullOrEmpty(line))
                 {
-                    var l = await reader.ReadLineAsync();
-                    //TODO: ubaci filter za tip fajlova?
-                    result.Add(l);
+                    result.Add(line);
+                    line = await reader.ReadLineAsync();
                 }
+
             }
             return result;
         }
