@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using System;
+using wpfcm1.DataAccess;
 
 namespace wpfcm1.Model
 {
@@ -52,7 +53,7 @@ namespace wpfcm1.Model
         /// <summary>
         /// 1. statusi koji se koriste prilikom rada sa kolekcijama dokumenata i opšti atributi za prikaz u listama: 
         /// </summary>
- 
+
         // 1.1. koristi se za promene statusa u listama za vreme obrade dokumenta
         private bool _processed;
         public bool Processed
@@ -60,9 +61,9 @@ namespace wpfcm1.Model
             get { return _processed; }
             set { _processed = value; NotifyOfPropertyChange(() => Processed); }
         }
-        
 
-         // 1.2 koristi se samo tokom manipulacije dokumentima u listama
+
+        // 1.2 koristi se samo tokom manipulacije dokumentima u listama
         private bool _isChecked;
         [XmlIgnore]
         public bool IsChecked
@@ -91,7 +92,7 @@ namespace wpfcm1.Model
         private string _namePib2;
         public string namePib2
         {
-            get { return _namePib2; }
+            get { return _namePib2; }            
             set { _namePib2 = value; NotifyOfPropertyChange(() => namePib2); }
         }
 
@@ -133,19 +134,28 @@ namespace wpfcm1.Model
         public bool HasSecondSignature
         {
             get { return _hasSecondSignature; }
-            set 
-            { 
-                _hasSecondSignature = value; 
-                NotifyOfPropertyChange(() => HasSecondSignature);  
+            set
+            {
+                _hasSecondSignature = value;
+                NotifyOfPropertyChange(() => HasSecondSignature);
                 NotifyOfPropertyChange(() => IsValid_HasSS_IsValidated_IsNotValidated2);
             }
         }
 
+        // 1.11 naziv primaoca izvucen po pib-u
+        private string _nameName;
+        public string nameName
+        {
+            get
+            {
+                return APIManager.GetCustomerNameByPIB(namePib2);
+            }
+        }
 
         /// <summary>
         /// 2. Polja za vrednosti izvučene iz potpisa 1 i potpisa 2 
         /// </summary>
- 
+
         // 2.1.1 potpis 1 - ime potpisnika
         private String _sigSignerName;
         public String sigSignerName
@@ -206,7 +216,7 @@ namespace wpfcm1.Model
         private DateTime _sigDateSigned2;
         public DateTime sigDateSigned2
         {
-            get { return _sigDateSigned2;  }
+            get { return _sigDateSigned2; }
             set { _sigDateSigned2 = value; NotifyOfPropertyChange(() => sigDateSigned2); }
         }
 
@@ -248,7 +258,7 @@ namespace wpfcm1.Model
                                     sigValidationInfo
                                     );
             }
-            set { if (value == "refresh")  NotifyOfPropertyChange(() => sigAdditionalInfo); }
+            set { if (value == "refresh") NotifyOfPropertyChange(() => sigAdditionalInfo); }
         }
 
         public bool ShouldSerializesigAdditionalInfo()
@@ -258,7 +268,7 @@ namespace wpfcm1.Model
         /// <summary>
         /// 3. Statusi prilikom procesa validacije potpisa u dokumentu :
         /// </summary>
-        
+
         // 3.1. rezultat validacije svih potpisa u dokumentu
         private bool? _isValid;
         public bool? IsValid
@@ -308,8 +318,8 @@ namespace wpfcm1.Model
         public bool isApprovedForProcessing
         {
             get { return _isApprovedForProcessing; }
-            set 
-            { 
+            set
+            {
                 _isApprovedForProcessing = value;
                 NotifyOfPropertyChange(() => isApprovedForProcessing);
                 NotifyOfPropertyChange(() => NotSignedAgain_Approved);
@@ -337,9 +347,11 @@ namespace wpfcm1.Model
         public bool isRejected
         {
             get { return _isRejected; }
-            set { _isRejected = value; 
-                NotifyOfPropertyChange(() => isRejected); 
-                NotifyOfPropertyChange(() => NotSignedAgain_Rejected); 
+            set
+            {
+                _isRejected = value;
+                NotifyOfPropertyChange(() => isRejected);
+                NotifyOfPropertyChange(() => NotSignedAgain_Rejected);
             }
         }
 
@@ -358,14 +370,14 @@ namespace wpfcm1.Model
 
         // 5.1. check sign
         public bool ShouldSerializeNotSignedAgain_Approved() { return false; }
-        
-        public bool NotSignedAgain_Approved  { get { return !IsSignedAgain && isApprovedForProcessing ; } set { }    }
+
+        public bool NotSignedAgain_Approved { get { return !IsSignedAgain && isApprovedForProcessing; } set { } }
 
 
         // 5.2. remove sign
         public bool ShouldSerializeNotSignedAgain_Rejected() { return false; }
 
-        public bool NotSignedAgain_Rejected { get { return !IsSignedAgain && isRejected ; } set { }        }
+        public bool NotSignedAgain_Rejected { get { return !IsSignedAgain && isRejected; } set { } }
 
         // 5.3. 
         public bool ShouldSerializeIsValid_HasSS_IsValidated2() { return false; }
@@ -400,8 +412,8 @@ namespace wpfcm1.Model
 
         public bool IsValid_HasSS_IsValidated_IsNotValidated2
         {
-            get 
-            { 
+            get
+            {
                 if (!IsValid.HasValue) return false;
                 if ((bool)IsValid && HasSecondSignature && isValidated && !_isValidated2) return true;
                 return false;
@@ -410,7 +422,7 @@ namespace wpfcm1.Model
         }
 
 
- 
+
         [XmlIgnore]
         public string Error { get; private set; }
     }
