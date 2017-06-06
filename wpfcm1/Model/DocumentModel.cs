@@ -92,7 +92,7 @@ namespace wpfcm1.Model
         private string _namePib2;
         public string namePib2
         {
-            get { return _namePib2; }            
+            get { return _namePib2; }
             set { _namePib2 = value; NotifyOfPropertyChange(() => namePib2); }
         }
 
@@ -143,13 +143,11 @@ namespace wpfcm1.Model
         }
 
         // 1.11 naziv primaoca izvucen po pib-u
-        private string _nameName;
-        public string nameName
+        private string _namePib2Name;
+        public string namePib2Name
         {
-            get
-            {
-                return APIManager.GetCustomerNameByPIB(namePib2);
-            }
+            get { return APIManager.GetCustomerNameByPIB("222222222"); }
+            set { _namePib2Name = value; NotifyOfPropertyChange(() => _namePib2Name); }
         }
 
         /// <summary>
