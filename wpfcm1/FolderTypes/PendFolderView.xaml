@@ -38,7 +38,6 @@
                   AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Naziv fajla" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True" />
-                <DataGridTextColumn Header="Pib izdavalac" Binding="{Binding Path=namePib1}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Pib primalac" Binding="{Binding Path=namePib2}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Naziv primaoca" Binding="{Binding Path=namePib2Name}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Br Dok" Binding="{Binding Path=nameDocNum}" IsReadOnly="True"/>

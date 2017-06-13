@@ -146,8 +146,24 @@ namespace wpfcm1.Model
         private string _namePib2Name;
         public string namePib2Name
         {
-            get { return APIManager.GetCustomerNameByPIB("222222222"); }
+            get
+            {
+                if (String.IsNullOrEmpty(_namePib2Name)) namePib2Name = APIManager.GetCustomerNameByPIB(namePib2);
+                return _namePib2Name;
+            }
             set { _namePib2Name = value; NotifyOfPropertyChange(() => _namePib2Name); }
+        }
+
+        // 1.12 naziv izdavaoca izvucen po pib-u
+        private string _namePib1Name;
+        public string namePib1Name
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(_namePib1Name)) namePib1Name = APIManager.GetCustomerNameByPIB(namePib1);
+                return _namePib1Name;
+            }
+            set { _namePib1Name = value; NotifyOfPropertyChange(() => _namePib1Name); }
         }
 
         /// <summary>

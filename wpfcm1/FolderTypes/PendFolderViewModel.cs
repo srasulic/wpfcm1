@@ -50,6 +50,7 @@ namespace wpfcm1.FolderTypes
                 old.IsChecked = state.IsChecked;
                 old.IsValid = state.IsValid;
                 old.Processed = state.Processed;
+                old.namePib2Name = state.namePib2Name;
             }
         }
 
@@ -59,7 +60,7 @@ namespace wpfcm1.FolderTypes
             if (doc != null && FilterText != null)
             {
                 //if (doc.namePib2.StartsWith(FilterText))
-                if (doc.DocumentInfo.Name.Contains(FilterText))
+                if (doc.DocumentInfo.Name.ToLower().Contains(FilterText.ToLower()) || doc.namePib2Name.ToLower().Contains(FilterText.ToLower()))
                     return true;
                 else
                     return false;
@@ -74,7 +75,9 @@ namespace wpfcm1.FolderTypes
             set
             {
                 _filterText = value;
-                OnFilterText();
+                if (_filterText.Length > 2) OnFilterText();
+                if (_filterText.Length == 0) OnFilterText();
+                
             }
         }
 
