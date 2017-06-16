@@ -15,7 +15,7 @@ namespace wpfcm1.Shell
     public interface IShell { }
 
     [Export(typeof(IShell))]
-    public sealed class ShellViewModel : Conductor<object>, IShell, IHandle<MessageShowHome>, IHandle<MessageSync>
+    public sealed class ShellViewModel : Conductor<object>, IShell, IHandle<MessageShowHome>, IHandle<MessageShowWeb>, IHandle<MessageSync>
     {
         private readonly IEventAggregator _events;
         private readonly IWindowManager _windowManager;
@@ -40,6 +40,7 @@ namespace wpfcm1.Shell
             KpInboundVM = new FolderGroupViewModel(FolderManager.KpInboundFolders, "Ulazna KP", events, _windowManager);
             OtherOutboundVM = new FolderGroupViewModel(FolderManager.OtherOutboundFolders, "Ostali Izlazni", events, _windowManager);
             OtherInboundVM = new FolderGroupViewModel(FolderManager.OtherInboundFolders, "Ostali Ulazni", events, _windowManager);
+            WebVM = new WebViewModel("Online report");
 
             ShowHome();
         }
@@ -57,6 +58,8 @@ namespace wpfcm1.Shell
         public FolderGroupViewModel KpInboundVM { get; set; }
         public FolderGroupViewModel OtherOutboundVM { get; set; }
         public FolderGroupViewModel OtherInboundVM { get; set; }
+        public WebViewModel WebVM { get; set; }
+
 
         public void ShowHome()
         {
@@ -104,6 +107,12 @@ namespace wpfcm1.Shell
             ActivateItem(OtherInboundVM);
         }
 
+        public void ShowWeb()
+        {
+            ActivateItem(WebVM);
+        }
+
+
         public void ShowSettings()
         {
             var result = _windowManager.ShowDialog(new DialogSettingsViewModel());
@@ -117,6 +126,11 @@ namespace wpfcm1.Shell
         public void Handle(MessageShowHome message)
         {
             ShowHome();
+        }
+
+        public void Handle(MessageShowWeb message)
+        {
+            ShowWeb();
         }
 
         public void Handle(MessageSync message)
@@ -164,6 +178,8 @@ namespace wpfcm1.Shell
             KpOutboundVM.Dispose();
             OtherInboundVM.Dispose();
             OtherOutboundVM.Dispose();
+            WebVM.Dispose();
+
         }
     }
 }

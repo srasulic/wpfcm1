@@ -27,6 +27,8 @@ namespace wpfcm1.Toolbar
             Buttons.Add(new ToolBarButtonViewModel(events, "folder_lock24", "Arhiviraj (označi za arhiviranje sve čekirane dokumente iz liste)", new MessageArchive()));
             Buttons.Add(new ToolBarButtonViewModel(events, "appbar_office_excel", "Izvezi listu dokumenata u Excel", new MessageXls()));
 
+            Buttons.Add(new ToolBarButtonViewModel(events, "appbar_information", "Prikaži online informacije", new MessageShowWeb()));
+
             _activeButtons = new ButtonVisibilityManager(this, events);
         }
 

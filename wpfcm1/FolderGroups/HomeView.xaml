@@ -6,10 +6,17 @@
     <Grid>
         <Grid.Resources>
             <Style x:Key="SmallTileStyle" TargetType="mah:Tile">
-                <Setter Property="Width" Value="233" />
-                <Setter Property="Height" Value="233" />
+                <Setter Property="Width" Value="215" />
+                <Setter Property="Height" Value="215" />
                 <Setter Property="FontSize" Value="15" />
-                <Setter Property="TitleFontSize" Value="31" />
+                <Setter Property="TitleFontSize" Value="30" />
+            </Style>
+            <Style x:Key="MiniTileStyle" TargetType="mah:Tile">
+                <Setter Property="Width" Value="100" />
+                <Setter Property="Height" Value="100" />
+                <Setter Property="TiltFactor" Value="2" />
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="TitleFontSize" Value="16" />
             </Style>
             <DataTemplate x:Key="FolderInfoDataTemplate">
                 <StackPanel Orientation="Horizontal">
@@ -33,11 +40,11 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <TextBlock Grid.Column="1"
-                   VerticalAlignment="Bottom"
-                   Text="Start"
-                   FontWeight="Light"
-                   FontSize="34"
-                   FontFamily="Segoe UI" />
+    		VerticalAlignment="Bottom"
+    		Text="Start"
+            FontWeight="Light"
+    		FontSize="34"
+    		FontFamily="Segoe UI" />
         <ScrollViewer Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center">
             <ItemsControl>
                 <ItemsControl.ItemsPanel>
@@ -46,30 +53,30 @@
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <mah:Tile Title="{Binding Path=Svm.OutboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowOutbound">
-                <ItemsControl ItemsSource="{Binding Path=Svm.OutboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}" />
-            </mah:Tile>
-            <mah:Tile Title="{Binding Path=Svm.InboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowInbound">
-                <ItemsControl ItemsSource="{Binding Path=Svm.InboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}"/>
-            </mah:Tile>
-            <mah:Tile Title="{Binding Path=Svm.IosOutboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowIosOutbound">
-                <ItemsControl ItemsSource="{Binding Path=Svm.IosOutboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}" />
-            </mah:Tile>
-            <mah:Tile Title="{Binding Path=Svm.IosInboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowIosInbound">
-                <ItemsControl ItemsSource="{Binding Path=Svm.IosInboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}"/>
-            </mah:Tile>
-            <mah:Tile Title="{Binding Path=Svm.KpOutboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowKpOutbound">
-                <ItemsControl ItemsSource="{Binding Path=Svm.KpOutboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}" />
-            </mah:Tile>
-            <mah:Tile Title="{Binding Path=Svm.KpInboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowKpInbound">
-                <ItemsControl ItemsSource="{Binding Path=Svm.KpInboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}"/>
-            </mah:Tile>
-            <mah:Tile Title="{Binding Path=Svm.OtherOutboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowOtherOutbound">
-                <ItemsControl ItemsSource="{Binding Path=Svm.OtherOutboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}" />
-            </mah:Tile>
-            <mah:Tile Title="{Binding Path=Svm.OtherInboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowOtherInbound">
-                <ItemsControl ItemsSource="{Binding Path=Svm.OtherInboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}"/>
-            </mah:Tile>
-                </ItemsControl>
+                    <ItemsControl ItemsSource="{Binding Path=Svm.OutboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}" />
+                </mah:Tile>
+                <mah:Tile Title="{Binding Path=Svm.InboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowInbound">
+                    <ItemsControl ItemsSource="{Binding Path=Svm.InboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}"/>
+                </mah:Tile>
+                <mah:Tile Title="{Binding Path=Svm.IosOutboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowIosOutbound">
+                    <ItemsControl ItemsSource="{Binding Path=Svm.IosOutboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}" />
+                </mah:Tile>
+                <mah:Tile Title="{Binding Path=Svm.IosInboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowIosInbound">
+                    <ItemsControl ItemsSource="{Binding Path=Svm.IosInboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}"/>
+                </mah:Tile>
+                <mah:Tile Title="{Binding Path=Svm.KpOutboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowKpOutbound">
+                    <ItemsControl ItemsSource="{Binding Path=Svm.KpOutboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}" />
+                </mah:Tile>
+                <mah:Tile Title="{Binding Path=Svm.KpInboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowKpInbound">
+                    <ItemsControl ItemsSource="{Binding Path=Svm.KpInboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}"/>
+                </mah:Tile>
+                <mah:Tile Title="{Binding Path=Svm.OtherOutboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowOtherOutbound">
+                    <ItemsControl ItemsSource="{Binding Path=Svm.OtherOutboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}" />
+                </mah:Tile>
+                <mah:Tile Title="{Binding Path=Svm.OtherInboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowOtherInbound">
+                    <ItemsControl ItemsSource="{Binding Path=Svm.OtherInboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}"/>
+                </mah:Tile>
+            </ItemsControl>
         </ScrollViewer>
     </Grid>
 </UserControl>

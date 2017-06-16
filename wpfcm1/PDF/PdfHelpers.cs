@@ -47,9 +47,45 @@ namespace wpfcm1.PDF
             }
         }
 
+        public static Tuple<string, string> ExtractText_ZAP(string path)
+        {
+            using (var reader = new PdfReader(path))
+            {
+                Rectangle rectPib = new Rectangle(10, 750, 200, 800)
+                {
+                    Border = Rectangle.BOX,
+                    BorderColor = BaseColor.RED,
+                    BorderWidth = 1
+                };
+
+                Rectangle rectNo = new Rectangle(10, 750, 200, 800)
+                {
+                    Border = Rectangle.BOX,
+                    BorderColor = BaseColor.RED,
+                    BorderWidth = 1
+                };
+
+                RenderFilter filterPib = new RegionTextRenderFilter(rectPib);
+                ITextExtractionStrategy strategyPib = new FilteredTextRenderListener(new LocationTextExtractionStrategy(), filterPib);
+
+                RenderFilter filterNo = new RegionTextRenderFilter(rectNo);
+                ITextExtractionStrategy strategyNo = new FilteredTextRenderListener(new LocationTextExtractionStrategy(), filterNo);
+
+                var textPib = PdfTextExtractor.GetTextFromPage(reader, 1, strategyPib);
+                var textNo = PdfTextExtractor.GetTextFromPage(reader, 1, strategyNo);
+
+                return Tuple.Create(textPib, textNo);
+            }
+        }
+
         public static Task<Tuple<string, string>> ExtractTextAsync(string path)
         {
             return Task.Run(() => ExtractText(path));
+        }
+
+        public static Task<Tuple<string, string>> ExtractTextAsync_ZAP(string path)
+        {
+            return Task.Run(() => ExtractText_ZAP(path));
         }
 
         public static bool ValidatePdfCertificates(string path)

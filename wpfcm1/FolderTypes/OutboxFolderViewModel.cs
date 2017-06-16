@@ -53,7 +53,11 @@ namespace wpfcm1.FolderTypes
 
         protected override void AddFile(string filePath)
         {
-            Documents.Add(new OutboxDocumentModel(new FileInfo(filePath)));
+            // ako je zavrsio sinh, azuriraj statuse poruka iz xml fajlova
+            if (! Regex.IsMatch(filePath, @".+syncstamp$", RegexOptions.IgnoreCase))
+            {
+                Documents.Add(new OutboxDocumentModel(new FileInfo(filePath)));
+            } 
         }
 
         protected override void OnActivate()

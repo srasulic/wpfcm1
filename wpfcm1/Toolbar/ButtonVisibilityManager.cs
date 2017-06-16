@@ -18,7 +18,7 @@ namespace wpfcm1.Toolbar
         {
             //Reject-Sign-Ack-Validate-ExtractData-TogglePreview-Sync-ShowHome 
             // - - - - - - -Xls
-            {"HomeViewModel",                   new BitArray(new byte[]{Convert.ToByte("00000011", 2), 0x0})},
+            {"HomeViewModel",                   new BitArray(new byte[]{Convert.ToByte("00000011", 2), 0x4})},
             {"GeneratedFolderViewModel",        new BitArray(new byte[]{Convert.ToByte("11001111", 2), 0x2})},
             {"InboxFolderViewModel",            new BitArray(new byte[]{Convert.ToByte("01110111", 2), 0x2})},
             {"PendFolderViewModel",             new BitArray(new byte[]{Convert.ToByte("00000111", 2), 0x2})},

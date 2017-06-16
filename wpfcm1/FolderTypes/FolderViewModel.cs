@@ -3,6 +3,7 @@ using iTextSharp.text.pdf.security;
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -64,12 +65,23 @@ namespace wpfcm1.FolderTypes
                 startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 startInfo.FileName = "cmd.exe";
 
-                startInfo.Arguments = @" /C for /f ""tokens=3"" %G IN ('c:\edokument\bin\handle.exe /accepteula eDokument\ -p Fox ^| findstr /i /r /c:"".*pid:.*pdf$""') DO c:\edokument\bin\pskill.exe /accepteula %G";
+                // Legacy: Zbog starih instalacija ostavljamo mogućnost da su handle.exe i pskill.exe u c:\bin direktorijumu
+                if (File.Exists(@"c:\edokument\bin\handle.exe"))
+                {
+                    startInfo.WorkingDirectory = @"c:\edokument\bin\";
+                }
+                else {
+                    startInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                }
+
+//                startInfo.Arguments = @" /C for /f ""tokens=3"" %G IN ('c:\edokument\bin\handle.exe /accepteula eDokument\ -p Fox ^| findstr /i /r /c:"".*pid:.*pdf$""') DO c:\edokument\bin\pskill.exe /accepteula %G";
+                startInfo.Arguments = @" /C for /f ""tokens=3"" %G IN ('handle.exe /accepteula eDokument\ -p Fox ^| findstr /i /r /c:"".*pid:.*pdf$""') DO pskill.exe /accepteula %G";
                 process.StartInfo = startInfo;
                 process.Start();
                 process.WaitForExit();
 
-                startInfo.Arguments = @" /C for /f ""tokens=3"" %G IN ('c:\edokument\bin\handle.exe /accepteula eDokument\ -p Acro ^| findstr /i /r /c:"".*pid:.*pdf$""') DO c:\edokument\bin\pskill.exe /accepteula %G";
+//                startInfo.Arguments = @" /C for /f ""tokens=3"" %G IN ('c:\edokument\bin\handle.exe /accepteula eDokument\ -p Acro ^| findstr /i /r /c:"".*pid:.*pdf$""') DO c:\edokument\bin\pskill.exe /accepteula %G";
+                startInfo.Arguments = @" /C for /f ""tokens=3"" %G IN ('handle.exe /accepteula eDokument\ -p Acro ^| findstr /i /r /c:"".*pid:.*pdf$""') DO pskill.exe /accepteula %G";
                 process.StartInfo = startInfo;
                 process.Start();
                 process.WaitForExit();
@@ -428,7 +440,20 @@ namespace wpfcm1.FolderTypes
 
         private void Watcher_Changed(object sender, FileSystemEventArgs e)
         {
+            // TODO: 
+            // NIJE MU možda ovde mesto... hvata sve promene, a ne samo one koje napravi sinhronizacija
+            // To jeste overhed, mada funkcionalno ne smeta - samo fajl dobija mark da ima neki eksterni xml... što jeste tačno...
+             
+        //    Log.Info("*** Promena:");
+        //    Log.Info(e.FullPath);
 
+            if ( Regex.Match(e.FullPath, @".xml", RegexOptions.IgnoreCase).Success ) {
+                var docName = Regex.Replace(e.FullPath, @".xml", "", RegexOptions.IgnoreCase);
+                var found = Documents.Where(d => d.DocumentPath == docName).FirstOrDefault();
+                if (!(found == null)) found.hasExternalMessage = true;
+         //       Log.Info("Ažuriran status ***");
+            }
+            
         }
 
         private void Watcher_Created(object sender, FileSystemEventArgs e)
