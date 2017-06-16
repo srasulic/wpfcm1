@@ -1,23 +1,34 @@
 ﻿using Caliburn.Micro;
+using iTextSharp.text.pdf.security;
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 using wpfcm1.Events;
 using wpfcm1.Model;
+using wpfcm1.PDF;
 using wpfcm1.Preview;
 
 namespace wpfcm1.FolderTypes
 {
     public class FolderViewModel : Screen, IDisposable
     {
-        protected string[] Extensions = { ".pdf", ".ack" };
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        // protected string[] Extensions = { ".pdf", ".ack" };
+        protected string[] Extensions = { ".pdf" };
         protected FileSystemWatcher _watcher;
         private readonly Dispatcher _dispatcher;
         protected readonly IEventAggregator _events;
+        private string _expList;
 
-        public FolderViewModel(string path, string name, IEventAggregator events)
+        public FolderViewModel(string path, string name, IEventAggregator events) 
         {
             FolderPath = path;
             DisplayName = name;
@@ -38,9 +49,341 @@ namespace wpfcm1.FolderTypes
         {
             Documents = new BindableCollection<DocumentModel>(
                  Directory.EnumerateFiles(FolderPath)
-                 .Where(f => Extensions.Contains(Path.GetExtension(f)))
+                 .Where(f => Extensions.Contains(Path.GetExtension(f).ToLower()))
                  .Select(f => new DocumentModel(new FileInfo(f))));
             InitWatcher(FolderPath);
+        }
+
+        public static void PsKillPdfHandlers()
+        {   // Srdjan - da pustimo u pozadini neke alatke da pobiju eventualne procese koji drze sapu na PDF fajlovima
+            //          Zbog brzine aplikaciji hadle.exe prosledjujemo deo naziva file handlera (bez ovoga traje 10-ak sekundi)
+            //          Podrzavamo (ocekujemo) Foxit Reader ili Adobe Acrobat Reader
+            try
+            {
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                startInfo.FileName = "cmd.exe";
+
+                // Legacy: Zbog starih instalacija ostavljamo mogućnost da su handle.exe i pskill.exe u c:\bin direktorijumu
+                if (File.Exists(@"c:\edokument\bin\handle.exe"))
+                {
+                    startInfo.WorkingDirectory = @"c:\edokument\bin\";
+                }
+                else {
+                    startInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                }
+
+//                startInfo.Arguments = @" /C for /f ""tokens=3"" %G IN ('c:\edokument\bin\handle.exe /accepteula eDokument\ -p Fox ^| findstr /i /r /c:"".*pid:.*pdf$""') DO c:\edokument\bin\pskill.exe /accepteula %G";
+                startInfo.Arguments = @" /C for /f ""tokens=3"" %G IN ('handle.exe /accepteula eDokument\ -p Fox ^| findstr /i /r /c:"".*pid:.*pdf$""') DO pskill.exe /accepteula %G";
+                process.StartInfo = startInfo;
+                process.Start();
+                process.WaitForExit();
+
+//                startInfo.Arguments = @" /C for /f ""tokens=3"" %G IN ('c:\edokument\bin\handle.exe /accepteula eDokument\ -p Acro ^| findstr /i /r /c:"".*pid:.*pdf$""') DO c:\edokument\bin\pskill.exe /accepteula %G";
+                startInfo.Arguments = @" /C for /f ""tokens=3"" %G IN ('handle.exe /accepteula eDokument\ -p Acro ^| findstr /i /r /c:"".*pid:.*pdf$""') DO pskill.exe /accepteula %G";
+                process.StartInfo = startInfo;
+                process.Start();
+                process.WaitForExit();
+                
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error while running PSTOOLS...", ex);
+            }
+        }
+        
+        protected void RejectDocument ()
+        {
+            var checkedDocuments = Documents.Where(d => d.IsChecked);
+            var destinationDir = SigningTransferRules.ProcessedMap[FolderPath];
+            foreach (var document in checkedDocuments)
+            {
+                var sourceFilePath = document.DocumentPath;
+                var fileName = Path.GetFileName(sourceFilePath);
+                var destinationFileName = string.Format("X_{0}_{1}", DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"), fileName);
+                var destinationFilePath = Path.Combine(destinationDir, destinationFileName);
+                File.Move(sourceFilePath, destinationFilePath);
+            }
+        }
+
+        public static string BoolToDaNeString(bool value)
+        {
+            return value ? "DA" : "ne";
+        }
+
+        protected void XlsExport()
+        {
+            try
+            {
+                var documents = Documents.Where(d => d.IsChecked).Cast<DocumentModel>();
+                if (!documents.Any()) { documents = Documents.Cast<DocumentModel>(); }
+                _expList = "\"Obelezen\",\"Fajl\",\"KB\",\"Pib1\",\"Pib2\",\"Br dok\",\"Datum\",\""
+                        + "Reason (napomena prilikom potpisivanja)\",\"Ime potpisnika\",\"Organizacija\",\"Datum potpisivanja\",\"Vremenski žig\",\""
+                        + "Reason 2 (napomena prilikom potpisivanja)\",\"Ime potpisnika 2\",\"Organizacija 2\",\"Datum potpisivanja 2\",\"Vremenski žig 2\",\""
+                        + "Validacija - info\",\"Odobren za obradu\",\"Odbačen\",\"Odobren za arhiviranje\"\r\n";
+                foreach (var document in documents)
+                {
+                    string[] fileNameParts = document.DocumentPath.Split('\\');
+                    string[] parts = fileNameParts.Last().Split('_');
+                    _expList = string.Concat(
+                        _expList, "\"",
+                        BoolToDaNeString(document.IsChecked), "\",\"",
+                        fileNameParts.Last(), "\",\"",
+                        document.LengthKB, "\",\"",
+                        
+                        document.namePib1, "\",\"", 
+                        document.namePib2, "\",\"",
+                        document.nameDocNum, "\",\"",
+                        document.nameDate, "\",\"",
+
+                        document.sigReason, "\",\"",
+                        document.sigSignerName, "\",\"",
+                        document.sigOrg, "\",\"",
+                        document.sigDateSigned, "\",\"",
+                        document.sigTS, "\",\"",
+                        
+                        document.sigReason2, "\",\"",
+                        document.sigSignerName2, "\",\"",
+                        document.sigOrg2, "\",\"",
+                        document.sigDateSigned2, "\",\"",
+                        document.sigTS2, "\",\"",
+                        
+                        document.sigValidationInfo, "\",\"",
+                        BoolToDaNeString(document.isApprovedForProcessing), "\",\"",
+                        BoolToDaNeString(document.isRejected), "\",\"",
+                        BoolToDaNeString(document.archiveReady), "\"\r\n"
+                        );
+                }
+
+                string filename = string.Concat(Guid.NewGuid().ToString(), @".csv");
+                filename = string.Concat(Path.GetTempPath(), filename);
+                try
+                {
+                    System.Text.Encoding utf16 = System.Text.Encoding.GetEncoding(1254);
+                    byte[] output = utf16.GetBytes(_expList);
+                    FileStream fs = new FileStream(filename, FileMode.Create);
+                    BinaryWriter bw = new BinaryWriter(fs);
+                    bw.Write(output, 0, output.Length); //write the encoded file
+                    bw.Flush();
+                    bw.Close();
+                    fs.Close();
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Error while exporting to XLS", e);
+                }
+
+                System.Diagnostics.Process.Start(filename);
+            }
+            catch
+            {
+
+            }
+        }
+
+        protected async Task ValidateDocSignaturesAsync()
+        {
+//            var documents = Documents.Where(d => !d.Processed).Cast<InboxDocumentModel>();
+            var documents = Documents.Where(d => !d.isValidated || d.IsChecked).Cast<DocumentModel>();
+            foreach (var document in documents)
+            {
+                try
+                {
+                    var isValid = await PdfHelpers.ValidatePdfCertificatesAsync(document.DocumentPath);
+                    document.IsValid = isValid;
+                    document.sigValidationInfo = @"O.K.";
+                } catch (Exception e)
+                {
+                    document.IsValid = false;
+                    document.sigValidationInfo = e.Message;
+                }
+                //document.isValidated = true;
+                //document.Processed = true;
+                // PROTOTIP - za sada obradjujemo prvi i drugi potpis na koji naidjemo. Doraditi za ostale!
+                // obradjujemo prvo drugi, koji mozda ne postoji, kako bi promena properti-ja na prvom okinula osvezavanje statusa u prikazima 
+                PdfPKCS7 pkcs7 = await PdfHelpers.GetPcks7Async(document.DocumentPath, 2);
+                if (!(pkcs7 == null))
+                {
+                    document.isValidated2 = true;
+                    document.sigReason2 = pkcs7.Reason;
+                    document.sigTS2 = pkcs7.TimeStampDate;
+                    document.sigDateSigned2 = pkcs7.SignDate;
+                    document.sigSignerName2 = System.Text.RegularExpressions.Regex.Replace(CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"CN"), @"[0-9]", "");
+                  //  document.sigOrg2 = String.Format("{0} - {1}", CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"O"), CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"OU"));
+                    var docFields = CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetFields();
+                    String organization = "";
+                    foreach (var ouField in docFields.Where(f => f.Key == @"OU"))
+                    {
+                        foreach (var ou in ouField.Value)
+                            organization = String.Format("{0}, {1}", organization, ou);
+                    }
+                    organization = String.Format("{0}, {1}", organization, CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"O"));
+                    document.sigOrg2 = organization;
+                }
+                pkcs7 = await PdfHelpers.GetPcks7Async(document.DocumentPath, 1);
+                if (!(pkcs7 == null))
+                {
+                    document.isValidated = true;
+                    document.sigReason = pkcs7.Reason;
+                    document.sigTS = pkcs7.TimeStampDate;
+                    document.sigDateSigned = pkcs7.SignDate;
+                    document.sigSignerName = System.Text.RegularExpressions.Regex.Replace(CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"CN"), @"[0-9]", "");
+                    var docFields = CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetFields();
+                    String organization = "";
+                    foreach (var ouField in docFields.Where(f => f.Key == @"OU"))
+                    {
+                        foreach (var ou in ouField.Value)
+                            organization = String.Format("{0}, {1}", organization, ou);
+                    }
+                    organization = String.Format("{0}, {1}", organization, CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"O"));
+                    document.sigOrg = organization;
+                }
+                document.sigAdditionalInfo = "refresh";
+            }
+        }
+
+        public void InternalMessengerGetStates()
+        {
+            foreach (var document in Documents.Where(d => d.hasExternalMessage)) {
+                InternalMessengerGetStates (document);
+                document.hasExternalMessage = false;
+            }
+        }
+        
+        public void InternalMessengerGetStates(DocumentModel document)
+        {
+            // promenjen način čitanja atributa, tako da ne zavisi od tipa poruke (ne koristimo deserialize)
+            // Čitamo bilo kakav xml koji ima atribute koje ocekujemo... 
+            // proverimo poruku koja je u samom folderu:
+            var fileName = Path.GetFileName(document.DocumentPath);
+            var file = Path.Combine(FolderPath, fileName + ".xml");
+            if (File.Exists(file))
+            {
+                try
+                {
+                    XmlDocument xDoc = new XmlDocument();
+                    xDoc.Load(file);
+                    foreach (XmlNode node in xDoc.DocumentElement.ChildNodes)
+                    {
+                        if (node.Name == "isApprovedForProcessing")
+                        {
+                            if (node.InnerText == "true") document.isApprovedForProcessing = true;
+                            else if (node.InnerText == "false") document.isApprovedForProcessing = false;
+                        }
+                        else if (node.Name == "isRejected")
+                        {
+                            if (node.InnerText == "true") document.isRejected = true;
+                            else if (node.InnerText == "false") document.isRejected = false;
+                        }
+                        else if (node.Name == "archiveReady")
+                        {
+                            if (node.InnerText == "true") document.archiveReady = true;
+                            else if (node.InnerText == "false") document.archiveReady = false;
+                        }
+                        else if (node.Name == "Processed" && document.Processed == false) // ne mozemo da vratimo dokument u prethodno stanje, moze samo iz false u true
+                        {
+                            if (node.InnerText == "true") document.Processed = true;
+                            else if (node.InnerText == "false") document.Processed = false;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Error: InternalMessengerGetStates ", e);
+                }
+            }
+            // ukoliko postoji i neka poruka koja još nije sinhronizovan asa serverom (interna obrada u aplikaciji)
+            // obradicemo i nju kao najsveziju informaciju
+            var destinationDir = SigningTransferRules.LocalMap[FolderPath];
+            file = Path.Combine(destinationDir, fileName + ".xml");
+            if (File.Exists(file))
+            {
+                try
+                {
+                    XmlDocument xDoc = new XmlDocument();
+                    xDoc.Load(file);
+                    foreach (XmlNode node in xDoc.DocumentElement.ChildNodes)
+                    {
+                        if (node.Name == "isApprovedForProcessing")
+                        {
+                            if (node.InnerText == "true") document.isApprovedForProcessing = true;
+                            else if (node.InnerText == "false") document.isApprovedForProcessing = false;
+                        }
+                        else if (node.Name == "isRejected")
+                        {
+                            if (node.InnerText == "true") document.isRejected = true;
+                            else if (node.InnerText == "false") document.isRejected = false;
+                        }
+                        else if (node.Name == "archiveReady")
+                        {
+                            if (node.InnerText == "true") document.archiveReady = true;
+                            else if (node.InnerText == "false") document.archiveReady = false;
+                        }
+                        else if (node.Name == "Processed" && document.Processed == false) // ne mozemo da vratimo dokument u prethodno stanje, moze samo iz false u true
+                        {
+                            if (node.InnerText == "true") document.Processed = true;
+                            else if (node.InnerText == "false") document.Processed = false;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Error: InternalMessengerGetStates ", e);
+                }
+            }
+        }
+
+
+        protected void SerializeMessage(InternalMessageModel message)
+        {
+            try
+            {
+                var destinationDir = SigningTransferRules.LocalMap[FolderPath];
+                var destinationFilePath = Path.Combine(destinationDir, message.MessageFileName);
+
+                var file = File.Create(destinationFilePath);
+
+                var xs = new XmlSerializer(typeof(InternalMessageModel));
+                using (Stream s = file)
+                    xs.Serialize(s, message);
+            }
+            catch (Exception e)
+            {
+                Log.Error("Error: SerializeMessage ", e);
+            }
+        }
+
+        protected void SetRejected()
+        {
+            if (!IsActive) return;
+            var checkedDocuments = Documents.Where(d => d.IsChecked).Where(d => !d.Processed);
+            if (!checkedDocuments.Any()) return;
+            // TODO: možda dodati dijalog, sada radimo bez upozorenja
+            foreach (var document in checkedDocuments)
+            {
+                document.Processed = true;
+                document.isRejected = true;
+                var message = new InternalMessageModel(document);
+                SerializeMessage(message);
+            }
+        }
+
+
+        protected void SetArchived()
+        {
+            if (!IsActive) return;
+            var checkedDocuments = Documents.Where(d => d.IsChecked); //.Where(d => !d.Processed);
+            if (!checkedDocuments.Any()) return;
+            // TODO: dodati dijalog, sada radimo bez upozorenja
+            foreach (var document in checkedDocuments)
+            {
+                document.Processed = true;
+                document.archiveReady = true;
+                if (!(document.isRejected)) document.isApprovedForProcessing = true;
+                var message = new InternalMessageModel(document);
+                SerializeMessage(message);
+            }
         }
 
         protected override void OnActivate()
@@ -60,7 +403,14 @@ namespace wpfcm1.FolderTypes
 
         protected virtual void AddFile(string filePath)
         {
-            Documents.Add(new DocumentModel(new FileInfo(filePath)));
+            if (Regex.IsMatch(filePath, @".+syncstamp$", RegexOptions.IgnoreCase))
+            {
+                InternalMessengerGetStates();
+            }
+            else
+            {
+                Documents.Add(new DocumentModel(new FileInfo(filePath)));
+            }
         }
 
         public virtual void OnSelectionChanged(SelectionChangedEventArgs e)
@@ -70,7 +420,8 @@ namespace wpfcm1.FolderTypes
             {
                 var document = e.AddedItems[0] as DocumentModel;
                 var path = document.DocumentPath;
-                if (path.EndsWith(".pdf"))
+                // da ne bude case sensitive...
+                if (path.ToLower().EndsWith(".pdf"))
                     message = path;
             }
             _events.PublishOnUIThread(new MessageShowPdf(message)); 
@@ -89,7 +440,20 @@ namespace wpfcm1.FolderTypes
 
         private void Watcher_Changed(object sender, FileSystemEventArgs e)
         {
+            // TODO: 
+            // NIJE MU možda ovde mesto... hvata sve promene, a ne samo one koje napravi sinhronizacija
+            // To jeste overhed, mada funkcionalno ne smeta - samo fajl dobija mark da ima neki eksterni xml... što jeste tačno...
+             
+        //    Log.Info("*** Promena:");
+        //    Log.Info(e.FullPath);
 
+            if ( Regex.Match(e.FullPath, @".xml", RegexOptions.IgnoreCase).Success ) {
+                var docName = Regex.Replace(e.FullPath, @".xml", "", RegexOptions.IgnoreCase);
+                var found = Documents.Where(d => d.DocumentPath == docName).FirstOrDefault();
+                if (!(found == null)) found.hasExternalMessage = true;
+         //       Log.Info("Ažuriran status ***");
+            }
+            
         }
 
         private void Watcher_Created(object sender, FileSystemEventArgs e)

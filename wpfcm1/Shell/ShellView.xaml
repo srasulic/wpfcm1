@@ -5,13 +5,14 @@
              xmlns:cal="http://www.caliburnproject.org"
              WindowStartupLocation="CenterScreen" 
              Icon="../Media/SignatureShow.ico" ShowIconOnTitleBar="False"
-             Width="987" Height="610"
+             Width="1100" Height="640"
              TitleCaps="False">
     
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands>
             <!--x:name doesnt work with caliburn. use attach instead. -->
             <Button Content="settings" cal:Message.Attach="ShowSettings"/>
+            <Button Content="about" cal:Message.Attach="ShowAbout"/>
         </mah:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
     

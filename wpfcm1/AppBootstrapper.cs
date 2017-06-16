@@ -57,7 +57,7 @@ namespace wpfcm1
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             DisplayRootViewFor<IShell>();
-            Log.Info("Session started!");
+            Log.Info("Session started! 1001.09.19");
         }
 
         protected override void OnExit(object sender, EventArgs e)
@@ -69,11 +69,11 @@ namespace wpfcm1
         {
             Log.Error("Unhandled exception", e.Exception);
             //TODO: ovo izbrisi pod hitno
-            MessageBox.Show(
-                Application.Current.MainWindow,
-                "Error encountered!" + Environment.NewLine + e.Exception.Message,
-                "Application Error",
-                MessageBoxButton.OK, MessageBoxImage.Error);
+            //MessageBox.Show(
+            //    Application.Current.MainWindow,
+            //    "Error encountered!" + Environment.NewLine + e.Exception.Message,
+            //    "Application Error",
+            //    MessageBoxButton.OK, MessageBoxImage.Error);
 
             e.Handled = true;
         }

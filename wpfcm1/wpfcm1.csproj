@@ -8,26 +8,37 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>wpfcm1</RootNamespace>
-    <AssemblyName>fakture</AssemblyName>
+    <AssemblyName>eDokumentPoliSign</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>publish\</PublishUrl>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <PublishUrl>ftp://polisignupdate.aserta.rs/</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
+    <UpdateRequired>true</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <InstallUrl>http://polisignupdate.aserta.rs/</InstallUrl>
+    <UpdateUrl>http://polisignupdate.aserta.rs/</UpdateUrl>
+    <TargetCulture>sr-Latn</TargetCulture>
+    <ProductName>eDokument PoliSign</ProductName>
+    <PublisherName>Aserta doo</PublisherName>
+    <SuiteName>eDokument</SuiteName>
+    <MinimumRequiredVersion>1.1.0.28</MinimumRequiredVersion>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>publish.htm</WebPage>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
+    <ApplicationRevision>31</ApplicationRevision>
+    <ApplicationVersion>1.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>false</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,11 +60,28 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>Media\SignatureShow.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup />
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>884F557654A589AB29E8C398A45765F1220789C1</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>wpfcm1_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>Internet</TargetZone>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Caliburn.Micro, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
       <HintPath>..\packages\Caliburn.Micro.Core.2.0.2\lib\net45\Caliburn.Micro.dll</HintPath>
@@ -104,6 +132,10 @@
     <Compile Include="Converters\Converters.cs" />
     <Compile Include="DataAccess\CertificateRepositiory.cs" />
     <Compile Include="DataAccess\FolderManager.cs" />
+    <Compile Include="Dialogs\DialogAboutView.xaml.cs">
+      <DependentUpon>DialogAboutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DialogAboutViewModel.cs" />
     <Compile Include="Dialogs\DialogSettingsView.xaml.cs">
       <DependentUpon>DialogSettingsView.xaml</DependentUpon>
     </Compile>
@@ -121,10 +153,40 @@
     <Compile Include="Events\MessageViewModelActivated.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="Extensions\TaskCancellationExtensions.cs" />
+    <Compile Include="FolderGroups\WebView.xaml.cs">
+      <DependentUpon>WebView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FolderGroups\WebViewModel.cs" />
+    <Compile Include="FolderTypes\ConfirmedOutToDoFolderView.xaml.cs">
+      <DependentUpon>ConfirmedOutToDoFolderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FolderTypes\ConfirmedToDoFolderView.xaml.cs">
+      <DependentUpon>ConfirmedToDoFolderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FolderTypes\ConfirmedFolderView.xaml.cs">
+      <DependentUpon>ConfirmedFolderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FolderTypes\ConfirmedOutToDoFolderViewModel.cs" />
+    <Compile Include="FolderTypes\ConfirmedToDoFolderViewModel.cs" />
+    <Compile Include="FolderTypes\ConfirmedFolderViewModel.cs" />
+    <Compile Include="FolderTypes\OutboxFolderView.xaml.cs">
+      <DependentUpon>OutboxFolderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FolderTypes\OutboxFolderViewModel.cs" />
+    <Compile Include="FolderTypes\PendFolderView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FolderTypes\PendFolderViewModel.cs" />
     <Compile Include="FTP\FtpClient.cs" />
     <Compile Include="Certificates\CertificateHelpers.cs" />
     <Compile Include="Model\CertificateModel.cs" />
+    <Compile Include="Model\ConfirmedOutToDoDocumentModel.cs" />
+    <Compile Include="Model\ConfirmedToDoDocumentModel.cs" />
+    <Compile Include="Model\InternalMessageModel.cs" />
     <Compile Include="Model\DocumentModel.cs" />
+    <Compile Include="Model\ConfirmedDocumentModel.cs" />
+    <Compile Include="Model\OutboxDocumentModel.cs" />
+    <Compile Include="Model\PendDocumentModel.cs" />
     <Compile Include="Model\GeneratedDocumentModel.cs" />
     <Compile Include="Model\InboxDocumentModel.cs" />
     <Compile Include="PDF\PdfHelpers.cs" />
@@ -136,6 +198,7 @@
       <DependentUpon>PreviewView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Preview\PreviewViewModel.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Settings\Folders.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -187,6 +250,10 @@
     <Compile Include="FolderTypes\InboxFolderView.xaml.cs">
       <DependentUpon>InboxFolderView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\DialogAboutView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\DialogResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -203,6 +270,30 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="FolderGroups\WebView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="FolderTypes\ConfirmedOutToDoFolderView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="FolderTypes\ConfirmedToDoFolderView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="FolderTypes\ConfirmedFolderView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="FolderTypes\OutboxFolderView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="FolderTypes\PendFolderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Preview\PreviewView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -214,6 +305,10 @@
     <Page Include="Resources\Icons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\MyIcons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Shell\ShellView.xaml">
       <SubType>Designer</SubType>
@@ -269,13 +364,19 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="packages.config" />
+    <None Include="ClassDiagram3.cd" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="wpfcm1_TemporaryKey.pfx" />
     <Resource Include="Resources\Entypo.ttf" />
     <None Include="Settings\User.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -287,7 +388,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Media\ack16.png" />
@@ -310,11 +413,95 @@
       <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\time16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\time16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\green_pdf_plain16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\wait16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\lock16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\minus16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\remove16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\check16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\green_red_pdf_plain16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\green_question_pdf_plain16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\lock_question_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\black_lock16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="handle.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="pskill.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="pskill64.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PublishFile Include="handle.exe">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="pskill.exe">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="pskill64.exe">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

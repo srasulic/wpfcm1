@@ -47,9 +47,45 @@ namespace wpfcm1.PDF
             }
         }
 
+        public static Tuple<string, string> ExtractText_ZAP(string path)
+        {
+            using (var reader = new PdfReader(path))
+            {
+                Rectangle rectPib = new Rectangle(10, 750, 200, 800)
+                {
+                    Border = Rectangle.BOX,
+                    BorderColor = BaseColor.RED,
+                    BorderWidth = 1
+                };
+
+                Rectangle rectNo = new Rectangle(10, 750, 200, 800)
+                {
+                    Border = Rectangle.BOX,
+                    BorderColor = BaseColor.RED,
+                    BorderWidth = 1
+                };
+
+                RenderFilter filterPib = new RegionTextRenderFilter(rectPib);
+                ITextExtractionStrategy strategyPib = new FilteredTextRenderListener(new LocationTextExtractionStrategy(), filterPib);
+
+                RenderFilter filterNo = new RegionTextRenderFilter(rectNo);
+                ITextExtractionStrategy strategyNo = new FilteredTextRenderListener(new LocationTextExtractionStrategy(), filterNo);
+
+                var textPib = PdfTextExtractor.GetTextFromPage(reader, 1, strategyPib);
+                var textNo = PdfTextExtractor.GetTextFromPage(reader, 1, strategyNo);
+
+                return Tuple.Create(textPib, textNo);
+            }
+        }
+
         public static Task<Tuple<string, string>> ExtractTextAsync(string path)
         {
             return Task.Run(() => ExtractText(path));
+        }
+
+        public static Task<Tuple<string, string>> ExtractTextAsync_ZAP(string path)
+        {
+            return Task.Run(() => ExtractText_ZAP(path));
         }
 
         public static bool ValidatePdfCertificates(string path)
@@ -65,15 +101,38 @@ namespace wpfcm1.PDF
                 }
                 catch
                 {
-                    isValid = false;
+                    throw; //////////////
+                    //isValid = false;
                 }
             }
             return isValid;
         }
 
+        public static PdfPKCS7 GetPcks7(string path, int position)
+        {
+            // PROTOTIP: obradjuje samo prvi na koji naidje...
+            var reader = new PdfReader(path);
+            AcroFields fields = reader.AcroFields;
+            var i = 1;
+            foreach (var sigName in fields.GetSignatureNames())
+            {
+                if (i++ == position)
+                {
+                    PdfPKCS7 pkcs7 = fields.VerifySignature(sigName);
+                    return pkcs7;
+                }
+            }
+            return null;
+        }
+
         public static Task<bool> ValidatePdfCertificatesAsync(string path)
         {
             return Task.Run(() => ValidatePdfCertificates(path));
+        }
+        
+        public static Task<PdfPKCS7> GetPcks7Async(string path, int position)
+        {
+            return Task.Run(() => GetPcks7(path, position));
         }
 
         private static void CheckIntegrity(AcroFields fields)
@@ -96,13 +155,13 @@ namespace wpfcm1.PDF
             {
                 PdfPKCS7 pkcs7 = fields.VerifySignature(sigName);
                 var tsOk = pkcs7.VerifyTimestampImprint();
-                if (!tsOk) throw new Exception();
+                if (!tsOk) throw new Exception("Greška prilikom provere ugrađenog vremenskog žiga / Verification error - VerifyTimestampImprint check failed.");
 
                 var c2 = new X509Certificate2();
                 c2.Import(pkcs7.SigningCertificate.GetEncoded());
                 var c2chain = CertificateHelpers.GetChain(c2);
                 var errors = CertificateHelpers.CheckCertificate(c2, c2chain);
-                if (errors.Count > 0) throw new Exception();
+                if (errors.Count > 0) throw new Exception("Greška u lancu sertifikata. Proverite da li je intaliran root sertifikat u lancu / Certificate chain error. Check if You trust all certificates in chain.");
 
                 var cert = pkcs7.SigningCertificate;
                 DateTime signDate = pkcs7.SignDate;
@@ -114,7 +173,7 @@ namespace wpfcm1.PDF
                 X509Certificate issuerCert = (certs.Length > 1 ? certs[1] : null);
 
                 CheckRevocation(pkcs7, signCert, issuerCert, signDate);
-                CheckRevocation(pkcs7, signCert, issuerCert, DateTime.Now);
+                //CheckRevocation(pkcs7, signCert, issuerCert, DateTime.Now);
             }
         }
 
@@ -135,7 +194,7 @@ namespace wpfcm1.PDF
                 verification.AddRange(verification);
             }
             if (verification.Count == 0)
-                throw  new Exception();
+                throw  new Exception("Nije bilo moguće proveriti da li je sertifikat opozvan / Certificate revocation check failed.");
         }
     }
 }

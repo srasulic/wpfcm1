@@ -27,12 +27,12 @@ namespace wpfcm1.Dialogs
             RootFolder = folders.RootFolder;
             UserName = user.UserName;
             PIB = user.PIB;
-            FtpServer = user.FtpServer;
+            FtpServer = user.FtpServer != "" ? user.FtpServer : @"ftp://ftp.aserta.rs/";
             FtpUserName = user.FtpUserName;
             FtpPassword = user.FtpPassword;
-            TimestampServer = user.TimestampServer;
-            TimestampUserName = user.TimestampUserName;
-            TimestampPassword = user.TimestampPassword;
+            TimestampServer = user.TimestampServer != "" ? user.TimestampServer : @"http://test-tsa.ca.posta.rs/timestamp1";
+            TimestampUserName = user.TimestampUserName != "" ? user.TimestampUserName : @"Test.Korisnik";
+            TimestampPassword = user.TimestampPassword != "" ? user.TimestampPassword : @"123456"; 
             LlxPib = user.LlxPib;
             LlyPib = user.LlyPib;
             UrxPib = user.UrxPib;
@@ -212,7 +212,7 @@ namespace wpfcm1.Dialogs
             }
         }
 
-        public string Error { get; }
+        public string Error { get; set; }
     }
 
     public class DialogSettingsViewModel : Screen

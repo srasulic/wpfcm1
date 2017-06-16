@@ -1,9 +1,11 @@
 ﻿using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 using wpfcm1.Extensions;
 using wpfcm1.FolderTypes;
 using wpfcm1.FTP;
@@ -11,6 +13,8 @@ using wpfcm1.Model;
 using wpfcm1.PDF;
 using wpfcm1.Processing;
 using wpfcm1.Settings;
+
+
 
 namespace wpfcm1.Dialogs
 {
@@ -20,10 +24,11 @@ namespace wpfcm1.Dialogs
         private readonly Dictionary<string, FolderViewModel> _folders;
         private readonly Progress<string> _reporter;
         private CancellationTokenSource _cancellation;
-
+        
+        
         public DialogSyncViewModel(Dictionary<string, FolderViewModel> folders)
         {
-            DisplayName = "";
+            DisplayName = "PoliSign - sinhronizacija sa serverom";
             _folders = folders;
             _reporter = new Progress<string>();
             _reporter.ProgressChanged += _reporter_ProgressChanged;
@@ -66,6 +71,8 @@ namespace wpfcm1.Dialogs
 
         public async void OnStart()
         {
+            // ToDO: smestiti ovo negde na lepše mesto, za sad je u FolderViewModel... 
+            FolderViewModel.PsKillPdfHandlers();
             try
             {
                 _cancellation = new CancellationTokenSource();
@@ -114,11 +121,19 @@ namespace wpfcm1.Dialogs
 
             var ftpClient = new FtpClient(ftpServer, ftpUsername, ftpPassword);
 
+            PrepareErrorLogForUpload();
+
             foreach (var folder in _folders)
             {
+
                 var sourceDir = folder.Key;
                 var destinationDir = FtpTransferRules.FtpMap[sourceDir];
-                var documents = new List<DocumentModel>(folder.Value.Documents); //shallow copy, cannot iterate collection that is going to be modified
+                //var documents = new List<DocumentModel>(folder.Value.Documents); //shallow copy, cannot iterate collection that is going to be modified
+                // uzmemo sve fajlove u direktorijumu bez obzira na to sta se nalazi u listama sa kojima korisnik radi
+                var documents = new BindableCollection<DocumentModel>(
+                    Directory.EnumerateFiles(sourceDir)
+                        .Where(f => !(System.Text.RegularExpressions.Regex.IsMatch(Path.GetFileName(f), @"stat.+\.xml", System.Text.RegularExpressions.RegexOptions.IgnoreCase)))
+                        .Select(f => new DocumentModel(new FileInfo(f))));
                 var ftpAction = FtpTransferRules.Action[sourceDir];
                 var syncMgr = new SyncManager();
                 Log.Info(string.Format("Syncing {0} with {1}", sourceDir, destinationDir));
@@ -128,19 +143,39 @@ namespace wpfcm1.Dialogs
                         if (reporter != null) reporter.Report(string.Format("Upload:\t{0} -> {1}", sourceDir, destinationDir));
                         await syncMgr.Upload(ftpClient, documents, sourceDir, destinationDir, reporter, token);
                         if (reporter != null) reporter.Report("OK");
+                        File.Create(sourceDir + @"\" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + ".syncstamp").Dispose();
                         break;
                     case FtpTransferRules.TransferAction.Sync:
                         if (reporter != null) reporter.Report(string.Format("Sync:\t{0} <-> {1}", sourceDir, destinationDir));
                         await syncMgr.Sync(ftpClient, documents, sourceDir, destinationDir, true, reporter, token);
                         if (reporter != null) reporter.Report("OK");
+                        File.Create(sourceDir + @"\" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + ".syncstamp").Dispose();
                         break;
                     case FtpTransferRules.TransferAction.Download:
                         if (reporter != null) reporter.Report(string.Format("Sync:\t{0} <-> {1}", sourceDir, destinationDir));
                         await syncMgr.Sync(ftpClient, documents, sourceDir, destinationDir, false, reporter, token);
                         if (reporter != null) reporter.Report("OK");
+                        File.Create(sourceDir + @"\" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + ".syncstamp").Dispose();
                         break;
                 }
             }
+            
+        }
+
+        private void PrepareErrorLogForUpload()
+        {
+
+            try
+            {
+                var destinationDir = SigningTransferRules.LocalMap[wpfcm1.DataAccess.FolderManager.OtherOutboundErpIfaceFolder];
+                var fileName = "fakture.log.txt";
+                var destFileName = Path.Combine(destinationDir, DateTime.UtcNow.ToString("yyyyMMddHHmmssfff")) + ".errorlog";
+                File.Copy(fileName, destFileName, true);
+            } catch (Exception e)
+            {
+                Log.Error("ERR: PrepareErrorLogForUpload ", e);
+            }
+  
         }
     }
 }

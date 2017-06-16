@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using wpfcm1.Events;
+using System;
 
 namespace wpfcm1.Toolbar
 {
@@ -11,13 +12,26 @@ namespace wpfcm1.Toolbar
     {
         private readonly ToolBarViewModel _toolBar;
 
+
+        
         private readonly Dictionary<string, BitArray> WorkspaceToButtonVisibility = new Dictionary<string, BitArray>()
         {
-            {"HomeViewModel", new BitArray(new byte[]{0x3})},
-            {"GeneratedFolderViewModel", new BitArray(new byte[]{0x3F})},
-            {"InboxFolderViewModel", new BitArray(new byte[]{0xCF})},
-            {"FolderViewModel", new BitArray(new byte[]{0x7})},
+            //Reject-Sign-Ack-Validate-ExtractData-TogglePreview-Sync-ShowHome 
+            // - - - - - - -Xls
+            {"HomeViewModel",                   new BitArray(new byte[]{Convert.ToByte("00000011", 2), 0x4})},
+            {"GeneratedFolderViewModel",        new BitArray(new byte[]{Convert.ToByte("11001111", 2), 0x2})},
+            {"InboxFolderViewModel",            new BitArray(new byte[]{Convert.ToByte("01110111", 2), 0x2})},
+            {"PendFolderViewModel",             new BitArray(new byte[]{Convert.ToByte("00000111", 2), 0x2})},
+            {"OutboxFolderViewModel",           new BitArray(new byte[]{Convert.ToByte("10000111", 2), 0x2})},
+            {"ConfirmedFolderViewModel",        new BitArray(new byte[]{Convert.ToByte("00010111", 2), 0x2})},
+            {"ConfirmedToDoFolderViewModel",    new BitArray(new byte[]{Convert.ToByte("11010111", 2), 0x2})},
+            {"ConfirmedOutToDoFolderViewModel", new BitArray(new byte[]{Convert.ToByte("10010111", 2), 0x3})},
+            {"FolderViewModel",                 new BitArray(new byte[]{Convert.ToByte("00000111", 2), 0x0})},
         }; 
+
+
+
+
 
         public ButtonVisibilityManager(ToolBarViewModel toolbar, IEventAggregator events)
         {

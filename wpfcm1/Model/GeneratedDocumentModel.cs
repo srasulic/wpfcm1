@@ -27,6 +27,13 @@ namespace wpfcm1.Model
             set { _invoiceNo = value; NotifyOfPropertyChange(() => InvoiceNo); }
         }
 
+        private bool _multipleInvoiceNo;
+        public bool multipleInvoiceNo
+        {
+            get { return _multipleInvoiceNo; }
+            set { _multipleInvoiceNo = value; NotifyOfPropertyChange(() => multipleInvoiceNo); }
+        }
+
         public override string this[string columnName]
         {
             get

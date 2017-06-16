@@ -10,25 +10,33 @@
                     <ResourceDictionary Source="FolderResources.xaml" />
                 </ResourceDictionary.MergedDictionaries>
                 <conv:InverseBooleanToBoldConverter x:Key="ib2bc" />
+                <conv:BooleanToOpacityConverter x:Key="b2oc" />
+                <conv:BooleanToBackgroundColourConverter x:Key="b2bcc" />
             </ResourceDictionary>
         </Grid.Resources>
 
         <DataGrid x:Name="Documents" cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChanged($eventArgs)]" 
                   AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False">
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Binding="{Binding IsChecked}" HeaderStyle="{StaticResource CheckBoxHeaderStyle}">
-                </DataGridCheckBoxColumn>
-                <DataGridTextColumn Header="Name" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True">
+                <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}" Binding="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource CheckBoxHeaderStyle}"/>
+                <DataGridTextColumn Header="Naziv fajla" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="FontWeight" Value="{Binding Processed, Converter={StaticResource ib2bc}}" />
+                            <Setter Property="Opacity" Value="{Binding Processed, Converter={StaticResource b2oc}}" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
+                <DataGridTextColumn Header="Size" Binding="{Binding Path=LengthKB, StringFormat='\{0:N0\} KB'}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="PIB" Binding="{Binding Path=Pib, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MinWidth="85"/>
-                <DataGridTextColumn Header="Invoice No" Binding="{Binding Path=InvoiceNo, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MinWidth="85"/>
-                <DataGridTextColumn Header="Date modified" Binding="{Binding Path=DocumentInfo.LastWriteTime}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Size" Binding="{Binding Path=DocumentInfo.Length}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Br Dok" Binding="{Binding Path=InvoiceNo, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MinWidth="85">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Background" Value="{Binding multipleInvoiceNo, Converter={StaticResource b2bcc}}" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Datum" Binding="{Binding Path=DocumentInfo.LastWriteTime}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

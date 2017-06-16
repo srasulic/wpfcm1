@@ -17,11 +17,13 @@ namespace wpfcm1.DataAccess
         public static readonly string InvoicesOutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundOutboxFolder);
         public static readonly string InvoicesOutboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundSentFolder);
         public static readonly string InvoicesOutboundPendFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundPendFolder);
-        public static readonly string InvoicesOutboundConfirmedFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundConfirmedFolder);
+        public static readonly string InvoicesOutboundConfirmedFolder        = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundConfirmedFolder);
+        public static readonly string InvoicesOutboundConfirmedOutToDoFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundConfirmedFolder);
         public static readonly string InvoicesInboundInboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundInboxFolder);
         public static readonly string InvoicesInboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundOutboxFolder);
         public static readonly string InvoicesInboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundSentFolder);
-        public static readonly string InvoicesInboundConfirmedFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundConfirmedFolder);
+        public static readonly string InvoicesInboundConfirmedFolder     = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundConfirmedFolder);
+        public static readonly string InvoicesInboundConfirmedToDoFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundConfirmedFolder);
         //folderi za IOS
         public static readonly string IosOutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.IosSubfolder, Folders.Default.OutboundErpIfaceFolder);
         public static readonly string IosOutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.IosSubfolder, Folders.Default.OutboundErpProcFolder);
@@ -39,11 +41,13 @@ namespace wpfcm1.DataAccess
         public static readonly string KpOutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.OutboundOutboxFolder);
         public static readonly string KpOutboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.OutboundSentFolder);
         public static readonly string KpOutboundPendFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.OutboundPendFolder);
-        public static readonly string KpOutboundConfirmedFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.OutboundConfirmedFolder);
+        public static readonly string KpOutboundConfirmedFolder        = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.OutboundConfirmedFolder);
+        public static readonly string KpOutboundConfirmedOutToDoFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.OutboundConfirmedFolder);
         public static readonly string KpInboundInboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.InboundInboxFolder);
         public static readonly string KpInboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.InboundOutboxFolder);
         public static readonly string KpInboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.InboundSentFolder);
-        public static readonly string KpInboundConfirmedFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.InboundConfirmedFolder);
+        public static readonly string KpInboundConfirmedFolder     = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.InboundConfirmedFolder);
+        public static readonly string KpInboundConfirmedToDoFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.InboundConfirmedFolder);
         //folderi za ostale ulazne/izlazne
         public static readonly string OtherOutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtherSubfolder, Folders.Default.OutboundErpIfaceFolder);
         public static readonly string OtherOutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtherSubfolder, Folders.Default.OutboundErpProcFolder);
@@ -57,14 +61,14 @@ namespace wpfcm1.DataAccess
         public static readonly string OtherInboundConfirmedFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtherSubfolder, Folders.Default.InboundConfirmedFolder);
 
         //grupe foldera
-        public static Dictionary<string, string> InvoicesOutboundFolders { get; } 
-        public static Dictionary<string, string> InvoicesInboundFolders { get; }
-        public static Dictionary<string, string> IosOutboundFolders { get; } 
-        public static Dictionary<string, string> IosInboundFolders { get; }
-        public static Dictionary<string, string> KpOutboundFolders { get; }
-        public static Dictionary<string, string> KpInboundFolders { get; }
-        public static Dictionary<string, string> OtherOutboundFolders { get; }
-        public static Dictionary<string, string> OtherInboundFolders { get; }
+        public static Dictionary<string, string> InvoicesOutboundFolders { get; set; }
+        public static Dictionary<string, string> InvoicesInboundFolders { get; set; }
+        public static Dictionary<string, string> IosOutboundFolders { get; set; }
+        public static Dictionary<string, string> IosInboundFolders { get; set; }
+        public static Dictionary<string, string> KpOutboundFolders { get; set; }
+        public static Dictionary<string, string> KpInboundFolders { get; set; }
+        public static Dictionary<string, string> OtherOutboundFolders { get; set; }
+        public static Dictionary<string, string> OtherInboundFolders { get; set; }
 
         public static Dictionary<string, string> FolderNameMap = new Dictionary<string, string>
         {
@@ -74,10 +78,12 @@ namespace wpfcm1.DataAccess
             {"InvoicesOutboundSentFolder", "Sent"},
             {"InvoicesOutboundPendFolder", "Pend"},
             {"InvoicesOutboundConfirmedFolder", "Confirmed"},
+            {"InvoicesOutboundConfirmedOutToDoFolder", "ToDo"},
             {"InvoicesInboundInboxFolder", "Inbox"},
             {"InvoicesInboundOutboxFolder", "Outbox"},
             {"InvoicesInboundSentFolder", "Sent"},
             {"InvoicesInboundConfirmedFolder", "Confirmed"},
+            {"InvoicesInboundConfirmedToDoFolder", "ToDo"},
             {"IosOutboundErpIfaceFolder", "Generated"},
             {"IosOutboundErpProcFolder", "Processed"},
             {"IosOutboundOutboxFolder", "Outbox"},
@@ -94,10 +100,12 @@ namespace wpfcm1.DataAccess
             {"KpOutboundSentFolder", "Sent"},
             {"KpOutboundPendFolder", "Pend"},
             {"KpOutboundConfirmedFolder", "Confirmed"},
+            {"KpOutboundConfirmedOutToDoFolder", "ToDo"},
             {"KpInboundInboxFolder", "Inbox"},
             {"KpInboundOutboxFolder", "Outbox"},
             {"KpInboundSentFolder", "Sent"},
             {"KpInboundConfirmedFolder", "Confirmed"},
+            {"KpInboundConfirmedToDoFolder", "ToDo"},
             {"OtherOutboundErpIfaceFolder", "Generated"},
             {"OtherOutboundErpProcFolder", "Processed"},
             {"OtherOutboundOutboxFolder", "Outbox"},
@@ -113,41 +121,45 @@ namespace wpfcm1.DataAccess
         public static readonly Dictionary<string, Type> FolderTypeMap = new Dictionary<string, Type>()
         {
             {"InvoicesOutboundErpIfaceFolder", typeof(GeneratedDocumentModel)},
-            {"InvoicesOutboundOutboxFolder", typeof(DocumentModel)},
+            {"InvoicesOutboundOutboxFolder", typeof(OutboxDocumentModel)},
             {"InvoicesOutboundSentFolder", typeof(DocumentModel)},
-            {"InvoicesOutboundPendFolder", typeof(DocumentModel)},
-            {"InvoicesOutboundConfirmedFolder", typeof(DocumentModel)},
+            {"InvoicesOutboundPendFolder", typeof(PendDocumentModel)},
+            {"InvoicesOutboundConfirmedFolder", typeof(ConfirmedDocumentModel)},
+            {"InvoicesOutboundConfirmedOutToDoFolder", typeof(ConfirmedOutToDoDocumentModel)},
             {"InvoicesInboundInboxFolder", typeof(InboxDocumentModel)},
-            {"InvoicesInboundOutboxFolder", typeof(DocumentModel)},
+            {"InvoicesInboundOutboxFolder", typeof(PendDocumentModel)},
             {"InvoicesInboundSentFolder", typeof(DocumentModel)},
-            {"InvoicesInboundConfirmedFolder", typeof(DocumentModel)},
+            {"InvoicesInboundConfirmedFolder", typeof(ConfirmedDocumentModel)},
+            {"InvoicesInboundConfirmedToDoFolder", typeof(ConfirmedToDoDocumentModel)},
             {"IosOutboundErpIfaceFolder", typeof(GeneratedDocumentModel)},
-            {"IosOutboundOutboxFolder", typeof(DocumentModel)},
+            {"IosOutboundOutboxFolder", typeof(OutboxDocumentModel)},
             {"IosOutboundSentFolder", typeof(DocumentModel)},
-            {"IosOutboundPendFolder", typeof(DocumentModel)},
-            {"IosOutboundConfirmedFolder", typeof(DocumentModel)},
+            {"IosOutboundPendFolder", typeof(PendDocumentModel)},
+            {"IosOutboundConfirmedFolder", typeof(ConfirmedDocumentModel)},
             {"IosInboundInboxFolder", typeof(InboxDocumentModel)},
-            {"IosInboundOutboxFolder", typeof(DocumentModel)},
+            {"IosInboundOutboxFolder", typeof(PendDocumentModel)},
             {"IosInboundSentFolder", typeof(DocumentModel)},
-            {"IosInboundConfirmedFolder", typeof(DocumentModel)},
+            {"IosInboundConfirmedFolder", typeof(ConfirmedDocumentModel)},
             {"KpOutboundErpIfaceFolder", typeof(GeneratedDocumentModel)},
-            {"KpOutboundOutboxFolder", typeof(DocumentModel)},
+            {"KpOutboundOutboxFolder", typeof(OutboxDocumentModel)},
             {"KpOutboundSentFolder", typeof(DocumentModel)},
-            {"KpOutboundPendFolder", typeof(DocumentModel)},
-            {"KpOutboundConfirmedFolder", typeof(DocumentModel)},
+            {"KpOutboundPendFolder", typeof(PendDocumentModel)},
+            {"KpOutboundConfirmedFolder", typeof(ConfirmedDocumentModel)},
+            {"KpOutboundConfirmedOutToDoFolder", typeof(ConfirmedOutToDoDocumentModel)},
             {"KpInboundInboxFolder", typeof(InboxDocumentModel)},
-            {"KpInboundOutboxFolder", typeof(DocumentModel)},
+            {"KpInboundOutboxFolder", typeof(PendDocumentModel)},
             {"KpInboundSentFolder", typeof(DocumentModel)},
-            {"KpInboundConfirmedFolder", typeof(DocumentModel)},
+            {"KpInboundConfirmedFolder", typeof(ConfirmedDocumentModel)},
+            {"KpInboundConfirmedToDoFolder", typeof(ConfirmedToDoDocumentModel)},
             {"OtherOutboundErpIfaceFolder", typeof(GeneratedDocumentModel)},
-            {"OtherOutboundOutboxFolder", typeof(DocumentModel)},
+            {"OtherOutboundOutboxFolder", typeof(OutboxDocumentModel)},
             {"OtherOutboundSentFolder", typeof(DocumentModel)},
-            {"OtherOutboundPendFolder", typeof(DocumentModel)},
-            {"OtherOutboundConfirmedFolder", typeof(DocumentModel)},
+            {"OtherOutboundPendFolder", typeof(PendDocumentModel)},
+            {"OtherOutboundConfirmedFolder", typeof(ConfirmedDocumentModel)},
             {"OtherInboundInboxFolder", typeof(InboxDocumentModel)},
-            {"OtherInboundOutboxFolder", typeof(DocumentModel)},
+            {"OtherInboundOutboxFolder", typeof(PendDocumentModel)},
             {"OtherInboundSentFolder", typeof(DocumentModel)},
-            {"OtherInboundConfirmedFolder", typeof(DocumentModel)}
+            {"OtherInboundConfirmedFolder", typeof(ConfirmedDocumentModel)}
         };
 
         static FolderManager()
@@ -158,7 +170,8 @@ namespace wpfcm1.DataAccess
                 {"InvoicesOutboundOutboxFolder", InvoicesOutboundOutboxFolder},
                 {"InvoicesOutboundSentFolder", InvoicesOutboundSentFolder},
                 {"InvoicesOutboundPendFolder", InvoicesOutboundPendFolder},
-                {"InvoicesOutboundConfirmedFolder", InvoicesOutboundConfirmedFolder}
+                {"InvoicesOutboundConfirmedFolder", InvoicesOutboundConfirmedFolder},
+                {"InvoicesOutboundConfirmedOutToDoFolder", InvoicesOutboundConfirmedFolder}
             };
             CheckFolders(InvoicesOutboundFolders);
             if (!Directory.Exists(InvoicesOutboundErpProcFolder)) Directory.CreateDirectory(InvoicesOutboundErpProcFolder);
@@ -168,7 +181,8 @@ namespace wpfcm1.DataAccess
                 {"InvoicesInboundInboxFolder", InvoicesInboundInboxFolder},
                 {"InvoicesInboundOutboxFolder", InvoicesInboundOutboxFolder},
                 {"InvoicesInboundSentFolder", InvoicesInboundSentFolder},
-                {"InvoicesInboundConfirmedFolder", InvoicesInboundConfirmedFolder}
+                {"InvoicesInboundConfirmedFolder", InvoicesInboundConfirmedFolder},
+                {"InvoicesInboundConfirmedToDoFolder", InvoicesInboundConfirmedFolder}
             };
             CheckFolders(InvoicesInboundFolders);
 
@@ -198,7 +212,8 @@ namespace wpfcm1.DataAccess
                 {"KpOutboundOutboxFolder", KpOutboundOutboxFolder},
                 {"KpOutboundSentFolder", KpOutboundSentFolder},
                 {"KpOutboundPendFolder", KpOutboundPendFolder},
-                {"KpOutboundConfirmedFolder", KpOutboundConfirmedFolder}
+                {"KpOutboundConfirmedFolder", KpOutboundConfirmedFolder},
+                {"KpOutboundConfirmedOutToDoFolder", KpOutboundConfirmedFolder}
             };
             CheckFolders(KpOutboundFolders);
             if (!Directory.Exists(KpOutboundErpProcFolder)) Directory.CreateDirectory(KpOutboundErpProcFolder);
@@ -208,7 +223,8 @@ namespace wpfcm1.DataAccess
                 {"KpInboundInboxFolder", KpInboundInboxFolder},
                 {"KpInboundOutboxFolder", KpInboundOutboxFolder},
                 {"KpInboundSentFolder", KpInboundSentFolder},
-                {"KpInboundConfirmedFolder", KpInboundConfirmedFolder}
+                {"KpInboundConfirmedFolder", KpInboundConfirmedFolder},
+                {"KpInboundConfirmedToDoFolder", KpInboundConfirmedFolder}
             };
             CheckFolders(KpInboundFolders);
 

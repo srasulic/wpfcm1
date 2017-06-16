@@ -9,39 +9,68 @@
                 <ResourceDictionary.MergedDictionaries>
                     <ResourceDictionary Source="FolderResources.xaml" />
                 </ResourceDictionary.MergedDictionaries>
-                <BitmapImage x:Key="PngError" UriSource="../Media/error16.png" />
-                <BitmapImage x:Key="PngOk" UriSource="../Media/ok16.png" />
-                <BitmapImage x:Key="PngAck" UriSource="../Media/ack16.png" />
                 <BooleanToVisibilityConverter x:Key="b2vc" />
                 <conv:InverseBooleanToVisibilityConverter x:Key="ib2vc" />
                 <conv:InverseBooleanToBoldConverter x:Key="ib2bc" />
+
+                <conv:BooleanToColourConverter x:Key="b2cc" />
+                <conv:BooleanToBackgroundColourConverter x:Key="b2bcc" />
+                <conv:BooleanToUnderlineConverter x:Key="b2uc" />
+                <conv:BooleanToOpacityConverter x:Key="b2oc" />
+
                 <DataTemplate x:Key="ImgCol">
                     <StackPanel>
-                        <Image Source="{StaticResource PngOk}" Visibility="{Binding Path=IsValid, Converter={StaticResource b2vc}}"/>
-                        <Image Source="{StaticResource PngError}" Visibility="{Binding Path=IsValid, Converter={StaticResource ib2vc}}"/>
+                        <Image Source="{StaticResource PngGreenPdf}" Visibility="{Binding Path=IsValid, Converter={StaticResource b2vc}}" ToolTip="{Binding sigAdditionalInfo}"/>
+                        <Image Source="{StaticResource PngError}" Visibility="{Binding Path=IsValid, Converter={StaticResource ib2vc}}" ToolTip="{Binding sigAdditionalInfo}"/>
                     </StackPanel>
                 </DataTemplate>
                 <DataTemplate x:Key="AckCol">
-                    <Image Source="{StaticResource PngAck}" Visibility="{Binding Path=IsAcknowledged, Converter={StaticResource b2vc}}"/>
+                    <StackPanel>
+                        <Image Source="{StaticResource PngAck}" Visibility="{Binding Path=IsAcknowledged, Converter={StaticResource b2vc}}"/>
+                    </StackPanel>
+                </DataTemplate>
+                <DataTemplate x:Key="HasSecSign">
+                    <StackPanel>
+                        <Image Source="{StaticResource PngLock}" Visibility="{Binding Path=IsSignedAgain, Converter={StaticResource b2vc}}"/>
+                        <Image Source="{StaticResource PngCheck}" Visibility="{Binding Path=NotSignedAgain_Approved, Converter={StaticResource b2vc}}"/>
+                        <Image Source="{StaticResource PngRemove}" Visibility="{Binding Path=NotSignedAgain_Rejected, Converter={StaticResource b2vc}}"/>
+                    </StackPanel>
+                </DataTemplate>
+                <DataTemplate x:Key="WaitForSrvProcessing">
+                        <Image Source="{StaticResource PngWait}" Visibility="{Binding Path=IsAcknowledged, Converter={StaticResource b2vc}}"/>
                 </DataTemplate>
             </ResourceDictionary>
         </Grid.Resources>
 
         <DataGrid x:Name="Documents" cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChanged($eventArgs)]"
-                  AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False">
+                  AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False" >
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Binding="{Binding IsChecked}" HeaderStyle="{StaticResource CheckBoxHeaderStyle}"/>
-                <DataGridTextColumn Header="Name" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True">
+                <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}" Binding="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource CheckBoxHeaderStyle}"/>
+                <DataGridTextColumn Header="Naziv fajla" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="FontWeight" Value="{Binding Processed, Converter={StaticResource ib2bc}}" />
+                            <Setter Property="FontWeight" Value="{Binding isValidated, Converter={StaticResource ib2bc}}" />
+                            <Setter Property="TextDecorations"  Value="{Binding IsChecked, Converter={StaticResource b2uc}}"  />
+                            <Setter Property="Opacity" Value="{Binding Processed, Converter={StaticResource b2oc}}" />
+                            <!--     <Setter Property="Background"  Value="{Binding IsChecked, Converter={StaticResource b2bcc}}" /> -->
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Date modified" Binding="{Binding Path=DocumentInfo.LastWriteTime}" IsReadOnly="True" />
-                <DataGridTextColumn Header="Size" Binding="{Binding Path=DocumentInfo.Length}" IsReadOnly="True"/>
-                <DataGridTemplateColumn CellTemplate="{StaticResource ImgCol}" MinWidth="32" IsReadOnly="True"/>
-                <DataGridTemplateColumn CellTemplate="{StaticResource AckCol}" MinWidth="32" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Size" Binding="{Binding Path=LengthKB, StringFormat='\{0:N0\} KB'}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Pib izdavalac" Binding="{Binding Path=namePib1}" IsReadOnly="True">                </DataGridTextColumn>
+                <DataGridTextColumn Header="Pib primalac" Binding="{Binding Path=namePib2}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Br Dok" Binding="{Binding Path=nameDocNum}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Datum" Binding="{Binding Path=nameDate}" IsReadOnly="True" />
+                <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}" Binding="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource CheckBoxHeaderStyle}"/>
+                <DataGridTemplateColumn Header="{StaticResource appbar_checkmark16}" CellTemplate="{StaticResource ImgCol}" MinWidth="32" IsReadOnly="True">
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{StaticResource appbar_reply_email16}" CellTemplate="{StaticResource AckCol}" MinWidth="32" IsReadOnly="True"/>
+                <DataGridTemplateColumn  Header="{StaticResource appbar_draw_pen_reflection16}"  CellTemplate="{StaticResource HasSecSign}" MinWidth="32" IsReadOnly="True"/>
+                <DataGridTemplateColumn  CellTemplate="{StaticResource WaitForSrvProcessing}" MinWidth="32" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Reason" Binding="{Binding Path=sigReason}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Potpisao" Binding="{Binding Path=sigSignerName}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Organizacija" Binding="{Binding Path=sigOrg}" IsReadOnly="True" />
+                <DataGridTextColumn Header="TS Vreme" Binding="{Binding Path=sigTS}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

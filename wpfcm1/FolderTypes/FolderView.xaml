@@ -6,9 +6,9 @@
         <DataGrid x:Name="Documents"  cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChanged($eventArgs)]"
                   AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False" IsReadOnly="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Path=DocumentInfo.Name}"/>
-                <DataGridTextColumn Header="Date modified" Binding="{Binding Path=DocumentInfo.LastWriteTime}" />
-                <DataGridTextColumn Header="Size" Binding="{Binding Path=DocumentInfo.Length}" />
+                <DataGridTextColumn Header="Naziv fajla" Binding="{Binding Path=DocumentInfo.Name}"/>
+                <DataGridTextColumn Header="Datum" Binding="{Binding Path=DocumentInfo.LastWriteTime}" />
+                <DataGridTextColumn Header="Size" Binding="{Binding Path=LengthKB, StringFormat='\{0:N0\} KB'}" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

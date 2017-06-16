@@ -9,10 +9,13 @@ using wpfcm1.Events;
 using wpfcm1.Model;
 using wpfcm1.PDF;
 using wpfcm1.Preview;
+using System;
+using System.Text.RegularExpressions;
+using iTextSharp.text.pdf.security;
 
 namespace wpfcm1.FolderTypes
 {
-    public class InboxFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageValidate>, IHandle<MessageAck>
+    public class InboxFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageValidate>, IHandle<MessageAck>, IHandle<MessageXls>
     {
         private readonly IWindowManager _windowManager;
         private CertificateModel _certificate;
@@ -26,7 +29,7 @@ namespace wpfcm1.FolderTypes
         {
             Documents = new BindableCollection<DocumentModel>(
                 Directory.EnumerateFiles(FolderPath)
-                .Where(f => Extensions.Contains(Path.GetExtension(f)))
+                .Where(f => Extensions.Contains(Path.GetExtension(f).ToLower()))
                 .Select(f => new InboxDocumentModel(new FileInfo(f))));
             
             InitWatcher(FolderPath);
@@ -40,14 +43,49 @@ namespace wpfcm1.FolderTypes
                 var old = found as InboxDocumentModel;
                 old.IsChecked = state.IsChecked;
                 old.IsValid = state.IsValid;
+                old.isValidated = state.isValidated;
                 old.Processed = state.Processed;
                 old.IsAcknowledged = state.IsAcknowledged;
+                old.IsSignedAgain = state.IsSignedAgain;
+                old.HasSecondSignature = state.HasSecondSignature;
+                old.isApprovedForProcessing = state.isApprovedForProcessing;
+                old.isRejected = state.isRejected;
+                old.sigValidationInfo = state.sigValidationInfo;
+
+                old.sigReason = state.sigReason;
+                old.sigTS = state.sigTS;
+                old.sigDateSigned = state.sigDateSigned;
+                old.sigSignerName = state.sigSignerName;
+                old.sigOrg = state.sigOrg;
+
+                old.sigReason2 = state.sigReason2;
+                old.sigTS2 = state.sigTS2;
+                old.sigDateSigned2 = state.sigDateSigned2;
+                old.sigSignerName2 = state.sigSignerName2;
+                old.sigOrg2 = state.sigOrg2;
+
+            }
+            foreach (var document in Documents)
+            {
+                document.sigAdditionalInfo = "refresh";
             }
         }
 
         protected override void AddFile(string filePath)
         {
-            Documents.Add(new InboxDocumentModel(new FileInfo(filePath)));
+            if (Regex.IsMatch(filePath, @".+syncstamp$", RegexOptions.IgnoreCase))
+            {
+                InternalMessengerGetStates();
+            }
+            // necemo u listu dodavati one koji nisu validno nazvan pdf
+            else if (!Regex.IsMatch(filePath, @".+_s.pdf$", RegexOptions.IgnoreCase))
+            {
+
+            }
+            else
+            {
+                Documents.Add(new InboxDocumentModel(new FileInfo(filePath)));
+            }
         }
 
         protected override void OnActivate()
@@ -69,36 +107,49 @@ namespace wpfcm1.FolderTypes
             _certificate = message;
         }
 
+        public void Handle(MessageXls message)
+        {
+            if (!IsActive) return;
+            XlsExport();
+
+        }
+
         public void Handle(MessageSign message)
         {
             if (IsActive)
             {
+                //PsKillPdfHandlers(); // workaround - pskill ubija sve procese koji rade nad PDF-ovima u eDokument
                 var certificateOk = _certificate != null && _certificate.IsQualified;
                 if (!certificateOk) return;
                 var validDocuments = GetDocumentsForSigning();
                 if (!validDocuments.Any()) return;
 
                 //TODO: ovo mora drugacije
-                _events.PublishOnUIThread(new MessageShowPdf(PreviewViewModel.Empty));
+                //_events.PublishOnUIThread(new MessageShowPdf(PreviewViewModel.Empty));
                 var result = _windowManager.ShowDialog(new DialogSignViewModel(_certificate, this));
             }
         }
 
         public async void Handle(MessageValidate message)
         {
-            var documents = Documents.Where(d => !d.Processed).Cast<InboxDocumentModel>();
-            foreach (var document in documents)
-            {
-                var isValid = await PdfHelpers.ValidatePdfCertificatesAsync(document.DocumentPath);
-                document.IsValid = isValid;
-                document.Processed = true;
-            }
+            if (!IsActive) return;
+            await ValidateDocSignaturesAsync();
         }
 
         public void Handle(MessageAck message)
         {
+            if (!IsActive) return;
             var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<InboxDocumentModel>();
             var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).ToList();
+            //// ako nije bilo cekiranih dokumenata
+            //// dodajemo ih iz liste selektovanih
+            //// NAPOMENA: izbaceno jer moramo proveriti da li ce ih zbuniti dvojako ponasanje programa!
+            //if (!checkedDocuments.Any())
+            //{
+            //    var v = GetView() as UserControl;
+            //    var dg = v.FindName("Documents") as DataGrid;
+            //    validDocuments = dg.SelectedItems.Cast<InboxDocumentModel>().ToList().Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).ToList();
+            //}
             var destinationDir = SigningTransferRules.LocalMap[FolderPath];
             foreach (var document in validDocuments)
             {
@@ -109,11 +160,42 @@ namespace wpfcm1.FolderTypes
             }
         }
 
+        //public void Handle(MessageToDo message)
+        //{
+        //    if (!IsActive) return;
+        //    var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<InboxDocumentModel>();
+        //    var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).ToList();
+        //    var destinationDir = SigningTransferRules.LocalMap[FolderPath];
+        //    foreach (var document in validDocuments)
+        //    {
+        //        var fileName = Path.GetFileName(document.DocumentPath);
+        //        var destinationFilePath = Path.Combine(destinationDir, fileName + ".ack");
+        //        File.Create(destinationFilePath).Dispose();
+        //        document.IsAcknowledged = true;
+        //    }
+        //}
+
         public IList<DocumentModel> GetDocumentsForSigning()
         {
             var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<InboxDocumentModel>();
-            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).Cast<DocumentModel>().ToList();
+            //var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).Cast<DocumentModel>().ToList();
+            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && d.IsAcknowledged && !d.HasSecondSignature).Cast<DocumentModel>().ToList();
             return validDocuments;
+        }
+
+        public void SetApproved(bool approved)
+        {
+            if (!IsActive) return;
+            
+            var documents = GetDocumentsForSigning();
+            foreach (var document in documents)
+            {
+                document.isApprovedForProcessing = approved;
+                document.isRejected = !approved;
+                InternalMessageModel message = new InternalMessageModel(document);
+                message.Processed = null; // ne zelimo da saljemo info na temu procesirano jer je poruka upucena drugom folderu
+                SerializeMessage(message);
+            }
         }
 
         public override void Dispose()

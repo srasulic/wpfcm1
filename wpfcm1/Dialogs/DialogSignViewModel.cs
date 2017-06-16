@@ -19,15 +19,38 @@ namespace wpfcm1.Dialogs
         private readonly FolderViewModel _folder;
         private readonly Progress<string> _reporter;
         private CancellationTokenSource _cancellation;
+        private bool _buttonApproveVisible; 
 
         public DialogSignViewModel(CertificateModel certificate, FolderViewModel folder)
         {
-            DisplayName = "";
+            DisplayName = "PoliSign - potpisivanje dokumenata";
             _certificate = certificate;
             _folder = folder;
             _reporter = new Progress<string>();
             _reporter.ProgressChanged += _reporter_ProgressChanged;
             Reports = new BindableCollection<string>();
+
+            Reports.Add("Dokumenti obeleženi za potpisivanje:");
+            var Documents = GetDocumentsForSigning(_folder);
+            foreach (var document in Documents)
+            {
+                Reports.Add(document.DocumentInfo.Name);
+            }
+
+            if ((_folder is InboxFolderViewModel) || (_folder is ConfirmedToDoFolderViewModel) )
+            {
+                _buttonApproveVisible = true;
+            }
+            else
+            {
+                _buttonApproveVisible = false;
+            }
+
+        }
+
+        public bool buttonApproveVisible { 
+            get { return _buttonApproveVisible; } 
+            set { }  
         }
 
         public BindableCollection<string> Reports { get; set; }
@@ -68,10 +91,20 @@ namespace wpfcm1.Dialogs
             if (_cancellation != null) _cancellation.Cancel();
         }
 
-        public bool CanOnStart { get { return !InProgress; } }
+        private bool _canOnStart = true;
+        public bool CanOnStart
+        {
+            set { _canOnStart = value; }
+            get { return _canOnStart && !InProgress; } 
+        }
 
         public async void OnStart()
         {
+            // ToDO: smestiti ovo negde na lepše mesto, za sad je u FolderViewModel... 
+            FolderViewModel.PsKillPdfHandlers();
+            Reports.Clear();
+            Reports.Add("Priprema za potpisivanje...");
+            CanOnStart = false;
             try
             {
                 _cancellation = new CancellationTokenSource();
@@ -118,6 +151,38 @@ namespace wpfcm1.Dialogs
             }
         }
 
+        public void OnApprove()
+        {
+            if (_folder is InboxFolderViewModel)
+            {
+                (_folder as InboxFolderViewModel).SetApproved(true);
+                Reports.Clear();
+                Reports.Add("Dokumenti su označeni kao ispravni i odobreni za dalju obradu i potpisivanje...");
+            }
+            if (_folder is ConfirmedToDoFolderViewModel)
+            {
+                (_folder as ConfirmedToDoFolderViewModel).SetApproved(true);
+                Reports.Clear();
+                Reports.Add("Dokumenti su označeni kao ispravni i odobreni za dalju obradu i potpisivanje...");
+            }
+        }
+
+        public void OnApproveNot()
+        {
+            if (_folder is InboxFolderViewModel)
+            {
+                (_folder as InboxFolderViewModel).SetApproved(false);
+                Reports.Clear();
+                Reports.Add("Dokumenti su označeni kao nevalidni za dalju obradu i potpisivanje...");
+            }
+            if (_folder is ConfirmedToDoFolderViewModel)
+            {
+                (_folder as ConfirmedToDoFolderViewModel).SetApproved(false);
+                Reports.Clear();
+                Reports.Add("Dokumenti su označeni kao nevalidni za dalju obradu i potpisivanje...");
+            }
+        }
+
         private IList<DocumentModel> GetDocumentsForSigning(FolderViewModel folder)
         {
             if (folder is GeneratedFolderViewModel)
@@ -126,8 +191,16 @@ namespace wpfcm1.Dialogs
             }
             if (folder is InboxFolderViewModel)
             {
-                return (folder as InboxFolderViewModel).GetDocumentsForSigning(); 
+                return (folder as InboxFolderViewModel).GetDocumentsForSigning();
             }
+            if (folder is ConfirmedToDoFolderViewModel)
+            {
+                return (folder as ConfirmedToDoFolderViewModel).GetDocumentsForSigning();
+            }
+            //if (folder is ConfirmedOutToDoFolderViewModel)
+            //{
+            //    return (folder as ConfirmedOutToDoFolderViewModel).GetDocumentsForSigning();
+            //}
             throw new ArgumentException("folder)");
         }
     }

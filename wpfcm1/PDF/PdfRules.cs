@@ -11,10 +11,12 @@ namespace wpfcm1.PDF
         {
             {FolderManager.InvoicesOutboundErpIfaceFolder, SignatureLocation.UpperLeft},
             {FolderManager.InvoicesInboundInboxFolder, SignatureLocation.UpperRight},
+            {FolderManager.InvoicesInboundConfirmedToDoFolder, SignatureLocation.UpperRight},
             {FolderManager.IosOutboundErpIfaceFolder, SignatureLocation.UpperLeft},
             {FolderManager.IosInboundInboxFolder, SignatureLocation.UpperRight},
             {FolderManager.KpOutboundErpIfaceFolder, SignatureLocation.UpperLeft},
             {FolderManager.KpInboundInboxFolder, SignatureLocation.UpperRight},
+            {FolderManager.KpInboundConfirmedToDoFolder, SignatureLocation.UpperRight},
             {FolderManager.OtherOutboundErpIfaceFolder, SignatureLocation.UpperLeft},
             {FolderManager.OtherInboundInboxFolder, SignatureLocation.UpperRight}
 
@@ -31,14 +33,29 @@ namespace wpfcm1.PDF
     {
         public static Dictionary<string, string> LocalMap = new Dictionary<string, string>()
         {
-            {FolderManager.InvoicesOutboundErpIfaceFolder, FolderManager.InvoicesOutboundOutboxFolder},
-            {FolderManager.InvoicesInboundInboxFolder, FolderManager.InvoicesInboundOutboxFolder},
+            {FolderManager.InvoicesOutboundErpIfaceFolder,          FolderManager.InvoicesOutboundOutboxFolder},
+            //{FolderManager.InvoicesOutboundConfirmedOutToDoFolder,  FolderManager.InvoicesOutboundOutboxFolder},
+            {FolderManager.InvoicesOutboundConfirmedFolder,         FolderManager.InvoicesOutboundOutboxFolder},
+            {FolderManager.InvoicesInboundInboxFolder,              FolderManager.InvoicesInboundOutboxFolder},
+            //{FolderManager.InvoicesInboundConfirmedToDoFolder,      FolderManager.InvoicesInboundOutboxFolder},
+            {FolderManager.InvoicesInboundConfirmedFolder,          FolderManager.InvoicesInboundOutboxFolder},
+            
             {FolderManager.IosOutboundErpIfaceFolder, FolderManager.IosOutboundOutboxFolder},
-            {FolderManager.IosInboundInboxFolder, FolderManager.IosInboundOutboxFolder},
-            {FolderManager.KpOutboundErpIfaceFolder, FolderManager.KpOutboundOutboxFolder},
-            {FolderManager.KpInboundInboxFolder, FolderManager.KpInboundOutboxFolder},
-            {FolderManager.OtherOutboundErpIfaceFolder, FolderManager.OtherOutboundOutboxFolder},
-            {FolderManager.OtherInboundInboxFolder, FolderManager.OtherInboundOutboxFolder}
+            {FolderManager.IosOutboundConfirmedFolder, FolderManager.IosOutboundOutboxFolder},
+            {FolderManager.IosInboundInboxFolder,      FolderManager.IosInboundOutboxFolder},
+            {FolderManager.IosInboundConfirmedFolder,  FolderManager.IosInboundOutboxFolder},
+            
+            {FolderManager.KpOutboundErpIfaceFolder,            FolderManager.KpOutboundOutboxFolder},
+            //{FolderManager.KpOutboundConfirmedOutToDoFolder,    FolderManager.KpOutboundOutboxFolder},
+            {FolderManager.KpOutboundConfirmedFolder,           FolderManager.KpOutboundOutboxFolder},
+            {FolderManager.KpInboundInboxFolder,                FolderManager.KpInboundOutboxFolder},
+            //{FolderManager.KpInboundConfirmedToDoFolder,        FolderManager.KpInboundOutboxFolder},
+            {FolderManager.KpInboundConfirmedFolder,            FolderManager.KpInboundOutboxFolder},
+            
+            {FolderManager.OtherOutboundErpIfaceFolder,   FolderManager.OtherOutboundOutboxFolder},
+            {FolderManager.OtherOutboundConfirmedFolder,  FolderManager.OtherOutboundOutboxFolder},
+            {FolderManager.OtherInboundInboxFolder,       FolderManager.OtherInboundOutboxFolder},
+            {FolderManager.OtherInboundConfirmedFolder,   FolderManager.OtherInboundOutboxFolder},
         };
 
         public static Dictionary<string, string> ProcessedMap= new Dictionary<string, string>()
@@ -46,25 +63,33 @@ namespace wpfcm1.PDF
             {FolderManager.InvoicesOutboundErpIfaceFolder, FolderManager.InvoicesOutboundErpProcFolder},
             {FolderManager.IosOutboundErpIfaceFolder, FolderManager.IosOutboundErpProcFolder},
             {FolderManager.KpOutboundErpIfaceFolder, FolderManager.KpOutboundErpProcFolder},
-            {FolderManager.OtherOutboundErpIfaceFolder, FolderManager.OtherOutboundErpProcFolder}
+            {FolderManager.OtherOutboundErpIfaceFolder, FolderManager.OtherOutboundErpProcFolder},
+            
+            {FolderManager.InvoicesOutboundOutboxFolder, FolderManager.InvoicesOutboundErpProcFolder},
+            {FolderManager.IosOutboundOutboxFolder, FolderManager.IosOutboundErpProcFolder},
+            {FolderManager.KpOutboundOutboxFolder, FolderManager.KpOutboundErpProcFolder},
+            {FolderManager.OtherOutboundOutboxFolder, FolderManager.OtherOutboundErpProcFolder}
         };
 
         public enum FinalAction
         {
             Acknowledge,
-            Store
+            Store,
+            SecondSignatureMark
         };
 
         public static Dictionary<string, FinalAction> OnFinished = new Dictionary<string, FinalAction>()
         {
             {FolderManager.InvoicesOutboundErpIfaceFolder, FinalAction.Store},
-            {FolderManager.InvoicesInboundInboxFolder, FinalAction.Acknowledge},
+            {FolderManager.InvoicesInboundInboxFolder, FinalAction.SecondSignatureMark},
+            {FolderManager.InvoicesInboundConfirmedToDoFolder, FinalAction.SecondSignatureMark},
             {FolderManager.IosOutboundErpIfaceFolder, FinalAction.Store},
-            {FolderManager.IosInboundInboxFolder, FinalAction.Acknowledge},
+            {FolderManager.IosInboundInboxFolder, FinalAction.SecondSignatureMark},
             {FolderManager.KpOutboundErpIfaceFolder, FinalAction.Store},
-            {FolderManager.KpInboundInboxFolder, FinalAction.Acknowledge},
+            {FolderManager.KpInboundInboxFolder, FinalAction.SecondSignatureMark},
+            {FolderManager.KpInboundConfirmedToDoFolder, FinalAction.SecondSignatureMark},
             {FolderManager.OtherOutboundErpIfaceFolder, FinalAction.Store},
-            {FolderManager.OtherInboundInboxFolder, FinalAction.Acknowledge}
+            {FolderManager.OtherInboundInboxFolder, FinalAction.SecondSignatureMark}
         };
     }
 
