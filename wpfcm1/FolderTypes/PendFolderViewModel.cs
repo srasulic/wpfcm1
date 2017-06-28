@@ -20,7 +20,7 @@ namespace wpfcm1.FolderTypes
         private readonly IWindowManager _windowManager;
         new protected string[] Extensions = { ".pdf", ".ack", ".xml" };
 
-        public ListCollectionView DocumentsCV { get; set; }
+        //public ListCollectionView DocumentsCV { get; set; }
 
         public PendFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
         {
@@ -54,37 +54,37 @@ namespace wpfcm1.FolderTypes
             }
         }
 
-        public bool FilterDocument(Object item)
-        {
-            var doc = item as DocumentModel;
-            if (doc != null && FilterText != null)
-            {
-                //if (doc.namePib2.StartsWith(FilterText))
-                if (doc.DocumentInfo.Name.ToLower().Contains(FilterText.ToLower()) || doc.namePib2Name.ToLower().Contains(FilterText.ToLower()))
-                    return true;
-                else
-                    return false;
-            }
-            return true;
-        }
+        //public bool FilterDocument(Object item)
+        //{
+        //    var doc = item as DocumentModel;
+        //    if (doc != null && FilterText != null)
+        //    {
+        //        //if (doc.namePib2.StartsWith(FilterText))
+        //        if (doc.DocumentInfo.Name.ToLower().Contains(FilterText.ToLower()) || doc.namePib2Name.ToLower().Contains(FilterText.ToLower()))
+        //            return true;
+        //        else
+        //            return false;
+        //    }
+        //    return true;
+        //}
 
-        private string _filterText;
-        public string FilterText
-        {
-            get { return _filterText; }
-            set
-            {
-                _filterText = value;
-                if (_filterText.Length > 2) OnFilterText();
-                if (_filterText.Length == 0) OnFilterText();
+        //private string _filterText;
+        //public string FilterText
+        //{
+        //    get { return _filterText; }
+        //    set
+        //    {
+        //        _filterText = value;
+        //        if (_filterText.Length > 2) OnFilterText();
+        //        if (_filterText.Length == 0) OnFilterText();
                 
-            }
-        }
+        //    }
+        //}
 
-        public void OnFilterText()
-        {
-            DocumentsCV.Refresh();
-        }
+        //public void OnFilterText()
+        //{
+        //    DocumentsCV.Refresh();
+        //}
 
         protected override void AddFile(string filePath)
         {

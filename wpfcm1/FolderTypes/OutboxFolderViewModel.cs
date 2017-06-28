@@ -13,6 +13,7 @@ using wpfcm1.Preview;
 using wpfcm1.Settings;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Data;
 
 
 namespace wpfcm1.FolderTypes
@@ -37,6 +38,9 @@ namespace wpfcm1.FolderTypes
                 .Select(f => new OutboxDocumentModel(new FileInfo(f))));
 
             InitWatcher(FolderPath);
+
+            DocumentsCV = CollectionViewSource.GetDefaultView(Documents) as ListCollectionView;
+            DocumentsCV.Filter = new Predicate<object>(FilterDocument);
 
             if (Documents.Count == 0) return;
             var states = Deserialize();
@@ -66,7 +70,7 @@ namespace wpfcm1.FolderTypes
             base.OnDeactivate(close);
             //TODO: hack: checkbox checkmark moze da se izgubi prilikom promene taba, ako promena nije komitovana
             var v = GetView() as UserControl;
-            var dg = v.FindName("Documents") as DataGrid;
+            var dg = v.FindName("DocumentsCV") as DataGrid;
             dg.CommitEdit(DataGridEditingUnit.Row, true);
         }
 
@@ -130,7 +134,7 @@ namespace wpfcm1.FolderTypes
             var cb = ec.Source as CheckBox;
             
             var view = ec.View as OutboxFolderView;
-            var dg = view.Documents;
+            var dg = view.DocumentsCV;
             var items = dg.SelectedItems;
             foreach (var item in items)
             {

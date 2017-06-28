@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Threading;
 using System.Xml;
 using System.Xml.Linq;
@@ -45,6 +46,8 @@ namespace wpfcm1.FolderTypes
         private bool _isChanged;
         public bool IsChanged { get { return _isChanged; } set { _isChanged = value; NotifyOfPropertyChange(() => IsChanged); } }
 
+        public ListCollectionView DocumentsCV { get; set; }
+
         protected virtual void InitDocuments()
         {
             Documents = new BindableCollection<DocumentModel>(
@@ -52,6 +55,9 @@ namespace wpfcm1.FolderTypes
                  .Where(f => Extensions.Contains(Path.GetExtension(f).ToLower()))
                  .Select(f => new DocumentModel(new FileInfo(f))));
             InitWatcher(FolderPath);
+
+            DocumentsCV = CollectionViewSource.GetDefaultView(Documents) as ListCollectionView;
+            DocumentsCV.Filter = new Predicate<object>(FilterDocument);
         }
 
         public static void PsKillPdfHandlers()
@@ -425,6 +431,38 @@ namespace wpfcm1.FolderTypes
                     message = path;
             }
             _events.PublishOnUIThread(new MessageShowPdf(message)); 
+        }
+
+        public bool FilterDocument(Object item)
+        {
+            var doc = item as DocumentModel;
+            if (doc != null && FilterText != null)
+            {
+                //if (doc.namePib2.StartsWith(FilterText))
+                if (doc.DocumentInfo.Name.ToLower().Contains(FilterText.ToLower()) || doc.namePib2Name.ToLower().Contains(FilterText.ToLower()))
+                    return true;
+                else
+                    return false;
+            }
+            return true;
+        }
+
+        private string _filterText;
+        public string FilterText
+        {
+            get { return _filterText; }
+            set
+            {
+                _filterText = value;
+                if (_filterText.Length > 2) OnFilterText();
+                if (_filterText.Length == 0) OnFilterText();
+
+            }
+        }
+
+        public void OnFilterText()
+        {
+            DocumentsCV.Refresh();
         }
 
         #region FileSystemwatcher
