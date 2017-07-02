@@ -182,11 +182,54 @@ namespace wpfcm1.FolderTypes
         public async void Handle(MessageExtractData message)
         {
             if (!IsActive) return;
+            // iz putanje koja je u obliku "c:\\eDokument\\Faktura\\ERP_outbound_interface" uzimamo tip dokumenta
+//            var tip_dok = Regex.Match(FolderPath, @"edokument\\(.*)\\", RegexOptions.IgnoreCase).Groups[1].ToString();
+//            if (tip_dok == "Faktura") return;
+            // sada imamo PIB i tip dokumenta - možemo da uputimo web request upit za mapiranje i za regex
+
             var documents = Documents.Where(d => !d.Processed).Cast<GeneratedDocumentModel>();
             var pib = User.Default.PIB;
             if (string.IsNullOrEmpty(pib))
                 throw new ApplicationException("PIB korisnika nije unet!");
 
+/*
+
+            var uri = "https://edokument.aserta.rs/index/api";
+            uri = @"http://edokument_hu.aserta.dev/index/api?test_do_login=1&user=111111111&pass=test01";
+            var request = WebRequest.Create(uri);
+            request.Proxy = null;
+            request.Method = "GET";
+
+            using (WebResponse response = request.GetResponse())
+            {
+                using (Stream stream = response.GetResponseStream())
+                {
+                    //                    XmlTextReader reader = new XmlTextReader(stream);
+                    StreamReader reader = new StreamReader(stream);
+                    string responseFromServer = reader.ReadToEnd();
+                    Console.WriteLine(responseFromServer);
+                    reader.Close();
+
+                }
+            }
+
+            uri = @"http://edokument_hu.aserta.dev/index/api?test_is_login=1";
+            request = WebRequest.Create(uri);
+            using (WebResponse response = request.GetResponse())
+            {
+                using (Stream stream = response.GetResponseStream())
+                {
+                    //                    XmlTextReader reader = new XmlTextReader(stream);
+                    StreamReader reader = new StreamReader(stream);
+                    string responseFromServer = reader.ReadToEnd();
+                    Console.WriteLine(responseFromServer);
+                    reader.Close();
+
+                }
+            }
+
+
+*/
             foreach (var document in documents)
             {
                 var matchResults = await PdfHelpers.ExtractTextAsync(document.DocumentPath);
@@ -204,8 +247,15 @@ namespace wpfcm1.FolderTypes
                 // farmalogist KP
                 if (string.IsNullOrEmpty(document.InvoiceNo))
                     document.InvoiceNo = Regex.Match(matchResults.Item2, @"[A-Z]{2,4}-[0-9]{8,9}").Value;
-
                
+                 //budzevina za perihard Zapisnike
+                // TODO: ovo napraviti kao univerzalno rešenje - trebaće i drugima
+                if ( string.IsNullOrEmpty(document.Pib) ) {
+                    var matchResults_ZAP = await PdfHelpers.ExtractTextAsync_ZAP(document.DocumentPath);
+                    document.Pib = Regex.Match(matchResults_ZAP.Item1, @"[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
+                    document.InvoiceNo = "Zapisnik";
+
+                }
 
                 Regex regexAllowedCharacters = new Regex(@"[^0-9a-zA-Z]");
                 document.InvoiceNo = regexAllowedCharacters.Replace(document.InvoiceNo, @"-");
