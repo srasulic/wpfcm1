@@ -14,7 +14,7 @@ using wpfcm1.Settings;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Net;
-
+using System.Windows.Data;
 
 namespace wpfcm1.FolderTypes
 {
