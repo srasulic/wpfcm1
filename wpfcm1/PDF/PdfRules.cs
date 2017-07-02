@@ -56,7 +56,6 @@ namespace wpfcm1.PDF
             {FolderManager.OtherOutboundConfirmedFolder,  FolderManager.OtherOutboundOutboxFolder},
             {FolderManager.OtherInboundInboxFolder,       FolderManager.OtherInboundOutboxFolder},
             {FolderManager.OtherInboundConfirmedFolder,   FolderManager.OtherInboundOutboxFolder},
-
         };
 
         public static Dictionary<string, string> ProcessedMap= new Dictionary<string, string>()
