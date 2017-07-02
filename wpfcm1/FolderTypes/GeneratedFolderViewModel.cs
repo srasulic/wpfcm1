@@ -16,7 +16,6 @@ using System.Windows;
 using System.Net;
 
 
-
 namespace wpfcm1.FolderTypes
 {
     public class GeneratedFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageExtractData>, IHandle<MessageReject>, IHandle<MessageXls>
