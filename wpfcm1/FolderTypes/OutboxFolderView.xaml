@@ -14,6 +14,7 @@
                 <conv:BooleanToBackgroundColourConverter x:Key="b2bcc" />
                 <conv:BooleanToUnderlineConverter x:Key="b2uc" />
                 <conv:BooleanToOpacityConverter x:Key="b2oc" />
+                <conv:TipDokToOpacityConverter x:Key="tdok2oc" />
             </ResourceDictionary>
         </Grid.Resources>
         <Grid.RowDefinitions>
@@ -31,14 +32,52 @@
                         <Style TargetType="TextBlock">
                             <Setter Property="TextDecorations"  Value="{Binding IsChecked, Converter={StaticResource b2uc}}"  />
                             <Setter Property="Opacity" Value="{Binding Processed, Converter={StaticResource b2oc}}" />
+                            <Setter Property="Opacity" Value="{Binding tipDok, Converter={StaticResource tdok2oc}}" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Size" Binding="{Binding Path=LengthKB, StringFormat='\{0:N0\} KB'}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="PIB" Binding="{Binding Path=Pib, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MinWidth="85"/>
-                <DataGridTextColumn Header="Br Dok" Binding="{Binding Path=InvoiceNo, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MinWidth="85"/>
-                <DataGridTextColumn Header="Datum" Binding="{Binding Path=DocumentInfo.LastWriteTime}" IsReadOnly="True"/>
-
+                <DataGridTextColumn Header="Size" Binding="{Binding Path=LengthKB, StringFormat='\{0:N0\} KB'}" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Opacity" Value="{Binding tipDok, Converter={StaticResource tdok2oc}}" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="PIB" Binding="{Binding Path=namePib2}" IsReadOnly="True" MinWidth="85">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Opacity" Value="{Binding tipDok, Converter={StaticResource tdok2oc}}" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Naziv primaoca" Binding="{Binding Path=namePib2Name}" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Opacity" Value="{Binding tipDok, Converter={StaticResource tdok2oc}}" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Br Dok" Binding="{Binding Path=nameDocNum}" IsReadOnly="True" MinWidth="85">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Opacity" Value="{Binding tipDok, Converter={StaticResource tdok2oc}}" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Datum" Binding="{Binding Path=DocumentInfo.LastWriteTime}" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Opacity" Value="{Binding tipDok, Converter={StaticResource tdok2oc}}" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Tip Dok" Binding="{Binding Path=tipDok}" IsReadOnly="True" MinWidth="85">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Opacity" Value="{Binding tipDok, Converter={StaticResource tdok2oc}}" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

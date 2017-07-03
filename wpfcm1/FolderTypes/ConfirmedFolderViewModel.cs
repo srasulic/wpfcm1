@@ -92,6 +92,10 @@ namespace wpfcm1.FolderTypes
                 old.sigDateSigned2 = state.sigDateSigned2;
                 old.sigSignerName2 = state.sigSignerName2;
                 old.sigOrg2 = state.sigOrg2;
+
+                old.namePib1Name = state.namePib1Name;
+                old.namePib2Name = state.namePib2Name;
+
             }
         
 
@@ -136,11 +140,11 @@ namespace wpfcm1.FolderTypes
             // ack fajl samo ignorisemo
             else if (Regex.IsMatch(filePath, @".+.pdf.ack$", RegexOptions.IgnoreCase))
             {
-                // ovo ne bi smelo da se desi... ove ack-ove nemamo kako da tretiramo, ignorisemo ih
+                // ack fajlove ne prikazujemo... mesto za akciju za ack-ove 
             }
             else if (Regex.IsMatch(filePath, @".+.pdf.jpg$", RegexOptions.IgnoreCase))
             {
-                // ovo ne bi smelo da se desi... ove ack-ove nemamo kako da tretiramo, ignorisemo ih
+                // jpg ne prikazujemo... mesto za akciju za jpg-ove 
             }
             // ako je stigao obostrano potpisan, dodajemo ga u listu a njegovom _s fajlu promenimo status
             else if (Regex.IsMatch(filePath, @".+_s_s.pdf$", RegexOptions.IgnoreCase))
@@ -238,11 +242,22 @@ namespace wpfcm1.FolderTypes
             var view = ec.View as ConfirmedFolderView;
             var dg = view.DocumentsCV;
             var items = dg.SelectedItems;
-            foreach (var item in items)
+            if (items.Count > 1)
             {
-                var doc = item as DocumentModel;
-                doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                foreach (var item in items)
+                {
+                    var doc = item as DocumentModel;
+                    doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                }
             }
-        }
+            else
+            {
+                foreach (var item in DocumentsCV)
+                {
+                    var doc = item as DocumentModel;
+                    doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                }
+            }
+        } 
     }
 }

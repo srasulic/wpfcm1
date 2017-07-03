@@ -15,7 +15,7 @@ using System.Windows.Data;
 
 namespace wpfcm1.FolderTypes
 {
-    public class ConfirmedToDoFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageXls>, IHandle<MessageReject>, IHandle<MessageValidate>
+    public class ConfirmedToDoFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageXls>, IHandle<MessageArchive>, IHandle<MessageReject>, IHandle<MessageValidate>
     {
         private readonly IWindowManager _windowManager;
         private CertificateModel _certificate;
@@ -49,6 +49,7 @@ namespace wpfcm1.FolderTypes
                     document.HasSecondSignature = true;
                     document.IsSignedAgain = false;
                     document.Processed = true;
+                    document.archiveReady = true;
                     continue;
                 }
                 var found = Documents.FirstOrDefault(d => d.DocumentPath == Regex.Replace(document.DocumentPath, @"_s.pdf", @"_s_s.pdf", RegexOptions.IgnoreCase));
@@ -91,11 +92,16 @@ namespace wpfcm1.FolderTypes
                 old.sigDateSigned2 = state.sigDateSigned2;
                 old.sigSignerName2 = state.sigSignerName2;
                 old.sigOrg2 = state.sigOrg2;
+
+                old.namePib1Name = state.namePib1Name;
+                old.namePib2Name = state.namePib2Name;
+
             }
         
             for (int i = Documents.Count - 1; i >= 0; i--)
             {
-                if (Documents[i].IsSignedAgain || Documents[i].Processed || Documents[i].HasSecondSignature) Documents.RemoveAt(i);
+//                if (Documents[i].IsSignedAgain || Documents[i].Processed || Documents[i].HasSecondSignature) Documents.RemoveAt(i);
+                if (Documents[i].Processed ) Documents.RemoveAt(i);
             }
 
             foreach (var document in Documents)
@@ -139,12 +145,15 @@ namespace wpfcm1.FolderTypes
                 newDoc.HasSecondSignature = true;
                 newDoc.IsSignedAgain = false;
                 newDoc.Processed = true;
+                newDoc.archiveReady = true;
                 Documents.Add(newDoc);
                 if (!(found == null))
                 {
                     found.IsSignedAgain = true;
                     found.Processed = true;
+                    found.archiveReady = true;
                 }
+
             }
             // ostale samo dodamo u listu
             else
@@ -199,6 +208,7 @@ namespace wpfcm1.FolderTypes
                 //TODO: ovo mora drugacije
                // _events.PublishOnUIThread(new MessageShowPdf(PreviewViewModel.Empty)); // prebaceno u dijalog na OnStart; tamo se koristi veći čekić (pskill)
                 var result = _windowManager.ShowDialog(new DialogSignViewModel(_certificate, this));
+
             }
         }
 
@@ -206,6 +216,12 @@ namespace wpfcm1.FolderTypes
         {
             if (!IsActive) return;
             SetRejected();
+        }
+
+        public void Handle(MessageArchive message)
+        {
+            if (!IsActive) return;
+            SetArchived();
         }
 
         public void SetApproved(bool approved)
@@ -317,11 +333,22 @@ namespace wpfcm1.FolderTypes
             var view = ec.View as ConfirmedToDoFolderView;
             var dg = view.DocumentsCV;
             var items = dg.SelectedItems;
-            foreach (var item in items)
+            if (items.Count > 1)
             {
-                var doc = item as DocumentModel;
-                doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                foreach (var item in items)
+                {
+                    var doc = item as DocumentModel;
+                    doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                }
             }
-        }
+            else
+            {
+                foreach (var item in DocumentsCV)
+                {
+                    var doc = item as DocumentModel;
+                    doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                }
+            }
+        } 
     }
 }

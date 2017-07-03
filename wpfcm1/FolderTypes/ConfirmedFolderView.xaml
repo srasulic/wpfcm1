@@ -33,7 +33,8 @@
                 </DataTemplate>
                 <DataTemplate x:Key="WaitForSrvProcessing">
                     <StackPanel>
-                        <Image Source="{StaticResource PngBlackLock}" Visibility="{Binding Path=archiveReady, Converter={StaticResource b2vc}}"/>
+                    <!--    <Image Source="{StaticResource PngBlackLock_o}" Visibility="{Binding Path=archiveReady, Converter={StaticResource b2vc}}"/>
+                    -->
                     </StackPanel>
                 </DataTemplate>
             </ResourceDictionary>
@@ -57,20 +58,25 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Size" Binding="{Binding Path=LengthKB, StringFormat='\{0:N0\} KB'}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Pib izdavalac" Binding="{Binding Path=namePib1}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Pib primalac" Binding="{Binding Path=namePib2}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Naziv primaoca" Binding="{Binding Path=namePib2Name}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Br Dok" Binding="{Binding Path=nameDocNum}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Datum" Binding="{Binding Path=nameDate}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Size" Binding="{Binding Path=LengthKB, StringFormat='\{0:N0\} KB'}" IsReadOnly="True"/>
                 <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}" Binding="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource CheckBoxHeaderStyle}"/>
                 <DataGridTemplateColumn Header="{StaticResource appbar_checkmark16}" CellTemplate="{StaticResource ImgCol}" MinWidth="32" IsReadOnly="True"/>
                 <DataGridTemplateColumn  CellTemplate="{StaticResource SignedAgainCol}" MinWidth="32" IsReadOnly="True"/>
                 <DataGridTemplateColumn CellTemplate="{StaticResource WaitForSrvProcessing}" MinWidth="32" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Reason" Binding="{Binding Path=sigReason}" IsReadOnly="True" />
-                <DataGridTextColumn Header="Potpisao" Binding="{Binding Path=sigSignerName}" IsReadOnly="True" />
-                <DataGridTextColumn Header="Organizacija" Binding="{Binding Path=sigOrg}" IsReadOnly="True" />
-                <DataGridTextColumn Header="TS Vreme" Binding="{Binding Path=sigTS}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Pib izdavalac" Binding="{Binding Path=namePib1}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Naziv izdavaoca" Binding="{Binding Path=namePib1Name}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Pib primalac" Binding="{Binding Path=namePib2}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Naziv primaoca" Binding="{Binding Path=namePib2Name}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Reason izdavaoc" Binding="{Binding Path=sigReason}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Potpisao izdavaoc" Binding="{Binding Path=sigSignerName}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Organizacija izdavaoc" Binding="{Binding Path=sigOrg}" IsReadOnly="True" />
+                <DataGridTextColumn Header="TS Vreme izdavaoc" Binding="{Binding Path=sigTS}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Reason primalac" Binding="{Binding Path=sigReason2}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Potpisao primalac" Binding="{Binding Path=sigSignerName2}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Organizacija primalac" Binding="{Binding Path=sigOrg2}" IsReadOnly="True" />
+                <DataGridTextColumn Header="TS Vreme primalac" Binding="{Binding Path=sigTS2}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

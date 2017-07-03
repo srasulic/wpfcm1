@@ -75,6 +75,22 @@ namespace wpfcm1.Converters
         }
     }
 
+    public class TipDokToOpacityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value != "Dokument") return 0.5;
+            return 1;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    
+
     public class BooleanToBackgroundColourConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

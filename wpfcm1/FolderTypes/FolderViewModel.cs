@@ -107,6 +107,8 @@ namespace wpfcm1.FolderTypes
             {
                 var sourceFilePath = document.DocumentPath;
                 var fileName = Path.GetFileName(sourceFilePath);
+                if (Regex.IsMatch(fileName, @".*pdf.xml$", RegexOptions.IgnoreCase)) continue;
+                if (Regex.IsMatch(fileName, @".*pdf.ack$", RegexOptions.IgnoreCase)) continue;
                 var destinationFileName = string.Format("X_{0}_{1}", DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"), fileName);
                 var destinationFilePath = Path.Combine(destinationDir, destinationFileName);
                 File.Move(sourceFilePath, destinationFilePath);

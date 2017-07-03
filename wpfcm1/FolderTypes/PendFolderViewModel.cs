@@ -50,6 +50,8 @@ namespace wpfcm1.FolderTypes
                 old.IsChecked = state.IsChecked;
                 old.IsValid = state.IsValid;
                 old.Processed = state.Processed;
+
+                old.namePib1Name = state.namePib1Name;
                 old.namePib2Name = state.namePib2Name;
             }
         }
@@ -156,7 +158,7 @@ namespace wpfcm1.FolderTypes
             return oldList;
         }
 
-        public override void OnCheck(object e)
+/*        public override void OnCheck(object e)
         {
             var ec = e as ActionExecutionContext;
             var cb = ec.Source as CheckBox;
@@ -169,6 +171,6 @@ namespace wpfcm1.FolderTypes
                 var doc = item as DocumentModel;
                 doc.IsChecked = cb.IsChecked.GetValueOrDefault();
             }
-        }
+        } */
     }
 }

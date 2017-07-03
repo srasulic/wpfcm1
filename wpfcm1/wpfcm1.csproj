@@ -465,6 +465,8 @@
     <Content Include="handle.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Media\black_lock_outline_24.png" />
+    <Resource Include="Media\black_lock_outline_16.png" />
     <Content Include="pskill.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

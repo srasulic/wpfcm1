@@ -52,13 +52,36 @@ namespace wpfcm1.FolderTypes
                 old.IsChecked = state.IsChecked;
                 old.IsValid = state.IsValid;
                 old.Processed = state.Processed;
+
+                old.namePib1Name = state.namePib1Name;
+                old.namePib2Name = state.namePib2Name;
             }
         }
 
+        // nećemo prikazivati ack i xml fajlove koji su za slanje
         protected override void AddFile(string filePath)
         {
-            // ako je zavrsio sinh, azuriraj statuse poruka iz xml fajlova
-            if (! Regex.IsMatch(filePath, @".+syncstamp$", RegexOptions.IgnoreCase))
+            if (Regex.IsMatch(filePath, @".+syncstamp$", RegexOptions.IgnoreCase))
+            {
+                // za outbox - mesto za akciju za kraj sinhronizacije
+            }
+            else if (Regex.IsMatch(filePath, @".+.pdf.ack$", RegexOptions.IgnoreCase))
+            {
+                // mesto za akciju za ack fajl
+                Documents.Add(new OutboxDocumentModel(new FileInfo(filePath)));
+//                var docName = filePath;
+//                var found = Documents.Where(d => d.DocumentPath == docName).FirstOrDefault();
+//                if (!(found == null)) found.tipDok = "Potvrda prijema";    
+            }
+            else if (Regex.IsMatch(filePath, @".+.pdf.xml$", RegexOptions.IgnoreCase))
+            {
+                // xml-ove ne prikazujemo - mesto za akciju za xml fajl
+                Documents.Add(new OutboxDocumentModel(new FileInfo(filePath)));
+//                var docName = filePath;
+//                var found = Documents.Where(d => d.DocumentPath == docName).FirstOrDefault();
+//                if (!(found == null)) found.tipDok = "Poruka za server (promena statusa dokumenta)";
+            }
+            else 
             {
                 Documents.Add(new OutboxDocumentModel(new FileInfo(filePath)));
             } 
@@ -88,6 +111,7 @@ namespace wpfcm1.FolderTypes
         public void Handle(MessageReject message)
         {
             if (!IsActive) return;
+            if (Regex.IsMatch(FolderPath, @".*Inbound.*Outbox.*", RegexOptions.IgnoreCase)) return;
             PsKillPdfHandlers(); // workaround - pskill ubija sve procese koji rade nad PDF-ovima u eDokument
             RejectDocument();
         }
@@ -132,7 +156,7 @@ namespace wpfcm1.FolderTypes
             return oldList;
         }
 
-        public override void OnCheck(object e)
+    public override void OnCheck(object e)
         {
             var ec = e as ActionExecutionContext;
             var cb = ec.Source as CheckBox;
@@ -140,10 +164,22 @@ namespace wpfcm1.FolderTypes
             var view = ec.View as OutboxFolderView;
             var dg = view.DocumentsCV;
             var items = dg.SelectedItems;
-            foreach (var item in items)
+            if (items.Count > 1)
             {
-                var doc = item as DocumentModel;
-                doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                foreach (var item in items)
+                {
+                    var doc = item as DocumentModel;
+                    doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                }
+            }
+            else
+            {
+                foreach (var item in DocumentsCV)
+                {
+                    var doc = item as DocumentModel;
+                    doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                }
+
             }
         }
     }

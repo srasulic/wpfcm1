@@ -320,11 +320,22 @@ namespace wpfcm1.FolderTypes
             var view = ec.View as GeneratedFolderView;
             var dg = view.DocumentsCV;
             var items = dg.SelectedItems;
-            foreach (var item in items)
+            if (items.Count > 1)
             {
-                var doc = item as DocumentModel;
-                doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                foreach (var item in items)
+                {
+                    var doc = item as DocumentModel;
+                    doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                }
             }
-        }
+            else
+            {
+                foreach (var item in DocumentsCV)
+                {
+                    var doc = item as DocumentModel;
+                    doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                }
+            }
+        } 
     }
 }

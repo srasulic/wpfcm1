@@ -94,6 +94,10 @@ namespace wpfcm1.FolderTypes
                 old.sigDateSigned2 = state.sigDateSigned2;
                 old.sigSignerName2 = state.sigSignerName2;
                 old.sigOrg2 = state.sigOrg2;
+
+                old.namePib1Name = state.namePib1Name;
+                old.namePib2Name = state.namePib2Name;
+
             }
         
             for (int i = Documents.Count - 1; i >= 0; i--)
@@ -191,6 +195,7 @@ namespace wpfcm1.FolderTypes
         {
             if (!IsActive) return;
             SetRejected();
+            SetArchived();
         }
 
         public void Handle(MessageArchive message)
@@ -320,11 +325,22 @@ namespace wpfcm1.FolderTypes
             var view = ec.View as ConfirmedOutToDoFolderView;
             var dg = view.DocumentsCV;
             var items = dg.SelectedItems;
-            foreach (var item in items)
+            if (items.Count > 1)
             {
-                var doc = item as DocumentModel;
-                doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                foreach (var item in items)
+                {
+                    var doc = item as DocumentModel;
+                    doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                }
             }
-        }
+            else
+            {
+                foreach (var item in DocumentsCV)
+                {
+                    var doc = item as DocumentModel;
+                    doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                }
+            }
+        } 
     }
 }

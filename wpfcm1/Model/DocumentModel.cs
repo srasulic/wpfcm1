@@ -166,6 +166,24 @@ namespace wpfcm1.Model
             set { _namePib1Name = value; NotifyOfPropertyChange(() => _namePib1Name); }
         }
 
+        // 1.13 za Outbox - da prikažemo tipove poruka koje se šalju
+        private string _tipDok;
+        [XmlIgnore]
+        public string tipDok
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(_tipDok))
+                {
+                    if (Regex.IsMatch(DocumentPath, @".+.pdf.ack$", RegexOptions.IgnoreCase)) tipDok = "Potvrda prijema";
+                    else if (Regex.IsMatch(DocumentPath, @".+.pdf.xml$", RegexOptions.IgnoreCase)) tipDok = "Poruka za server (promena statusa dokumenta)";
+                    else if (Regex.IsMatch(DocumentPath, @".+.synchstamp$", RegexOptions.IgnoreCase)) tipDok = "Interna poruka - kraj sinhronizacije";
+                    else tipDok = "Dokument"; //neka vrsta default vrednosti
+                }
+                return _tipDok; }
+            set { _tipDok = value; NotifyOfPropertyChange(() => tipDok); }
+        }
+
         /// <summary>
         /// 2. Polja za vrednosti izvučene iz potpisa 1 i potpisa 2 
         /// </summary>

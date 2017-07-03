@@ -68,6 +68,9 @@ namespace wpfcm1.FolderTypes
                 old.sigSignerName2 = state.sigSignerName2;
                 old.sigOrg2 = state.sigOrg2;
 
+                old.namePib1Name = state.namePib1Name;
+                old.namePib2Name = state.namePib2Name;
+
             }
             foreach (var document in Documents)
             {
@@ -138,6 +141,16 @@ namespace wpfcm1.FolderTypes
         {
             if (!IsActive) return;
             await ValidateDocSignaturesAsync();
+            // kada završimo validaciju okinućemo i slanje ack fajlova
+            var documents = Documents.Where(d => d.isValidated  && !d.IsAcknowledged).Cast<DocumentModel>();
+            var destinationDir = SigningTransferRules.LocalMap[FolderPath];
+            foreach (var document in documents)
+            {
+                var fileName = Path.GetFileName(document.DocumentPath);
+                var destinationFilePath = Path.Combine(destinationDir, fileName + ".ack");
+                File.Create(destinationFilePath).Dispose();
+                document.IsAcknowledged = true;
+            }
         }
 
         public void Handle(MessageAck message)
@@ -243,11 +256,22 @@ namespace wpfcm1.FolderTypes
             var view = ec.View as InboxFolderView;
             var dg = view.DocumentsCV;
             var items = dg.SelectedItems;
-            foreach (var item in items)
+            if (items.Count > 1)
             {
-                var doc = item as DocumentModel;
-                doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                foreach (var item in items)
+                {
+                    var doc = item as DocumentModel;
+                    doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                }
             }
-        }
+            else
+            {
+                foreach (var item in DocumentsCV)
+                {
+                    var doc = item as DocumentModel;
+                    doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                }
+            }
+        } 
     }
 }

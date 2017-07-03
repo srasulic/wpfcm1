@@ -70,52 +70,55 @@ namespace wpfcm1.DataAccess
         public static Dictionary<string, string> OtherOutboundFolders { get; set; }
         public static Dictionary<string, string> OtherInboundFolders { get; set; }
 
+        
+
         public static Dictionary<string, string> FolderNameMap = new Dictionary<string, string>
         {
-            {"InvoicesOutboundErpIfaceFolder", "Generated"},
-            {"InvoicesOutboundErpProcFolder", "Processed"},
-            {"InvoicesOutboundOutboxFolder", "Outbox"},
-            {"InvoicesOutboundSentFolder", "Sent"},
-            {"InvoicesOutboundPendFolder", "Pend"},
-            {"InvoicesOutboundConfirmedFolder", "Confirmed"},
+            
+            {"InvoicesOutboundErpIfaceFolder",      "Priprema"},
+            {"InvoicesOutboundErpProcFolder",       "Processed"},
+            {"InvoicesOutboundOutboxFolder",        "Za slanje"},
+            {"InvoicesOutboundSentFolder",          "Poslato"},
+            {"InvoicesOutboundPendFolder",          "Čekaju..."},
+            {"InvoicesOutboundConfirmedFolder",     "Arh - uručeni"},
             {"InvoicesOutboundConfirmedOutToDoFolder", "ToDo"},
-            {"InvoicesInboundInboxFolder", "Inbox"},
-            {"InvoicesInboundOutboxFolder", "Outbox"},
-            {"InvoicesInboundSentFolder", "Sent"},
-            {"InvoicesInboundConfirmedFolder", "Confirmed"},
-            {"InvoicesInboundConfirmedToDoFolder", "ToDo"},
-            {"IosOutboundErpIfaceFolder", "Generated"},
-            {"IosOutboundErpProcFolder", "Processed"},
-            {"IosOutboundOutboxFolder", "Outbox"},
-            {"IosOutboundSentFolder", "Sent"},
-            {"IosOutboundPendFolder", "Pend"},
-            {"IosOutboundConfirmedFolder", "Confirmed"},
-            {"IosInboundInboxFolder", "Inbox"},
-            {"IosInboundOutboxFolder", "Outbox"},
-            {"IosInboundSentFolder", "Sent"},
-            {"IosInboundConfirmedFolder", "Confirmed"},
-            {"KpOutboundErpIfaceFolder", "Generated"},
-            {"KpOutboundErpProcFolder", "Processed"},
-            {"KpOutboundOutboxFolder", "Outbox"},
-            {"KpOutboundSentFolder", "Sent"},
-            {"KpOutboundPendFolder", "Pend"},
-            {"KpOutboundConfirmedFolder", "Confirmed"},
-            {"KpOutboundConfirmedOutToDoFolder", "ToDo"},
-            {"KpInboundInboxFolder", "Inbox"},
-            {"KpInboundOutboxFolder", "Outbox"},
-            {"KpInboundSentFolder", "Sent"},
-            {"KpInboundConfirmedFolder", "Confirmed"},
-            {"KpInboundConfirmedToDoFolder", "ToDo"},
-            {"OtherOutboundErpIfaceFolder", "Generated"},
-            {"OtherOutboundErpProcFolder", "Processed"},
-            {"OtherOutboundOutboxFolder", "Outbox"},
-            {"OtherOutboundSentFolder", "Sent"},
-            {"OtherOutboundPendFolder", "Pend"},
-            {"OtherOutboundConfirmedFolder", "Confirmed"},
-            {"OtherInboundInboxFolder", "Inbox"},
-            {"OtherInboundOutboxFolder", "Outbox"},
-            {"OtherInboundSentFolder", "Sent"},
-            {"OtherInboundConfirmedFolder", "Confirmed"}
+            {"InvoicesInboundInboxFolder",          "Primljeno"},
+            {"InvoicesInboundOutboxFolder",         "Za slanje"},
+            {"InvoicesInboundSentFolder",           "Poslato"},
+            {"InvoicesInboundConfirmedFolder",      "Arh - potvrđeni"},
+            {"InvoicesInboundConfirmedToDoFolder",  "ToDo"},
+            {"IosOutboundErpIfaceFolder",           "Priprema"},
+            {"IosOutboundErpProcFolder",            "Processed"},
+            {"IosOutboundOutboxFolder",             "Za slanje"},
+            {"IosOutboundSentFolder",               "Poslato"},
+            {"IosOutboundPendFolder",               "Čekaju..."},
+            {"IosOutboundConfirmedFolder",          "Arh - uručeni"},
+            {"IosInboundInboxFolder",               "Primljeno"},
+            {"IosInboundOutboxFolder",              "Za slanje"},
+            {"IosInboundSentFolder",                "Poslato"},
+            {"IosInboundConfirmedFolder",           "Arh - potvrđeni"},
+            {"KpOutboundErpIfaceFolder",            "Priprema"},
+            {"KpOutboundErpProcFolder",             "Processed"},
+            {"KpOutboundOutboxFolder",              "Za slanje"},
+            {"KpOutboundSentFolder",                "Poslato"},
+            {"KpOutboundPendFolder",                "Čekaju..."},
+            {"KpOutboundConfirmedFolder",           "Arh - uručeni"},
+            {"KpOutboundConfirmedOutToDoFolder",    "ToDo"},
+            {"KpInboundInboxFolder",                "Primljeno"},
+            {"KpInboundOutboxFolder",               "Za slanje"},
+            {"KpInboundSentFolder",                 "Poslato"},
+            {"KpInboundConfirmedFolder",            "Arh - potvrđeni"},
+            {"KpInboundConfirmedToDoFolder",        "ToDo"},
+            {"OtherOutboundErpIfaceFolder",         "Priprema"},
+            {"OtherOutboundErpProcFolder",          "Processed"},
+            {"OtherOutboundOutboxFolder",           "Za slanje"},
+            {"OtherOutboundSentFolder",             "Poslato"},
+            {"OtherOutboundPendFolder",             "Čekaju..."},
+            {"OtherOutboundConfirmedFolder",        "Arh - uručeni"},
+            {"OtherInboundInboxFolder",             "Primljeno"},
+            {"OtherInboundOutboxFolder",            "Za slanje"},
+            {"OtherInboundSentFolder",              "Poslato"},
+            {"OtherInboundConfirmedFolder",         "Arh - potvrđeni"}
         };
 
         public static readonly Dictionary<string, Type> FolderTypeMap = new Dictionary<string, Type>()
@@ -127,7 +130,7 @@ namespace wpfcm1.DataAccess
             {"InvoicesOutboundConfirmedFolder", typeof(ConfirmedDocumentModel)},
             {"InvoicesOutboundConfirmedOutToDoFolder", typeof(ConfirmedOutToDoDocumentModel)},
             {"InvoicesInboundInboxFolder", typeof(InboxDocumentModel)},
-            {"InvoicesInboundOutboxFolder", typeof(PendDocumentModel)},
+            {"InvoicesInboundOutboxFolder", typeof(OutboxDocumentModel)},
             {"InvoicesInboundSentFolder", typeof(DocumentModel)},
             {"InvoicesInboundConfirmedFolder", typeof(ConfirmedDocumentModel)},
             {"InvoicesInboundConfirmedToDoFolder", typeof(ConfirmedToDoDocumentModel)},
@@ -137,7 +140,7 @@ namespace wpfcm1.DataAccess
             {"IosOutboundPendFolder", typeof(PendDocumentModel)},
             {"IosOutboundConfirmedFolder", typeof(ConfirmedDocumentModel)},
             {"IosInboundInboxFolder", typeof(InboxDocumentModel)},
-            {"IosInboundOutboxFolder", typeof(PendDocumentModel)},
+            {"IosInboundOutboxFolder", typeof(OutboxDocumentModel)},
             {"IosInboundSentFolder", typeof(DocumentModel)},
             {"IosInboundConfirmedFolder", typeof(ConfirmedDocumentModel)},
             {"KpOutboundErpIfaceFolder", typeof(GeneratedDocumentModel)},
@@ -147,7 +150,7 @@ namespace wpfcm1.DataAccess
             {"KpOutboundConfirmedFolder", typeof(ConfirmedDocumentModel)},
             {"KpOutboundConfirmedOutToDoFolder", typeof(ConfirmedOutToDoDocumentModel)},
             {"KpInboundInboxFolder", typeof(InboxDocumentModel)},
-            {"KpInboundOutboxFolder", typeof(PendDocumentModel)},
+            {"KpInboundOutboxFolder", typeof(OutboxDocumentModel)},
             {"KpInboundSentFolder", typeof(DocumentModel)},
             {"KpInboundConfirmedFolder", typeof(ConfirmedDocumentModel)},
             {"KpInboundConfirmedToDoFolder", typeof(ConfirmedToDoDocumentModel)},
@@ -157,7 +160,7 @@ namespace wpfcm1.DataAccess
             {"OtherOutboundPendFolder", typeof(PendDocumentModel)},
             {"OtherOutboundConfirmedFolder", typeof(ConfirmedDocumentModel)},
             {"OtherInboundInboxFolder", typeof(InboxDocumentModel)},
-            {"OtherInboundOutboxFolder", typeof(PendDocumentModel)},
+            {"OtherInboundOutboxFolder", typeof(OutboxDocumentModel)},
             {"OtherInboundSentFolder", typeof(DocumentModel)},
             {"OtherInboundConfirmedFolder", typeof(ConfirmedDocumentModel)}
         };
@@ -179,10 +182,10 @@ namespace wpfcm1.DataAccess
             InvoicesInboundFolders = new Dictionary<string, string>
             {
                 {"InvoicesInboundInboxFolder", InvoicesInboundInboxFolder},
+                {"InvoicesInboundConfirmedToDoFolder", InvoicesInboundConfirmedFolder},                  
                 {"InvoicesInboundOutboxFolder", InvoicesInboundOutboxFolder},
                 {"InvoicesInboundSentFolder", InvoicesInboundSentFolder},
-                {"InvoicesInboundConfirmedFolder", InvoicesInboundConfirmedFolder},
-                {"InvoicesInboundConfirmedToDoFolder", InvoicesInboundConfirmedFolder}
+                {"InvoicesInboundConfirmedFolder", InvoicesInboundConfirmedFolder} 
             };
             CheckFolders(InvoicesInboundFolders);
 
@@ -221,10 +224,10 @@ namespace wpfcm1.DataAccess
             KpInboundFolders = new Dictionary<string, string>
             {
                 {"KpInboundInboxFolder", KpInboundInboxFolder},
+                {"KpInboundConfirmedToDoFolder", KpInboundConfirmedFolder},
                 {"KpInboundOutboxFolder", KpInboundOutboxFolder},
                 {"KpInboundSentFolder", KpInboundSentFolder},
-                {"KpInboundConfirmedFolder", KpInboundConfirmedFolder},
-                {"KpInboundConfirmedToDoFolder", KpInboundConfirmedFolder}
+                {"KpInboundConfirmedFolder", KpInboundConfirmedFolder}
             };
             CheckFolders(KpInboundFolders);
 
