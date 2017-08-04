@@ -36,9 +36,9 @@ namespace wpfcm1.FolderGroups
 
                     var fgvm = cc.DataContext as FolderGroupViewModel;
                     var preview = fgvm.Preview;
-                    pdfBrowser.Navigate(preview.CurrentDocument);
-
+                    pdfBrowser.Navigate(new System.Uri(preview.CurrentDocument));
                     _firstPass = true;
+                    
                 }
             }
         }

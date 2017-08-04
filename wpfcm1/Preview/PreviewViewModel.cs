@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using System.ComponentModel.Composition;
 using wpfcm1.Events;
+using System.Diagnostics; //test
 
 namespace wpfcm1.Preview
 {
@@ -41,6 +42,8 @@ namespace wpfcm1.Preview
         {
             //var uri = message.Uri == Empty ? Empty : string.Format("{0}#toolbar=0&navpanes=0", message.Uri);
             CurrentDocument = message.Uri;
+            
+            
         }
     }
 }

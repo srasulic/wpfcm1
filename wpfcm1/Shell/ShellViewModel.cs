@@ -29,7 +29,8 @@ namespace wpfcm1.Shell
             _windowManager = windowManager;
 
             ToolBar = toolBar;
-            CertVM = certs;
+            CertVM = certs;           
+            
 
             HomeVM = new HomeViewModel(this);
             OutboundVM = new FolderGroupViewModel(FolderManager.InvoicesOutboundFolders, "Izlazne Fakture", events, _windowManager);
@@ -41,6 +42,7 @@ namespace wpfcm1.Shell
             OtherOutboundVM = new FolderGroupViewModel(FolderManager.OtherOutboundFolders, "Ostali Izlazni", events, _windowManager);
             OtherInboundVM = new FolderGroupViewModel(FolderManager.OtherInboundFolders, "Ostali Ulazni", events, _windowManager);
             WebVM = new WebViewModel("Online report");
+            
 
             ShowHome();
         }
@@ -62,7 +64,9 @@ namespace wpfcm1.Shell
 
 
         public void ShowHome()
-        {
+        {   //*****************************************************************
+            CertVM.RefreshCertificateList();
+            //*****************************************************************
             ActivateItem(HomeVM);
             _events.PublishOnUIThread(new MessageViewModelActivated(ActiveItem.GetType().Name));
         }

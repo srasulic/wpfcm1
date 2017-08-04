@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using wpfcm1.Certificates;
 using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
+using System;
 
 namespace wpfcm1.Model
 {
@@ -21,11 +22,13 @@ namespace wpfcm1.Model
             CertificateSimpleName = Certificate.GetNameInfo(X509NameType.SimpleName, false);
 
             // ako nema private key, nije kvalifikovan. Ubrzava se start aplikacije jer se ne bilduju bespotrebni sertifikati
+            
             if (!Certificate.HasPrivateKey)
             {
                 IsQualified = false;
                 return;
             }
+            
             //////////
             // privremeno za TEST
             //
@@ -49,6 +52,11 @@ namespace wpfcm1.Model
                 Errors.Add("Cannot check revocation (no ocsp and crl).");
 
             IsQualified = Errors.Count == 0 && (hasOcsp || hasCrl);
+        }
+
+        internal object ToList()
+        {
+            throw new NotImplementedException();
         }
     }
 }

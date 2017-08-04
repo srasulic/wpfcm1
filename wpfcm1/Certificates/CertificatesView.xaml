@@ -12,7 +12,7 @@
             <ColumnDefinition Width="21"/>
         </Grid.ColumnDefinitions>
         <ComboBox x:Name="Certificates" DisplayMemberPath="CertificateSimpleName" IsSynchronizedWithCurrentItem="True" FontSize="13"
-                  cal:Message.Attach="[Event SelectionChanged] = [Action OnSelection($this)]; [EventLoaded] = [Action OnSelection($this)]"
+                  cal:Message.Attach="[Event SelectionChanged] = [Action OnSelection($this)]; [EventLoaded] = [Action OnSelection($this)]"  
         />
         <TextBlock Grid.Column="1" Text="!" FontWeight="Bold" FontSize="21" Foreground="{DynamicResource ControlsValidationBrush}" 
                    VerticalAlignment="Center" HorizontalAlignment="Center"

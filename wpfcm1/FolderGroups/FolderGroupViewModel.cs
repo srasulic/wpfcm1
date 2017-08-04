@@ -99,7 +99,7 @@ namespace wpfcm1.FolderGroups
                 var newUri = new Uri(message.Uri).AbsolutePath;
                 if (String.Compare(oldUri, newUri, StringComparison.OrdinalIgnoreCase) == 0) return;
 
-                pdfBrowser.Navigate(message.Uri);
+                pdfBrowser.Navigate(new System.Uri(message.Uri));
             }
         }
     }
