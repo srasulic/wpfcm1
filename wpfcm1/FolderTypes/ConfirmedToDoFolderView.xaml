@@ -19,18 +19,15 @@
                 <conv:BooleanToOpacityConverter x:Key="b2oc" />
                 <DataTemplate x:Key="ImgCol">
                     <StackPanel>
-                        <Image Source="{StaticResource PngGreenPdf}" Visibility="{Binding Path=IsValid, Converter={StaticResource b2vc}}">
-                            <Image.ToolTip>
-                                <ToolTip Content="{Binding sigAdditionalInfo}"/>
-                            </Image.ToolTip>
-                        </Image>
                         <Image Source="{StaticResource PngError}" Visibility="{Binding Path=IsValid, Converter={StaticResource ib2vc}}" ToolTip="{Binding sigAdditionalInfo}"/>
+                        <Image Source="{StaticResource PngLock}" Visibility="{Binding Path=IsValid_HasSS_IsValidated2, Converter={StaticResource b2vc}}" ToolTip="{Binding sigAdditionalInfo}"/>
+                        <Image Source="{StaticResource PngGreenPdf}" Visibility="{Binding Path=IsValid_HasNotSS, Converter={StaticResource b2vc}}" ToolTip="{Binding sigAdditionalInfo}"/>
                     </StackPanel>
                 </DataTemplate>
-                <DataTemplate x:Key="SignedAgainCol">
+                <DataTemplate x:Key="ApprovedRejected">
                     <StackPanel>
-                        <Image Source="{StaticResource PngCheck}" Visibility="{Binding Path=isApprovedForProcessing, Converter={StaticResource b2vc}}"/>
-                        <Image Source="{StaticResource PngRemove}" Visibility="{Binding Path=isRejected, Converter={StaticResource b2vc}}"/>
+                        <Image Source="{StaticResource PngCheck}" Visibility="{Binding Path=isApprovedForProcessing, Converter={StaticResource b2vc}}" ToolTip="Interno odobren"/>
+                        <Image Source="{StaticResource PngRemove}" Visibility="{Binding Path=isRejected, Converter={StaticResource b2vc}}" ToolTip="Interno neodobren"/>
                    </StackPanel>
                 </DataTemplate>
                 <DataTemplate x:Key="WaitForSrvProcessing">
@@ -45,6 +42,7 @@
             <RowDefinition Height="0.1*"/>
             <RowDefinition />
         </Grid.RowDefinitions>
+        <TextBlock Text="Primljena dokumenta kojima u grupi Prijem - obrada nismo stavili drugi potpis. Potpisivanje ili arhiviranje dokumente uklanja iz ove grupe." VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="10" Margin="-5"></TextBlock>
         <TextBlock Text="Pretraga: " VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" ></TextBlock>
         <TextBox x:Name="FilterText" VerticalAlignment="Center" HorizontalAlignment="Stretch" Height="8" Margin="60,0,58,0" BorderThickness="0" />
         <DataGrid x:Name="DocumentsCV" Grid.Row="1" cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChanged($eventArgs)]"
@@ -66,8 +64,8 @@
                 <DataGridTextColumn Header="Datum" Binding="{Binding Path=nameDate}" IsReadOnly="True" />
                 <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}" Binding="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource CheckBoxHeaderStyle}"/>
                 <DataGridTemplateColumn Header="{StaticResource appbar_checkmark16}" CellTemplate="{StaticResource ImgCol}" MinWidth="32" IsReadOnly="True"/>
-                <DataGridTemplateColumn  CellTemplate="{StaticResource SignedAgainCol}" MinWidth="32" IsReadOnly="True"/>
-                <DataGridTemplateColumn CellTemplate="{StaticResource WaitForSrvProcessing}" MinWidth="32" IsReadOnly="True"/>
+                <DataGridTemplateColumn CellTemplate="{StaticResource ApprovedRejected}" MinWidth="32" IsReadOnly="True"/>
+                <DataGridTemplateColumn Header="{StaticResource appbar_draw_pen_reflection16}" CellTemplate="{StaticResource WaitForSrvProcessing}" MinWidth="32" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Reason" Binding="{Binding Path=sigReason}" IsReadOnly="True" />
                 <DataGridTextColumn Header="Potpisao" Binding="{Binding Path=sigSignerName}" IsReadOnly="True" />
                 <DataGridTextColumn Header="Organizacija" Binding="{Binding Path=sigOrg}" IsReadOnly="True" />

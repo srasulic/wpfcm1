@@ -11,23 +11,25 @@ using iTextSharp.text;
 using wpfcm1.Certificates;
 using wpfcm1.Settings;
 using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
+using wpfcm1.Model;
 
 namespace wpfcm1.PDF
 {
     public class PdfHelpers
     {
-        public static Tuple<string, string> ExtractText(string path)
+        public static Tuple<string, string> ExtractText(string path, RecognitionPatternModel.PibAttributes pibAtt, RecognitionPatternModel.DocNumAttributes docAtt)
         {
             using (var reader = new PdfReader(path))
             {
-                Rectangle rectPib = new Rectangle(User.Default.LlxPib, User.Default.LlyPib, User.Default.UrxPib, User.Default.UryPib)
+              //  Rectangle rectPib = new Rectangle(User.Default.LlxPib, User.Default.LlyPib, User.Default.UrxPib, User.Default.UryPib)
+                Rectangle rectPib = new Rectangle(pibAtt.x, pibAtt.y, pibAtt.xx, pibAtt.yy)
                 {
                     Border = Rectangle.BOX,
                     BorderColor = BaseColor.RED,
                     BorderWidth = 1
                 };
 
-                Rectangle rectNo = new Rectangle(User.Default.LlxNo, User.Default.LlyNo, User.Default.UrxNo, User.Default.UryNo)
+                Rectangle rectNo = new Rectangle(docAtt.x, docAtt.y, docAtt.xx, docAtt.yy)
                 {
                     Border = Rectangle.BOX,
                     BorderColor = BaseColor.RED,
@@ -47,7 +49,7 @@ namespace wpfcm1.PDF
             }
         }
 
-        public static Tuple<string, string> ExtractText_ZAP(string path)
+ /*       public static Tuple<string, string> ExtractText_ZAP(string path)
         {
             using (var reader = new PdfReader(path))
             {
@@ -77,17 +79,17 @@ namespace wpfcm1.PDF
                 return Tuple.Create(textPib, textNo);
             }
         }
-
-        public static Task<Tuple<string, string>> ExtractTextAsync(string path)
+*/
+        public static Task<Tuple<string, string>> ExtractTextAsync(string path, RecognitionPatternModel.PibAttributes pibAtt, RecognitionPatternModel.DocNumAttributes docAtt)
         {
-            return Task.Run(() => ExtractText(path));
+            return Task.Run(() => ExtractText(path, pibAtt, docAtt));
         }
 
-        public static Task<Tuple<string, string>> ExtractTextAsync_ZAP(string path)
+ /*       public static Task<Tuple<string, string>> ExtractTextAsync_ZAP(string path)
         {
             return Task.Run(() => ExtractText_ZAP(path));
         }
-
+*/
         public static bool ValidatePdfCertificates(string path)
         {
             bool isValid = true;

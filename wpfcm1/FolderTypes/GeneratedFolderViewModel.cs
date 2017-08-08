@@ -18,6 +18,8 @@ using System.Windows.Data;
 
 namespace wpfcm1.FolderTypes
 {
+
+
     public class GeneratedFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageExtractData>, IHandle<MessageReject>, IHandle<MessageXls>
     {
         private readonly IWindowManager _windowManager;
@@ -182,59 +184,67 @@ namespace wpfcm1.FolderTypes
         public async void Handle(MessageExtractData message)
         {
             if (!IsActive) return;
-            // iz putanje koja je u obliku "c:\\eDokument\\Faktura\\ERP_outbound_interface" uzimamo tip dokumenta
-//            var tip_dok = Regex.Match(FolderPath, @"edokument\\(.*)\\", RegexOptions.IgnoreCase).Groups[1].ToString();
-//            if (tip_dok == "Faktura") return;
-            // sada imamo PIB i tip dokumenta - možemo da uputimo web request upit za mapiranje i za regex
+
 
             var documents = Documents.Where(d => !d.Processed).Cast<GeneratedDocumentModel>();
             var pib = User.Default.PIB;
             if (string.IsNullOrEmpty(pib))
                 throw new ApplicationException("PIB korisnika nije unet!");
 
-/*
 
-            var uri = "https://edokument.aserta.rs/index/api";
-            uri = @"http://edokument_hu.aserta.dev/index/api?test_do_login=1&user=111111111&pass=test01";
-            var request = WebRequest.Create(uri);
-            request.Proxy = null;
-            request.Method = "GET";
+            // iz putanje koja je u obliku "c:\\eDokument\\Faktura\\ERP_outbound_interface" uzimamo tip dokumenta
+            var tipDok = Regex.Match(FolderPath, @"edokument\\(.*)\\", RegexOptions.IgnoreCase).Groups[1].ToString();
+            // sada imamo PIB i tip dokumenta - možemo da uputimo web request upit za mapiranje i za regex
 
-            using (WebResponse response = request.GetResponse())
-            {
-                using (Stream stream = response.GetResponseStream())
-                {
-                    //                    XmlTextReader reader = new XmlTextReader(stream);
-                    StreamReader reader = new StreamReader(stream);
-                    string responseFromServer = reader.ReadToEnd();
-                    Console.WriteLine(responseFromServer);
-                    reader.Close();
+            RecognitionPatternModel recPatt = new RecognitionPatternModel();
+            recPatt.SetRecognitionPatterns(pib, tipDok);
+            
 
-                }
-            }
-
-            uri = @"http://edokument_hu.aserta.dev/index/api?test_is_login=1";
-            request = WebRequest.Create(uri);
-            using (WebResponse response = request.GetResponse())
-            {
-                using (Stream stream = response.GetResponseStream())
-                {
-                    //                    XmlTextReader reader = new XmlTextReader(stream);
-                    StreamReader reader = new StreamReader(stream);
-                    string responseFromServer = reader.ReadToEnd();
-                    Console.WriteLine(responseFromServer);
-                    reader.Close();
-
-                }
-            }
-
-
-*/
             foreach (var document in documents)
             {
-                var matchResults = await PdfHelpers.ExtractTextAsync(document.DocumentPath);
+                // prvo probamo sa prvim setom koordinata:
+                var matchResults = await PdfHelpers.ExtractTextAsync(document.DocumentPath, (RecognitionPatternModel.PibAttributes)recPatt.PibAttPrim, (RecognitionPatternModel.DocNumAttributes)recPatt.DocAttPrim);
                 document.Pib = Regex.Match(matchResults.Item1, @"[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
 
+                document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex1).Value;
+                if (string.IsNullOrEmpty(document.InvoiceNo))
+                    document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex2).Value;
+                if (string.IsNullOrEmpty(document.InvoiceNo))
+                    document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex3).Value;
+                if (string.IsNullOrEmpty(document.InvoiceNo))
+                    document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex4).Value;
+                if (string.IsNullOrEmpty(document.InvoiceNo))
+                    document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex5).Value;
+
+                // zatim probamo sa drugim setom koordinata:
+                if (string.IsNullOrEmpty(document.InvoiceNo) || string.IsNullOrEmpty(document.Pib))
+                {
+                    matchResults = await PdfHelpers.ExtractTextAsync(document.DocumentPath, (RecognitionPatternModel.PibAttributes)recPatt.PibAttAlt, (RecognitionPatternModel.DocNumAttributes)recPatt.DocAttAlt);
+                    if (string.IsNullOrEmpty(document.Pib))
+                    {
+                        document.Pib = Regex.Match(matchResults.Item1, @"[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
+                    }
+
+                    if (string.IsNullOrEmpty(document.InvoiceNo))
+                    {
+                        document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex1).Value;
+                        if (string.IsNullOrEmpty(document.InvoiceNo))
+                            document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex2).Value;
+                        if (string.IsNullOrEmpty(document.InvoiceNo))
+                            document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex3).Value;
+                        if (string.IsNullOrEmpty(document.InvoiceNo))
+                            document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex4).Value;
+                        if (string.IsNullOrEmpty(document.InvoiceNo))
+                            document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex5).Value;
+                    }
+                }
+                // ako posle svega nije prepoznat broj, dodeli mu vrednost za Neprepoznat string
+                if (string.IsNullOrEmpty(document.InvoiceNo))
+                {
+                    document.InvoiceNo = recPatt.DocRegexList.notRecognizedString;
+                }
+
+/*
                 document.InvoiceNo = Regex.Match(matchResults.Item2, @"F[0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
 
                 // perihard:
@@ -256,7 +266,7 @@ namespace wpfcm1.FolderTypes
                     document.InvoiceNo = "Zapisnik";
 
                 }
-
+*/
                 Regex regexAllowedCharacters = new Regex(@"[^0-9a-zA-Z]");
                 document.InvoiceNo = regexAllowedCharacters.Replace(document.InvoiceNo, @"-");
 

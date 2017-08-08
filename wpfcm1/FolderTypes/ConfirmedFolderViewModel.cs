@@ -147,6 +147,8 @@ namespace wpfcm1.FolderTypes
                 // jpg ne prikazujemo... mesto za akciju za jpg-ove 
             }
             // ako je stigao obostrano potpisan, dodajemo ga u listu a njegovom _s fajlu promenimo status
+            // 07.08.2017 srdjan: verzija 2 - potpuno ga izbacimo ga iz liste ?
+
             else if (Regex.IsMatch(filePath, @".+_s_s.pdf$", RegexOptions.IgnoreCase))
             {
                 var docName = Regex.Replace(filePath, @"_s_s", "_s");
@@ -158,8 +160,9 @@ namespace wpfcm1.FolderTypes
                 Documents.Add(newDoc);
                 if (!(found == null))
                 {
-                    found.IsSignedAgain = true;
-                    found.Processed = true;
+                //    found.IsSignedAgain = true;
+                //    found.Processed = true;
+                    Documents.Remove(found);
                 }
             }
             // ostale samo dodamo u listu

@@ -76,6 +76,20 @@ namespace wpfcm1.PDF
 
             IExternalSignature pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA1);
             MakeSignature.SignDetached(appearance, pks, chain, crlList, ocspClient, tsaClient, 0, CryptoStandard.CMS);
+
+            /*
+            if (cert.SignatureAlgorithm.FriendlyName == "sha256RSA")
+            {
+                IExternalSignature pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA256);
+                MakeSignature.SignDetached(appearance, pks, chain, crlList, ocspClient, tsaClient, 0, CryptoStandard.CMS);
+            }
+            else
+            {
+                IExternalSignature pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA1);
+                MakeSignature.SignDetached(appearance, pks, chain, crlList, ocspClient, tsaClient, 0, CryptoStandard.CMS);
+            }
+             * */
+
         }
 
         private static Rectangle GetSignatureRect(

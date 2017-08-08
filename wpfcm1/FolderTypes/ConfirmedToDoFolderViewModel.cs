@@ -137,21 +137,23 @@ namespace wpfcm1.FolderTypes
                 // ovo ne bi smelo da se desi... ove ack-ove nemamo kako da tretiramo, ignorisemo ih
             }
             // ako je stigao obostrano potpisan, dodajemo ga u listu a njegovom _s fajlu promenimo status
+            // 07.08.2017 srdjan: verzija 2 - potpuno ga izbacimo ga iz liste ?
             else if (Regex.IsMatch(filePath, @".+_s_s.pdf$", RegexOptions.IgnoreCase))
             {
                 var docName = Regex.Replace(filePath, @"_s_s", "_s");
                 var found = Documents.Where(d => d.DocumentPath == docName).FirstOrDefault();
                 var newDoc = new ConfirmedToDoDocumentModel(new FileInfo(filePath));
                 newDoc.HasSecondSignature = true;
-                newDoc.IsSignedAgain = false;
+                newDoc.IsSignedAgain = true;
                 newDoc.Processed = true;
                 newDoc.archiveReady = true;
                 Documents.Add(newDoc);
                 if (!(found == null))
                 {
-                    found.IsSignedAgain = true;
-                    found.Processed = true;
-                    found.archiveReady = true;
+//                    found.IsSignedAgain = true;
+//                    found.Processed = true;
+//                    found.archiveReady = true;
+                    Documents.Remove(found);
                 }
 
             }
