@@ -95,10 +95,12 @@ namespace wpfcm1.DataAccess
             {"IosOutboundSentFolder",               "Poslato"},
             {"IosOutboundPendFolder",               "Čekaju..."},
             {"IosOutboundConfirmedFolder",          "Arh - uručeni"},
-            {"IosInboundInboxFolder",               "Primljeno"},
+            
+            {"IosInboundInboxFolder",               "Prijem - obrada"},                
             {"IosInboundOutboxFolder",              "Za slanje"},
             {"IosInboundSentFolder",                "Poslato"},
-            {"IosInboundConfirmedFolder",           "Arh - potvrđeni"},
+            {"IosInboundConfirmedFolder",           "Arhiva"},
+            
             {"KpOutboundErpIfaceFolder",            "Priprema"},
             {"KpOutboundErpProcFolder",             "Processed"},
             {"KpOutboundOutboxFolder",              "Za slanje"},
@@ -106,21 +108,24 @@ namespace wpfcm1.DataAccess
             {"KpOutboundPendFolder",                "Čekaju..."},
             {"KpOutboundConfirmedFolder",           "Arh - uručeni"},
             {"KpOutboundConfirmedOutToDoFolder",    "ToDo"},
-            {"KpInboundInboxFolder",                "Primljeno"},
+            
+            {"KpInboundInboxFolder",                "Prijem - obrada"},
             {"KpInboundOutboxFolder",               "Za slanje"},
             {"KpInboundSentFolder",                 "Poslato"},
-            {"KpInboundConfirmedFolder",            "Arh - potvrđeni"},
-            {"KpInboundConfirmedToDoFolder",        "ToDo"},
+            {"KpInboundConfirmedFolder",            "Arhiva"},
+            {"KpInboundConfirmedToDoFolder",        "Primljeni - nepotpisani"},
+            
             {"OtherOutboundErpIfaceFolder",         "Priprema"},
             {"OtherOutboundErpProcFolder",          "Processed"},
             {"OtherOutboundOutboxFolder",           "Za slanje"},
             {"OtherOutboundSentFolder",             "Poslato"},
             {"OtherOutboundPendFolder",             "Čekaju..."},
             {"OtherOutboundConfirmedFolder",        "Arh - uručeni"},
-            {"OtherInboundInboxFolder",             "Primljeno"},
+            
+            {"OtherInboundInboxFolder",             "Prijem - obrada"},
             {"OtherInboundOutboxFolder",            "Za slanje"},
             {"OtherInboundSentFolder",              "Poslato"},
-            {"OtherInboundConfirmedFolder",         "Arh - potvrđeni"}
+            {"OtherInboundConfirmedFolder",         "Arhiva"}
         };
 
         public static readonly Dictionary<string, Type> FolderTypeMap = new Dictionary<string, Type>()
