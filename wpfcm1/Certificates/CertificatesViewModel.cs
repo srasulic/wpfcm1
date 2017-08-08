@@ -21,7 +21,7 @@ namespace wpfcm1.Certificates
 
         public ObservableCollection<CertificateModel> Certificates { get; private set; }
 
-
+        // 
         private bool first = true;
 
         public void RefreshCertificateList()

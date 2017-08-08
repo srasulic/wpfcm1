@@ -65,7 +65,8 @@ namespace wpfcm1.Shell
 
         public void ShowHome()
         {   //*****************************************************************
-            CertVM.RefreshCertificateList();
+            // dok ne nađemo način da sprečimo iskakanje Please insert card, ovo će biti privremenio isključeno.
+            //CertVM.RefreshCertificateList();
             //*****************************************************************
             ActivateItem(HomeVM);
             _events.PublishOnUIThread(new MessageViewModelActivated(ActiveItem.GetType().Name));

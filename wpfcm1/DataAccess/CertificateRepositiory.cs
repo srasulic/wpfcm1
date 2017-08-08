@@ -39,6 +39,8 @@ namespace wpfcm1.DataAccess
                 try {
                     if (!cert.HasPrivateKey) continue;
                     if (!CertHasNonRepudiation(cert)) continue;
+                    // privremeno komentar dok ne nadjemo bolji nacin (podiže se Insert smart card za neke sertifikate iz liste, što nije exception)
+                    /*
                     var rsa = cert.PrivateKey as RSACryptoServiceProvider;
                     if (rsa == null) continue;
                     if (rsa.CspKeyContainerInfo.HardwareDevice)
@@ -46,6 +48,7 @@ namespace wpfcm1.DataAccess
                         list.Add(new CertificateModel(cert));
                         certFoundInSmartCard= true;                    
                     }
+                    */
                     allQualifiedCerts.Add(new CertificateModel(cert));
                     
                 }catch (System.Security.Cryptography.CryptographicException ex) { allQualifiedCerts.Add(new CertificateModel(cert)); }

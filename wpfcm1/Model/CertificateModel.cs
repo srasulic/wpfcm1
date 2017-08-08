@@ -54,9 +54,6 @@ namespace wpfcm1.Model
             IsQualified = Errors.Count == 0 && (hasOcsp || hasCrl);
         }
 
-        internal object ToList()
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }
