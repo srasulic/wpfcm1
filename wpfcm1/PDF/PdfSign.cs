@@ -25,33 +25,40 @@ namespace wpfcm1.PDF
             using (var reader = new PdfReader(src))
             using (var fs = new FileStream(dst, FileMode.Create))
 
-            switch (sigLocation)
-            {
-                case SignatureRules.SignatureLocation.UpperLeft:
-                    using (var stamper = PdfStamper.CreateSignature(reader, fs, '\0'))
-                    {
-                        CreateSignature(cert, chain, crlList, ocspClient, tsaClient, stamper, reader, sigLocation, true, reason);
-                    }
-                    break;
-                case SignatureRules.SignatureLocation.UpperRight:
-                    using (var stamper = PdfStamper.CreateSignature(reader, fs, '\0', null, true))
-                        CreateSignature(cert, chain, crlList, ocspClient, tsaClient, stamper, reader, sigLocation, false, reason);
-                    break;
-            }
+                switch (sigLocation)
+                {
+                    case SignatureRules.SignatureLocation.UpperLeft:
+                        using (var stamper = PdfStamper.CreateSignature(reader, fs, '\0'))
+                        {
+                            CreateSignature(cert, chain, crlList, ocspClient, tsaClient, stamper, reader, sigLocation, true, reason);
+                        }
+                        break;
+                    case SignatureRules.SignatureLocation.UpperRight:
+                        using (var stamper = PdfStamper.CreateSignature(reader, fs, '\0', null, true))
+                            CreateSignature(cert, chain, crlList, ocspClient, tsaClient, stamper, reader, sigLocation, false, reason);
+                        break;
+                }
         }
 
         private static void CreateSignature(
-            X509Certificate2 cert, 
-            List<X509Certificate> chain, 
-            ICollection<ICrlClient> crlList, 
+            X509Certificate2 cert,
+            List<X509Certificate> chain,
+            ICollection<ICrlClient> crlList,
             IOcspClient ocspClient,
-            ITSAClient tsaClient, 
+            ITSAClient tsaClient,
             PdfStamper stamper,
             PdfReader reader,
             SignatureRules.SignatureLocation sigLocation,
             bool provideCertificationLevel,
             string reason)
         {
+            /*
+            string path = System.Environment.GetEnvironmentVariable("SystemRoot") + @"\fonts\Arial.ttf";
+            iTextSharp.text.FontFactory.Register(path);
+            BaseFont unicode =  BaseFont.CreateFont(path, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            stamper.AcroFields.AddSubstitutionFont(unicode);
+            */
+
             PdfSignatureAppearance appearance = stamper.SignatureAppearance;
             appearance.Reason = reason;
             //appearance.Location = location;
@@ -59,36 +66,18 @@ namespace wpfcm1.PDF
             if (provideCertificationLevel)
                 appearance.CertificationLevel = PdfSignatureAppearance.CERTIFIED_FORM_FILLING_AND_ANNOTATIONS;
             var rect = GetSignatureRect(reader, sigLocation);
-            var sigName = SignatureRules.SignatureName[sigLocation]; 
+            var sigName = SignatureRules.SignatureName[sigLocation];
             appearance.SetVisibleSignature(rect, 1, sigName);
 
- /*           
- //           var fontPath = System.Environment.GetEnvironmentVariable("SystemRoot") + @"\fonts\tt1018m_.ttf";
 
-//            BaseFont fieldFontTest =
-  ///                    BaseFont.CreateFont(  fontPath,
-     //                                       BaseFont.IDENTITY_H,
-       //                                     BaseFont.EMBEDDED);
+            //var fontPath = System.Environment.GetEnvironmentVariable("SystemRoot") + @"\fonts\tt1018m_.ttf";
+            //BaseFont fieldFontTest = BaseFont.CreateFont(fontPath,BaseFont.IDENTITY_H,BaseFont.EMBEDDED);
+            //BaseFont fieldFontTest = BaseFont.CreateFont(BaseFont.COURIER_BOLD, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED);
+            //stamper.AcroFields.SetFieldProperty("Potpis1", "textfont", fieldFontTest, null);
 
-  //          BaseFont fieldFontTest = BaseFont.CreateFont(BaseFont.COURIER_BOLD, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED);
-  //          stamper.AcroFields.SetFieldProperty("Potpis1", "textfont", fieldFontTest, null);
-*/
 
             IExternalSignature pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA1);
             MakeSignature.SignDetached(appearance, pks, chain, crlList, ocspClient, tsaClient, 0, CryptoStandard.CMS);
-
-            /*
-            if (cert.SignatureAlgorithm.FriendlyName == "sha256RSA")
-            {
-                IExternalSignature pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA256);
-                MakeSignature.SignDetached(appearance, pks, chain, crlList, ocspClient, tsaClient, 0, CryptoStandard.CMS);
-            }
-            else
-            {
-                IExternalSignature pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA1);
-                MakeSignature.SignDetached(appearance, pks, chain, crlList, ocspClient, tsaClient, 0, CryptoStandard.CMS);
-            }
-             * */
 
         }
 
@@ -120,7 +109,7 @@ namespace wpfcm1.PDF
             SignatureRules.SignatureLocation sigLocation,
             string reason = "")
         {
-            return Task.Run(() => 
+            return Task.Run(() =>
                 SignPdf(src, dst, cert, chain, crlList, ocspClient, tsaClient, sigLocation, reason)
             );
         }
