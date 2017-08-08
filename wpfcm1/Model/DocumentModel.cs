@@ -184,6 +184,15 @@ namespace wpfcm1.Model
             set { _tipDok = value; NotifyOfPropertyChange(() => tipDok); }
         }
 
+        // 1.14 WaitForServerProcessing - privremena osobina za dokumente u INBOX-u - nakon sinhronizacije treba da im se promenin neki vidljivi status, 
+        //      da se zna da čekaju na serversku obradu
+        private bool _waitForServerProcessing;
+        public bool WaitForServerProcessing
+        {
+            get { return _waitForServerProcessing; }
+            set { _waitForServerProcessing = value; NotifyOfPropertyChange(() => WaitForServerProcessing); }
+        }
+
         /// <summary>
         /// 2. Polja za vrednosti izvučene iz potpisa 1 i potpisa 2 
         /// </summary>

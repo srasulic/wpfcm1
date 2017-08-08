@@ -253,12 +253,24 @@ namespace wpfcm1.FolderTypes
 
         public void InternalMessengerGetStates()
         {
-            foreach (var document in Documents.Where(d => d.hasExternalMessage)) {
-                InternalMessengerGetStates (document);
+            foreach (var document in Documents.Where(d => d.hasExternalMessage))
+            {
+                InternalMessengerGetStates(document);
                 document.hasExternalMessage = false;
             }
         }
+
+        public void SetWaitForServerProcessing()
+        {
+            foreach (var document in Documents.Where(d => d.IsAcknowledged))
+            {
+                // nakon zavrsene sinhronizacije cemo sve dokumente koji imaju status IsAcknoledged
+                // obeležiti sa WaitForServerProcessing. Ovo se koristi samo u Inboxu, ali se sme primeniti svuda.
+                document.WaitForServerProcessing = true;
+            }
+        }
         
+
         public void InternalMessengerGetStates(DocumentModel document)
         {
             // promenjen način čitanja atributa, tako da ne zavisi od tipa poruke (ne koristimo deserialize)
@@ -481,7 +493,7 @@ namespace wpfcm1.FolderTypes
         private void Watcher_Changed(object sender, FileSystemEventArgs e)
         {
             // TODO: 
-            // NIJE MU možda ovde mesto... hvata sve promene, a ne samo one koje napravi sinhronizacija
+            // NIJE Log-eru možda ovde mesto... hvata sve promene, a ne samo one koje napravi sinhronizacija
             // To jeste overhed, mada funkcionalno ne smeta - samo fajl dobija mark da ima neki eksterni xml... što jeste tačno...
              
         //    Log.Info("*** Promena:");

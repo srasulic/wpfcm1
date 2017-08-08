@@ -71,6 +71,8 @@ namespace wpfcm1.FolderTypes
                 old.namePib1Name = state.namePib1Name;
                 old.namePib2Name = state.namePib2Name;
 
+                old.WaitForServerProcessing = state.WaitForServerProcessing;
+
             }
             foreach (var document in Documents)
             {
@@ -83,6 +85,8 @@ namespace wpfcm1.FolderTypes
             if (Regex.IsMatch(filePath, @".+syncstamp$", RegexOptions.IgnoreCase))
             {
                 InternalMessengerGetStates();
+                // ovo nam nije baš tačno, pravi okidač je synchstamp u OUTBOX-u ...
+                SetWaitForServerProcessing();
             }
             // necemo u listu dodavati one koji nisu validno nazvan pdf
             else if (!Regex.IsMatch(filePath, @".+_s.pdf$", RegexOptions.IgnoreCase))
@@ -196,7 +200,7 @@ namespace wpfcm1.FolderTypes
         {
             var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<InboxDocumentModel>();
             //var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).Cast<DocumentModel>().ToList();
-            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && d.IsAcknowledged && !d.HasSecondSignature).Cast<DocumentModel>().ToList();
+            var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && d.IsAcknowledged && !d.HasSecondSignature && !d.IsSignedAgain).Cast<DocumentModel>().ToList();
             return validDocuments;
         }
 

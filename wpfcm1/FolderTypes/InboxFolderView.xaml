@@ -26,18 +26,18 @@
                 </DataTemplate>
                 <DataTemplate x:Key="AckCol">
                     <StackPanel>
-                        <Image Source="{StaticResource PngAck}" Visibility="{Binding Path=IsAcknowledged, Converter={StaticResource b2vc}}"/>
+                        <Image Source="{StaticResource PngAck}" Visibility="{Binding Path=IsAcknowledged, Converter={StaticResource b2vc}}" ToolTip="Potvrda prijema spremna za slanje."/>
                     </StackPanel>
                 </DataTemplate>
                 <DataTemplate x:Key="HasSecSign">
                     <StackPanel>
-                        <Image Source="{StaticResource PngLock}" Visibility="{Binding Path=IsSignedAgain, Converter={StaticResource b2vc}}"/>
-                        <Image Source="{StaticResource PngCheck}" Visibility="{Binding Path=NotSignedAgain_Approved, Converter={StaticResource b2vc}}"/>
-                        <Image Source="{StaticResource PngRemove}" Visibility="{Binding Path=NotSignedAgain_Rejected, Converter={StaticResource b2vc}}"/>
+                        <Image Source="{StaticResource PngOk}" Visibility="{Binding Path=IsSignedAgain, Converter={StaticResource b2vc}}"  ToolTip="Obostrani potpis spreman za slanje."/>
+                        <Image Source="{StaticResource PngCheck}" Visibility="{Binding Path=NotSignedAgain_Approved, Converter={StaticResource b2vc}}"  ToolTip="Interno odobren"/>
+                        <Image Source="{StaticResource PngRemove}" Visibility="{Binding Path=NotSignedAgain_Rejected, Converter={StaticResource b2vc}}" ToolTip="Interno neodobren"/>
                     </StackPanel>
                 </DataTemplate>
                 <DataTemplate x:Key="WaitForSrvProcessing">
-                        <Image Source="{StaticResource PngWait}" Visibility="{Binding Path=IsAcknowledged, Converter={StaticResource b2vc}}"/>
+                    <Image Source="{StaticResource PngWait}" Visibility="{Binding Path=WaitForServerProcessing, Converter={StaticResource b2vc}}"  ToolTip="Poslato, čeka na kliring."/>
                 </DataTemplate>
             </ResourceDictionary>
         </Grid.Resources>
@@ -45,6 +45,7 @@
             <RowDefinition Height="0.1*"/>
             <RowDefinition />
         </Grid.RowDefinitions>
+        <TextBlock Text="Prijem novih dokumenata, validacija potpisa, slanje potvrde prijema i obostrano potpisivanje. Dokumenta su u ovoj grupi sve dok kliring server ne obradi poslatu potvrdu prijema." VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="10" Margin="-5"></TextBlock>
         <TextBlock Text="Pretraga: " VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" ></TextBlock>
         <TextBox x:Name="FilterText" VerticalAlignment="Center" HorizontalAlignment="Stretch" Height="8" Margin="60,0,58,0" BorderThickness="0" />
         <DataGrid x:Name="DocumentsCV" Grid.Row="1" cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChanged($eventArgs)]"

@@ -43,6 +43,7 @@
             <RowDefinition Height="0.1*"/>
             <RowDefinition />
         </Grid.RowDefinitions>
+        <TextBlock Text="Arhiva svih primljenih i svih obostrano potpisanih dokumenta." VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="10" Margin="-5"></TextBlock>
         <TextBlock Text="Pretraga: " VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" ></TextBlock>
         <TextBox x:Name="FilterText" VerticalAlignment="Center" HorizontalAlignment="Stretch" Height="8" Margin="60,0,58,0" BorderThickness="0" />
         <DataGrid x:Name="DocumentsCV" Grid.Row="1" cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChanged($eventArgs)]"

@@ -82,11 +82,13 @@ namespace wpfcm1.DataAccess
             {"InvoicesOutboundPendFolder",          "Čekaju..."},
             {"InvoicesOutboundConfirmedFolder",     "Arh - uručeni"},
             {"InvoicesOutboundConfirmedOutToDoFolder", "ToDo"},
-            {"InvoicesInboundInboxFolder",          "Primljeno"},
+
+            {"InvoicesInboundInboxFolder",          "Prijem - obrada"},
             {"InvoicesInboundOutboxFolder",         "Za slanje"},
             {"InvoicesInboundSentFolder",           "Poslato"},
-            {"InvoicesInboundConfirmedFolder",      "Arh - potvrđeni"},
-            {"InvoicesInboundConfirmedToDoFolder",  "ToDo"},
+            {"InvoicesInboundConfirmedFolder",      "Arhiva"},
+            {"InvoicesInboundConfirmedToDoFolder",  "Primljeni - nepotpisani"},
+            
             {"IosOutboundErpIfaceFolder",           "Priprema"},
             {"IosOutboundErpProcFolder",            "Processed"},
             {"IosOutboundOutboxFolder",             "Za slanje"},
