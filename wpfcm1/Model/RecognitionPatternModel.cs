@@ -73,7 +73,7 @@ namespace wpfcm1.Model
         // web upit kojim dobijamo parametre. Ako ne uspe, uzimamo ih iz settingsa
         public void SetRecognitionPatterns (string pib, string tipDok) {
 
-            var uri = String.Format("http://edokument_hu.aserta.dev/index/mapping_rules?pib={0}&tip_dok={1}", pib, tipDok);
+            var uri = String.Format("https://edokument.aserta.rs/index/mapping_rules?pib={0}&tip_dok={1}", pib, tipDok);
             var request = WebRequest.Create(uri);
             request.Proxy = null;
             request.Method = "GET";
