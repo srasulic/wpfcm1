@@ -29,6 +29,7 @@ namespace wpfcm1.Processing
 
         public async Task SignAsync(string reason = "", IProgress<string> reporter = null, CancellationToken token = default(CancellationToken))
         {
+            // preuzmemo vrednosti - stringove iz podešavanja aplikacije:
             var tsServer = User.Default.TimestampServer;
             if (string.IsNullOrEmpty(tsServer)) throw new ApplicationException("Timestamp server korisnika nije unet!");
             var tsUser = User.Default.TimestampUserName;
