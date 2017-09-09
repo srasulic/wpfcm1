@@ -355,7 +355,7 @@ namespace wpfcm1.FolderTypes
         }
 
 
-        protected void SerializeMessage(InternalMessageModel message)
+        public void SerializeMessage(InternalMessageModel message)
         {
             try
             {

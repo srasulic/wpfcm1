@@ -9,6 +9,7 @@ using wpfcm1.Certificates;
 using wpfcm1.Model;
 using wpfcm1.PDF;
 using wpfcm1.Settings;
+using wpfcm1.FolderTypes;
 
 namespace wpfcm1.Processing
 {
@@ -16,16 +17,18 @@ namespace wpfcm1.Processing
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public SigningManager(CertificateModel certificate, IList<DocumentModel> documents, string sourceDir)
+        public SigningManager(CertificateModel certificate, IList<DocumentModel> documents, string sourceDir, FolderViewModel folder)
         {
             Certificate = certificate;
             Documents = documents;
             SourceDir = sourceDir;
+            Folder = folder;
         }
 
         public IList<DocumentModel> Documents { get; private set; }
         public string SourceDir { get; set; }
         public CertificateModel Certificate { get; private set; }
+        public FolderViewModel Folder { get; set; }
 
         public async Task SignAsync(string reason = "", IProgress<string> reporter = null, CancellationToken token = default(CancellationToken))
         {
@@ -117,6 +120,12 @@ namespace wpfcm1.Processing
                         //document.HasSecondSignature = true;
                         //document.IsAcknowledged = false;
                         document.IsSignedAgain = true;
+                        document.Processed = true;
+                        document.archiveReady = true;
+
+                        var message = new InternalMessageModel(document);
+                        Folder.SerializeMessage(message);
+                        
                         break;
                     case SigningTransferRules.FinalAction.Store:
                         var processedDir = SigningTransferRules.ProcessedMap[SourceDir];

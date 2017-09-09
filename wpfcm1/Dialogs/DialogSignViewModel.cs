@@ -100,7 +100,6 @@ namespace wpfcm1.Dialogs
 
         public async void OnStart()
         {
-            // ToDO: smestiti ovo negde na lepše mesto, za sad je u FolderViewModel... 
             FolderViewModel.PsKillPdfHandlers();
             Reports.Clear();
             Reports.Add("Priprema za potpisivanje...");
@@ -111,8 +110,8 @@ namespace wpfcm1.Dialogs
                 InProgress = true;
                 // shallow documents copy, always updated, even if cancel was pressed
                 var documents = GetDocumentsForSigning(_folder);
-                var sourceDir = _folder.FolderPath;
-                var signingMgr = new SigningManager(_certificate, documents, sourceDir);
+                var sourceDir = _folder.FolderPath; 
+                var signingMgr = new SigningManager(_certificate, documents, sourceDir, _folder);
                 Log.Info("Signing started...");
                 await signingMgr.SignAsync(Reason, _reporter, _cancellation.Token).WithCancellation(_cancellation.Token);
                 Log.Info("Signing finished...");

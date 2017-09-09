@@ -79,7 +79,7 @@ namespace wpfcm1.DataAccess
             {"InvoicesOutboundErpProcFolder",       "Processed"},
             {"InvoicesOutboundOutboxFolder",        "Za slanje"},
             {"InvoicesOutboundSentFolder",          "Poslato"},
-            {"InvoicesOutboundPendFolder",          "Čekaju..."},
+            {"InvoicesOutboundPendFolder",          "Na čekanju"},
             {"InvoicesOutboundConfirmedFolder",     "Arh - uručeni"},
             {"InvoicesOutboundConfirmedOutToDoFolder", "ToDo"},
 
@@ -93,7 +93,7 @@ namespace wpfcm1.DataAccess
             {"IosOutboundErpProcFolder",            "Processed"},
             {"IosOutboundOutboxFolder",             "Za slanje"},
             {"IosOutboundSentFolder",               "Poslato"},
-            {"IosOutboundPendFolder",               "Čekaju..."},
+            {"IosOutboundPendFolder",               "Na čekanju"},
             {"IosOutboundConfirmedFolder",          "Arh - uručeni"},
             
             {"IosInboundInboxFolder",               "Prijem - obrada"},                
@@ -105,7 +105,7 @@ namespace wpfcm1.DataAccess
             {"KpOutboundErpProcFolder",             "Processed"},
             {"KpOutboundOutboxFolder",              "Za slanje"},
             {"KpOutboundSentFolder",                "Poslato"},
-            {"KpOutboundPendFolder",                "Čekaju..."},
+            {"KpOutboundPendFolder",                "Na čekanju"},
             {"KpOutboundConfirmedFolder",           "Arh - uručeni"},
             {"KpOutboundConfirmedOutToDoFolder",    "ToDo"},
             
@@ -119,7 +119,7 @@ namespace wpfcm1.DataAccess
             {"OtherOutboundErpProcFolder",          "Processed"},
             {"OtherOutboundOutboxFolder",           "Za slanje"},
             {"OtherOutboundSentFolder",             "Poslato"},
-            {"OtherOutboundPendFolder",             "Čekaju..."},
+            {"OtherOutboundPendFolder",             "Na čekanju"},
             {"OtherOutboundConfirmedFolder",        "Arh - uručeni"},
             
             {"OtherInboundInboxFolder",             "Prijem - obrada"},
