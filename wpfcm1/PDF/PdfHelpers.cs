@@ -17,6 +17,9 @@ namespace wpfcm1.PDF
 {
     public class PdfHelpers
     {
+        //
+        // 1.0 - Manipulacija tekstom
+        //
         public static Tuple<string, string> ExtractText(string path, RecognitionPatternModel.PibAttributes pibAtt, RecognitionPatternModel.DocNumAttributes docAtt)
         {
             using (var reader = new PdfReader(path))
@@ -49,89 +52,102 @@ namespace wpfcm1.PDF
             }
         }
 
- /*       public static Tuple<string, string> ExtractText_ZAP(string path)
-        {
-            using (var reader = new PdfReader(path))
-            {
-                Rectangle rectPib = new Rectangle(10, 750, 200, 800)
-                {
-                    Border = Rectangle.BOX,
-                    BorderColor = BaseColor.RED,
-                    BorderWidth = 1
-                };
 
-                Rectangle rectNo = new Rectangle(10, 750, 200, 800)
-                {
-                    Border = Rectangle.BOX,
-                    BorderColor = BaseColor.RED,
-                    BorderWidth = 1
-                };
 
-                RenderFilter filterPib = new RegionTextRenderFilter(rectPib);
-                ITextExtractionStrategy strategyPib = new FilteredTextRenderListener(new LocationTextExtractionStrategy(), filterPib);
 
-                RenderFilter filterNo = new RegionTextRenderFilter(rectNo);
-                ITextExtractionStrategy strategyNo = new FilteredTextRenderListener(new LocationTextExtractionStrategy(), filterNo);
-
-                var textPib = PdfTextExtractor.GetTextFromPage(reader, 1, strategyPib);
-                var textNo = PdfTextExtractor.GetTextFromPage(reader, 1, strategyNo);
-
-                return Tuple.Create(textPib, textNo);
-            }
-        }
-*/
-        public static Task<Tuple<string, string>> ExtractTextAsync(string path, RecognitionPatternModel.PibAttributes pibAtt, RecognitionPatternModel.DocNumAttributes docAtt)
+         public static Task<Tuple<string, string>> ExtractTextAsync(string path, RecognitionPatternModel.PibAttributes pibAtt, RecognitionPatternModel.DocNumAttributes docAtt)
         {
             return Task.Run(() => ExtractText(path, pibAtt, docAtt));
         }
 
- /*       public static Task<Tuple<string, string>> ExtractTextAsync_ZAP(string path)
-        {
-            return Task.Run(() => ExtractText_ZAP(path));
-        }
-*/
-        public static bool ValidatePdfCertificates(string path)
+
+        //
+        // 2.0 - validacija sertifikata
+        //
+
+        public static Tuple<bool, string> ValidatePdfCertificatesWithInfo(string path)
         {
             bool isValid = true;
-            using (var reader = new PdfReader(path))
+            string validationInfo = "";
+            try
             {
-                AcroFields fields = reader.AcroFields;
-                try
+                using (var reader = new PdfReader(path))
                 {
-                    CheckIntegrity(fields);
-                    CheckSignatures(fields);
-                }
-                catch
-                {
-                    throw; //////////////
-                    //isValid = false;
+                    AcroFields fields = reader.AcroFields;
+                    try
+                    {
+                        CheckIntegrity(fields);
+                        validationInfo = validationInfo + "OK: Integritet potpisa proveren. " + System.Environment.NewLine;
+                    }
+                    catch (Exception e)
+                    {
+                        isValid = false;
+                        validationInfo = validationInfo + "GREŠKA: Greška prilikom provere integriteta potpisa: " + e.Message + System.Environment.NewLine;
+                    }
+
+                    try
+                    {
+                        CheckTimestamp(fields);
+                        validationInfo = validationInfo + "OK: Dokument potpisan Vremenskim žigom. " + System.Environment.NewLine;
+                    }
+                    catch (Exception e)
+                    {
+                        validationInfo = validationInfo + "NAPOMENA: Vremenski žig ne postoji ili ga nije bilo moguće proveriti (" + e.Message + ")" + System.Environment.NewLine;
+                    }
+
+                    try
+                    {
+                        CheckSignatures(fields);
+                        validationInfo = validationInfo + "OK: Svi potpisi na dokumentu su ispravni. " + System.Environment.NewLine;
+                    }
+                    catch (Exception e)
+                    {
+                        isValid = false;
+                        validationInfo = validationInfo + "GREŠKA: Greška prilikom provere integriteta potpisa: " + e.Message + System.Environment.NewLine;
+                    }
+                    // Dodoati LTV proveru!!!
                 }
             }
-            return isValid;
+            catch (Exception e)
+            {
+                isValid = false;
+                validationInfo = validationInfo + "GREŠKA: Neobradjena greška " + e.Message + System.Environment.NewLine;
+            }
+            return Tuple.Create(isValid, validationInfo);
         }
+
 
         public static PdfPKCS7 GetPcks7(string path, int position)
         {
-            // PROTOTIP: obradjuje samo prvi na koji naidje...
-            var reader = new PdfReader(path);
-            AcroFields fields = reader.AcroFields;
-            var i = 1;
-            foreach (var sigName in fields.GetSignatureNames())
+            try
             {
-                if (i++ == position)
+                var reader = new PdfReader(path);
+                AcroFields fields = reader.AcroFields;
+                var i = 1;
+                foreach (var sigName in fields.GetSignatureNames())
                 {
-                    PdfPKCS7 pkcs7 = fields.VerifySignature(sigName);
-                    return pkcs7;
+                    if (i++ == position)
+                    {
+                        PdfPKCS7 pkcs7 = fields.VerifySignature(sigName);
+                        return pkcs7;
+                    }
                 }
+                return null;
             }
-            return null;
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
-        public static Task<bool> ValidatePdfCertificatesAsync(string path)
+
+        // dodajemo Validate Pdf Cert funkciju koja će umeti da vrati <Tuple<bool, string>> gde će string biti dodatna informacija na temu sertifikata
+        public static Task<Tuple<bool, string>> ValidatePdfCertificatesWithInfoAsync(string path)
         {
-            return Task.Run(() => ValidatePdfCertificates(path));
+            return Task.Run(() => ValidatePdfCertificatesWithInfo(path));
         }
-        
+
+
         public static Task<PdfPKCS7> GetPcks7Async(string path, int position)
         {
             return Task.Run(() => GetPcks7(path, position));
@@ -151,31 +167,42 @@ namespace wpfcm1.PDF
                 throw new Exception();
         }
 
-        private static void CheckSignatures(AcroFields fields)
+        private static void CheckTimestamp(AcroFields fields)
         {
             foreach (var sigName in fields.GetSignatureNames())
             {
                 PdfPKCS7 pkcs7 = fields.VerifySignature(sigName);
                 var tsOk = pkcs7.VerifyTimestampImprint();
                 if (!tsOk) throw new Exception("Greška prilikom provere ugrađenog vremenskog žiga / Verification error - VerifyTimestampImprint check failed.");
+            }
+        }
 
+        private static void CheckSignatures(AcroFields fields)
+        {
+            foreach (var sigName in fields.GetSignatureNames())
+            {
+                PdfPKCS7 pkcs7 = fields.VerifySignature(sigName);
                 var c2 = new X509Certificate2();
                 c2.Import(pkcs7.SigningCertificate.GetEncoded());
                 var c2chain = CertificateHelpers.GetChain(c2);
                 var errors = CertificateHelpers.CheckCertificate(c2, c2chain);
-                if (errors.Count > 0) throw new Exception("Greška u lancu sertifikata. Proverite da li je intaliran root sertifikat u lancu / Certificate chain error. Check if You trust all certificates in chain.");
+                if (errors.Count > 0) throw new Exception("Greška u lancu sertifikata. Proverite da li je instaliran root sertifikat u lancu / Certificate chain error. Check if You trust all certificates in chain.");
 
+                // Exceptions:
+                //   Org.BouncyCastle.Security.Certificates.CertificateExpiredException
+                //   Org.BouncyCastle.Security.Certificates.CertificateNotYetValidException
                 var cert = pkcs7.SigningCertificate;
                 DateTime signDate = pkcs7.SignDate;
                 cert.CheckValidity(signDate);
-                cert.CheckValidity();
 
+
+                // zasto nismo uzeli SigningCertificate iz prethodnog koraka?
                 X509Certificate[] certs = pkcs7.SignCertificateChain;
                 X509Certificate signCert = certs[0];
                 X509Certificate issuerCert = (certs.Length > 1 ? certs[1] : null);
 
+                // Od funkcije očekujemo da ako nije u redu da Exception("Nije bilo moguće proveriti da li je sertifikat opozvan / Certificate revocation check failed.");
                 CheckRevocation(pkcs7, signCert, issuerCert, signDate);
-                //CheckRevocation(pkcs7, signCert, issuerCert, DateTime.Now);
             }
         }
 

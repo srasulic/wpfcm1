@@ -30,7 +30,7 @@ namespace wpfcm1.Processing
         public async Task SignAsync(string reason = "", IProgress<string> reporter = null, CancellationToken token = default(CancellationToken))
         {
             // preuzmemo vrednosti - stringove iz podešavanja aplikacije:
-            var tsServer = User.Default.TimestampServer;
+            string tsServer = User.Default.TimestampServer;
             if (string.IsNullOrEmpty(tsServer)) throw new ApplicationException("Timestamp server korisnika nije unet!");
             var tsUser = User.Default.TimestampUserName;
             var tsPass = User.Default.TimestampPassword;
@@ -39,7 +39,32 @@ namespace wpfcm1.Processing
 
             var crlList = await CertificateHelpers.GetCrlClentsOfflineAsync(Certificate.ChainElements);
             var ocspClient = new OcspClientBouncyCastle();
-            var tsaClient = new TSAClientBouncyCastle(tsServer, tsUser, tsPass, 0, DigestAlgorithms.SHA1);
+            // posebna podrska za definisanje željenog SHA algoritma
+            // default će biti SHA1
+            TSAClientBouncyCastle tsaClient = null;
+            if (tsServer.IndexOf( @":SHA1") > 0){
+                tsServer = tsServer.Replace(@":SHA1", "");
+                tsaClient = new TSAClientBouncyCastle(tsServer, tsUser, tsPass, 0, DigestAlgorithms.SHA1);
+            }
+            else if (tsServer.IndexOf(@":SHA256") > 0)
+            {
+                tsServer = tsServer.Replace(@":SHA256", "");
+                tsaClient = new TSAClientBouncyCastle(tsServer, tsUser, tsPass, 0, DigestAlgorithms.SHA256);
+            }
+            else if (tsServer.IndexOf(@":SHA384") > 0)
+            {
+                tsServer = tsServer.Replace(@":SHA384", "");
+                tsaClient = new TSAClientBouncyCastle(tsServer, tsUser, tsPass, 0, DigestAlgorithms.SHA384);
+            }
+            else if (tsServer.IndexOf(@":SHA512") > 0)
+            {
+                tsServer = tsServer.Replace(@":SHA512", "");
+                tsaClient = new TSAClientBouncyCastle(tsServer, tsUser, tsPass, 0, DigestAlgorithms.SHA512);
+            }
+            else if (tsServer != @"N" )
+            {
+                tsaClient = new TSAClientBouncyCastle(tsServer, tsUser, tsPass, 0, DigestAlgorithms.SHA1);
+            };
 
             var destinationDir = SigningTransferRules.LocalMap[SourceDir];
             var signatureLocation = SignatureRules.Map[SourceDir];

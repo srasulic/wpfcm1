@@ -198,9 +198,9 @@ namespace wpfcm1.FolderTypes
             {
                 try
                 {
-                    var isValid = await PdfHelpers.ValidatePdfCertificatesAsync(document.DocumentPath);
-                    document.IsValid = isValid;
-                    document.sigValidationInfo = @"O.K.";
+                    Tuple<bool, string> isValid = await PdfHelpers.ValidatePdfCertificatesWithInfoAsync(document.DocumentPath);
+                    document.IsValid = isValid.Item1;
+                    document.sigValidationInfo = isValid.Item2;
                 } catch (Exception e)
                 {
                     document.IsValid = false;

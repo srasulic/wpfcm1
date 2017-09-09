@@ -69,9 +69,19 @@ namespace wpfcm1.PDF
             appearance.Layer2Font = new Font(font);
 
 
+            // unapredjeno na SHA256 sem ako sertifikat podržava samo SHA1  
+            // unapređeno na CADES umesto CMS
+            IExternalSignature pks;
+            if (cert.SignatureAlgorithm.FriendlyName == "sha1RSA")
+            {
+                pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA1);
+            }
+            else
+            {
+                pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA256);
+            }
+            MakeSignature.SignDetached(appearance, pks, chain, crlList, ocspClient, tsaClient, 0, CryptoStandard.CADES);
 
-            IExternalSignature pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA1);
-            MakeSignature.SignDetached(appearance, pks, chain, crlList, ocspClient, tsaClient, 0, CryptoStandard.CMS);
 
         }
 

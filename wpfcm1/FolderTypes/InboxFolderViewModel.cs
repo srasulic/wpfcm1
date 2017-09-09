@@ -152,8 +152,15 @@ namespace wpfcm1.FolderTypes
             {
                 var fileName = Path.GetFileName(document.DocumentPath);
                 var destinationFilePath = Path.Combine(destinationDir, fileName + ".ack");
-                File.Create(destinationFilePath).Dispose();
-                document.IsAcknowledged = true;
+
+                string ackInfo = "\r\n"
+                    + " Pošiljalac: " + document.namePib1 + " - " + document.namePib1Name + "\r\n"
+                    + " Primalac: " + document.namePib2 + " - " + document.namePib2Name + "\r\n"
+                    + " Br Dokumenta: " + document.nameDocNum + "\r\n"
+                    + " Info o izvornom dokumentu - naziv: " + document.DocumentPath + "\r\n"
+                    + " Info o izvornom dokumentu - veličina: " + document.LengthKB + "\r\n"
+                    + " Info o izvornom dokumentu - potpisnik: " + document.sigSignerName + "\r\n";
+                document.IsAcknowledged = CreateAckFile(destinationFilePath, ackInfo);
             }
         }
 
@@ -176,8 +183,43 @@ namespace wpfcm1.FolderTypes
             {
                 var fileName = Path.GetFileName(document.DocumentPath);
                 var destinationFilePath = Path.Combine(destinationDir, fileName + ".ack");
-                File.Create(destinationFilePath).Dispose();
-                document.IsAcknowledged = true;
+                string ackInfo = "\r\n"
+                    + " Pošiljalac: " + document.namePib1 + " - " + document.namePib1Name + "\r\n"
+                    + " Primalac: " + document.namePib2 + " - " + document.namePib2Name + "\r\n"
+                    + " Br Dokumenta: " + document.nameDocNum + "\r\n"
+                    + " Info o izvornom dokumentu - naziv: " + document.DocumentPath + "\r\n"
+                    + " Info o izvornom dokumentu - veličina: " + document.LengthKB + "\r\n"
+                    + " Info o izvornom dokumentu - potpisnik: " + document.sigSignerName + "\r\n";
+                document.IsAcknowledged = CreateAckFile(destinationFilePath, ackInfo);
+            }
+        }
+
+        private static bool CreateAckFile(string filename, string ackInfo)
+        {
+            try
+            {
+
+                using (FileStream fs = File.Create(filename))
+                {
+
+                    Byte[] info = new System.Text.UTF8Encoding(true).GetBytes("Poruka o preuzimanju PoliSign : " 
+                                + filename 
+                                + ackInfo + " \r\n "
+                                + "OS time: " + DateTime.Now.ToString("dd MMM yyyy HH:mm:ss") + " \r\n "
+                                + "OS username: " + Environment.UserName + " \r\n "
+                                + "OS user domainname: " + Environment.UserDomainName + " \r\n "
+                                );
+                    // Add some information to the file.
+                    fs.Write(info, 0, info.Length);
+                }
+
+
+              //  File.Create(filename).Dispose();
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
 
