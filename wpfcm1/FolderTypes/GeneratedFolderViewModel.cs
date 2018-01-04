@@ -186,7 +186,7 @@ namespace wpfcm1.FolderTypes
             if (!IsActive) return;
 
 
-            var documents = Documents.Where(d => !d.Processed).Cast<GeneratedDocumentModel>();
+            var documents = Documents.Where(d => !d.Processed || d.IsChecked).Cast<GeneratedDocumentModel>();
             var pib = User.Default.PIB;
             if (string.IsNullOrEmpty(pib))
                 throw new ApplicationException("PIB korisnika nije unet!");
@@ -204,17 +204,21 @@ namespace wpfcm1.FolderTypes
             {
                 // prvo probamo sa prvim setom koordinata:
                 var matchResults = await PdfHelpers.ExtractTextAsync(document.DocumentPath, (RecognitionPatternModel.PibAttributes)recPatt.PibAttPrim, (RecognitionPatternModel.DocNumAttributes)recPatt.DocAttPrim);
-                document.Pib = Regex.Match(matchResults.Item1, @"[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
+                document.Pib = Regex.Match(matchResults.Item1, @"1[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
+                if (string.IsNullOrEmpty(document.Pib))
+                    document.Pib = Regex.Match(matchResults.Item1, @"222222222").Value;
+                if (string.IsNullOrEmpty(document.Pib))
+                    document.Pib = Regex.Match(matchResults.Item1, @"333333333").Value;
 
-                document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex1).Value;
+                document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex1, RegexOptions.Multiline).Value;
                 if (string.IsNullOrEmpty(document.InvoiceNo))
-                    document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex2).Value;
+                    document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex2, RegexOptions.Multiline).Value;
                 if (string.IsNullOrEmpty(document.InvoiceNo))
-                    document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex3).Value;
+                    document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex3, RegexOptions.Multiline).Value;
                 if (string.IsNullOrEmpty(document.InvoiceNo))
-                    document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex4).Value;
+                    document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex4, RegexOptions.Multiline).Value;
                 if (string.IsNullOrEmpty(document.InvoiceNo))
-                    document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex5).Value;
+                    document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex5, RegexOptions.Multiline).Value;
 
                 // zatim probamo sa drugim setom koordinata:
                 if (string.IsNullOrEmpty(document.InvoiceNo) || string.IsNullOrEmpty(document.Pib))
@@ -222,20 +226,20 @@ namespace wpfcm1.FolderTypes
                     matchResults = await PdfHelpers.ExtractTextAsync(document.DocumentPath, (RecognitionPatternModel.PibAttributes)recPatt.PibAttAlt, (RecognitionPatternModel.DocNumAttributes)recPatt.DocAttAlt);
                     if (string.IsNullOrEmpty(document.Pib))
                     {
-                        document.Pib = Regex.Match(matchResults.Item1, @"[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
+                        document.Pib = Regex.Match(matchResults.Item1, @"1[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
                     }
 
                     if (string.IsNullOrEmpty(document.InvoiceNo))
                     {
-                        document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex1).Value;
+                        document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex1, RegexOptions.Multiline).Value;
                         if (string.IsNullOrEmpty(document.InvoiceNo))
-                            document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex2).Value;
+                            document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex2, RegexOptions.Multiline).Value;
                         if (string.IsNullOrEmpty(document.InvoiceNo))
-                            document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex3).Value;
+                            document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex3, RegexOptions.Multiline).Value;
                         if (string.IsNullOrEmpty(document.InvoiceNo))
-                            document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex4).Value;
+                            document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex4, RegexOptions.Multiline).Value;
                         if (string.IsNullOrEmpty(document.InvoiceNo))
-                            document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex5).Value;
+                            document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex5, RegexOptions.Multiline).Value;
                     }
                 }
                 // ako posle svega nije prepoznat broj, dodeli mu vrednost za Neprepoznat string
@@ -244,33 +248,59 @@ namespace wpfcm1.FolderTypes
                     document.InvoiceNo = recPatt.DocRegexList.notRecognizedString;
                 }
 
-/*
-                document.InvoiceNo = Regex.Match(matchResults.Item2, @"F[0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
-
-                // perihard:
-                if (string.IsNullOrEmpty(document.InvoiceNo))
-                    document.InvoiceNo = Regex.Match(matchResults.Item2, @"[0-9]{2}-[0-9]{3}-[0-9]+").Value;
-                if (string.IsNullOrEmpty(document.InvoiceNo))
-                    document.InvoiceNo = Regex.Match(matchResults.Item2, @"[0-9]{1,3}-[0-9]+").Value;
-                if (string.IsNullOrEmpty(document.InvoiceNo))
-                    document.InvoiceNo = Regex.Match(matchResults.Item2, @"DPTR[0-9]{1,3}-[0-9]+").Value;
-                // farmalogist KP
-                if (string.IsNullOrEmpty(document.InvoiceNo))
-                    document.InvoiceNo = Regex.Match(matchResults.Item2, @"[A-Z]{2,4}-[0-9]{8,9}").Value;
-               
-                 //budzevina za perihard Zapisnike
-                // TODO: ovo napraviti kao univerzalno rešenje - trebaće i drugima
-                if ( string.IsNullOrEmpty(document.Pib) ) {
-                    var matchResults_ZAP = await PdfHelpers.ExtractTextAsync_ZAP(document.DocumentPath);
-                    document.Pib = Regex.Match(matchResults_ZAP.Item1, @"[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
-                    document.InvoiceNo = "Zapisnik";
-
-                }
-*/
                 Regex regexAllowedCharacters = new Regex(@"[^0-9a-zA-Z]");
                 document.InvoiceNo = regexAllowedCharacters.Replace(document.InvoiceNo, @"-");
 
                 document.Processed = true;
+
+                //Dodajemo proveru validnosti podataka koje smo dobili:
+                // (ovo se radi i na pregledu - gridu ali tamo se obrade samo prikazani pa IsValid ostane nedodeljeno ako se ne skroluje)
+
+                document.IsValid = true;
+                if (string.IsNullOrWhiteSpace(document.Pib))
+                {
+                    document.IsValid = false;
+                }
+                var regexPib = new Regex(@"\b\d{9}\b");
+                if (!regexPib.IsMatch(document.Pib))
+                {
+                    document.IsValid = false;
+                }
+
+                if (document.Pib != "111111111" && document.Pib != "222222222" && document.Pib != "333333333")
+                {
+                    // begin kontrola PIBa:
+                    int ost_pret = 10;
+                    string cifra;
+                    int i_cifra, suma, ostatak, umnozak, kontCifraIzracunata, kontCifra;
+
+                    for (int i = 0; i < 8; i++)
+                    {
+                        cifra = document.Pib.Substring(i, 1);
+                        int.TryParse(cifra, out i_cifra);
+                        suma = ost_pret + i_cifra;
+                        ostatak = suma % 10;
+                        if (ostatak == 0) { ostatak = 10; }
+                        umnozak = ostatak * 2;
+                        ost_pret = umnozak % 11;
+                    }
+
+                    int.TryParse(document.Pib.Substring(document.Pib.Length - 1, 1), out kontCifra);
+                    kontCifraIzracunata = (11 - ost_pret) % 10;
+
+
+                    if (kontCifraIzracunata != kontCifra)
+                    {
+                        document.IsValid = false;
+                    }
+                    // end kontrola PIBa:
+                }
+
+                if (string.IsNullOrWhiteSpace(document.InvoiceNo))
+                {
+                    document.IsValid = false;
+                }
+
             }
             CheckForDuplicateInvNo();
         }

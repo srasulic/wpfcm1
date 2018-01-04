@@ -9,9 +9,16 @@
                 <ResourceDictionary.MergedDictionaries>
                     <ResourceDictionary Source="FolderResources.xaml" />
                 </ResourceDictionary.MergedDictionaries>
+                <BooleanToVisibilityConverter x:Key="b2vc" />
+                <conv:InverseBooleanToVisibilityConverter x:Key="ib2vc" />
                 <conv:InverseBooleanToBoldConverter x:Key="ib2bc" />
                 <conv:BooleanToOpacityConverter x:Key="b2oc" />
                 <conv:BooleanToBackgroundColourConverter x:Key="b2bcc" />
+                <DataTemplate x:Key="StatusCol">
+                    <StackPanel>
+                        <Image Source="{StaticResource PngRemove}" Visibility="{Binding Path=IsValid, Converter={StaticResource ib2vc}}" ToolTip="Nevalidan PIB ili nema broja dokumenta" />
+                    </StackPanel>
+                </DataTemplate>
             </ResourceDictionary>
         </Grid.Resources>
         <Grid.RowDefinitions>
@@ -42,6 +49,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="Datum" Binding="{Binding Path=DocumentInfo.LastWriteTime}" IsReadOnly="True"/>
+                <DataGridTemplateColumn  CellTemplate="{StaticResource StatusCol}" MinWidth="32" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

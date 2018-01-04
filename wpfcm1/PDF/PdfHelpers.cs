@@ -185,8 +185,12 @@ namespace wpfcm1.PDF
                 var c2 = new X509Certificate2();
                 c2.Import(pkcs7.SigningCertificate.GetEncoded());
                 var c2chain = CertificateHelpers.GetChain(c2);
-                var errors = CertificateHelpers.CheckCertificate(c2, c2chain);
-                if (errors.Count > 0) throw new Exception("Greška u lancu sertifikata. Proverite da li je instaliran root sertifikat u lancu / Certificate chain error. Check if You trust all certificates in chain.");
+ 
+                // Isključeno jer proverava da li su sertifikati validni u ovom trenutku
+                // TODO: dodati validaciju na ispravan način!!!!!
+
+                // var errors = CertificateHelpers.CheckCertificate(c2, c2chain);
+                // if (errors.Count > 0) throw new Exception("Greška u lancu sertifikata. Proverite da li je instaliran root sertifikat u lancu / Certificate chain error. Check if You trust all certificates in chain.");
 
                 // Exceptions:
                 //   Org.BouncyCastle.Security.Certificates.CertificateExpiredException

@@ -93,6 +93,9 @@ namespace wpfcm1.PDF
             if (sigLocation == SignatureRules.SignatureLocation.UpperLeft)
             {
                 var signatureRect = new Rectangle(10, pageRect.Height - 60, 200, pageRect.Height - 10);
+                // Za Korporion urađena dorada, spušten potpis na dno strane. 
+                // TODO: parametrizovati ovo u settingsu
+                //                var signatureRect = new Rectangle(360, 60, 550, 110);
                 return signatureRect;
             }
             else

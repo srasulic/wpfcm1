@@ -103,13 +103,13 @@ namespace wpfcm1.Certificates
 
             var certificateSimpleName = certificate.GetNameInfo(X509NameType.SimpleName, false);
             var match = Regex.Match(certificateSimpleName, @"\b(\d{6,9})(-(\d{13}))?\b");
-            var jmbg = match.Groups[3].Value;
+//            var jmbg = match.Groups[3].Value;
             // TODO: Zasto nam je ovo uopste vazno? Da li smo imali neku ideju sta sa JMBG ili nismo znali da postoje specijlani slucajevi kada se sert moze izdati bez jmbg...
-            if (!string.IsNullOrEmpty(jmbg))
-            {
-                bool jmbgOk = CheckJmbg(jmbg);
-                if (!jmbgOk) errors.Add("Bad JMBG.");
-            }
+//            if (!string.IsNullOrEmpty(jmbg))
+//            {
+//                bool jmbgOk = CheckJmbg(jmbg);
+//                if (!jmbgOk) errors.Add("Bad JMBG.");
+//            }
 
             var chain = chainBuildInfo.Item1;
             var isChainValid = chainBuildInfo.Item2;
