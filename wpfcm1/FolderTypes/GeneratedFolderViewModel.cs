@@ -265,9 +265,8 @@ namespace wpfcm1.FolderTypes
                 if (!regexPib.IsMatch(document.Pib))
                 {
                     document.IsValid = false;
-                }
-
-                if (document.Pib != "111111111" && document.Pib != "222222222" && document.Pib != "333333333")
+                } 
+                else if (document.Pib != "111111111" && document.Pib != "222222222" && document.Pib != "333333333")
                 {
                     // begin kontrola PIBa:
                     int ost_pret = 10;
