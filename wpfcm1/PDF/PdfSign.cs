@@ -90,18 +90,50 @@ namespace wpfcm1.PDF
             SignatureRules.SignatureLocation sigLocation)
         {
             var pageRect = reader.GetPageSize(1);
-            if (sigLocation == SignatureRules.SignatureLocation.UpperLeft)
+            var pageRotation = reader.GetPageRotation(1);
+
+            // ako je portrait:
+            if (pageRotation == 0)
             {
-                var signatureRect = new Rectangle(10, pageRect.Height - 60, 200, pageRect.Height - 10);
-                // Za Korporion urađena dorada, spušten potpis na dno strane. 
-                // TODO: parametrizovati ovo u settingsu
-                //                var signatureRect = new Rectangle(360, 60, 550, 110);
-                return signatureRect;
+                if (sigLocation == SignatureRules.SignatureLocation.UpperLeft)
+                {
+                    var signatureRect = new Rectangle(10, pageRect.Height - 60, 200, pageRect.Height - 10);
+                    // Za Korporion urađena dorada, spušten potpis na dno strane: var signatureRect = new Rectangle(360, 60, 550, 110);
+                    return signatureRect;
+                }
+                else
+                {
+                    var signatureRect = new Rectangle(pageRect.Width - 200, pageRect.Height - 60, pageRect.Width - 10, pageRect.Height - 10);
+                    return signatureRect;
+                }
             }
-            else
+            // ako je landscape:
+            else if (pageRotation == 90)
             {
-                var signatureRect = new Rectangle(pageRect.Width - 200, pageRect.Height - 60, pageRect.Width - 10, pageRect.Height - 10);
-                return signatureRect;
+                if (sigLocation == SignatureRules.SignatureLocation.UpperLeft)
+                {
+                    var signatureRect = new Rectangle(10, pageRect.Width - 60, 200, pageRect.Width - 10);
+                    return signatureRect;
+                }
+                else
+                {
+                    var signatureRect = new Rectangle(pageRect.Height - 200, pageRect.Width - 60, pageRect.Height - 10, pageRect.Width - 10);
+                    return signatureRect;
+                }
+            }            
+            // ako nije ni landscape ni portrait, stavi potpise bilo gde na strani gde ce se uvek videti:
+            else 
+            {
+                if (sigLocation == SignatureRules.SignatureLocation.UpperLeft)
+                {
+                    var signatureRect = new Rectangle(10, 10, 200, 200);
+                    return signatureRect;
+                }
+                else
+                {
+                    var signatureRect = new Rectangle(10, 300, 200, 500);
+                    return signatureRect;
+                }
             }
         }
 
