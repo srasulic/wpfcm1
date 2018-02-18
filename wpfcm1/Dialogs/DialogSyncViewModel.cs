@@ -47,6 +47,7 @@ namespace wpfcm1.Dialogs
                 NotifyOfPropertyChange(() => InProgress);
                 NotifyOfPropertyChange(() => CanOnClose);
                 NotifyOfPropertyChange(() => CanOnStart);
+                NotifyOfPropertyChange(() => CanOnCancel);
             }
         }
 
@@ -69,6 +70,8 @@ namespace wpfcm1.Dialogs
 
         public bool CanOnStart { get { return !InProgress; } }
 
+        public bool CanOnCancel { get { return InProgress; } }
+
         public async void OnStart()
         {
             // ToDO: smestiti ovo negde na lepše mesto, za sad je u FolderViewModel... 
@@ -83,7 +86,7 @@ namespace wpfcm1.Dialogs
             }
             catch (OperationCanceledException ex)
             {
-                Log.Error("Signing cancelled...", ex);
+                Log.Error("Synch cancelled...", ex);
                 (_reporter as IProgress<string>).Report("Operation cancelled");
                 (_reporter as IProgress<string>).Report(ex.Message);
             }

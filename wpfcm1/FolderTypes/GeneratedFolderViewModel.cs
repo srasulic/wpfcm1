@@ -181,6 +181,49 @@ namespace wpfcm1.FolderTypes
             }
         }
 
+
+        public static bool IsPibOk (String pib)
+        {
+            if (string.IsNullOrWhiteSpace(pib))
+            {
+                return false;
+            }
+            var regexPib = new Regex(@"\b\d{9}\b");
+            // ako nije 9 cifara vrati false
+            if (!regexPib.IsMatch(pib))
+            {
+                return false;
+            } 
+            // ako je jedan od testnih vrati true
+            if (pib == "111111111" || pib == "222222222" || pib == "333333333")
+            {
+                return true;
+            }
+
+            // kontrola PIBa:
+            int ost_pret = 10;
+            string cifra;
+            int i_cifra, suma, ostatak, umnozak, kontCifraIzracunata, kontCifra;
+
+            for (int i = 0; i < 8; i++)
+            {
+                cifra = pib.Substring(i, 1);
+                int.TryParse(cifra, out i_cifra);
+                suma = ost_pret + i_cifra;
+                ostatak = suma % 10;
+                if (ostatak == 0) { ostatak = 10; }
+                umnozak = ostatak * 2;
+                ost_pret = umnozak % 11;
+            }
+
+            int.TryParse(pib.Substring(pib.Length - 1, 1), out kontCifra);
+            kontCifraIzracunata = (11 - ost_pret) % 10;
+
+
+            if (kontCifraIzracunata != kontCifra) return false;
+            else return true;
+        }
+
         public async void Handle(MessageExtractData message)
         {
             if (!IsActive) return;
@@ -204,12 +247,13 @@ namespace wpfcm1.FolderTypes
             {
                 // prvo probamo sa prvim setom koordinata:
                 var matchResults = await PdfHelpers.ExtractTextAsync(document.DocumentPath, (RecognitionPatternModel.PibAttributes)recPatt.PibAttPrim, (RecognitionPatternModel.DocNumAttributes)recPatt.DocAttPrim);
-                document.Pib = Regex.Match(matchResults.Item1, @"1[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
-                if (string.IsNullOrEmpty(document.Pib))
-                    document.Pib = Regex.Match(matchResults.Item1, @"222222222").Value;
-                if (string.IsNullOrEmpty(document.Pib))
-                    document.Pib = Regex.Match(matchResults.Item1, @"333333333").Value;
 
+                MatchCollection matches = Regex.Matches(matchResults.Item1, @"[1-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]");
+                foreach (Match match in matches)
+                {
+                    if ( IsPibOk(match.Value) ) document.Pib = match.Value;
+                }
+                
                 document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex1, RegexOptions.Multiline).Value;
                 if (string.IsNullOrEmpty(document.InvoiceNo))
                     document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.regex2, RegexOptions.Multiline).Value;
@@ -226,7 +270,11 @@ namespace wpfcm1.FolderTypes
                     matchResults = await PdfHelpers.ExtractTextAsync(document.DocumentPath, (RecognitionPatternModel.PibAttributes)recPatt.PibAttAlt, (RecognitionPatternModel.DocNumAttributes)recPatt.DocAttAlt);
                     if (string.IsNullOrEmpty(document.Pib))
                     {
-                        document.Pib = Regex.Match(matchResults.Item1, @"1[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]").Value;
+                        matches = Regex.Matches(matchResults.Item1, @"[1-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]");
+                        foreach (Match match in matches)
+                        {
+                            if (IsPibOk(match.Value)) document.Pib = match.Value;
+                        }
                     }
 
                     if (string.IsNullOrEmpty(document.InvoiceNo))
@@ -256,44 +304,7 @@ namespace wpfcm1.FolderTypes
                 //Dodajemo proveru validnosti podataka koje smo dobili:
                 // (ovo se radi i na pregledu - gridu ali tamo se obrade samo prikazani pa IsValid ostane nedodeljeno ako se ne skroluje)
 
-                document.IsValid = true;
-                if (string.IsNullOrWhiteSpace(document.Pib))
-                {
-                    document.IsValid = false;
-                }
-                var regexPib = new Regex(@"\b\d{9}\b");
-                if (!regexPib.IsMatch(document.Pib))
-                {
-                    document.IsValid = false;
-                } 
-                else if (document.Pib != "111111111" && document.Pib != "222222222" && document.Pib != "333333333")
-                {
-                    // begin kontrola PIBa:
-                    int ost_pret = 10;
-                    string cifra;
-                    int i_cifra, suma, ostatak, umnozak, kontCifraIzracunata, kontCifra;
-
-                    for (int i = 0; i < 8; i++)
-                    {
-                        cifra = document.Pib.Substring(i, 1);
-                        int.TryParse(cifra, out i_cifra);
-                        suma = ost_pret + i_cifra;
-                        ostatak = suma % 10;
-                        if (ostatak == 0) { ostatak = 10; }
-                        umnozak = ostatak * 2;
-                        ost_pret = umnozak % 11;
-                    }
-
-                    int.TryParse(document.Pib.Substring(document.Pib.Length - 1, 1), out kontCifra);
-                    kontCifraIzracunata = (11 - ost_pret) % 10;
-
-
-                    if (kontCifraIzracunata != kontCifra)
-                    {
-                        document.IsValid = false;
-                    }
-                    // end kontrola PIBa:
-                }
+                document.IsValid = IsPibOk(document.Pib);
 
                 if (string.IsNullOrWhiteSpace(document.InvoiceNo))
                 {

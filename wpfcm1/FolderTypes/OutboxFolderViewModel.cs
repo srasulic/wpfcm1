@@ -21,7 +21,8 @@ namespace wpfcm1.FolderTypes
     public class OutboxFolderViewModel : FolderViewModel, IHandle<MessageReject>, IHandle<MessageXls>
     {
         private readonly IWindowManager _windowManager;
-        new protected string[] Extensions = { ".pdf", ".ack", ".xml" };
+//        new protected string[] Extensions = { ".pdf", ".ack", ".xml" };
+        new protected string[] Extensions = { ".pdf", ".ack" };
 
 
         public OutboxFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
@@ -76,7 +77,7 @@ namespace wpfcm1.FolderTypes
             else if (Regex.IsMatch(filePath, @".+.pdf.xml$", RegexOptions.IgnoreCase))
             {
                 // xml-ove ne prikazujemo - mesto za akciju za xml fajl
-                Documents.Add(new OutboxDocumentModel(new FileInfo(filePath)));
+//                Documents.Add(new OutboxDocumentModel(new FileInfo(filePath)));
 //                var docName = filePath;
 //                var found = Documents.Where(d => d.DocumentPath == docName).FirstOrDefault();
 //                if (!(found == null)) found.tipDok = "Poruka za server (promena statusa dokumenta)";

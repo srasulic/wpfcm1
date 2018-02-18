@@ -130,7 +130,7 @@ namespace wpfcm1.Model
             DocRegexList.regex3 = @"[0-9]{1,3}-[0-9]+";
             DocRegexList.regex4 = @"DPTR[0-9]{1,3}-[0-9]+";
             DocRegexList.regex5 = @"[A-Z]{2,4}-[0-9]{8,9}";
-            DocRegexList.notRecognizedString = @"Zapisnik";
+            DocRegexList.notRecognizedString = @"ZAP";
         }
 
 

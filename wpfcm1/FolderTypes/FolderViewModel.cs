@@ -427,6 +427,10 @@ namespace wpfcm1.FolderTypes
             {
                 InternalMessengerGetStates();
             }
+            else if (Regex.IsMatch(filePath, @".+.pdf.xml$", RegexOptions.IgnoreCase))
+            {
+                // xml-ove ne prikazujemo - mesto za akciju za xml fajl
+            }
             else
             {
                 Documents.Add(new DocumentModel(new FileInfo(filePath)));

@@ -75,6 +75,7 @@ namespace wpfcm1.FTP
         /// <returns></returns>
         /// NAPOMENA: odustali smo od asinhrone funkcije jer nije pouzdano vraćala listu fajlova. Sekla je rezultate.
         ///           Kroz debugger je radila ispravno... 
+        /// NAPOMENA 2: Po svemu sudeći, bug je u radu funkcije Peek... 
         public IEnumerable<string> ListDirectoryDetails(string ftpDir = "")
         {
             var uri = string.Format("{0}/{1}", Uri, ftpDir);
