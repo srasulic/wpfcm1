@@ -57,8 +57,12 @@ namespace wpfcm1.Model
 
         public PibAttributesPrim PibAttPrim { get; set; }
         public PibAttributesAlt PibAttAlt { get; set; }
+        public PibAttributesAlt PibAttAlt1 { get; set; }
+        public PibAttributesAlt PibAttAlt2 { get; set; }
         public DocNumAttributesPrim DocAttPrim { get; set; }
         public DocNumAttributesAlt DocAttAlt { get; set; }
+        public DocNumAttributesAlt DocAttAlt1 { get; set; }
+        public DocNumAttributesAlt DocAttAlt2 { get; set; }
         public DocNumRegexList DocRegexList { get; set; }
     
         public RecognitionPatternModel() {
@@ -90,8 +94,12 @@ namespace wpfcm1.Model
                         RecognitionPatternModel r = Newtonsoft.Json.JsonConvert.DeserializeObject<RecognitionPatternModel>(responseFromServer);
                         this.PibAttPrim = r.PibAttPrim;
                         this.PibAttAlt = r.PibAttAlt;
+                        this.PibAttAlt1 = r.PibAttAlt1;
+                        this.PibAttAlt2 = r.PibAttAlt2;
                         this.DocAttPrim = r.DocAttPrim;
                         this.DocAttAlt = r.DocAttAlt;
+                        this.DocAttAlt1 = r.DocAttAlt1;
+                        this.DocAttAlt2 = r.DocAttAlt2;
                         this.DocRegexList = r.DocRegexList;
 
                         reader.Close();
