@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using wpfcm1.DataAccess;
+using wpfcm1.Settings;
 
 namespace wpfcm1.PDF
 {
@@ -95,7 +96,7 @@ namespace wpfcm1.PDF
 
     public static class FtpTransferRules
     {
-        public enum TransferAction { Upload, Download, Sync };
+        public enum TransferAction { Upload, Download, Sync, Exclude };
 
         public static Dictionary<string, string> FtpMap = new Dictionary<string, string>()
         {
@@ -127,30 +128,30 @@ namespace wpfcm1.PDF
 
         public static Dictionary<string, TransferAction> Action = new Dictionary<string, TransferAction>()
         {
-            {FolderManager.InvoicesOutboundOutboxFolder, TransferAction.Upload},
-            {FolderManager.InvoicesOutboundPendFolder, TransferAction.Sync},
-            {FolderManager.InvoicesOutboundConfirmedFolder, TransferAction.Download},
-            {FolderManager.InvoicesInboundInboxFolder, TransferAction.Sync},
-            {FolderManager.InvoicesInboundOutboxFolder, TransferAction.Upload},
-            {FolderManager.InvoicesInboundConfirmedFolder, TransferAction.Download},
-            {FolderManager.IosOutboundOutboxFolder, TransferAction.Upload},
-            {FolderManager.IosOutboundPendFolder, TransferAction.Sync},
-            {FolderManager.IosOutboundConfirmedFolder, TransferAction.Download},
-            {FolderManager.IosInboundInboxFolder, TransferAction.Sync},
-            {FolderManager.IosInboundOutboxFolder, TransferAction.Upload},
-            {FolderManager.IosInboundConfirmedFolder, TransferAction.Download},
-            {FolderManager.KpOutboundOutboxFolder, TransferAction.Upload},
-            {FolderManager.KpOutboundPendFolder, TransferAction.Sync},
-            {FolderManager.KpOutboundConfirmedFolder, TransferAction.Download},
-            {FolderManager.KpInboundInboxFolder, TransferAction.Sync},
-            {FolderManager.KpInboundOutboxFolder, TransferAction.Upload},
-            {FolderManager.KpInboundConfirmedFolder, TransferAction.Download},
-            {FolderManager.OtherOutboundOutboxFolder, TransferAction.Upload},
-            {FolderManager.OtherOutboundPendFolder, TransferAction.Sync},
-            {FolderManager.OtherOutboundConfirmedFolder, TransferAction.Download},
-            {FolderManager.OtherInboundInboxFolder, TransferAction.Sync},
-            {FolderManager.OtherInboundOutboxFolder, TransferAction.Upload},
-            {FolderManager.OtherInboundConfirmedFolder, TransferAction.Download}
+            {FolderManager.InvoicesOutboundOutboxFolder, (User.Default.InvoicesOutbound ? TransferAction.Upload : TransferAction.Exclude)},
+            {FolderManager.InvoicesOutboundPendFolder, (User.Default.InvoicesOutbound ? TransferAction.Sync : TransferAction.Exclude)},
+            {FolderManager.InvoicesOutboundConfirmedFolder, (User.Default.InvoicesOutbound ? TransferAction.Download : TransferAction.Exclude)},
+            {FolderManager.InvoicesInboundInboxFolder, (User.Default.InvoicesInbound ? TransferAction.Sync : TransferAction.Exclude)},
+            {FolderManager.InvoicesInboundOutboxFolder, (User.Default.InvoicesInbound ? TransferAction.Upload : TransferAction.Exclude)},
+            {FolderManager.InvoicesInboundConfirmedFolder, (User.Default.InvoicesInbound? TransferAction.Download : TransferAction.Exclude)},
+            {FolderManager.IosOutboundOutboxFolder, (User.Default.IosOutbound ? TransferAction.Upload : TransferAction.Exclude)},
+            {FolderManager.IosOutboundPendFolder, (User.Default.IosOutbound ? TransferAction.Sync : TransferAction.Exclude)},
+            {FolderManager.IosOutboundConfirmedFolder, (User.Default.IosOutbound ? TransferAction.Download : TransferAction.Exclude)},
+            {FolderManager.IosInboundInboxFolder, (User.Default.IosInbound ? TransferAction.Sync : TransferAction.Exclude)},
+            {FolderManager.IosInboundOutboxFolder, (User.Default.IosInbound ? TransferAction.Upload : TransferAction.Exclude)},
+            {FolderManager.IosInboundConfirmedFolder, (User.Default.IosInbound? TransferAction.Download : TransferAction.Exclude)},
+            {FolderManager.KpOutboundOutboxFolder, (User.Default.KpOutbound ? TransferAction.Upload : TransferAction.Exclude)},
+            {FolderManager.KpOutboundPendFolder, (User.Default.KpOutbound ? TransferAction.Sync : TransferAction.Exclude)},
+            {FolderManager.KpOutboundConfirmedFolder, (User.Default.KpOutbound ? TransferAction.Download : TransferAction.Exclude)},
+            {FolderManager.KpInboundInboxFolder, (User.Default.KpInbound ? TransferAction.Sync : TransferAction.Exclude)},
+            {FolderManager.KpInboundOutboxFolder, (User.Default.KpInbound ? TransferAction.Upload : TransferAction.Exclude)},
+            {FolderManager.KpInboundConfirmedFolder, (User.Default.KpInbound ? TransferAction.Download : TransferAction.Exclude)},
+            {FolderManager.OtherOutboundOutboxFolder, (User.Default.OtherOutbound ? TransferAction.Upload : TransferAction.Exclude)},
+            {FolderManager.OtherOutboundPendFolder, (User.Default.OtherOutbound ? TransferAction.Sync : TransferAction.Exclude)},
+            {FolderManager.OtherOutboundConfirmedFolder, (User.Default.OtherOutbound ? TransferAction.Download : TransferAction.Exclude)},
+            {FolderManager.OtherInboundInboxFolder, (User.Default.OtherInbound ? TransferAction.Sync : TransferAction.Exclude)},
+            {FolderManager.OtherInboundOutboxFolder, (User.Default.OtherInbound ? TransferAction.Upload : TransferAction.Exclude)},
+            {FolderManager.OtherInboundConfirmedFolder, (User.Default.OtherInbound ? TransferAction.Download : TransferAction.Exclude)}
         };
 
         public static Dictionary<string, string> LocalMap = new Dictionary<string, string>()

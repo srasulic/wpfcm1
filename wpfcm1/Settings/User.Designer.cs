@@ -12,7 +12,7 @@ namespace wpfcm1.Settings {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.5.0.0")]
     internal sealed partial class User : global::System.Configuration.ApplicationSettingsBase {
         
         private static User defaultInstance = ((User)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new User())));
@@ -212,6 +212,102 @@ namespace wpfcm1.Settings {
             }
             set {
                 this["UryNo"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool InvoicesInbound {
+            get {
+                return ((bool)(this["InvoicesInbound"]));
+            }
+            set {
+                this["InvoicesInbound"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool InvoicesOutbound {
+            get {
+                return ((bool)(this["InvoicesOutbound"]));
+            }
+            set {
+                this["InvoicesOutbound"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IosInbound {
+            get {
+                return ((bool)(this["IosInbound"]));
+            }
+            set {
+                this["IosInbound"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IosOutbound {
+            get {
+                return ((bool)(this["IosOutbound"]));
+            }
+            set {
+                this["IosOutbound"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool KpInbound {
+            get {
+                return ((bool)(this["KpInbound"]));
+            }
+            set {
+                this["KpInbound"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool KpOutbound {
+            get {
+                return ((bool)(this["KpOutbound"]));
+            }
+            set {
+                this["KpOutbound"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool OtherInbound {
+            get {
+                return ((bool)(this["OtherInbound"]));
+            }
+            set {
+                this["OtherInbound"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool OtherOutbound {
+            get {
+                return ((bool)(this["OtherOutbound"]));
+            }
+            set {
+                this["OtherOutbound"] = value;
             }
         }
     }
