@@ -37,8 +37,7 @@
         <TextBlock Grid.Row="6" Grid.Column="0" Text="Timestamp server" VerticalAlignment="Center"/>
         <TextBlock Grid.Row="7" Grid.Column="0" Text="Timestamp username" VerticalAlignment="Center"/>
         <TextBlock Grid.Row="8" Grid.Column="0" Text="Timestamp password" VerticalAlignment="Center"/>
-        <TextBlock Grid.Row="9" Grid.Column="0" Text="koordinate PIB-a" VerticalAlignment="Center"/>
-        <TextBlock Grid.Row="10" Grid.Column="0" Text="Koordinate otpremnice" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="9" Grid.Column="0" Text="Sinhronizacija" VerticalAlignment="Center"/>
         
         <TextBox Grid.Row="0" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.RootFolder, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBox Grid.Row="1" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.UserName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
@@ -49,7 +48,7 @@
         <TextBox Grid.Row="6" Grid.Column="1"  Margin="3" Text="{Binding Path=UserTemp.TimestampServer, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBox Grid.Row="7" Grid.Column="1"  Margin="3" Text="{Binding Path=UserTemp.TimestampUserName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBox Grid.Row="8" Grid.Column="1"  Margin="3" Text="{Binding Path=UserTemp.TimestampPassword, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-        
+
         <Grid Grid.Row="9" Grid.Column="1" Margin="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -61,16 +60,15 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Text="llx:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <TextBox Grid.Column="1" VerticalAlignment="Center" Text="{Binding Path=UserTemp.LlxPib, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Grid.Column="2" Text="lly:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <TextBox Grid.Column="3" VerticalAlignment="Center" Text="{Binding Path=UserTemp.LlyPib, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Grid.Column="4" Text="urx:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <TextBox Grid.Column="5" VerticalAlignment="Center" Text="{Binding Path=UserTemp.UrxPib, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Grid.Column="6" Text="ury:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <TextBox Grid.Column="7" VerticalAlignment="Center" Text="{Binding Path=UserTemp.UryPib, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Column="0" Text="UF:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <CheckBox Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding Path=UserTemp.InvoicesInbound, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Column="2" Text="IF:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <CheckBox Grid.Column="3" VerticalAlignment="Center" IsChecked="{Binding Path=UserTemp.InvoicesOutbound, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Column="4" Text="UKP:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <CheckBox Grid.Column="5" VerticalAlignment="Center" IsChecked="{Binding Path=UserTemp.KpInbound, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Column="6" Text="IKP:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <CheckBox Grid.Column="7" VerticalAlignment="Center" IsChecked="{Binding Path=UserTemp.KpOutbound, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
-
         <Grid Grid.Row="10" Grid.Column="1" Margin="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -82,17 +80,17 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Text="llx:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <TextBox Grid.Column="1" VerticalAlignment="Center" Text="{Binding Path=UserTemp.LlxNo, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Grid.Column="2" Text="lly:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <TextBox Grid.Column="3" VerticalAlignment="Center" Text="{Binding Path=UserTemp.LlyNo, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Grid.Column="4" Text="urx:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <TextBox Grid.Column="5" VerticalAlignment="Center" Text="{Binding Path=UserTemp.UrxNo, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Grid.Column="6" Text="ury:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <TextBox Grid.Column="7" VerticalAlignment="Center" Text="{Binding Path=UserTemp.UryNo, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Column="0" Text="UIos:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <CheckBox Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding Path=UserTemp.IosInbound, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Column="2" Text="IIos:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <CheckBox Grid.Column="3" VerticalAlignment="Center" IsChecked="{Binding Path=UserTemp.IosOutbound, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Column="4" Text="UO:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <CheckBox Grid.Column="5" VerticalAlignment="Center" IsChecked="{Binding Path=UserTemp.OtherInbound, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Column="6" Text="IO:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <CheckBox Grid.Column="7" VerticalAlignment="Center" IsChecked="{Binding Path=UserTemp.OtherOutbound, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
 
-        <StackPanel Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+        <StackPanel Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Button Content="OK" Width="96" Height="32" x:Name="OnClose" Margin="3"/>
             <Button Content="Cancel" Width="96" Height="32" x:Name="OnCancel" Margin="3,3,0,3"/>
         </StackPanel>

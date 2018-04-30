@@ -18,6 +18,7 @@ namespace wpfcm1.Dialogs
         private string _timestampPassword;
         private float _llxPib, _llyPib, _urxPib, _uryPib;
         private float _llxNo, _llyNo, _urxNo, _uryNo;
+        private bool _invoicesInbound, _invoicesOutbound, _iosInbound, _iosOutbound, _kpInbound, _kpOutbound, _otherInbound, _otherOutbound;
 
         public UserModel()
         {
@@ -41,6 +42,14 @@ namespace wpfcm1.Dialogs
             LlyNo = user.LlyNo;
             UrxNo = user.UrxNo;
             UryNo = user.UryNo;
+            InvoicesInbound = user.InvoicesInbound;
+            InvoicesOutbound = user.InvoicesOutbound;
+            IosInbound = user.IosInbound;
+            IosOutbound = user.IosOutbound;
+            KpInbound = user.KpInbound;
+            KpOutbound = user.KpOutbound;
+            OtherInbound = user.OtherInbound;
+            OtherOutbound = user.OtherOutbound;
         }
 
         public string RootFolder
@@ -190,6 +199,55 @@ namespace wpfcm1.Dialogs
             set { _uryNo = value; NotifyOfPropertyChange(() => UryNo); }
         }
 
+        //    private bool , _InvoicesOutbound, _IosInbound, _IosOutbound, _KpInbound, _KpOutbound, _OtherInbound, _OtherOutbound;
+        public bool InvoicesInbound
+        {
+            get { return _invoicesInbound; }
+            set { _invoicesInbound = value; NotifyOfPropertyChange(() => _invoicesInbound); }
+        }
+
+        public bool InvoicesOutbound
+        {
+            get { return _invoicesOutbound; }
+            set { _invoicesOutbound = value; NotifyOfPropertyChange(() => _invoicesOutbound); }
+        }
+
+        public bool IosInbound
+        {
+            get { return _iosInbound; }
+            set { _iosInbound = value; NotifyOfPropertyChange(() => _iosInbound); }
+        }
+
+        public bool IosOutbound
+        {
+            get { return _iosOutbound; }
+            set { _iosOutbound = value; NotifyOfPropertyChange(() => _iosOutbound); }
+        }
+
+        public bool KpInbound
+        {
+            get { return _kpInbound; }
+            set { _kpInbound = value; NotifyOfPropertyChange(() => _kpInbound); }
+        }
+
+        public bool KpOutbound
+        {
+            get { return _kpOutbound; }
+            set { _kpOutbound = value; NotifyOfPropertyChange(() => _kpOutbound); }
+        }
+
+        public bool OtherInbound
+        {
+            get { return _otherInbound; }
+            set { _otherInbound = value; NotifyOfPropertyChange(() => _otherInbound); }
+        }
+
+        public bool OtherOutbound
+        {
+            get { return _otherOutbound; }
+            set { _otherOutbound = value; NotifyOfPropertyChange(() => _otherOutbound); }
+        }
+
         public string this[string columnName]
         {
             get
@@ -214,6 +272,8 @@ namespace wpfcm1.Dialogs
 
         public string Error { get; set; }
     }
+
+
 
     public class DialogSettingsViewModel : Screen
     {
@@ -255,6 +315,14 @@ namespace wpfcm1.Dialogs
             User.Default.LlyNo = UserTemp.LlyNo;
             User.Default.UrxNo = UserTemp.UrxNo;
             User.Default.UryNo = UserTemp.UryNo;
+            User.Default.InvoicesInbound = UserTemp.InvoicesInbound;
+            User.Default.InvoicesOutbound = UserTemp.InvoicesOutbound;
+            User.Default.IosInbound = UserTemp.IosInbound;
+            User.Default.IosOutbound = UserTemp.IosOutbound;
+            User.Default.KpInbound = UserTemp.KpInbound;
+            User.Default.KpOutbound = UserTemp.KpOutbound;
+            User.Default.OtherInbound = UserTemp.OtherInbound;
+            User.Default.OtherOutbound = UserTemp.OtherOutbound;
 
             User.Default.Save();
             Folders.Default.Save();

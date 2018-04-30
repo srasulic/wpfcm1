@@ -25,18 +25,23 @@ namespace wpfcm1.FTP
         public string User { get; private set; }
         public string Pass { get; private set; }
 
-        private FtpWebRequest PrepareFtpRequest (string uri) {
+        private FtpWebRequest PrepareFtpRequest(string uri)
+        {
 
             var req = (FtpWebRequest)WebRequest.Create(uri);
             req.Proxy = null;
             req.Credentials = new NetworkCredential(User, Pass);
 
             req.EnableSsl = true;
+            req.KeepAlive = true;
+            req.UseBinary = true;
+            req.UsePassive = true;
+            req.Timeout = 10000;
             // ovo nam ne treba jer nam ftp server ne zahteva klijentski cert. Možda nekad u budućnosti...
-     //       X509Certificate cert = X509Certificate.CreateFromCertFile(@"D:\temp\edokument.crt");
-     //       X509CertificateCollection certCollection = new X509CertificateCollection();
-     //       certCollection.Add(cert);
-     //       req.ClientCertificates = certCollection;
+            //       X509Certificate cert = X509Certificate.CreateFromCertFile(@"D:\temp\edokument.crt");
+            //       X509CertificateCollection certCollection = new X509CertificateCollection();
+            //       certCollection.Add(cert);
+            //       req.ClientCertificates = certCollection;
 
             return req;
         }
@@ -81,7 +86,7 @@ namespace wpfcm1.FTP
             var uri = string.Format("{0}/{1}", Uri, ftpDir);
             var req = PrepareFtpRequest(uri);
             var result = new List<string>();
-            
+
             req.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
 
             try
@@ -94,7 +99,7 @@ namespace wpfcm1.FTP
                     while ((lin = reader.ReadLine()) != null)
                     //while (reader.Peek() >= 0)
                     {
-//                        var l = await reader.ReadLineAsync();
+                        //                        var l = await reader.ReadLineAsync();
                         result.Add(lin);
                     }
                 }
@@ -115,9 +120,11 @@ namespace wpfcm1.FTP
         /// <returns></returns>
         public async Task DownloadFileAsync(string dir, string fileName, string destFilePath)
         {
-            var wc = new WebClient {Proxy = null, Credentials = new NetworkCredential(User, Pass)};
-            var uri = string.Format(@"{0}{1}{2}", Uri, dir, fileName);
-            await wc.DownloadFileTaskAsync(uri, destFilePath);
+            await Task.Run(() => DownloadFile(dir, fileName, destFilePath));
+
+            // var wc = new WebClient { Proxy = null, Credentials = new NetworkCredential(User, Pass) };
+            // var uri = string.Format(@"{0}{1}{2}", Uri, dir, fileName);
+            // await wc.DownloadFileTaskAsync(uri, destFilePath);
         }
 
         /// <summary>
@@ -143,7 +150,7 @@ namespace wpfcm1.FTP
                 reqStream.Write(bytes, 0, bytes.Length);
             }
 
-            using (var resp = (FtpWebResponse) req.GetResponse())
+            using (var resp = (FtpWebResponse)req.GetResponse())
             {
                 //Log.Info(resp.StatusDescription);
             }
@@ -157,6 +164,36 @@ namespace wpfcm1.FTP
             return Task.Run(() => UploadFile(sourceFilePath, destinationDir, newFileName));
         }
 
+        public void DownloadFile(string dir, string fileName, string destFilePath)
+        {
+            var uri = string.Format(@"{0}{1}{2}", Uri, dir, fileName);
+            var req = PrepareFtpRequest(uri);
+            req.Method = WebRequestMethods.Ftp.DownloadFile;
+            FtpWebResponse ftpResponse = (FtpWebResponse)req.GetResponse();
+            Stream ftpStream = ftpResponse.GetResponseStream();
+            FileStream localFileStream = new FileStream(destFilePath, FileMode.Create);
+            /* Buffer for the Downloaded Data */
+            const int bufferLength = 2048;
+            byte[] byteBuffer = new byte[bufferLength];
+            int bytesRead = ftpStream.Read(byteBuffer, 0, bufferLength);
+            /* Download the File by Writing the Buffered Data Until the Transfer is Complete */
+            try
+            {
+                while (bytesRead > 0)
+                {
+                    localFileStream.Write(byteBuffer, 0, bytesRead);
+                    bytesRead = ftpStream.Read(byteBuffer, 0, bufferLength);
+                }
+            }
+            catch (Exception ex) { Log.Error("ERR: DownloadFile", ex); }
+            /* Resource Cleanup */
+            localFileStream.Close();
+            ftpStream.Close();
+            ftpResponse.Close();
+            req = null;
+        }
+
+
         /// <summary>
         /// Rename file on FTP
         /// </summary>
@@ -168,7 +205,7 @@ namespace wpfcm1.FTP
             req.Method = WebRequestMethods.Ftp.Rename;
             req.RenameTo = newFileName;
 
-            using (var resp = (FtpWebResponse) req.GetResponse())
+            using (var resp = (FtpWebResponse)req.GetResponse())
             {
                 //Log.Info(resp.StatusDescription);
             }
@@ -177,8 +214,8 @@ namespace wpfcm1.FTP
 
         public static bool myValidateServerCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
-                return true;
-            
+            return true;
+
         }
 
     }
