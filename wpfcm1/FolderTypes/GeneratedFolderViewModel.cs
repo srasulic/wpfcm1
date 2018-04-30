@@ -120,7 +120,7 @@ namespace wpfcm1.FolderTypes
             try
             {
                 var documents = Documents.Cast<GeneratedDocumentModel>();
-                _expList = "\"Mark\",\"Pib primalac\",\"Fajl\",\"KB\",\"Br Dok\"\r\n";
+                _expList = "sep=,\n\"Mark\",\"Pib primalac\",\"Fajl\",\"KB\",\"Br Dok\"\r\n";
                 foreach (var document in documents)
                 {
                     string[] fileNameParts = document.DocumentPath.Split('\\');
@@ -221,7 +221,12 @@ namespace wpfcm1.FolderTypes
 
 
             if (kontCifraIzracunata != kontCifra) return false;
-            else return true;
+            else
+            {   
+                //provera da li je PIB korisnika(iz settings-a isti kao pib primaoca iz dokumenta za slanje)
+                if (User.Default.PIB == pib) throw new ApplicationException("PIB pimaoca je isto kao i PIB korisnika!");
+                return true;
+            }
         }
 
         public async void Handle(MessageExtractData message)

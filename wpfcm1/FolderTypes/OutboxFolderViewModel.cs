@@ -21,8 +21,9 @@ namespace wpfcm1.FolderTypes
     public class OutboxFolderViewModel : FolderViewModel, IHandle<MessageReject>, IHandle<MessageXls>
     {
         private readonly IWindowManager _windowManager;
-//        new protected string[] Extensions = { ".pdf", ".ack", ".xml" };
-        new protected string[] Extensions = { ".pdf", ".ack" };
+        //        new protected string[] Extensions = { ".pdf", ".ack", ".xml" };
+        //        new protected string[] Extensions = { ".pdf", ".ack" };
+        new protected string[] Extensions = { ".pdf"};
 
 
         public OutboxFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
@@ -69,7 +70,7 @@ namespace wpfcm1.FolderTypes
             else if (Regex.IsMatch(filePath, @".+.pdf.ack$", RegexOptions.IgnoreCase))
             {
                 // mesto za akciju za ack fajl
-                Documents.Add(new OutboxDocumentModel(new FileInfo(filePath)));
+               // Documents.Add(new OutboxDocumentModel(new FileInfo(filePath)));
 //                var docName = filePath;
 //                var found = Documents.Where(d => d.DocumentPath == docName).FirstOrDefault();
 //                if (!(found == null)) found.tipDok = "Potvrda prijema";    
