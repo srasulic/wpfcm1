@@ -126,7 +126,7 @@ namespace wpfcm1.FolderTypes
             {
                 var documents = Documents.Where(d => d.IsChecked).Cast<DocumentModel>();
                 if (!documents.Any()) { documents = Documents.Cast<DocumentModel>(); }
-                _expList = "\"Obelezen\",\"Fajl\",\"KB\",\"Pib1\",\"Pib2\",\"Br dok\",\"Datum\",\""
+                _expList = "sep=,\n\"Obelezen\",\"Fajl\",\"KB\",\"Pib1\",\"Pib2\",\"Br dok\",\"Datum\",\""
                         + "Reason (napomena prilikom potpisivanja)\",\"Ime potpisnika\",\"Organizacija\",\"Datum potpisivanja\",\"Vremenski žig\",\""
                         + "Reason 2 (napomena prilikom potpisivanja)\",\"Ime potpisnika 2\",\"Organizacija 2\",\"Datum potpisivanja 2\",\"Vremenski žig 2\",\""
                         + "Validacija - info\",\"Odobren za obradu\",\"Odbačen\",\"Odobren za arhiviranje\"\r\n";
