@@ -216,14 +216,14 @@ namespace wpfcm1.PDF
             if (pkcs7.Ocsp != null)
                 ocsps.Add(pkcs7.Ocsp);
             var ocspVerifier = new OcspVerifier(null, ocsps);
-            List<VerificationOK> verification = ocspVerifier.Verify(signCert, issuerCert, date);
+            List<VerificationOK> verification = ocspVerifier.Verify(signCert, issuerCert, date.ToUniversalTime());
             if (verification.Count == 0)
             {
                 var crls = new List<X509Crl>();
                 if (pkcs7.CRLs != null)
                     crls.AddRange(pkcs7.CRLs);
                 var crlVerifier = new CrlVerifier(null, crls);
-                verification = crlVerifier.Verify(signCert, issuerCert, date);
+                verification = crlVerifier.Verify(signCert, issuerCert, date.ToUniversalTime());
                 verification.AddRange(verification);
             }
             if (verification.Count == 0)

@@ -74,7 +74,7 @@ namespace wpfcm1.PDF
             IExternalSignature pks;
             if (cert.SignatureAlgorithm.FriendlyName == "sha1RSA")
             {
-                pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA1);
+                pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA1); 
             }
             else
             {
