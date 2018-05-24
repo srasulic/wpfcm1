@@ -1,0 +1,43 @@
+﻿<mah:MetroWindow x:Class="wpfcm1.Dialogs.DialogLoginView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+    ShowCloseButton="False" ShowMinButton="False" ShowMaxRestoreButton="False"
+    WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+    BorderBrush="{DynamicResource AccentColorBrush}"
+    BorderThickness="1"
+    Loaded="DialogLoginView_OnLoaded"
+    Width="500" Height="250"
+    >
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="9*"/>
+            <ColumnDefinition Width="201*"/>
+            <ColumnDefinition Width="524*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="2" Text="Login" VerticalAlignment="Center" Margin="50,6,-50,10" FontSize="18" />
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Korisničko ime:" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Lozinka:" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8"/>
+        <TextBlock Grid.Row="10" Grid.Column="2" Text="{Binding Path=LoginTemp.Message, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" Foreground="Red" FontSize="14" FontFamily="Verdana" FontWeight="Light" />
+
+        <TextBox Grid.Row="1" Grid.Column="2" Margin="3" Text="{Binding Path=LoginTemp.UserName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <PasswordBox Name="passwdBox" Grid.Row="2" Grid.Column="2" Margin="3" PasswordChanged="PasswordBox_OnPasswordChanged"/>
+
+        <StackPanel Grid.Row="4" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+        <Button Content="OK" x:Name="OnClose" Margin="130,21,245,-20" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="4"/>
+        <Button Content="Cancel" x:Name="OnCancel" Margin="109,21,138,-20" Grid.Column="2" Grid.Row="4"/>
+    </Grid>
+</mah:MetroWindow>

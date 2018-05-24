@@ -166,6 +166,9 @@ namespace wpfcm1.FTP
 
         public void DownloadFile(string dir, string fileName, string destFilePath)
         {
+            //Do not download _reg files
+            if (fileName.Contains("_reg")) return;
+
             var uri = string.Format(@"{0}{1}{2}", Uri, dir, fileName);
             var req = PrepareFtpRequest(uri);
             req.Method = WebRequestMethods.Ftp.DownloadFile;

@@ -138,11 +138,16 @@
     <Compile Include="Converters\Converters.cs" />
     <Compile Include="DataAccess\APIManager.cs" />
     <Compile Include="DataAccess\CertificateRepositiory.cs" />
+    <Compile Include="DataAccess\EncryptionHelper.cs" />
     <Compile Include="DataAccess\FolderManager.cs" />
     <Compile Include="Dialogs\DialogAboutView.xaml.cs">
       <DependentUpon>DialogAboutView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\DialogAboutViewModel.cs" />
+    <Compile Include="Dialogs\DialogLoginView.xaml.cs">
+      <DependentUpon>DialogLoginView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DialogLoginViewModel.cs" />
     <Compile Include="Dialogs\DialogSettingsView.xaml.cs">
       <DependentUpon>DialogSettingsView.xaml</DependentUpon>
     </Compile>
@@ -262,6 +267,10 @@
     <Page Include="Dialogs\DialogAboutView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\DialogLoginView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\DialogResources.xaml">
       <SubType>Designer</SubType>

@@ -42,7 +42,9 @@ namespace wpfcm1.Shell
             OtherOutboundVM = new FolderGroupViewModel(FolderManager.OtherOutboundFolders, "Ostali Izlazni", events, _windowManager);
             OtherInboundVM = new FolderGroupViewModel(FolderManager.OtherInboundFolders, "Ostali Ulazni", events, _windowManager);
             WebVM = new WebViewModel("Online report");
-            
+            LoginVM = new DialogLoginViewModel(_windowManager);
+            //var result = _windowManager.ShowDialog(new DialogLoginViewModel());
+
 
             ShowHome();
         }
@@ -61,6 +63,7 @@ namespace wpfcm1.Shell
         public FolderGroupViewModel OtherOutboundVM { get; set; }
         public FolderGroupViewModel OtherInboundVM { get; set; }
         public WebViewModel WebVM { get; set; }
+        public DialogLoginViewModel LoginVM { get; set; }
 
 
         public void ShowHome()
@@ -70,6 +73,8 @@ namespace wpfcm1.Shell
             //*****************************************************************
             ActivateItem(HomeVM);
             _events.PublishOnUIThread(new MessageViewModelActivated(ActiveItem.GetType().Name));
+
+            _windowManager.ShowDialog(new DialogLoginViewModel(_windowManager));
         }
 
         public void ShowOutbound()

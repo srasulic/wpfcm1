@@ -13,8 +13,7 @@ using wpfcm1.Model;
 using wpfcm1.PDF;
 using wpfcm1.Processing;
 using wpfcm1.Settings;
-
-
+using wpfcm1.DataAccess;
 
 namespace wpfcm1.Dialogs
 {
@@ -121,6 +120,9 @@ namespace wpfcm1.Dialogs
             if (string.IsNullOrEmpty(ftpUsername)) throw new ApplicationException("Username korisnika nije unet!");
             var ftpPassword = User.Default.FtpPassword;
             if (string.IsNullOrEmpty(ftpPassword)) throw new ApplicationException("Password korisnika nije unet!");
+
+            //Decrypting FTP Password
+            ftpPassword = EncryptionHelper.Decrypt(ftpPassword);
 
             var ftpClient = new FtpClient(ftpServer, ftpUsername, ftpPassword);
 

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Text.RegularExpressions;
 using Caliburn.Micro;
+using wpfcm1.DataAccess;
 using wpfcm1.Settings;
 
 namespace wpfcm1.Dialogs
@@ -16,9 +17,11 @@ namespace wpfcm1.Dialogs
         private string _timestampServer;
         private string _timestampUserName;
         private string _timestampPassword;
+        private string _token;
         private float _llxPib, _llyPib, _urxPib, _uryPib;
         private float _llxNo, _llyNo, _urxNo, _uryNo;
         private bool _invoicesInbound, _invoicesOutbound, _iosInbound, _iosOutbound, _kpInbound, _kpOutbound, _otherInbound, _otherOutbound;
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public UserModel()
         {
@@ -42,6 +45,7 @@ namespace wpfcm1.Dialogs
             LlyNo = user.LlyNo;
             UrxNo = user.UrxNo;
             UryNo = user.UryNo;
+            Token = user.Token;
             InvoicesInbound = user.InvoicesInbound;
             InvoicesOutbound = user.InvoicesOutbound;
             IosInbound = user.IosInbound;
@@ -59,6 +63,7 @@ namespace wpfcm1.Dialogs
             {
                 if (value == _rootFolder) return;
                 _rootFolder = value;
+                Log.Info("Change in settings - RootFolder");
                 NotifyOfPropertyChange(() => RootFolder);
             }
         }
@@ -70,6 +75,7 @@ namespace wpfcm1.Dialogs
             {
                 if (value == _userName) return;
                 _userName = value;
+                Log.Info("Change in settings - UserName");
                 NotifyOfPropertyChange(() => UserName);
             }
         }
@@ -81,6 +87,7 @@ namespace wpfcm1.Dialogs
             {
                 if (value == _pib) return;
                 _pib = value;
+                Log.Info("Change in settings - PIB");
                 NotifyOfPropertyChange(() => PIB);
             }
         }
@@ -92,6 +99,7 @@ namespace wpfcm1.Dialogs
             {
                 if (value == _ftpServer) return;
                 _ftpServer = value;
+                Log.Info("Change in settings - FtpServer");
                 NotifyOfPropertyChange(() => FtpServer);
             }
         }
@@ -103,6 +111,7 @@ namespace wpfcm1.Dialogs
             {
                 if (value == _ftpUserName) return;
                 _ftpUserName = value;
+                Log.Info("Change in settings - FtpUserName");
                 NotifyOfPropertyChange(() => FtpUserName);
             }
         }
@@ -114,6 +123,7 @@ namespace wpfcm1.Dialogs
             {
                 if (value == _ftpPassword) return;
                 _ftpPassword = value;
+                Log.Info("Change in settings - FtpPassword");
                 NotifyOfPropertyChange(() => FtpPassword);
             }
         }
@@ -125,6 +135,7 @@ namespace wpfcm1.Dialogs
             {
                 if (value == _timestampServer) return;
                 _timestampServer = value;
+                Log.Info("Change in settings - TimestampServer");
                 NotifyOfPropertyChange(() => TimestampServer);
             }
         }
@@ -136,6 +147,7 @@ namespace wpfcm1.Dialogs
             {
                 if (value == _timestampUserName) return;
                 _timestampUserName = value;
+                Log.Info("Change in settings - TimestampUserName");
                 NotifyOfPropertyChange(() => TimestampUserName);
             }
         }
@@ -147,6 +159,7 @@ namespace wpfcm1.Dialogs
             {
                 if (value == _timestampPassword) return;
                 _timestampPassword = value;
+                Log.Info("Change in settings - TimestampPassword");
                 NotifyOfPropertyChange(() => TimestampPassword);
             }
         }
@@ -199,53 +212,59 @@ namespace wpfcm1.Dialogs
             set { _uryNo = value; NotifyOfPropertyChange(() => UryNo); }
         }
 
+        public string Token
+        {
+            get { return _token; }
+            set { _token = value; NotifyOfPropertyChange(() => Token); }
+        }
+
         //    private bool , _InvoicesOutbound, _IosInbound, _IosOutbound, _KpInbound, _KpOutbound, _OtherInbound, _OtherOutbound;
         public bool InvoicesInbound
         {
             get { return _invoicesInbound; }
-            set { _invoicesInbound = value; NotifyOfPropertyChange(() => _invoicesInbound); }
+            set { _invoicesInbound = value; NotifyOfPropertyChange(() => _invoicesInbound); Log.Info("Change in settings - InvoicesInbound"); }
         }
 
         public bool InvoicesOutbound
         {
             get { return _invoicesOutbound; }
-            set { _invoicesOutbound = value; NotifyOfPropertyChange(() => _invoicesOutbound); }
+            set { _invoicesOutbound = value; NotifyOfPropertyChange(() => _invoicesOutbound); Log.Info("Change in settings - InvoicesOutbound"); }
         }
 
         public bool IosInbound
         {
             get { return _iosInbound; }
-            set { _iosInbound = value; NotifyOfPropertyChange(() => _iosInbound); }
+            set { _iosInbound = value; NotifyOfPropertyChange(() => _iosInbound); Log.Info("Change in settings - IosInbound"); }
         }
 
         public bool IosOutbound
         {
             get { return _iosOutbound; }
-            set { _iosOutbound = value; NotifyOfPropertyChange(() => _iosOutbound); }
+            set { _iosOutbound = value; NotifyOfPropertyChange(() => _iosOutbound); Log.Info("Change in settings - IosOutbound"); }
         }
 
         public bool KpInbound
         {
             get { return _kpInbound; }
-            set { _kpInbound = value; NotifyOfPropertyChange(() => _kpInbound); }
+            set { _kpInbound = value; NotifyOfPropertyChange(() => _kpInbound); Log.Info("Change in settings - KpInbound"); }
         }
 
         public bool KpOutbound
         {
             get { return _kpOutbound; }
-            set { _kpOutbound = value; NotifyOfPropertyChange(() => _kpOutbound); }
+            set { _kpOutbound = value; NotifyOfPropertyChange(() => _kpOutbound); Log.Info("Change in settings - KpOutbound"); }
         }
 
         public bool OtherInbound
         {
             get { return _otherInbound; }
-            set { _otherInbound = value; NotifyOfPropertyChange(() => _otherInbound); }
+            set { _otherInbound = value; NotifyOfPropertyChange(() => _otherInbound); Log.Info("Change in settings - OtherInbound"); }
         }
 
         public bool OtherOutbound
         {
             get { return _otherOutbound; }
-            set { _otherOutbound = value; NotifyOfPropertyChange(() => _otherOutbound); }
+            set { _otherOutbound = value; NotifyOfPropertyChange(() => _otherOutbound); Log.Info("Change in settings - OtherOutbound"); }
         }
 
         public string this[string columnName]
@@ -315,6 +334,7 @@ namespace wpfcm1.Dialogs
             User.Default.LlyNo = UserTemp.LlyNo;
             User.Default.UrxNo = UserTemp.UrxNo;
             User.Default.UryNo = UserTemp.UryNo;
+            User.Default.Token = UserTemp.Token;
             User.Default.InvoicesInbound = UserTemp.InvoicesInbound;
             User.Default.InvoicesOutbound = UserTemp.InvoicesOutbound;
             User.Default.IosInbound = UserTemp.IosInbound;
@@ -323,6 +343,9 @@ namespace wpfcm1.Dialogs
             User.Default.KpOutbound = UserTemp.KpOutbound;
             User.Default.OtherInbound = UserTemp.OtherInbound;
             User.Default.OtherOutbound = UserTemp.OtherOutbound;
+
+            //encrypted FTP Password
+            User.Default.FtpPassword = EncryptionHelper.Encrypt(User.Default.FtpPassword);
 
             User.Default.Save();
             Folders.Default.Save();
