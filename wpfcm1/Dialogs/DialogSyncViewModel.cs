@@ -122,7 +122,7 @@ namespace wpfcm1.Dialogs
             if (string.IsNullOrEmpty(ftpPassword)) throw new ApplicationException("Password korisnika nije unet!");
 
             //Decrypting FTP Password
-            ftpPassword = EncryptionHelper.Decrypt(ftpPassword);
+            //ftpPassword = EncryptionHelper.Decrypt(ftpPassword);
 
             var ftpClient = new FtpClient(ftpServer, ftpUsername, ftpPassword);
 

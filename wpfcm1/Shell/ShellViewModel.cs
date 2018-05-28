@@ -65,6 +65,9 @@ namespace wpfcm1.Shell
         public WebViewModel WebVM { get; set; }
         public DialogLoginViewModel LoginVM { get; set; }
 
+        //For login screen 
+        private static bool first = true;
+
 
         public void ShowHome()
         {   //*****************************************************************
@@ -74,7 +77,11 @@ namespace wpfcm1.Shell
             ActivateItem(HomeVM);
             _events.PublishOnUIThread(new MessageViewModelActivated(ActiveItem.GetType().Name));
 
-            _windowManager.ShowDialog(new DialogLoginViewModel(_windowManager));
+            if (first)
+            {
+                first = false;
+                _windowManager.ShowDialog(new DialogLoginViewModel(_windowManager));
+            }
         }
 
         public void ShowOutbound()

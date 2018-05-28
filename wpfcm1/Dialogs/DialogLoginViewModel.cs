@@ -10,6 +10,8 @@ using wpfcm1.Settings;
 using System.Windows;
 using System.Net;
 using System.IO;
+using wpfcm1.DataAccess;
+using wpfcm1.FTP;
 
 namespace wpfcm1.Dialogs
 {
@@ -156,6 +158,10 @@ namespace wpfcm1.Dialogs
                         Log.Info("SUCCESSFUL LOGIN (UserName = " + LoginTemp.UserName + ") - " + message[0]);
                         LoginTemp.Message = message[0];
                         User.Default.Token = message[1];
+                        User.Default.FtpPassword = message[2];
+                        FtpClient.WebFtpPass = message[2];
+                        User.Default.FtpUserName = LoginTemp.PIB;
+
                         (GetView() as Window).Hide();
                     }
                     else

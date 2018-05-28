@@ -16,7 +16,9 @@ namespace wpfcm1.FTP
         {
             Uri = uri;
             User = user;
-            Pass = pass;
+            //Pass = pass;
+            Pass = WebFtpPass; //koristi se FTP Password dovucen sa web-a
+
             // Da bi nam prolazila kontrola sertifikata bezuslovno (samo želimo kriptovan saobraćaj)
             ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(myValidateServerCertificate);
         }
@@ -24,6 +26,8 @@ namespace wpfcm1.FTP
         public string Uri { get; private set; }
         public string User { get; private set; }
         public string Pass { get; private set; }
+        //FTP Pass u plaintext-u, dovucen preko WebRequest-a
+        public static string WebFtpPass { get; set; }
 
         private FtpWebRequest PrepareFtpRequest(string uri)
         {
