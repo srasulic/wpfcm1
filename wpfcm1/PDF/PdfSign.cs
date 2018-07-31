@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using wpfcm1.Settings;
 using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 
 namespace wpfcm1.PDF
@@ -92,18 +93,34 @@ namespace wpfcm1.PDF
             var pageRect = reader.GetPageSize(1);
             var pageRotation = reader.GetPageRotation(1);
 
+            var sigHeight = 50;
+            var sigWidth = 190;
+
+            // TODO: staviti provere da ne izađemo iz vidljivog dela strane
+
             // ako je portrait:
             if (pageRotation == 0)
             {
                 if (sigLocation == SignatureRules.SignatureLocation.UpperLeft)
                 {
-                    var signatureRect = new Rectangle(10, pageRect.Height - 60, 200, pageRect.Height - 10);
+                    //                    var signatureRect = new Rectangle(10, pageRect.Height - 60, 200, pageRect.Height - 10);
+                    var x = User.Default.XSigShift + 10;
+                    var y = pageRect.Height - User.Default.YSigShift - 60;
+                    var xx = x + sigWidth;
+                    var yy = y + sigHeight;
+
+                    var signatureRect = new Rectangle(x, y, xx, yy);
                     // Za Korporion urađena dorada, spušten potpis na dno strane: var signatureRect = new Rectangle(360, 60, 550, 110);
                     return signatureRect;
                 }
                 else
                 {
-                    var signatureRect = new Rectangle(pageRect.Width - 200, pageRect.Height - 60, pageRect.Width - 10, pageRect.Height - 10);
+//                    var signatureRect = new Rectangle(pageRect.Width - 200, pageRect.Height - 60, pageRect.Width - 10, pageRect.Height - 10);
+                    var x = pageRect.Width - User.Default.XSigShiftRight - 200;
+                    var y = pageRect.Height - User.Default.YSigShiftRight - 60;
+                    var xx = x + sigWidth;
+                    var yy = y + sigHeight;
+                    var signatureRect = new Rectangle(x, y, xx, yy);
                     return signatureRect;
                 }
             }
@@ -112,12 +129,23 @@ namespace wpfcm1.PDF
             {
                 if (sigLocation == SignatureRules.SignatureLocation.UpperLeft)
                 {
-                    var signatureRect = new Rectangle(10, pageRect.Width - 60, 200, pageRect.Width - 10);
+                    //                    var signatureRect = new Rectangle(10, pageRect.Width - 60, 200, pageRect.Width - 10);
+                    var x = User.Default.XSigShift + 10;
+                    var y = pageRect.Width - User.Default.YSigShift - 60;
+                    var xx = x + sigWidth;
+                    var yy = y + sigHeight;
+
+                    var signatureRect = new Rectangle(x, y, xx, yy);
                     return signatureRect;
                 }
                 else
                 {
-                    var signatureRect = new Rectangle(pageRect.Height - 200, pageRect.Width - 60, pageRect.Height - 10, pageRect.Width - 10);
+//                    var signatureRect = new Rectangle(pageRect.Height - 200, pageRect.Width - 60, pageRect.Height - 10, pageRect.Width - 10);
+                    var x = pageRect.Height - User.Default.XSigShiftRight - 200;
+                    var y = pageRect.Width - User.Default.YSigShiftRight - 60;
+                    var xx = x + sigWidth;
+                    var yy = y + sigHeight;
+                    var signatureRect = new Rectangle(x, y, xx, yy);
                     return signatureRect;
                 }
             }            

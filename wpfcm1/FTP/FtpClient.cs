@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace wpfcm1.FTP
@@ -65,7 +66,10 @@ namespace wpfcm1.FTP
                 string line = reader.ReadLine();
                 while (!string.IsNullOrEmpty(line))
                 {
-                    result.Add(line);
+                    if (!Regex.IsMatch(line, @".+_reg$", RegexOptions.IgnoreCase))
+                    {
+                        result.Add(line);
+                    }
                     line = await reader.ReadLineAsync();
                 }
 
@@ -121,7 +125,6 @@ namespace wpfcm1.FTP
         public async Task DownloadFileAsync(string dir, string fileName, string destFilePath)
         {
             await Task.Run(() => DownloadFile(dir, fileName, destFilePath));
-
             // var wc = new WebClient { Proxy = null, Credentials = new NetworkCredential(User, Pass) };
             // var uri = string.Format(@"{0}{1}{2}", Uri, dir, fileName);
             // await wc.DownloadFileTaskAsync(uri, destFilePath);

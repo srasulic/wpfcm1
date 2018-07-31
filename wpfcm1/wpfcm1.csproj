@@ -30,11 +30,11 @@
     <ProductName>eDokument PoliSign</ProductName>
     <PublisherName>Aserta doo</PublisherName>
     <SuiteName>eDokument</SuiteName>
-    <MinimumRequiredVersion>1.1.0.28</MinimumRequiredVersion>
+    <MinimumRequiredVersion>1.1.0.43</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>43</ApplicationRevision>
+    <ApplicationRevision>45</ApplicationRevision>
     <ApplicationVersion>1.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -66,7 +66,7 @@
   <PropertyGroup />
   <PropertyGroup />
   <PropertyGroup>
-    <ManifestCertificateThumbprint>CB6754EE42C99AC0BC08CC2D0BE7C3B18EEF2057</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>E61236CE5F076261E3A9BD35B2185D3CFA6ED9FA</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>

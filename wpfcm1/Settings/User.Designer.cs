@@ -310,5 +310,53 @@ namespace wpfcm1.Settings {
                 this["InvoicesInbound"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float XSigShift {
+            get {
+                return ((float)(this["XSigShift"]));
+            }
+            set {
+                this["XSigShift"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float YSigShift {
+            get {
+                return ((float)(this["YSigShift"]));
+            }
+            set {
+                this["YSigShift"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float XSigShiftRight {
+            get {
+                return ((float)(this["XSigShiftRight"]));
+            }
+            set {
+                this["XSigShiftRight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float YSigShiftRight {
+            get {
+                return ((float)(this["YSigShiftRight"]));
+            }
+            set {
+                this["YSigShiftRight"] = value;
+            }
+        }
     }
 }

@@ -59,10 +59,14 @@ namespace wpfcm1.Model
         public PibAttributesAlt PibAttAlt { get; set; }
         public PibAttributesAlt PibAttAlt1 { get; set; }
         public PibAttributesAlt PibAttAlt2 { get; set; }
+        public PibAttributesAlt PibAttAlt4 { get; set; }
+        public PibAttributesAlt PibAttAlt5 { get; set; }
         public DocNumAttributesPrim DocAttPrim { get; set; }
         public DocNumAttributesAlt DocAttAlt { get; set; }
         public DocNumAttributesAlt DocAttAlt1 { get; set; }
         public DocNumAttributesAlt DocAttAlt2 { get; set; }
+        public DocNumAttributesAlt DocAttAlt4 { get; set; }
+        public DocNumAttributesAlt DocAttAlt5 { get; set; }
         public DocNumRegexList DocRegexList { get; set; }
     
         public RecognitionPatternModel() {
@@ -96,10 +100,14 @@ namespace wpfcm1.Model
                         this.PibAttAlt = r.PibAttAlt;
                         this.PibAttAlt1 = r.PibAttAlt1;
                         this.PibAttAlt2 = r.PibAttAlt2;
+                        this.PibAttAlt4 = r.PibAttAlt4;
+                        this.PibAttAlt5 = r.PibAttAlt5;
                         this.DocAttPrim = r.DocAttPrim;
                         this.DocAttAlt = r.DocAttAlt;
                         this.DocAttAlt1 = r.DocAttAlt1;
                         this.DocAttAlt2 = r.DocAttAlt2;
+                        this.DocAttAlt4 = r.DocAttAlt4;
+                        this.DocAttAlt5 = r.DocAttAlt5;
                         this.DocRegexList = r.DocRegexList;
 
                         reader.Close();

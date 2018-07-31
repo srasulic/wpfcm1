@@ -16,6 +16,7 @@ namespace wpfcm1.Dialogs
         private string _timestampServer;
         private string _timestampUserName;
         private string _timestampPassword;
+        private float _xSigShift, _ySigShift, _xSigShiftRight, _ySigShiftRight;
         private float _llxPib, _llyPib, _urxPib, _uryPib;
         private float _llxNo, _llyNo, _urxNo, _uryNo;
         private bool _invoicesInbound, _invoicesOutbound, _iosInbound, _iosOutbound, _kpInbound, _kpOutbound, _otherInbound, _otherOutbound;
@@ -50,6 +51,11 @@ namespace wpfcm1.Dialogs
             KpOutbound = user.KpOutbound;
             OtherInbound = user.OtherInbound;
             OtherOutbound = user.OtherOutbound;
+            XSigShift = user.XSigShift;
+            YSigShift = user.YSigShift;
+            XSigShiftRight = user.XSigShiftRight;
+            YSigShiftRight = user.YSigShiftRight;
+
         }
 
         public string RootFolder
@@ -270,6 +276,46 @@ namespace wpfcm1.Dialogs
             }
         }
 
+        public float XSigShift
+        {
+            get
+            {
+                if (_xSigShift < 0) return 0;
+                return _xSigShift < 190 ? _xSigShift : 190 ;
+            }
+            set { _xSigShift = value; NotifyOfPropertyChange(() => XSigShift); }
+        }
+
+        public float YSigShift
+        {
+            get
+            {
+                if (_ySigShift < 0) return 0;
+                return _ySigShift < 190 ? _ySigShift : 190;
+            }
+            set { _ySigShift = value ; NotifyOfPropertyChange(() => YSigShift); }
+        }
+
+        public float XSigShiftRight
+        {
+            get
+            {
+                if (_xSigShiftRight < 0) return 0;
+                return _xSigShiftRight < 190 ? _xSigShiftRight : 190;
+            }
+            set { _xSigShiftRight = value; NotifyOfPropertyChange(() => XSigShiftRight); }
+        }
+
+        public float YSigShiftRight
+        {
+            get
+            {
+                if (_ySigShiftRight < 0) return 0;
+                return _ySigShiftRight < 190 ? _ySigShiftRight : 190;
+            }
+            set { _ySigShiftRight = value; NotifyOfPropertyChange(() => YSigShiftRight); }
+        }
+
         public string Error { get; set; }
     }
 
@@ -323,6 +369,10 @@ namespace wpfcm1.Dialogs
             User.Default.KpOutbound = UserTemp.KpOutbound;
             User.Default.OtherInbound = UserTemp.OtherInbound;
             User.Default.OtherOutbound = UserTemp.OtherOutbound;
+            User.Default.XSigShift = UserTemp.XSigShift;
+            User.Default.YSigShift = UserTemp.YSigShift;
+            User.Default.XSigShiftRight = UserTemp.XSigShiftRight;
+            User.Default.YSigShiftRight = UserTemp.YSigShiftRight;
 
             User.Default.Save();
             Folders.Default.Save();

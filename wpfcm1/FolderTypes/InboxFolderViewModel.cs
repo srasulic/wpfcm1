@@ -102,6 +102,8 @@ namespace wpfcm1.FolderTypes
         protected override void OnActivate()
         {
             _events.PublishOnUIThread(new MessageViewModelActivated(GetType().Name));
+            // pri ulasku startuj automatsku validaciju 
+            Handle(new MessageValidate());
         }
 
         protected override void OnDeactivate(bool close)

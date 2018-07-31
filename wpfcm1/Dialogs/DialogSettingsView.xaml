@@ -22,6 +22,8 @@
             <RowDefinition  Height="Auto"/>
             <RowDefinition  Height="Auto"/>
             <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
             <RowDefinition  Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -38,7 +40,8 @@
         <TextBlock Grid.Row="7" Grid.Column="0" Text="Timestamp username" VerticalAlignment="Center"/>
         <TextBlock Grid.Row="8" Grid.Column="0" Text="Timestamp password" VerticalAlignment="Center"/>
         <TextBlock Grid.Row="9" Grid.Column="0" Text="Sinhronizacija" VerticalAlignment="Center"/>
-        
+        <TextBlock Grid.Row="11" Grid.Column="0" Text="Potpis offset" VerticalAlignment="Center"/>
+
         <TextBox Grid.Row="0" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.RootFolder, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBox Grid.Row="1" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.UserName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBox Grid.Row="2" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.PIB, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
@@ -89,8 +92,27 @@
             <TextBlock Grid.Column="6" Text="IO:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
             <CheckBox Grid.Column="7" VerticalAlignment="Center" IsChecked="{Binding Path=UserTemp.OtherOutbound, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
-
-        <StackPanel Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+        <Grid Grid.Row="11" Grid.Column="1" Margin="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="x-L:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBox Grid.Column="1" VerticalAlignment="Center" Text="{Binding Path=UserTemp.XSigShift, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Column="2" Text="y-L:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBox Grid.Column="3" VerticalAlignment="Center" Text="{Binding Path=UserTemp.YSigShift, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Column="4" Text="x-D:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBox Grid.Column="5" VerticalAlignment="Center" Text="{Binding Path=UserTemp.XSigShiftRight, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Column="6" Text="y-D:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBox Grid.Column="7" VerticalAlignment="Center" Text="{Binding Path=UserTemp.YSigShiftRight, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
+        <StackPanel Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Button Content="OK" Width="96" Height="32" x:Name="OnClose" Margin="3"/>
             <Button Content="Cancel" Width="96" Height="32" x:Name="OnCancel" Margin="3,3,0,3"/>
         </StackPanel>
