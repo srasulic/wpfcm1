@@ -57,7 +57,7 @@ namespace wpfcm1
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             DisplayRootViewFor<IShell>();
-            Log.Info("Session started! 1.1.0.45");
+            Log.Info("Session started! 1.1.0.46");
         }
 
         protected override void OnExit(object sender, EventArgs e)

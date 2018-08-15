@@ -20,7 +20,7 @@ namespace wpfcm1.PDF
         //
         // 1.0 - Manipulacija tekstom
         //
-        public static Tuple<string, string> ExtractText(string path, RecognitionPatternModel.PibAttributes pibAtt, RecognitionPatternModel.DocNumAttributes docAtt)
+        public static Tuple<string, string> ExtractText(string path, RecognitionPatternModel.Coordinates pibAtt, RecognitionPatternModel.Coordinates docAtt)
         {
             using (var reader = new PdfReader(path))
             {
@@ -52,10 +52,41 @@ namespace wpfcm1.PDF
             }
         }
 
+        //
+        // 1.1 - Utvrdi orjentaciju i rotaciju strane
+        //
+        public static Tuple<bool, int> ExtractOrientationRotation(string path)
+        {
+            bool isPortrait;
+            int pageRotation;
+            using (var reader = new PdfReader(path))
+            {
+                //  Rectangle rectPib = new Rectangle(User.Default.LlxPib, User.Default.LlyPib, User.Default.UrxPib, User.Default.UryPib)
+                pageRotation = reader.GetPageRotation(1);
+                
+
+                var pageRect = reader.GetPageSize(1);
+                if (pageRect.Height > pageRect.Width)
+                {
+                    isPortrait = true;
+                } else
+                {
+                    isPortrait = false;
+                }
+
+                return Tuple.Create(isPortrait, pageRotation);
+            }
+        }
+
+
+        public static Task<Tuple<bool, int>> ExtractOrientationRotationAsync(string path)
+        {
+            return Task.Run(() => ExtractOrientationRotation(path));
+        }
 
 
 
-         public static Task<Tuple<string, string>> ExtractTextAsync(string path, RecognitionPatternModel.PibAttributes pibAtt, RecognitionPatternModel.DocNumAttributes docAtt)
+        public static Task<Tuple<string, string>> ExtractTextAsync(string path, RecognitionPatternModel.Coordinates pibAtt, RecognitionPatternModel.Coordinates docAtt)
         {
             return Task.Run(() => ExtractText(path, pibAtt, docAtt));
         }
@@ -134,7 +165,7 @@ namespace wpfcm1.PDF
                 }
                 return null;
             }
-            catch (Exception e)
+            catch 
             {
                 return null;
             }
