@@ -110,6 +110,12 @@ namespace wpfcm1.Dialogs
             TryClose(true);
         }
 
+        public  void OpenSettings()
+        {
+            _windowManager.ShowDialog(new DialogSettingsViewModel());
+            LoginTemp.PIB = User.Default.PIB;
+        }
+
         private void Login()
         {
             if (string.IsNullOrEmpty(LoginTemp.UserName) || string.IsNullOrEmpty(LoginTemp.Password))
@@ -123,7 +129,7 @@ namespace wpfcm1.Dialogs
                 _windowManager.ShowDialog(new DialogSettingsViewModel());
                 LoginTemp.PIB = User.Default.PIB;
             }
-
+         
             var request = WebRequest.Create("http://edev.office.aserta.rs/login/remoteLogin");
 
             var postData = "user_name=" + LoginTemp.UserName;
@@ -149,17 +155,20 @@ namespace wpfcm1.Dialogs
                     StreamReader reader = new StreamReader(stream);
                     string responseFromServer = reader.ReadToEnd();
 
-                    string[] requestArguments = responseFromServer.Split('}');
-                    string[] message = requestArguments[1].Split('*');
+                    AuthenticationResponse json = Newtonsoft.Json.JsonConvert.DeserializeObject<AuthenticationResponse>(responseFromServer);
 
+                    string message = json.message;
+                    string token = json.token;
+                    string ftpPass = json.ftpPass;
+                      
 
-                    if (message.Length > 1)
+                    if (!String.IsNullOrEmpty(token))
                     {
-                        Log.Info("SUCCESSFUL LOGIN (UserName = " + LoginTemp.UserName + ") - " + message[0]);
-                        LoginTemp.Message = message[0];
-                        User.Default.Token = message[1];
-                        User.Default.FtpPassword = message[2];
-                        FtpClient.WebFtpPass = message[2];
+                        Log.Info("SUCCESSFUL LOGIN (UserName = " + LoginTemp.UserName + ") - " + message);
+                        LoginTemp.Message = message;
+                        User.Default.Token = token; 
+                        User.Default.FtpPassword = ftpPass;
+                        FtpClient.WebFtpPass = ftpPass;
                         User.Default.FtpUserName = LoginTemp.PIB;
 
                         (GetView() as Window).Hide();
@@ -167,7 +176,7 @@ namespace wpfcm1.Dialogs
                     else
                     {
                         Log.Error("FAILED LOGIN: (UserName = " + LoginTemp.UserName + ") - " + message[0]);
-                        LoginTemp.Message = message[0];
+                        LoginTemp.Message = message;
                     }
 
                     reader.Close();
@@ -176,6 +185,13 @@ namespace wpfcm1.Dialogs
 
         }
 
+    }
+
+    public class AuthenticationResponse
+    {
+        public string message { get; set; }
+        public string token { get; set; }
+        public string ftpPass { get; set; }
     }
 
 

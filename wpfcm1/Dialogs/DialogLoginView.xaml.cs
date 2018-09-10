@@ -38,5 +38,10 @@ namespace wpfcm1.Dialogs
         {
             ((dynamic)DataContext).LoginTemp.Password = passwdBox.Password;
         }
+
+        private void TextBlock_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
     }
 }
