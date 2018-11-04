@@ -37,7 +37,7 @@
         <PasswordBox Name="passwdBox" Grid.Row="2" Grid.Column="2" Margin="3" PasswordChanged="PasswordBox_OnPasswordChanged"/>
 
         <StackPanel Grid.Row="4" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
-        <Button Content="OK" x:Name="OnClose" Margin="130,21,245,-20" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="4"/>
+        <Button Content="OK" x:Name="OnClose" Margin="130,21,245,-20" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="4" IsDefault="True"/>
         <Button Content="Cancel" x:Name="OnCancel" Margin="109,21,138,-20" Grid.Column="2" Grid.Row="4"/>
     </Grid>
 </mah:MetroWindow>

@@ -27,8 +27,8 @@ namespace wpfcm1.Dialogs
         public LoginModel()
         {
             User user = User.Default;
-                        
-            UserName = "";
+
+            UserName = user.UserName;
             Password = "";            
             Token = "";
             Message = "";
@@ -102,6 +102,8 @@ namespace wpfcm1.Dialogs
         public void OnClose()
         {
             Login();
+            User.Default.UserName = LoginTemp.UserName;
+            User.Default.Save();
             //(GetView() as Window).Hide();
         }
 

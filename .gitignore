@@ -184,3 +184,6 @@ FakesAssemblies/
 /.vs/wpfcm1/v15/Server/sqlite3
 /wpfcm1/ClassDiagram1.cd
 /wpfcm1/ClassDiagram2.cd
+/.vs/config/applicationhost.config
+/.vs/wpfcm1/DesignTimeBuild/.dtbcache
+/.vs/slnx.sqlite
