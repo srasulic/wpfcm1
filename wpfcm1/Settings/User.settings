@@ -65,6 +65,12 @@
     <Setting Name="KpOutbound" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="PovratiInbound" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="PovratiOutbound" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
     <Setting Name="OtherInbound" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>

@@ -19,7 +19,7 @@ namespace wpfcm1.Dialogs
         private float _xSigShift, _ySigShift, _xSigShiftRight, _ySigShiftRight;
         private float _llxPib, _llyPib, _urxPib, _uryPib;
         private float _llxNo, _llyNo, _urxNo, _uryNo;
-        private bool _invoicesInbound, _invoicesOutbound, _iosInbound, _iosOutbound, _kpInbound, _kpOutbound, _otherInbound, _otherOutbound;
+        private bool _invoicesInbound, _invoicesOutbound, _iosInbound, _iosOutbound, _kpInbound, _kpOutbound, _povratiInbound, _povratiOutbound, _otherInbound, _otherOutbound;
 
         public UserModel()
         {
@@ -49,6 +49,8 @@ namespace wpfcm1.Dialogs
             IosOutbound = user.IosOutbound;
             KpInbound = user.KpInbound;
             KpOutbound = user.KpOutbound;
+            PovratiInbound = user.PovratiInbound;
+            PovratiOutbound = user.PovratiOutbound;
             OtherInbound = user.OtherInbound;
             OtherOutbound = user.OtherOutbound;
             XSigShift = user.XSigShift;
@@ -242,6 +244,20 @@ namespace wpfcm1.Dialogs
             set { _kpOutbound = value; NotifyOfPropertyChange(() => _kpOutbound); }
         }
 
+
+        public bool PovratiInbound
+        {
+            get { return _povratiInbound; }
+            set { _povratiInbound = value; NotifyOfPropertyChange(() => _povratiInbound); }
+        }
+
+        public bool PovratiOutbound
+        {
+            get { return _povratiOutbound; }
+            set { _povratiOutbound = value; NotifyOfPropertyChange(() => _povratiOutbound); }
+        }
+
+
         public bool OtherInbound
         {
             get { return _otherInbound; }
@@ -367,6 +383,8 @@ namespace wpfcm1.Dialogs
             User.Default.IosOutbound = UserTemp.IosOutbound;
             User.Default.KpInbound = UserTemp.KpInbound;
             User.Default.KpOutbound = UserTemp.KpOutbound;
+            User.Default.PovratiInbound = UserTemp.PovratiInbound;
+            User.Default.PovratiOutbound = UserTemp.PovratiOutbound;
             User.Default.OtherInbound = UserTemp.OtherInbound;
             User.Default.OtherOutbound = UserTemp.OtherOutbound;
             User.Default.XSigShift = UserTemp.XSigShift;

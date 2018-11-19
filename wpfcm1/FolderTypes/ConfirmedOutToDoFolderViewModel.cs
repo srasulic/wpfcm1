@@ -233,6 +233,12 @@ namespace wpfcm1.FolderTypes
                 if (found == null)
                 {
                     document.Processed = true;
+                    // FIX - prilikom serijalizacije ToDo foldera većini dokumenata (koji su arhivirani) nije u ovom trenutku
+                    //    dostupan naziv komitenata. Zato su svi prolazili prilikom serijalizacije sa upitom ka serveru 
+                    //    jer se takav poziv nalazi u get metodi ...
+                    //    Ovom ispravkom se smanjilo vreme zatvaranja aplikacije 
+                    document.namePib1Name = "x";
+                    document.namePib2Name = "x";
                 }
                 else
                 {
@@ -261,6 +267,9 @@ namespace wpfcm1.FolderTypes
                     document.sigDateSigned2 = docForSerialization.sigDateSigned2;
                     document.sigSignerName2 = docForSerialization.sigSignerName2;
                     document.sigOrg2 = docForSerialization.sigOrg2;
+
+                    document.namePib1Name = docForSerialization.namePib1Name;
+                    document.namePib2Name = docForSerialization.namePib2Name;
                 }
             }
             
