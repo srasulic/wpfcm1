@@ -80,7 +80,7 @@ namespace wpfcm1.Shell
             if (first)
             {
                 first = false;
-                _windowManager.ShowDialog(new DialogLoginViewModel(_windowManager));
+               // _windowManager.ShowDialog(new DialogLoginViewModel(_windowManager));
             }
         }
 

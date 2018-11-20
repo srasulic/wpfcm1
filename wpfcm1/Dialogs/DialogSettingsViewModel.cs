@@ -345,7 +345,7 @@ namespace wpfcm1.Dialogs
             User.Default.OtherOutbound = UserTemp.OtherOutbound;
 
             //encrypted FTP Password
-            User.Default.FtpPassword = EncryptionHelper.Encrypt(User.Default.FtpPassword);
+            //User.Default.FtpPassword = EncryptionHelper.Encrypt(User.Default.FtpPassword);
 
             User.Default.Save();
             Folders.Default.Save();
