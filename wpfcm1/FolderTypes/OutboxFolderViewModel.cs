@@ -20,6 +20,8 @@ namespace wpfcm1.FolderTypes
 {
     public class OutboxFolderViewModel : FolderViewModel, IHandle<MessageReject>, IHandle<MessageXls>
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly IWindowManager _windowManager;
         //        new protected string[] Extensions = { ".pdf", ".ack", ".xml" };
         //        new protected string[] Extensions = { ".pdf", ".ack" };
@@ -113,7 +115,11 @@ namespace wpfcm1.FolderTypes
         public void Handle(MessageReject message)
         {
             if (!IsActive) return;
-            if (Regex.IsMatch(FolderPath, @".*Inbound.*Outbox.*", RegexOptions.IgnoreCase)) return;
+            if (Regex.IsMatch(FolderPath, @".*Inbound.*Outbox.*", RegexOptions.IgnoreCase))
+            {
+                Log.Warn("Pokusaj odbacivanja _s_s dokumenta iz Inbound.Outbox!");
+                return;
+            }
             PsKillPdfHandlers(); // workaround - pskill ubija sve procese koji rade nad PDF-ovima u eDokument
             RejectDocument();
         }

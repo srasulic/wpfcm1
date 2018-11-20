@@ -44,6 +44,9 @@
     <Setting Name="KpSubfolder" Type="System.String" Scope="Application">
       <Value Profile="(Default)">KP</Value>
     </Setting>
+    <Setting Name="PovratiSubfolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Povrati</Value>
+    </Setting>
     <Setting Name="OtherSubfolder" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Ostali</Value>
     </Setting>

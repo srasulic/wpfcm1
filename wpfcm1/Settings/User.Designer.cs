@@ -12,7 +12,7 @@ namespace wpfcm1.Settings {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.6.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.7.0.0")]
     internal sealed partial class User : global::System.Configuration.ApplicationSettingsBase {
         
         private static User defaultInstance = ((User)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new User())));
@@ -278,6 +278,30 @@ namespace wpfcm1.Settings {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool PovratiInbound {
+            get {
+                return ((bool)(this["PovratiInbound"]));
+            }
+            set {
+                this["PovratiInbound"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool PovratiOutbound {
+            get {
+                return ((bool)(this["PovratiOutbound"]));
+            }
+            set {
+                this["PovratiOutbound"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool OtherInbound {
             get {
                 return ((bool)(this["OtherInbound"]));
@@ -308,6 +332,54 @@ namespace wpfcm1.Settings {
             }
             set {
                 this["InvoicesInbound"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float XSigShift {
+            get {
+                return ((float)(this["XSigShift"]));
+            }
+            set {
+                this["XSigShift"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float YSigShift {
+            get {
+                return ((float)(this["YSigShift"]));
+            }
+            set {
+                this["YSigShift"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float XSigShiftRight {
+            get {
+                return ((float)(this["XSigShiftRight"]));
+            }
+            set {
+                this["XSigShiftRight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float YSigShiftRight {
+            get {
+                return ((float)(this["YSigShiftRight"]));
+            }
+            set {
+                this["YSigShiftRight"] = value;
             }
         }
         

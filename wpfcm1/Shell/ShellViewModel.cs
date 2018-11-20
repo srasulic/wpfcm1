@@ -23,7 +23,7 @@ namespace wpfcm1.Shell
         [ImportingConstructor]
         public ShellViewModel(IEventAggregator events, IWindowManager windowManager, ToolBarViewModel toolBar, CertificatesViewModel certs)
         {
-            DisplayName = "eDokument PoliSign";
+            DisplayName = "eDokument PoliSign     " + AppBootstrapper.appVersion;
             _events = events;
             _events.Subscribe(this);
             _windowManager = windowManager;
@@ -39,6 +39,8 @@ namespace wpfcm1.Shell
             IosInboundVM = new FolderGroupViewModel(FolderManager.IosInboundFolders, "Ulazni IOS", events, _windowManager);
             KpOutboundVM = new FolderGroupViewModel(FolderManager.KpOutboundFolders, "Izlazna KP", events, _windowManager);
             KpInboundVM = new FolderGroupViewModel(FolderManager.KpInboundFolders, "Ulazna KP", events, _windowManager);
+            PovratiOutboundVM = new FolderGroupViewModel(FolderManager.PovratiOutboundFolders, "Izlazni Povrati", events, _windowManager);
+            PovratiInboundVM = new FolderGroupViewModel(FolderManager.PovratiInboundFolders, "Ulazni Povrati", events, _windowManager);
             OtherOutboundVM = new FolderGroupViewModel(FolderManager.OtherOutboundFolders, "Ostali Izlazni", events, _windowManager);
             OtherInboundVM = new FolderGroupViewModel(FolderManager.OtherInboundFolders, "Ostali Ulazni", events, _windowManager);
             WebVM = new WebViewModel("Online report");
@@ -60,6 +62,8 @@ namespace wpfcm1.Shell
         public FolderGroupViewModel IosInboundVM { get; set; }
         public FolderGroupViewModel KpOutboundVM { get; set; }
         public FolderGroupViewModel KpInboundVM { get; set; }
+        public FolderGroupViewModel PovratiOutboundVM { get; set; }
+        public FolderGroupViewModel PovratiInboundVM { get; set; }
         public FolderGroupViewModel OtherOutboundVM { get; set; }
         public FolderGroupViewModel OtherInboundVM { get; set; }
         public WebViewModel WebVM { get; set; }
@@ -112,6 +116,16 @@ namespace wpfcm1.Shell
         public void ShowKpInbound()
         {
             ActivateItem(KpInboundVM);
+        }
+
+        public void ShowPovratiOutbound()
+        {
+            ActivateItem(PovratiOutboundVM);
+        }
+
+        public void ShowPovratiInbound()
+        {
+            ActivateItem(PovratiInboundVM);
         }
 
         public void ShowOtherOutbound()
@@ -172,6 +186,12 @@ namespace wpfcm1.Shell
                 {FolderManager.KpInboundInboxFolder, KpInboundVM.FolderVMs[0]},
                 {FolderManager.KpInboundOutboxFolder, KpInboundVM.FolderVMs[1]},
                 {FolderManager.KpInboundConfirmedFolder, KpInboundVM.FolderVMs[3]},
+                {FolderManager.PovratiOutboundOutboxFolder, PovratiOutboundVM.FolderVMs[1]},
+                {FolderManager.PovratiOutboundPendFolder, PovratiOutboundVM.FolderVMs[3]},
+                {FolderManager.PovratiOutboundConfirmedFolder, PovratiOutboundVM.FolderVMs[4]},
+                {FolderManager.PovratiInboundInboxFolder, PovratiInboundVM.FolderVMs[0]},
+                {FolderManager.PovratiInboundOutboxFolder, PovratiInboundVM.FolderVMs[1]},
+                {FolderManager.PovratiInboundConfirmedFolder, PovratiInboundVM.FolderVMs[3]},
                 {FolderManager.OtherOutboundOutboxFolder, OtherOutboundVM.FolderVMs[1]},
                 {FolderManager.OtherOutboundPendFolder, OtherOutboundVM.FolderVMs[3]},
                 {FolderManager.OtherOutboundConfirmedFolder, OtherOutboundVM.FolderVMs[4]},
@@ -193,6 +213,8 @@ namespace wpfcm1.Shell
             IosOutboundVM.Dispose();
             KpInboundVM.Dispose();
             KpOutboundVM.Dispose();
+            PovratiInboundVM.Dispose();
+            PovratiOutboundVM.Dispose();
             OtherInboundVM.Dispose();
             OtherOutboundVM.Dispose();
             WebVM.Dispose();

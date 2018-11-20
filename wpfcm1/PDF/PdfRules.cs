@@ -15,9 +15,13 @@ namespace wpfcm1.PDF
             {FolderManager.InvoicesInboundConfirmedToDoFolder, SignatureLocation.UpperRight},
             {FolderManager.IosOutboundErpIfaceFolder, SignatureLocation.UpperLeft},
             {FolderManager.IosInboundInboxFolder, SignatureLocation.UpperRight},
+            {FolderManager.IosInboundConfirmedToDoFolder, SignatureLocation.UpperRight},
             {FolderManager.KpOutboundErpIfaceFolder, SignatureLocation.UpperLeft},
             {FolderManager.KpInboundInboxFolder, SignatureLocation.UpperRight},
             {FolderManager.KpInboundConfirmedToDoFolder, SignatureLocation.UpperRight},
+            {FolderManager.PovratiOutboundErpIfaceFolder, SignatureLocation.UpperLeft},
+            {FolderManager.PovratiInboundInboxFolder, SignatureLocation.UpperRight},
+            {FolderManager.PovratiInboundConfirmedToDoFolder, SignatureLocation.UpperRight},
             {FolderManager.OtherOutboundErpIfaceFolder, SignatureLocation.UpperLeft},
             {FolderManager.OtherInboundInboxFolder, SignatureLocation.UpperRight}
 
@@ -45,14 +49,19 @@ namespace wpfcm1.PDF
             {FolderManager.IosOutboundConfirmedFolder, FolderManager.IosOutboundOutboxFolder},
             {FolderManager.IosInboundInboxFolder,      FolderManager.IosInboundOutboxFolder},
             {FolderManager.IosInboundConfirmedFolder,  FolderManager.IosInboundOutboxFolder},
-            
+
             {FolderManager.KpOutboundErpIfaceFolder,            FolderManager.KpOutboundOutboxFolder},
             //{FolderManager.KpOutboundConfirmedOutToDoFolder,    FolderManager.KpOutboundOutboxFolder},
             {FolderManager.KpOutboundConfirmedFolder,           FolderManager.KpOutboundOutboxFolder},
             {FolderManager.KpInboundInboxFolder,                FolderManager.KpInboundOutboxFolder},
             //{FolderManager.KpInboundConfirmedToDoFolder,        FolderManager.KpInboundOutboxFolder},
             {FolderManager.KpInboundConfirmedFolder,            FolderManager.KpInboundOutboxFolder},
-            
+
+            {FolderManager.PovratiOutboundErpIfaceFolder,            FolderManager.PovratiOutboundOutboxFolder},
+            {FolderManager.PovratiOutboundConfirmedFolder,           FolderManager.PovratiOutboundOutboxFolder},
+            {FolderManager.PovratiInboundInboxFolder,                FolderManager.PovratiInboundOutboxFolder},
+            {FolderManager.PovratiInboundConfirmedFolder,            FolderManager.PovratiInboundOutboxFolder},
+
             {FolderManager.OtherOutboundErpIfaceFolder,   FolderManager.OtherOutboundOutboxFolder},
             {FolderManager.OtherOutboundConfirmedFolder,  FolderManager.OtherOutboundOutboxFolder},
             {FolderManager.OtherInboundInboxFolder,       FolderManager.OtherInboundOutboxFolder},
@@ -64,11 +73,13 @@ namespace wpfcm1.PDF
             {FolderManager.InvoicesOutboundErpIfaceFolder, FolderManager.InvoicesOutboundErpProcFolder},
             {FolderManager.IosOutboundErpIfaceFolder, FolderManager.IosOutboundErpProcFolder},
             {FolderManager.KpOutboundErpIfaceFolder, FolderManager.KpOutboundErpProcFolder},
+            {FolderManager.PovratiOutboundErpIfaceFolder, FolderManager.PovratiOutboundErpProcFolder},
             {FolderManager.OtherOutboundErpIfaceFolder, FolderManager.OtherOutboundErpProcFolder},
             
             {FolderManager.InvoicesOutboundOutboxFolder, FolderManager.InvoicesOutboundErpProcFolder},
             {FolderManager.IosOutboundOutboxFolder, FolderManager.IosOutboundErpProcFolder},
             {FolderManager.KpOutboundOutboxFolder, FolderManager.KpOutboundErpProcFolder},
+            {FolderManager.PovratiOutboundOutboxFolder, FolderManager.PovratiOutboundErpProcFolder},
             {FolderManager.OtherOutboundOutboxFolder, FolderManager.OtherOutboundErpProcFolder}
         };
 
@@ -86,9 +97,13 @@ namespace wpfcm1.PDF
             {FolderManager.InvoicesInboundConfirmedToDoFolder, FinalAction.SecondSignatureMark},
             {FolderManager.IosOutboundErpIfaceFolder, FinalAction.Store},
             {FolderManager.IosInboundInboxFolder, FinalAction.SecondSignatureMark},
+            {FolderManager.IosInboundConfirmedToDoFolder, FinalAction.SecondSignatureMark},
             {FolderManager.KpOutboundErpIfaceFolder, FinalAction.Store},
             {FolderManager.KpInboundInboxFolder, FinalAction.SecondSignatureMark},
             {FolderManager.KpInboundConfirmedToDoFolder, FinalAction.SecondSignatureMark},
+            {FolderManager.PovratiOutboundErpIfaceFolder, FinalAction.Store},
+            {FolderManager.PovratiInboundInboxFolder, FinalAction.SecondSignatureMark},
+            {FolderManager.PovratiInboundConfirmedToDoFolder, FinalAction.SecondSignatureMark},
             {FolderManager.OtherOutboundErpIfaceFolder, FinalAction.Store},
             {FolderManager.OtherInboundInboxFolder, FinalAction.SecondSignatureMark}
         };
@@ -118,6 +133,12 @@ namespace wpfcm1.PDF
             {FolderManager.KpInboundInboxFolder, "edokument/kp/inbound/inbox/"},
             {FolderManager.KpInboundOutboxFolder, "edokument/kp/inbound/outbox/"},
             {FolderManager.KpInboundConfirmedFolder, "edokument/kp/inbound/confirmed/"},
+            {FolderManager.PovratiOutboundOutboxFolder, "edokument/povrati/outbound/outbox/"},
+            {FolderManager.PovratiOutboundPendFolder, "edokument/povrati/outbound/pend/"},
+            {FolderManager.PovratiOutboundConfirmedFolder, "edokument/povrati/outbound/confirmed/"},
+            {FolderManager.PovratiInboundInboxFolder, "edokument/povrati/inbound/inbox/"},
+            {FolderManager.PovratiInboundOutboxFolder, "edokument/povrati/inbound/outbox/"},
+            {FolderManager.PovratiInboundConfirmedFolder, "edokument/povrati/inbound/confirmed/"},
             {FolderManager.OtherOutboundOutboxFolder, "edokument/ostali/outbound/outbox/"},
             {FolderManager.OtherOutboundPendFolder, "edokument/ostali/outbound/pend/"},
             {FolderManager.OtherOutboundConfirmedFolder, "edokument/ostali/outbound/confirmed/"},
@@ -146,6 +167,12 @@ namespace wpfcm1.PDF
             {FolderManager.KpInboundInboxFolder, (User.Default.KpInbound ? TransferAction.Sync : TransferAction.Exclude)},
             {FolderManager.KpInboundOutboxFolder, (User.Default.KpInbound ? TransferAction.Upload : TransferAction.Exclude)},
             {FolderManager.KpInboundConfirmedFolder, (User.Default.KpInbound ? TransferAction.Download : TransferAction.Exclude)},
+            {FolderManager.PovratiOutboundOutboxFolder, (User.Default.PovratiOutbound ? TransferAction.Upload : TransferAction.Exclude)},
+            {FolderManager.PovratiOutboundPendFolder, (User.Default.PovratiOutbound ? TransferAction.Sync : TransferAction.Exclude)},
+            {FolderManager.PovratiOutboundConfirmedFolder, (User.Default.PovratiOutbound ? TransferAction.Download : TransferAction.Exclude)},
+            {FolderManager.PovratiInboundInboxFolder, (User.Default.PovratiInbound ? TransferAction.Sync : TransferAction.Exclude)},
+            {FolderManager.PovratiInboundOutboxFolder, (User.Default.PovratiInbound ? TransferAction.Upload : TransferAction.Exclude)},
+            {FolderManager.PovratiInboundConfirmedFolder, (User.Default.PovratiInbound ? TransferAction.Download : TransferAction.Exclude)},
             {FolderManager.OtherOutboundOutboxFolder, (User.Default.OtherOutbound ? TransferAction.Upload : TransferAction.Exclude)},
             {FolderManager.OtherOutboundPendFolder, (User.Default.OtherOutbound ? TransferAction.Sync : TransferAction.Exclude)},
             {FolderManager.OtherOutboundConfirmedFolder, (User.Default.OtherOutbound ? TransferAction.Download : TransferAction.Exclude)},
@@ -162,6 +189,8 @@ namespace wpfcm1.PDF
             {FolderManager.IosInboundOutboxFolder, FolderManager.IosInboundSentFolder},
             {FolderManager.KpOutboundOutboxFolder, FolderManager.KpOutboundSentFolder},
             {FolderManager.KpInboundOutboxFolder, FolderManager.KpInboundSentFolder},
+            {FolderManager.PovratiOutboundOutboxFolder, FolderManager.PovratiOutboundSentFolder},
+            {FolderManager.PovratiInboundOutboxFolder, FolderManager.PovratiInboundSentFolder},
             {FolderManager.OtherOutboundOutboxFolder, FolderManager.OtherOutboundSentFolder},
             {FolderManager.OtherInboundOutboxFolder, FolderManager.OtherInboundSentFolder}
         };

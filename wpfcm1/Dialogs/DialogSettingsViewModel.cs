@@ -18,9 +18,10 @@ namespace wpfcm1.Dialogs
         private string _timestampUserName;
         private string _timestampPassword;
         private string _token;
+        private float _xSigShift, _ySigShift, _xSigShiftRight, _ySigShiftRight;
         private float _llxPib, _llyPib, _urxPib, _uryPib;
         private float _llxNo, _llyNo, _urxNo, _uryNo;
-        private bool _invoicesInbound, _invoicesOutbound, _iosInbound, _iosOutbound, _kpInbound, _kpOutbound, _otherInbound, _otherOutbound;
+        private bool _invoicesInbound, _invoicesOutbound, _iosInbound, _iosOutbound, _kpInbound, _kpOutbound, _povratiInbound, _povratiOutbound, _otherInbound, _otherOutbound;
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public UserModel()
@@ -52,8 +53,15 @@ namespace wpfcm1.Dialogs
             IosOutbound = user.IosOutbound;
             KpInbound = user.KpInbound;
             KpOutbound = user.KpOutbound;
+            PovratiInbound = user.PovratiInbound;
+            PovratiOutbound = user.PovratiOutbound;
             OtherInbound = user.OtherInbound;
             OtherOutbound = user.OtherOutbound;
+            XSigShift = user.XSigShift;
+            YSigShift = user.YSigShift;
+            XSigShiftRight = user.XSigShiftRight;
+            YSigShiftRight = user.YSigShiftRight;
+
         }
 
         public string RootFolder
@@ -255,6 +263,20 @@ namespace wpfcm1.Dialogs
             set { _kpOutbound = value; NotifyOfPropertyChange(() => _kpOutbound); Log.Info("Change in settings - KpOutbound"); }
         }
 
+
+        public bool PovratiInbound
+        {
+            get { return _povratiInbound; }
+            set { _povratiInbound = value; NotifyOfPropertyChange(() => _povratiInbound); }
+        }
+
+        public bool PovratiOutbound
+        {
+            get { return _povratiOutbound; }
+            set { _povratiOutbound = value; NotifyOfPropertyChange(() => _povratiOutbound); }
+        }
+
+
         public bool OtherInbound
         {
             get { return _otherInbound; }
@@ -287,6 +309,46 @@ namespace wpfcm1.Dialogs
                 }
                 return null;
             }
+        }
+
+        public float XSigShift
+        {
+            get
+            {
+                if (_xSigShift < 0) return 0;
+                return _xSigShift < 190 ? _xSigShift : 190 ;
+            }
+            set { _xSigShift = value; NotifyOfPropertyChange(() => XSigShift); }
+        }
+
+        public float YSigShift
+        {
+            get
+            {
+                if (_ySigShift < 0) return 0;
+                return _ySigShift < 190 ? _ySigShift : 190;
+            }
+            set { _ySigShift = value ; NotifyOfPropertyChange(() => YSigShift); }
+        }
+
+        public float XSigShiftRight
+        {
+            get
+            {
+                if (_xSigShiftRight < 0) return 0;
+                return _xSigShiftRight < 190 ? _xSigShiftRight : 190;
+            }
+            set { _xSigShiftRight = value; NotifyOfPropertyChange(() => XSigShiftRight); }
+        }
+
+        public float YSigShiftRight
+        {
+            get
+            {
+                if (_ySigShiftRight < 0) return 0;
+                return _ySigShiftRight < 190 ? _ySigShiftRight : 190;
+            }
+            set { _ySigShiftRight = value; NotifyOfPropertyChange(() => YSigShiftRight); }
         }
 
         public string Error { get; set; }
@@ -341,8 +403,14 @@ namespace wpfcm1.Dialogs
             User.Default.IosOutbound = UserTemp.IosOutbound;
             User.Default.KpInbound = UserTemp.KpInbound;
             User.Default.KpOutbound = UserTemp.KpOutbound;
+            User.Default.PovratiInbound = UserTemp.PovratiInbound;
+            User.Default.PovratiOutbound = UserTemp.PovratiOutbound;
             User.Default.OtherInbound = UserTemp.OtherInbound;
             User.Default.OtherOutbound = UserTemp.OtherOutbound;
+            User.Default.XSigShift = UserTemp.XSigShift;
+            User.Default.YSigShift = UserTemp.YSigShift;
+            User.Default.XSigShiftRight = UserTemp.XSigShiftRight;
+            User.Default.YSigShiftRight = UserTemp.YSigShiftRight;
 
             //encrypted FTP Password
             //User.Default.FtpPassword = EncryptionHelper.Encrypt(User.Default.FtpPassword);

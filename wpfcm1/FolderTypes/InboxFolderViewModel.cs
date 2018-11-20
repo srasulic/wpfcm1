@@ -102,6 +102,8 @@ namespace wpfcm1.FolderTypes
         protected override void OnActivate()
         {
             _events.PublishOnUIThread(new MessageViewModelActivated(GetType().Name));
+            // pri ulasku startuj automatsku validaciju 
+            Handle(new MessageValidate());
         }
 
         protected override void OnDeactivate(bool close)
@@ -160,6 +162,26 @@ namespace wpfcm1.FolderTypes
                     + " Info o izvornom dokumentu - naziv: " + document.DocumentPath + "\r\n"
                     + " Info o izvornom dokumentu - veličina: " + document.LengthKB + "\r\n"
                     + " Info o izvornom dokumentu - potpisnik: " + document.sigSignerName + "\r\n";
+                document.IsAcknowledged = CreateAckFile(destinationFilePath, ackInfo);
+            }
+
+            // Trebaju nam i konfirmacije o pdf-ovima koji nisu prošli validaciju potpisa
+            documents = Documents.Where(d => ! d.isValidated && !d.IsAcknowledged).Cast<DocumentModel>();
+            foreach (var document in documents)
+            {
+                var fileName = Path.GetFileName(document.DocumentPath);
+                var destinationFilePath = Path.Combine(destinationDir, fileName + ".ack");
+
+                string ackInfo = "\r\n"
+                    + " Pošiljalac: " + document.namePib1 + " - " + document.namePib1Name + "\r\n"
+                    + " Primalac: " + document.namePib2 + " - " + document.namePib2Name + "\r\n"
+                    + " Br Dokumenta: " + document.nameDocNum + "\r\n"
+                    + " Info o izvornom dokumentu - naziv: " + document.DocumentPath + "\r\n"
+                    + " Info o izvornom dokumentu - veličina: " + document.LengthKB + "\r\n"
+                    + " Info o izvornom dokumentu - potpisnik: " + document.sigSignerName + "\r\n"
+                    + " UPOZORENJE: \r\n"
+                    + " Validacija potpisa nije uspesno izvrsena na strani primaoca. \r\n"
+                    ;
                 document.IsAcknowledged = CreateAckFile(destinationFilePath, ackInfo);
             }
         }

@@ -70,6 +70,12 @@
                 <mah:Tile Title="{Binding Path=Svm.KpInboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowKpInbound">
                     <ItemsControl ItemsSource="{Binding Path=Svm.KpInboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}"/>
                 </mah:Tile>
+                <mah:Tile Title="{Binding Path=Svm.PovratiOutboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowPovratiOutbound">
+                    <ItemsControl ItemsSource="{Binding Path=Svm.PovratiOutboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}" />
+                </mah:Tile>
+                <mah:Tile Title="{Binding Path=Svm.PovratiInboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowPovratiInbound">
+                    <ItemsControl ItemsSource="{Binding Path=Svm.PovratiInboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}"/>
+                </mah:Tile>
                 <mah:Tile Title="{Binding Path=Svm.OtherOutboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowOtherOutbound">
                     <ItemsControl ItemsSource="{Binding Path=Svm.OtherOutboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}" />
                 </mah:Tile>

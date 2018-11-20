@@ -80,18 +80,18 @@ namespace wpfcm1.FolderTypes
                     startInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 }
 
-//                startInfo.Arguments = @" /C for /f ""tokens=3"" %G IN ('c:\edokument\bin\handle.exe /accepteula eDokument\ -p Fox ^| findstr /i /r /c:"".*pid:.*pdf$""') DO c:\edokument\bin\pskill.exe /accepteula %G";
+                //                startInfo.Arguments = @" /C for /f ""tokens=3"" %G IN ('c:\edokument\bin\handle.exe /accepteula eDokument\ -p Fox ^| findstr /i /r /c:"".*pid:.*pdf$""') DO c:\edokument\bin\pskill.exe /accepteula %G";
                 startInfo.Arguments = @" /C for /f ""tokens=3"" %G IN ('handle.exe /accepteula eDokument\ -p Fox ^| findstr /i /r /c:"".*pid:.*pdf$""') DO pskill.exe /accepteula %G";
                 process.StartInfo = startInfo;
                 process.Start();
                 process.WaitForExit();
 
-//                startInfo.Arguments = @" /C for /f ""tokens=3"" %G IN ('c:\edokument\bin\handle.exe /accepteula eDokument\ -p Acro ^| findstr /i /r /c:"".*pid:.*pdf$""') DO c:\edokument\bin\pskill.exe /accepteula %G";
+                //                startInfo.Arguments = @" /C for /f ""tokens=3"" %G IN ('c:\edokument\bin\handle.exe /accepteula eDokument\ -p Acro ^| findstr /i /r /c:"".*pid:.*pdf$""') DO c:\edokument\bin\pskill.exe /accepteula %G";
                 startInfo.Arguments = @" /C for /f ""tokens=3"" %G IN ('handle.exe /accepteula eDokument\ -p Acro ^| findstr /i /r /c:"".*pid:.*pdf$""') DO pskill.exe /accepteula %G";
                 process.StartInfo = startInfo;
                 process.Start();
                 process.WaitForExit();
-                
+
             }
             catch (Exception ex)
             {
@@ -126,7 +126,7 @@ namespace wpfcm1.FolderTypes
             {
                 var documents = Documents.Where(d => d.IsChecked).Cast<DocumentModel>();
                 if (!documents.Any()) { documents = Documents.Cast<DocumentModel>(); }
-                _expList = "sep=,\n\"Obelezen\",\"Fajl\",\"KB\",\"Pib1\",\"Pib2\",\"Br dok\",\"Datum\",\""
+                _expList = "sep=,\n\"Obelezen\",\"Fajl\",\"KB\",\"Pib1\",\"Izdavalac\",\"Pib2\",\"Primalac\",\"Br dok\",\"Datum\",\""
                         + "Reason (napomena prilikom potpisivanja)\",\"Ime potpisnika\",\"Organizacija\",\"Datum potpisivanja\",\"Vremenski žig\",\""
                         + "Reason 2 (napomena prilikom potpisivanja)\",\"Ime potpisnika 2\",\"Organizacija 2\",\"Datum potpisivanja 2\",\"Vremenski žig 2\",\""
                         + "Validacija - info\",\"Odobren za obradu\",\"Odbačen\",\"Odobren za arhiviranje\"\r\n";
@@ -139,9 +139,11 @@ namespace wpfcm1.FolderTypes
                         BoolToDaNeString(document.IsChecked), "\",\"",
                         fileNameParts.Last(), "\",\"",
                         document.LengthKB, "\",\"",
-                        
-                        document.namePib1, "\",\"", 
+
+                        document.namePib1, "\",\"",
+                        document.namePib1Name, "\",\"",
                         document.namePib2, "\",\"",
+                        document.namePib2Name, "\",\"",
                         document.nameDocNum, "\",\"",
                         document.nameDate, "\",\"",
 

@@ -12,7 +12,7 @@ namespace wpfcm1.Settings {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.7.0.0")]
     internal sealed partial class Folders : global::System.Configuration.ApplicationSettingsBase {
         
         private static Folders defaultInstance = ((Folders)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Folders())));
@@ -149,6 +149,15 @@ namespace wpfcm1.Settings {
         public string KpSubfolder {
             get {
                 return ((string)(this["KpSubfolder"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Povrati")]
+        public string PovratiSubfolder {
+            get {
+                return ((string)(this["PovratiSubfolder"]));
             }
         }
         
