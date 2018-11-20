@@ -35,6 +35,8 @@ namespace wpfcm1.DataAccess
         public static readonly string IosInboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.IosSubfolder, Folders.Default.InboundOutboxFolder);
         public static readonly string IosInboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.IosSubfolder, Folders.Default.InboundSentFolder);
         public static readonly string IosInboundConfirmedFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.IosSubfolder, Folders.Default.InboundConfirmedFolder);
+        public static readonly string IosOutboundConfirmedOutToDoFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.IosSubfolder, Folders.Default.OutboundConfirmedFolder);
+        public static readonly string IosInboundConfirmedToDoFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.IosSubfolder, Folders.Default.InboundConfirmedFolder);
         //folderi za KP
         public static readonly string KpOutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.OutboundErpIfaceFolder);
         public static readonly string KpOutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.OutboundErpProcFolder);
@@ -110,12 +112,14 @@ namespace wpfcm1.DataAccess
             {"IosOutboundSentFolder",               "Poslato"},
             {"IosOutboundPendFolder",               "Na čekanju"},
             {"IosOutboundConfirmedFolder",          "Arh - uručeni"},
-            
+            {"IosOutboundConfirmedOutToDoFolder",   "ToDo"},
+
             {"IosInboundInboxFolder",               "Prijem - obrada"},                
             {"IosInboundOutboxFolder",              "Za slanje"},
             {"IosInboundSentFolder",                "Poslato"},
             {"IosInboundConfirmedFolder",           "Arhiva"},
-            
+            {"IosInboundConfirmedToDoFolder",       "Primljeni - nepotpisani"},
+
             {"KpOutboundErpIfaceFolder",            "Priprema"},
             {"KpOutboundErpProcFolder",             "Processed"},
             {"KpOutboundOutboxFolder",              "Za slanje"},
@@ -171,15 +175,19 @@ namespace wpfcm1.DataAccess
             {"InvoicesInboundSentFolder", typeof(DocumentModel)},
             {"InvoicesInboundConfirmedFolder", typeof(ConfirmedDocumentModel)},
             {"InvoicesInboundConfirmedToDoFolder", typeof(ConfirmedToDoDocumentModel)},
+
             {"IosOutboundErpIfaceFolder", typeof(GeneratedDocumentModel)},
             {"IosOutboundOutboxFolder", typeof(OutboxDocumentModel)},
             {"IosOutboundSentFolder", typeof(DocumentModel)},
             {"IosOutboundPendFolder", typeof(PendDocumentModel)},
             {"IosOutboundConfirmedFolder", typeof(ConfirmedDocumentModel)},
+            {"IosOutboundConfirmedOutToDoFolder", typeof(ConfirmedOutToDoDocumentModel)},
             {"IosInboundInboxFolder", typeof(InboxDocumentModel)},
             {"IosInboundOutboxFolder", typeof(OutboxDocumentModel)},
             {"IosInboundSentFolder", typeof(DocumentModel)},
             {"IosInboundConfirmedFolder", typeof(ConfirmedDocumentModel)},
+            {"IosInboundConfirmedToDoFolder", typeof(ConfirmedToDoDocumentModel)},
+
             {"KpOutboundErpIfaceFolder", typeof(GeneratedDocumentModel)},
             {"KpOutboundOutboxFolder", typeof(OutboxDocumentModel)},
             {"KpOutboundSentFolder", typeof(DocumentModel)},
@@ -245,7 +253,8 @@ namespace wpfcm1.DataAccess
                 {"IosOutboundOutboxFolder", IosOutboundOutboxFolder},
                 {"IosOutboundSentFolder", IosOutboundSentFolder},
                 {"IosOutboundPendFolder", IosOutboundPendFolder},
-                {"IosOutboundConfirmedFolder", IosOutboundConfirmedFolder}
+                {"IosOutboundConfirmedFolder", IosOutboundConfirmedFolder},
+                {"IosOutboundConfirmedOutToDoFolder", IosOutboundConfirmedFolder}
             };
             CheckFolders(IosOutboundFolders);
             if (!Directory.Exists(IosOutboundErpProcFolder)) Directory.CreateDirectory(IosOutboundErpProcFolder);
@@ -253,6 +262,7 @@ namespace wpfcm1.DataAccess
             IosInboundFolders = new Dictionary<string, string>
             {
                 {"IosInboundInboxFolder", IosInboundInboxFolder},
+                {"IosInboundConfirmedToDoFolder", IosInboundConfirmedFolder},
                 {"IosInboundOutboxFolder", IosInboundOutboxFolder},
                 {"IosInboundSentFolder", IosInboundSentFolder},
                 {"IosInboundConfirmedFolder", IosInboundConfirmedFolder}
