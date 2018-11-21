@@ -1,7 +1,9 @@
 ﻿using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using wpfcm1.Extensions;
@@ -16,6 +18,8 @@ namespace wpfcm1.Dialogs
 {
     public class DialogAboutViewModel : Screen
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private string aboutText = "";
         public DialogAboutViewModel()
         {
@@ -45,6 +49,30 @@ namespace wpfcm1.Dialogs
         }
 
         public string AboutText { get => aboutText; set => aboutText = value; }
+
+
+        public void AeroHelp()
+        {
+            try
+            {
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                startInfo.FileName = "Aeroadmin.exe";
+
+                startInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+                process.StartInfo = startInfo;
+                process.Start();
+               // process.WaitForExit();
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error while running Aeroadmin.exe ...", ex);
+            }
+        }
+    
 
         public void OnClose()
         {

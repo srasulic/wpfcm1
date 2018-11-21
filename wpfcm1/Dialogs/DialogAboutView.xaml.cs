@@ -10,5 +10,6 @@ namespace wpfcm1.Dialogs
             //Owner = Application.Current.MainWindow;
             InitializeComponent();
         }
+
     }
 }

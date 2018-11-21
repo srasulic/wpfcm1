@@ -13,6 +13,16 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBox Text="{Binding AboutText}" ></TextBox>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Left">
+            <Button Style="{DynamicResource MetroCircleButtonStyle}" Width="55" Height="55" x:Name="AeroHelp" Margin="3,3,3,3" ToolTip="Podrška operatera - daljinski pristup računaru">
+                <Rectangle Width="23" Height="23"
+                   Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Uniform" Visual="{DynamicResource appbar_lifesaver}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+        </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
             <Button Content="Close" Width="96" Height="32" x:Name="OnClose" Margin="3"/>
         </StackPanel>
