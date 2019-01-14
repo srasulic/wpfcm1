@@ -76,7 +76,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
@@ -93,9 +93,8 @@
       <HintPath>..\packages\Caliburn.Micro.2.0.2\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="itextsharp, Version=5.5.8.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\iTextSharp.5.5.8\lib\itextsharp.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
@@ -202,7 +201,11 @@
     <Compile Include="Model\GeneratedDocumentModel.cs" />
     <Compile Include="Model\InboxDocumentModel.cs" />
     <Compile Include="Model\RecognitionPatternModel.cs" />
+    <Compile Include="PDF\PdfCertificateUtil.cs" />
+    <Compile Include="PDF\PdfCrlVerifier.cs" />
     <Compile Include="PDF\PdfHelpers.cs" />
+    <Compile Include="PDF\PdfLtvVerifier.cs" />
+    <Compile Include="PDF\PdfOcspVerifier.cs" />
     <Compile Include="PDF\PdfRules.cs" />
     <Compile Include="PDF\PdfSign.cs" />
     <Compile Include="Processing\SigningManager.cs" />

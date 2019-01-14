@@ -12,6 +12,7 @@ using wpfcm1.Certificates;
 using wpfcm1.Settings;
 using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 using wpfcm1.Model;
+//using Org.BouncyCastle.Security;
 
 namespace wpfcm1.PDF
 {
@@ -137,6 +138,15 @@ namespace wpfcm1.PDF
                         validationInfo = validationInfo + "GREŠKA: Greška prilikom provere integriteta potpisa: " + e.Message + System.Environment.NewLine;
                     }
                     // Dodoati LTV proveru!!!
+
+                 //   PdfLtvVerifier verifier = new PdfLtvVerifier(reader);
+                 //   List<VerificationOK> xxx = new List<VerificationOK>();
+                 //   verifier.Verify(xxx);
+                 //   if (xxx == null)
+                 //   {
+                 //       validationInfo = validationInfo + "Ovo je test ";
+                 //   }
+
                 }
             }
             catch (Exception e)
@@ -230,7 +240,7 @@ namespace wpfcm1.PDF
                 DateTime signDate = pkcs7.SignDate;
                 cert.CheckValidity(signDate);
 
-
+               
                 // zasto nismo uzeli SigningCertificate iz prethodnog koraka?
                 X509Certificate[] certs = pkcs7.SignCertificateChain;
                 X509Certificate signCert = certs[0];
@@ -243,17 +253,23 @@ namespace wpfcm1.PDF
 
         private static void CheckRevocation(PdfPKCS7 pkcs7, X509Certificate signCert, X509Certificate issuerCert, DateTime date)
         {
-            var ocsps = new List<BasicOcspResp>();
+            List<BasicOcspResp> ocsps = new List<BasicOcspResp>();
             if (pkcs7.Ocsp != null)
                 ocsps.Add(pkcs7.Ocsp);
-            var ocspVerifier = new OcspVerifier(null, ocsps);
+            PdfOcspVerifier ocspVerifier = new PdfOcspVerifier(null, ocsps);
+            // TODO: napraviti posebnu granu koja može da proveri i online ako nema embedovanih 
+            //       ocsp i crl... U z napomenu da nije LTV potpis...
+            ocspVerifier.OnlineCheckingAllowed = false;
             List<VerificationOK> verification = ocspVerifier.Verify(signCert, issuerCert, date.ToUniversalTime());
             if (verification.Count == 0)
             {
                 var crls = new List<X509Crl>();
                 if (pkcs7.CRLs != null)
                     crls.AddRange(pkcs7.CRLs);
-                var crlVerifier = new CrlVerifier(null, crls);
+                PdfCrlVerifier crlVerifier = new PdfCrlVerifier(null, crls);
+                // TODO: napraviti posebnu granu koja može da proveri i online ako nema embedovanih 
+                //       ocsp i crl... U z napomenu da nije LTV potpis...
+                crlVerifier.OnlineCheckingAllowed = false;
                 verification = crlVerifier.Verify(signCert, issuerCert, date.ToUniversalTime());
                 verification.AddRange(verification);
             }
