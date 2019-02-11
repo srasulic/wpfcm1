@@ -155,8 +155,10 @@ namespace wpfcm1.PDF
         {
             try
             {
+                // imali smo probleme sa našom verzijm koja je ograničena na http, vraticemo na originalni poziv funkcije
+                // String crlurl = PdfCertificateUtil.GetCRLURLhttp(signCert);
                 // gets the URL from the certificate
-                String crlurl = PdfCertificateUtil.GetCRLURLhttp(signCert);
+                String crlurl = CertificateUtil.GetCRLURL(signCert);
                 if (crlurl == null)
                     return null;
                 LOGGER.Info("Getting CRL from " + crlurl);
