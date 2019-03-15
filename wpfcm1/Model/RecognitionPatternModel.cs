@@ -133,7 +133,7 @@ namespace wpfcm1.Model
             // pa ovde izmeniti da se deserijalizacija uradi odmah u liste
 
 
-            var uri = String.Format("https://edokument.aserta.rs/index/mapping_rules?pib={0}&tip_dok={1}", pib, tipDok);
+            var uri = String.Format("https://polisign.net/index/mapping_rules?pib={0}&tip_dok={1}", pib, tipDok);
             var request = WebRequest.Create(uri);
             request.Proxy = null;
             request.Method = "GET";

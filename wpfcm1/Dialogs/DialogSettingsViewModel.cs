@@ -32,7 +32,7 @@ namespace wpfcm1.Dialogs
             RootFolder = folders.RootFolder;
             UserName = user.UserName;
             PIB = user.PIB;
-            FtpServer = user.FtpServer != "" ? user.FtpServer : @"ftp://ftp.aserta.rs/";
+            FtpServer = user.FtpServer != "" ? user.FtpServer : @"ftp://ftp.polisign.net/";
             FtpUserName = user.FtpUserName;
             FtpPassword = user.FtpPassword;
             TimestampServer = user.TimestampServer != "" ? user.TimestampServer : @"http://test-tsa.ca.posta.rs/timestamp1";
@@ -297,11 +297,14 @@ namespace wpfcm1.Dialogs
                 {
                     case "PIB":
                         if (string.IsNullOrWhiteSpace(PIB))
-                            return "Pib must have 9 numbers";
-                        var regexPib = new Regex(@"\b\d{9}\b");
-                        if (!regexPib.IsMatch(PIB))
+                            return "Validna vrednost je 9 ili 13 cifara";
+                        // var regexPib = new Regex(@"\b\d{9}\b");
+                        // var regexJib = new Regex(@"\b\d{13}\b");
+                        
+                        // if (!regexPib.IsMatch(PIB))
+                        if (!FolderTypes.GeneratedFolderViewModel.IsPibOk(PIB))
                         {
-                            return "Pib must have 9 numbers";
+                            return "Unesite validan pib / jib";
                         }
                         break;
                     default:

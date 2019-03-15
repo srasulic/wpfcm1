@@ -16,6 +16,8 @@
                         <local:AppBootstrapper x:Key="bootstrapper" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
+            <Color x:Key="AccentColorHead">#006666</Color>
+            <SolidColorBrush x:Key="WindowTitleColorBrush" Color="{StaticResource AccentColorHead}"  />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

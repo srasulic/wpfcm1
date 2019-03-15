@@ -41,7 +41,15 @@ namespace wpfcm1.Model
             var chain = chainBuildInfo.Item1;
             ChainElements = CertificateHelpers.GetChainElements(chain);
 
-            Errors = CertificateHelpers.CheckCertificate(Certificate, chainBuildInfo);
+                    
+            // podrška za nekvalifikovane sertifikate koje koristi Republika Srpska
+            if ( certificate.IssuerName.Name == "C=BA, S=Republika Srpska, O=Poreska uprava, CN=PURS CA 1")
+            {
+                Errors = new List<string>();
+            } else
+            {
+                Errors = CertificateHelpers.CheckCertificate(Certificate, chainBuildInfo);
+            }
 
             var bccert = DotNetUtilities.FromX509Certificate(Certificate);
             var crlUrl = CertificateUtil.GetCRLURL(bccert);

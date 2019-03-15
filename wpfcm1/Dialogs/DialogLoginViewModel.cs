@@ -133,7 +133,7 @@ namespace wpfcm1.Dialogs
             }
 
             //            var request = WebRequest.Create("http://edev.office.aserta.rs/login/remoteLogin");
-            var request = WebRequest.Create("https://edokument.aserta.rs/login/remoteLogin");
+            var request = WebRequest.Create("https://polisign.net/login/remoteLogin");
 
             var postData = "user_name=" + LoginTemp.UserName;
             postData += "&user_password=" + LoginTemp.Password;

@@ -14,7 +14,8 @@ namespace wpfcm1.DataAccess
         {
             try
             {
-                string urlAddress = string.Format("https://edokument.aserta.rs/index/api?pib={0}", pib);
+                // ###### ZA SETTINGS
+                string urlAddress = string.Format("https://polisign.net/index/api?pib={0}", pib);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();

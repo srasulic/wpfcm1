@@ -29,7 +29,7 @@ namespace wpfcm1.Dialogs
                 " \r\n " +
                 "Opšti uslovi: \r\n " + 
                 "-------------- \r\n " +
-                "https://edokument.aserta.rs/download/Opsti_uslovi_eDokument.pdf \r\n " + 
+                "https://polisign.net/download/Opsti_uslovi_eDokument.pdf \r\n " + 
                 "\r\n" +
                 "Licenciranje: \r\n ------------- \r\n" +
                 "eDokument PoliSign se licencira prema pravilima GNU Affero General Public \r\n" + 
@@ -43,9 +43,10 @@ namespace wpfcm1.Dialogs
                 "--\r\n" + 
                 "Podrška: e-dokument@aserta.rs \r\n" + 
                 "Autor:   Sergej Petrovski \r\n" + 
-                "Autor:   Aserta doo \r\n" + 
-                "            http://www.aserta.rs \r\n" + 
-                "            https://edokument.aserta.rs \r\n" ;
+                "Autor:   Aserta doo \r\n" +
+                "            http://www.aserta.rs \r\n" +
+                "            https://polisign.net \r\n" +
+                "            https://edokument.aserta.rs \r\n";
         }
 
         public string AboutText { get => aboutText; set => aboutText = value; }
