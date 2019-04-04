@@ -247,9 +247,19 @@ namespace wpfcm1.FolderTypes
                 //0.1.2.3.4.5.6.7.8.9.10.11.12
                 //L = 11 - (( 7*(A+E) + 6*(B+Ž) + 5*(V+Z) + 4*(G+I) + 3*(D+J) + 2*(Đ+K) ) % 11)
                 var l = 11 - ((7 * (j[0] + j[6]) + 6 * (j[1] + j[7]) + 5 * (j[2] + j[8]) + 4 * (j[3] + j[9]) + 3 * (j[4] + j[10]) + 2 * (j[5] + j[11])) % 11);
-                l = l > 10 ? 0 : l;
+                l = l >= 10 ? 0 : l;
 
-                return l == j[12];
+                if (l != j[12]) return false;
+                else
+                {
+                    //provera da li je PIB korisnika(iz settings-a isti kao pib primaoca iz dokumenta za slanje)
+                    if (User.Default.PIB == pib)
+                    {
+                        Log.Error("ERR: IsPibOK - logical error - PIB pimaoca je isto kao i PIB korisnika!");
+                        return false;
+                    }
+                    return true;
+                }
             } 
             
             // ako je nekako kod dosao doovde
@@ -320,7 +330,9 @@ namespace wpfcm1.FolderTypes
                         {
                             var matchResults = await PdfHelpers.ExtractTextAsync(document.DocumentPath, pibAtt, docAtt);
 
-                            MatchCollection matches = Regex.Matches(matchResults.Item1, @"[1-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]");
+                            // BIH izmena - PIB 13
+                            // MatchCollection matches = Regex.Matches(matchResults.Item1, @"[1-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]");
+                            MatchCollection matches = Regex.Matches(matchResults.Item1, @"4[0-9]{12}");
                             foreach (Match match in matches)
                             {
                                 // ako mapiranje vraća neki validan PIB, idemo na traženje broja dokumenta
