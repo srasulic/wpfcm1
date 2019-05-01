@@ -319,7 +319,8 @@ namespace wpfcm1.Dialogs
             get
             {
                 if (_xSigShift < 0) return 0;
-                return _xSigShift < 190 ? _xSigShift : 190 ;
+//                return _xSigShift < 190 ? _xSigShift : 190;
+                return _xSigShift < 590 ? _xSigShift : 590;
             }
             set { _xSigShift = value; NotifyOfPropertyChange(() => XSigShift); }
         }
@@ -329,7 +330,8 @@ namespace wpfcm1.Dialogs
             get
             {
                 if (_ySigShift < 0) return 0;
-                return _ySigShift < 190 ? _ySigShift : 190;
+//                return _ySigShift < 190 ? _ySigShift : 190;
+                return _ySigShift < 840 ? _ySigShift : 840;
             }
             set { _ySigShift = value ; NotifyOfPropertyChange(() => YSigShift); }
         }
