@@ -191,7 +191,7 @@ namespace wpfcm1.FolderTypes
             }
             var regexPib = new Regex(@"\b\d{9}\b");
             var regexJib = new Regex(@"\b\d{13}\b");
-            // ako nije 9 cifara vrati false
+            // ako nije 9 ili 13 cifara vrati false
             if (!regexPib.IsMatch(pib) && !regexJib.IsMatch(pib))
             {
                 return false;
