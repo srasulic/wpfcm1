@@ -15,13 +15,8 @@ namespace wpfcm1
     public class AppBootstrapper : BootstrapperBase 
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-<<<<<<< HEAD
-        public static string appVersion = "1.5.0.09";
-=======
-        //private static string appTitle = User.Default.Variation == "BIH" ? "Banja Luka" : " ";
         private static string appTitle = User.Default.AppTitle;
-        public static string appVersion = appTitle + " - 1.5.0.05";
->>>>>>> feature_bih
+        public static string appVersion = appTitle + " - 1.6.0.01";
 
         CompositionContainer _container;
 
