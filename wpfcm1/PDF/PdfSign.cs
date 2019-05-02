@@ -72,8 +72,10 @@ namespace wpfcm1.PDF
 
             // unapredjeno na SHA256 sem ako sertifikat podržava samo SHA1  
             // unapređeno na CADES umesto CMS
+            // dodata podrška za nekvalifikovane sertifikate koje koristi Republika Srpska - SHA1
+
             IExternalSignature pks;
-            if (cert.SignatureAlgorithm.FriendlyName == "sha1RSA")
+            if (cert.SignatureAlgorithm.FriendlyName == "sha1RSA" || cert.IssuerName.Name == "C=BA, S=Republika Srpska, O=Poreska uprava, CN=PURS CA 1")
             {
                 pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA1); 
             }
@@ -81,6 +83,7 @@ namespace wpfcm1.PDF
             {
                 pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA256);
             }
+
             MakeSignature.SignDetached(appearance, pks, chain, crlList, ocspClient, tsaClient, 0, CryptoStandard.CADES);
 
 

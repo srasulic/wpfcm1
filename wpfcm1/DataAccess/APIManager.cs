@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using wpfcm1.Settings;
 
 namespace wpfcm1.DataAccess
 {
@@ -14,7 +15,7 @@ namespace wpfcm1.DataAccess
         {
             try
             {
-                string urlAddress = string.Format("https://edokument.aserta.rs/index/api?pib={0}", pib);
+                string urlAddress = string.Format("{0}/index/api?pib={1}", User.Default.ApiURL, pib);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();

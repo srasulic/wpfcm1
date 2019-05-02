@@ -22,7 +22,7 @@
     		FontFamily="Segoe UI" ><Run Text="Online report"/>
         </TextBlock>
         <ContentControl Grid.Row="1" Grid.Column="1" Margin="5,11,5,5">
-            <WebBrowser Source="https://edokument.aserta.rs/polisignnovosti" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+            <WebBrowser Source="https://edokument.rs/polisignnovosti" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
         </ContentControl>
 
         

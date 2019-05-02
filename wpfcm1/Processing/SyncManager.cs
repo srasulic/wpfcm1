@@ -62,7 +62,7 @@ namespace wpfcm1.Processing
                 }
                 catch (IOException e)
                 {
-                    var fn1 = Regex.Match(Path.GetFileName(sourceFileName), @"[0-9]{9}_[0-9]{9}_.+_[0-9]+");
+                    var fn1 = Regex.Match(Path.GetFileName(sourceFileName), @"[0-9]{9,13}_[0-9]{9,13}_.+_[0-9]+");
                     var fn2 = Regex.Match(Path.GetFileName(sourceFileName), @"_s.+");
                     var newDestFileName = fn1 + "x" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + "x" + fn2;
                     var newDestPath = Path.Combine(FtpTransferRules.LocalMap[sourceDir], newDestFileName);

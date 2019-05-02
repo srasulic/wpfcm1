@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Text.RegularExpressions;
+using System.Windows.Media;
 using Caliburn.Micro;
 using wpfcm1.DataAccess;
 using wpfcm1.Settings;
@@ -18,11 +19,14 @@ namespace wpfcm1.Dialogs
         private string _timestampUserName;
         private string _timestampPassword;
         private string _token;
+        private string _apiURL;
+        private string _variation;
         private float _xSigShift, _ySigShift, _xSigShiftRight, _ySigShiftRight;
         private float _llxPib, _llyPib, _urxPib, _uryPib;
         private float _llxNo, _llyNo, _urxNo, _uryNo;
         private bool _invoicesInbound, _invoicesOutbound, _iosInbound, _iosOutbound, _kpInbound, _kpOutbound, _povratiInbound, _povratiOutbound, _otherInbound, _otherOutbound;
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private string _appTitle;
 
         public UserModel()
         {
@@ -32,12 +36,12 @@ namespace wpfcm1.Dialogs
             RootFolder = folders.RootFolder;
             UserName = user.UserName;
             PIB = user.PIB;
-            FtpServer = user.FtpServer != "" ? user.FtpServer : @"ftp://ftp.aserta.rs/";
+     //       FtpServer = user.FtpServer != "" ? user.FtpServer : @"ftp://ftp.polisign.net/";
             FtpUserName = user.FtpUserName;
             FtpPassword = user.FtpPassword;
             TimestampServer = user.TimestampServer != "" ? user.TimestampServer : @"http://test-tsa.ca.posta.rs/timestamp1";
             TimestampUserName = user.TimestampUserName != "" ? user.TimestampUserName : @"Test.Korisnik";
-            TimestampPassword = user.TimestampPassword != "" ? user.TimestampPassword : @"123456"; 
+            TimestampPassword = user.TimestampPassword != "" ? user.TimestampPassword : @"123456";
             LlxPib = user.LlxPib;
             LlyPib = user.LlyPib;
             UrxPib = user.UrxPib;
@@ -61,7 +65,29 @@ namespace wpfcm1.Dialogs
             YSigShift = user.YSigShift;
             XSigShiftRight = user.XSigShiftRight;
             YSigShiftRight = user.YSigShiftRight;
+            Variation = user.Variation != "" ? user.Variation : @"RS";
+//            ApiURL = user.ApiURL;
+//          AppTitle = user.AppTitle;
+        
 
+            /* boja hedera je definisana prema Variation u App.xaml.cs */
+            /* Naziv u zaglavlju je definisan prema Variation u AppBootstrapper.cs */
+
+        }
+
+        public string AppTitle
+        {
+            get
+            {
+                return _appTitle;
+            }
+            set
+            {
+                if (value == _appTitle) return;
+                _appTitle = value;
+                Log.Info("Change in settings - AppTitle");
+                NotifyOfPropertyChange(() => AppTitle);
+            }
         }
 
         public string RootFolder
@@ -171,6 +197,57 @@ namespace wpfcm1.Dialogs
                 NotifyOfPropertyChange(() => TimestampPassword);
             }
         }
+
+
+        public string ApiURL
+        {
+            get {
+                return _apiURL; }
+            set
+            {
+                if (value == _apiURL) return;
+                _apiURL = value;
+                Log.Info("Change in settings - ApiURL");
+                NotifyOfPropertyChange(() => ApiURL);
+            }
+        }
+
+        public string Variation
+        {
+            get { return _variation; }
+            set
+            {
+                if (value == _variation) return;
+                _variation = value;
+
+                if (_variation == "RS") {
+                    FtpServer = @"ftp://ftp.aserta.rs/";
+                    AppTitle = @"https://edokument.rs";
+                    ApiURL = @"https://edokument.rs";
+                }
+                else if (_variation == "BIH") {
+                    FtpServer = @"ftp://ftp.polisign.net/";
+                    AppTitle = @"https://polisign.net";
+                    ApiURL = @"https://polisign.net";
+                }
+                else if (_variation == "RSDEV") {
+                    FtpServer = @"ftp://edokument.dev.aserta.rs/";
+                    AppTitle = @"https://edokument.dev.aserta.rs";
+                    ApiURL = @"https://edokument.dev.aserta.rs";
+                }
+                else if (_variation == "BIHDEV") {
+                    FtpServer = @"ftp://116.203.101.59/";
+                    AppTitle = @"https://116.203.101.59";
+                    ApiURL = @"https://116.203.101.59";
+                }
+
+                Log.Info("Change in settings - Variation");
+                NotifyOfPropertyChange(() => Variation);
+//                NotifyOfPropertyChange(() => ApiURL);
+//                NotifyOfPropertyChange(() => AppTitle);
+            }
+        }
+
 
         public float LlxPib
         {
@@ -297,11 +374,14 @@ namespace wpfcm1.Dialogs
                 {
                     case "PIB":
                         if (string.IsNullOrWhiteSpace(PIB))
-                            return "Pib must have 9 numbers";
-                        var regexPib = new Regex(@"\b\d{9}\b");
-                        if (!regexPib.IsMatch(PIB))
+                            return "Validna vrednost je 9 ili 13 cifara";
+                        // var regexPib = new Regex(@"\b\d{9}\b");
+                        // var regexJib = new Regex(@"\b\d{13}\b");
+                        
+                        // if (!regexPib.IsMatch(PIB))
+                        if (!FolderTypes.GeneratedFolderViewModel.IsPibOk(PIB))
                         {
-                            return "Pib must have 9 numbers";
+                            return "Unesite validan pib / jib";
                         }
                         break;
                     default:
@@ -316,7 +396,8 @@ namespace wpfcm1.Dialogs
             get
             {
                 if (_xSigShift < 0) return 0;
-                return _xSigShift < 190 ? _xSigShift : 190 ;
+//                return _xSigShift < 190 ? _xSigShift : 190;
+                return _xSigShift < 590 ? _xSigShift : 590;
             }
             set { _xSigShift = value; NotifyOfPropertyChange(() => XSigShift); }
         }
@@ -326,7 +407,8 @@ namespace wpfcm1.Dialogs
             get
             {
                 if (_ySigShift < 0) return 0;
-                return _ySigShift < 190 ? _ySigShift : 190;
+//                return _ySigShift < 190 ? _ySigShift : 190;
+                return _ySigShift < 840 ? _ySigShift : 840;
             }
             set { _ySigShift = value ; NotifyOfPropertyChange(() => YSigShift); }
         }
@@ -411,6 +493,9 @@ namespace wpfcm1.Dialogs
             User.Default.YSigShift = UserTemp.YSigShift;
             User.Default.XSigShiftRight = UserTemp.XSigShiftRight;
             User.Default.YSigShiftRight = UserTemp.YSigShiftRight;
+            User.Default.ApiURL = UserTemp.ApiURL;
+            User.Default.Variation = UserTemp.Variation;
+            User.Default.AppTitle = UserTemp.AppTitle;
 
             //encrypted FTP Password
             //User.Default.FtpPassword = EncryptionHelper.Encrypt(User.Default.FtpPassword);

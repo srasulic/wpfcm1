@@ -97,7 +97,7 @@ namespace wpfcm1.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value != "Dokument") return 0.5;
+            if ((string)value != "Dokument") return 0.5;
             return 1;
         }
 
@@ -107,7 +107,7 @@ namespace wpfcm1.Converters
         }
     }
 
-    
+ 
 
     public class BooleanToBackgroundColourConverter : IValueConverter
     {
