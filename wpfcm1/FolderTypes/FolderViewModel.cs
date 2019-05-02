@@ -575,6 +575,7 @@ namespace wpfcm1.FolderTypes
             Log.Info("Ariviranje dokumenata u direktorijum: " + archivePath);
             try
             {
+                FolderViewModel.PsKillPdfHandlers();
                 var documents = Documents.Cast<DocumentModel>();
                 if (!documents.Any()) { documents = Documents.Cast<DocumentModel>(); }
                 foreach (var document in documents)
