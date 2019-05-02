@@ -330,9 +330,10 @@ namespace wpfcm1.FolderTypes
                         {
                             var matchResults = await PdfHelpers.ExtractTextAsync(document.DocumentPath, pibAtt, docAtt);
 
-                            // BIH izmena - PIB 13
                             // MatchCollection matches = Regex.Matches(matchResults.Item1, @"[1-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]");
-                            MatchCollection matches = Regex.Matches(matchResults.Item1, @"4[0-9]{12}");
+                            //MatchCollection matches = Regex.Matches(matchResults.Item1, @"4[0-9]{12}");
+                            // vraca sve nizove brojeva tako da nema problema sa substringovima dugackih brojeva poput bank racuna
+                            MatchCollection matches = Regex.Matches(matchResults.Item1, @"[0-9]+");
                             foreach (Match match in matches)
                             {
                                 // ako mapiranje vraća neki validan PIB, idemo na traženje broja dokumenta
