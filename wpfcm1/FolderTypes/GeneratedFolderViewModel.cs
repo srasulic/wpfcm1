@@ -403,8 +403,9 @@ namespace wpfcm1.FolderTypes
                     document.InvoiceNo = recPatt.DocRegexList.notRecognizedString;
                 }
 
-                Regex regexAllowedCharacters = new Regex(@"[^0-9a-zA-Z]");
-                document.InvoiceNo = regexAllowedCharacters.Replace(document.InvoiceNo, @"-");
+                // Izmešteno u setter metodu kako bi važilo i za ručne unose
+ //               Regex regexAllowedCharacters = new Regex(@"[^0-9a-zA-Z]");
+ //               document.InvoiceNo = regexAllowedCharacters.Replace(document.InvoiceNo, @"-");
 
                 document.Processed = true;
 
