@@ -21,6 +21,7 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
 using System.IO;
+using System.Windows;
 
 namespace wpfcm1.FolderTypes
 {
@@ -576,18 +577,58 @@ namespace wpfcm1.FolderTypes
             try
             {
                 FolderViewModel.PsKillPdfHandlers();
-                var documents = Documents.Cast<DocumentModel>();
+                var documents = Documents.Where(d => d.IsChecked).Cast<DocumentModel>();
                 if (!documents.Any()) { documents = Documents.Cast<DocumentModel>(); }
+
+                //od izabranih dokumenata samo jedan treba da je sa barkodom, ostali su njegove specifikacije
+                string barcodeNumber = null;
+                string fileNameWithBarcode = null;
+                bool foundBarcode = false;
                 foreach (var document in documents)
                 {
                     string fileName = document.DocumentPath;
-                    string barcodeNumber = ExtractBarcodeNumber(fileName);
-                    renamePdf(fileName, barcodeNumber, archivePath);
+                    string extractedInfo = ExtractBarcodeNumber(fileName);
+                    if(extractedInfo != null)
+                    {
+                        if (foundBarcode)
+                        {
+                            //pronadjena dva dokumenta sa barkodom
+                            MessageBox.Show("Izabrali ste dva dokumenta sa barkodom. Izaberite jedan dokument i njegovu propratnu specifikaciju.", "Greška pri arhiviranju");
+                            return;
+                        }
+                        foundBarcode = true;
+                        barcodeNumber = extractedInfo;
+                        fileNameWithBarcode = fileName;
+                    }
                 }
+
+                if (!foundBarcode)
+                {
+                    //nije pronadjen ni jedan dokument sa barkodom
+                    MessageBox.Show("Niste izabrali ni jedan dokument sa barkodom. Izaberite jedan dokument i njegovu propratnu specifikaciju.", "Greška pri arhiviranju");
+                    return;                        
+                }
+
+                //prebacivanje i reimenovanje dokumenata
+                int fileCount = 0;
+                foreach (var document in documents)
+                {   
+                    string fileName = document.DocumentPath;
+                    if(fileName == fileNameWithBarcode)
+                    {
+                        renamePdf(fileName, barcodeNumber, archivePath);
+                    }
+                    else
+                    {
+                        renamePdf(fileName, barcodeNumber + "_qqq_spec" + fileCount, archivePath);
+                        fileCount++;
+                    }
+                }
+                
             }
             catch
             {
-
+                MessageBox.Show("Arhiviranje neuspešno. Molim vas pokušajte ponovo.", "Greška pri arhiviranju");
             }
         }
 
@@ -617,9 +658,10 @@ namespace wpfcm1.FolderTypes
                     foreach (Match match in matches)
                     {
                         barcodeNumber = match.Value;
+                        return barcodeNumber;
                     }
 
-                    return barcodeNumber;
+                    return null;
                 }
             }
         }
