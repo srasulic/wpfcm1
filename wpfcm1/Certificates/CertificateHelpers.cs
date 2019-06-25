@@ -13,6 +13,7 @@ namespace wpfcm1.Certificates
 {
     public static class CertificateHelpers
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public static Tuple<X509Chain, bool> GetChain(X509Certificate2 cert)
         {
             var chain = new X509Chain();
@@ -70,6 +71,12 @@ namespace wpfcm1.Certificates
                     using (var de = new DirectoryEntry(crlUrl) { AuthenticationType = AuthenticationTypes.Anonymous })
                     {
                         var crlBytes = de.Properties["certificateRevocationList;binary"].Value as byte[];
+                        // HALCOM podrška - zbog nove LDAP specifikacije, vrednost se vraća za atribut koji nema "binary" u nazivu:
+                        if (crlBytes == null || crlBytes.Length == 0)
+                        {
+                            // Log.Info(String.Format("LDAP vratio prazan byte[] za {0}", crlUrl));
+                            crlBytes = de.Properties["certificateRevocationList"].Value as byte[];
+                        }
                         var ccoff = new CrlClientOffline(crlBytes);
                         crlList.Add(ccoff);
                     }
