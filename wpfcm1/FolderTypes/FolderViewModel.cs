@@ -557,7 +557,28 @@ namespace wpfcm1.FolderTypes
 
         public virtual void OnCheck(object e)
         {
+            var ec = e as ActionExecutionContext;
+            var cb = ec.Source as CheckBox;
 
+            var view = ec.View as FolderView;
+            var dg = view.DocumentsCV;
+            var items = dg.SelectedItems;
+            if (items.Count > 1)
+            {
+                foreach (var item in items)
+                {
+                    var doc = item as DocumentModel;
+                    doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                }
+            }
+            else
+            {
+                foreach (var item in DocumentsCV)
+                {
+                    var doc = item as DocumentModel;
+                    doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                }
+            }
         }
 
         public void Handle(MessageArchiveNBGP message)
@@ -642,7 +663,7 @@ namespace wpfcm1.FolderTypes
             {
                 using (var reader = new PdfReader(path))
                 {
-                    Rectangle barcodeRect = new Rectangle(20, 550, 200, 600) //coordinates of NBGP barcode
+                    Rectangle barcodeRect = new Rectangle(10, 500, 220, 650) //coordinates of NBGP barcode
                     {
                         Border = Rectangle.BOX,
                         BorderColor = BaseColor.RED,
@@ -679,5 +700,6 @@ namespace wpfcm1.FolderTypes
                 Log.Info(oldFile + "-->" + newFile);
             }
         }
+
     }
 }
