@@ -30,6 +30,15 @@ namespace wpfcm1.Processing
                 Log.Info(string.Format("Uploading {0}", sourceFilePath));
                 try {
                     await ftpClient.UploadFileAsync(sourceFilePath, destinationDir, tempFileName);
+
+                    var destinationFtpUri = string.Format("{0}{1}{2}", ftpClient.Uri, destinationDir, tempFileName);
+                    ftpClient.RenameFile(destinationFtpUri, sourceFileName);
+
+                    //                var destinationFileName = string.Format("{0}_{1}", DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"), Path.GetFileName(sourceFileName));
+                    var destinationFilePath = Path.Combine(FtpTransferRules.LocalMap[sourceDir], Path.GetFileName(sourceFileName));
+                    Log.Info(string.Format("Moving to {0}", destinationFilePath));
+
+                    //  File.Move(sourceFilePath, destinationFilePath);
                 }
                 catch (Exception ex)
                 {
@@ -47,14 +56,7 @@ namespace wpfcm1.Processing
 
                 token.ThrowIfCancellationRequested();
 
-                var destinationFtpUri = string.Format("{0}{1}{2}", ftpClient.Uri, destinationDir, tempFileName);
-                ftpClient.RenameFile(destinationFtpUri, sourceFileName);
 
-//                var destinationFileName = string.Format("{0}_{1}", DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"), Path.GetFileName(sourceFileName));
-                var destinationFilePath = Path.Combine(FtpTransferRules.LocalMap[sourceDir], Path.GetFileName(sourceFileName));
-                Log.Info(string.Format("Moving to {0}", destinationFilePath));
-
-              //  File.Move(sourceFilePath, destinationFilePath);
 
                 try
                 {
