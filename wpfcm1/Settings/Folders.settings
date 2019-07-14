@@ -51,7 +51,7 @@
       <Value Profile="(Default)">Ostali</Value>
     </Setting>
     <Setting Name="ArchiveFolder" Type="System.String" Scope="User">
-      <Value Profile="(Default)">c:\Archive</Value>
+      <Value Profile="(Default)">c:\eDokument\Archive</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -20,12 +20,15 @@ using wpfcm1.Settings;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
-using System.IO;
+
+using wpfcm1.DataAccess;
+using System.Collections.Generic;
+
 using System.Windows;
 
 namespace wpfcm1.FolderTypes
 {
-    public class FolderViewModel : Screen, IDisposable, IHandle<MessageArchiveNBGP>
+    public class FolderViewModel : Screen, IDisposable, IHandle<MessageArchiveSelected>
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         // protected string[] Extensions = { ".pdf", ".ack" };
@@ -64,8 +67,8 @@ namespace wpfcm1.FolderTypes
 
             DocumentsCV = CollectionViewSource.GetDefaultView(Documents) as ListCollectionView;
             DocumentsCV.Filter = new Predicate<object>(FilterDocument);
-        }
-
+                 }
+     
         public static void PsKillPdfHandlers()
         {   // Srdjan - da pustimo u pozadini neke alatke da pobiju eventualne procese koji drze sapu na PDF fajlovima
             //          Zbog brzine aplikaciji hadle.exe prosledjujemo deo naziva file handlera (bez ovoga traje 10-ak sekundi)
@@ -581,13 +584,38 @@ namespace wpfcm1.FolderTypes
             }
         }
 
-        public void Handle(MessageArchiveNBGP message)
+        public void Handle(MessageArchiveSelected message)
         {
             if (!IsActive) return;
-            if (User.Default.PIB == "105480755")
-            {
-                //samo za korisnika sa PIBom 105480755 (NBGP) ce biti dostupna opcija arhiviranja
+            if (APIManager.GetArchivePolicy() == "NBGP")
+            {    
                 ArchiveNBGP();
+            } else
+            {
+                ArchiveBasic();
+            }
+        }
+
+        private void ArchiveBasic()
+        {
+            string archivePath = Folders.Default.ArchiveFolder;
+            Log.Info("Ariviranje dokumenata u direktorijum: " + archivePath);
+            try
+            {
+                FolderViewModel.PsKillPdfHandlers();
+                var documents = Documents.Where(d => d.IsChecked).Cast<DocumentModel>();
+                if (!documents.Any()) { documents = Documents.Cast<DocumentModel>(); }
+
+                //prebacivanje i reimenovanje dokumenata
+                foreach (var document in documents)
+                {
+                    string fileName = document.DocumentPath;
+                    renamePdf(fileName, document.DocumentInfo.Name, archivePath);
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Arhiviranje neuspešno. Molim vas pokušajte ponovo.", "Greška pri arhiviranju");
             }
         }
 
@@ -627,25 +655,25 @@ namespace wpfcm1.FolderTypes
                 {
                     //nije pronadjen ni jedan dokument sa barkodom
                     MessageBox.Show("Niste izabrali ni jedan dokument sa barkodom. Izaberite jedan dokument i njegovu propratnu specifikaciju.", "Greška pri arhiviranju");
-                    return;                        
+                    return;
                 }
 
                 //prebacivanje i reimenovanje dokumenata
                 int fileCount = 0;
                 foreach (var document in documents)
-                {   
+                {
                     string fileName = document.DocumentPath;
-                    if(fileName == fileNameWithBarcode)
+                    if (fileName == fileNameWithBarcode)
                     {
                         renamePdf(fileName, barcodeNumber, archivePath);
                     }
                     else
                     {
-                        renamePdf(fileName, barcodeNumber + "_qqq_spec" + fileCount, archivePath);
+                        renamePdf(fileName, barcodeNumber + "_EDOKARCH_spec" + fileCount, archivePath);
                         fileCount++;
                     }
                 }
-                
+
             }
             catch
             {

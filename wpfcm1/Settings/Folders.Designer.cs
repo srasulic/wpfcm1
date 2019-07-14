@@ -12,7 +12,7 @@ namespace wpfcm1.Settings {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.6.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.7.0.0")]
     internal sealed partial class Folders : global::System.Configuration.ApplicationSettingsBase {
         
         private static Folders defaultInstance = ((Folders)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Folders())));
@@ -172,7 +172,7 @@ namespace wpfcm1.Settings {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("c:\\Archive")]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:\\eDokument\\Archive")]
         public string ArchiveFolder {
             get {
                 return ((string)(this["ArchiveFolder"]));

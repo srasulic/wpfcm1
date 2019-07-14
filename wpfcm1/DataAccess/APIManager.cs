@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
+using wpfcm1.Settings;
 
 namespace wpfcm1.DataAccess
 {
@@ -49,5 +49,18 @@ namespace wpfcm1.DataAccess
                 return "";
             }
         }
+
+        public static string GetArchivePolicy()
+        {
+            var pib = User.Default.PIB;
+
+            if (pib == "105480755")
+                return "NBGP";
+            else
+                return "BASIC";
+
+        }
+
+
     }
 }
