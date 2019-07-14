@@ -10,6 +10,7 @@ namespace wpfcm1.Dialogs
     public class UserModel : PropertyChangedBase, IDataErrorInfo
     {
         private string _rootFolder;
+        private string _archiveFolder;
         private string _userName;
         private string _pib;
         private string _ftpServer;
@@ -34,6 +35,7 @@ namespace wpfcm1.Dialogs
             User user = User.Default;
 
             RootFolder = folders.RootFolder;
+            ArchiveFolder = folders.ArchiveFolder;
             UserName = user.UserName;
             PIB = user.PIB;
      //       FtpServer = user.FtpServer != "" ? user.FtpServer : @"ftp://ftp.polisign.net/";
@@ -99,6 +101,18 @@ namespace wpfcm1.Dialogs
                 _rootFolder = value;
                 Log.Info("Change in settings - RootFolder");
                 NotifyOfPropertyChange(() => RootFolder);
+            }
+        }
+
+        public string ArchiveFolder
+        {
+            get { return _archiveFolder; }
+            set
+            {
+                if (value == _archiveFolder) return;
+                _archiveFolder = value;
+                Log.Info("Change in settings - Arcive Folder");
+                NotifyOfPropertyChange(() => ArchiveFolder);
             }
         }
 
@@ -462,6 +476,7 @@ namespace wpfcm1.Dialogs
         private void SaveUser()
         {
             Folders.Default.RootFolder = UserTemp.RootFolder;
+            Folders.Default.ArchiveFolder = UserTemp.ArchiveFolder;
             User.Default.UserName = UserTemp.UserName;
             User.Default.PIB = UserTemp.PIB;
             User.Default.FtpServer = UserTemp.FtpServer;

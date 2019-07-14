@@ -50,5 +50,18 @@ namespace wpfcm1.DataAccess
                 return "";
             }
         }
+
+        public static string GetArchivePolicy()
+        {
+            var pib = User.Default.PIB;
+
+            if (pib == "105480755")
+                return "NBGP";
+            else
+                return "BASIC";
+
+        }
+
+
     }
 }

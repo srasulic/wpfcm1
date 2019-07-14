@@ -169,5 +169,17 @@ namespace wpfcm1.Settings {
                 return ((string)(this["OtherSubfolder"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:\\eDokument\\Archive")]
+        public string ArchiveFolder {
+            get {
+                return ((string)(this["ArchiveFolder"]));
+            }
+            set {
+                this["ArchiveFolder"] = value;
+            }
+        }
     }
 }

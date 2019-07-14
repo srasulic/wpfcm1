@@ -26,6 +26,7 @@
             <RowDefinition  Height="Auto"/>
             <RowDefinition  Height="Auto"/>
             <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
             <RowDefinition  Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -33,30 +34,32 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Root folder" VerticalAlignment="Center"/>
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Name" VerticalAlignment="Center"/>
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="PIB" VerticalAlignment="Center"/>
-        <TextBlock Grid.Row="13" Grid.Column="0"  Text="FTP server address" VerticalAlignment="Center"/>
-        <TextBlock Grid.Row="4" Grid.Column="0" Text="FTP username" VerticalAlignment="Center"/>
-        <TextBlock Grid.Row="5" Grid.Column="0" Text="FTP password" VerticalAlignment="Center"/>
-        <TextBlock Grid.Row="6" Grid.Column="0" Text="Timestamp server" VerticalAlignment="Center"/>
-        <TextBlock Grid.Row="7" Grid.Column="0" Text="Timestamp username" VerticalAlignment="Center"/>
-        <TextBlock Grid.Row="8" Grid.Column="0" Text="Timestamp password" VerticalAlignment="Center"/>
-        <TextBlock Grid.Row="9" Grid.Column="0" Text="Sinhronizacija" VerticalAlignment="Center"/>
-        <TextBlock Grid.Row="11" Grid.Column="0" Text="Potpis offset" VerticalAlignment="Center"/>
-        <TextBlock Grid.Row="12" Grid.Column="0" Text="Api URL" VerticalAlignment="Center"/>
-        <TextBlock Grid.Row="3" Grid.Column="0" Text="Varijacija" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Archive folder" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Name" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="PIB" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Varijacija" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="FTP username" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="FTP password" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="7" Grid.Column="0" Text="Timestamp server" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="8" Grid.Column="0" Text="Timestamp username" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="9" Grid.Column="0" Text="Timestamp password" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="10" Grid.Column="0" Text="Sinhronizacija" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="12" Grid.Column="0" Text="Potpis offset" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="13" Grid.Column="0" Text="Api URL" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="14" Grid.Column="0"  Text="FTP server address" VerticalAlignment="Center"/>
 
         <TextBox Grid.Row="0" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.RootFolder, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Row="1" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.UserName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.PIB, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Grid.Row="13" Grid.Column="1" Margin="3"  Text="{Binding Path=UserTemp.FtpServer, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Row="4" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.FtpUserName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-        <PasswordBox Name="passwdBox" Grid.Row="5" Grid.Column="1" Margin="3" PasswordChanged="PasswordBox_OnPasswordChanged"/>
-        <TextBox Grid.Row="6" Grid.Column="1"  Margin="3" Text="{Binding Path=UserTemp.TimestampServer, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Row="7" Grid.Column="1"  Margin="3" Text="{Binding Path=UserTemp.TimestampUserName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Row="8" Grid.Column="1"  Margin="3" Text="{Binding Path=UserTemp.TimestampPassword, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.ArchiveFolder, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.UserName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.PIB, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="5" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.FtpUserName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <PasswordBox Name="passwdBox" Grid.Row="6" Grid.Column="1" Margin="3" PasswordChanged="PasswordBox_OnPasswordChanged"/>
+        <TextBox Grid.Row="7" Grid.Column="1"  Margin="3" Text="{Binding Path=UserTemp.TimestampServer, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="8" Grid.Column="1"  Margin="3" Text="{Binding Path=UserTemp.TimestampUserName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="9" Grid.Column="1"  Margin="3" Text="{Binding Path=UserTemp.TimestampPassword, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Grid.Row="14" Grid.Column="1" Margin="3"  Text="{Binding Path=UserTemp.FtpServer, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <Grid Grid.Row="9" Grid.Column="1" Margin="3">
+        <Grid Grid.Row="10" Grid.Column="1" Margin="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -80,7 +83,7 @@
             <TextBlock Grid.Column="8" Text="UPov:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
             <CheckBox Grid.Column="9" VerticalAlignment="Center" IsChecked="{Binding Path=UserTemp.PovratiInbound, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
-        <Grid Grid.Row="10" Grid.Column="1" Margin="3">
+        <Grid Grid.Row="11" Grid.Column="1" Margin="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -104,7 +107,7 @@
             <TextBlock Grid.Column="8" Text="IPov:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
             <CheckBox Grid.Column="9" VerticalAlignment="Center" IsChecked="{Binding Path=UserTemp.PovratiOutbound, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
-        <Grid Grid.Row="11" Grid.Column="1" Margin="3">
+        <Grid Grid.Row="12" Grid.Column="1" Margin="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -124,15 +127,14 @@
             <TextBlock Grid.Column="6" Text="y-D:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
             <TextBox Grid.Column="7" VerticalAlignment="Center" Text="{Binding Path=UserTemp.YSigShiftRight, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
-        <TextBlock Grid.Row="12" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.ApiURL, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-    <!--    <TextBox Grid.Row="3" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.Variation, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-    -->    <ComboBox Grid.Row="3" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.Variation, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+        <TextBlock Grid.Row="13" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.ApiURL, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <ComboBox Grid.Row="4" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.Variation, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
             <ComboBoxItem>RS</ComboBoxItem>
             <ComboBoxItem>BIH</ComboBoxItem>
             <ComboBoxItem>RSDEV</ComboBoxItem>
             <ComboBoxItem>BIHDEV</ComboBoxItem>
         </ComboBox>
-        <StackPanel Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+        <StackPanel Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Button Content="OK" Width="96" Height="32" x:Name="OnClose" Margin="3"/>
             <Button Content="Cancel" Width="96" Height="32" x:Name="OnCancel" Margin="3,3,0,3"/>
         </StackPanel>

@@ -13,5 +13,6 @@ namespace wpfcm1.Events
     public class MessageXls : IButtonMessage { }
     public class MessageArchive : IButtonMessage { }
     public class MessageShowWeb : IButtonMessage { }
+    public class MessageArchiveSelected : IButtonMessage { }
 
 }

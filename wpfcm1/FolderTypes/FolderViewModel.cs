@@ -16,10 +16,19 @@ using wpfcm1.Events;
 using wpfcm1.Model;
 using wpfcm1.PDF;
 using wpfcm1.Preview;
+using wpfcm1.Settings;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.text.pdf.parser;
+
+using wpfcm1.DataAccess;
+using System.Collections.Generic;
+
+using System.Windows;
 
 namespace wpfcm1.FolderTypes
 {
-    public class FolderViewModel : Screen, IDisposable
+    public class FolderViewModel : Screen, IDisposable, IHandle<MessageArchiveSelected>
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         // protected string[] Extensions = { ".pdf", ".ack" };
@@ -52,14 +61,14 @@ namespace wpfcm1.FolderTypes
         {
             Documents = new BindableCollection<DocumentModel>(
                  Directory.EnumerateFiles(FolderPath)
-                 .Where(f => Extensions.Contains(Path.GetExtension(f).ToLower()))
+                 .Where(f => Extensions.Contains(System.IO.Path.GetExtension(f).ToLower()))
                  .Select(f => new DocumentModel(new FileInfo(f))));
             InitWatcher(FolderPath);
 
             DocumentsCV = CollectionViewSource.GetDefaultView(Documents) as ListCollectionView;
             DocumentsCV.Filter = new Predicate<object>(FilterDocument);
-        }
-
+                 }
+     
         public static void PsKillPdfHandlers()
         {   // Srdjan - da pustimo u pozadini neke alatke da pobiju eventualne procese koji drze sapu na PDF fajlovima
             //          Zbog brzine aplikaciji hadle.exe prosledjujemo deo naziva file handlera (bez ovoga traje 10-ak sekundi)
@@ -77,7 +86,7 @@ namespace wpfcm1.FolderTypes
                     startInfo.WorkingDirectory = @"c:\edokument\bin\";
                 }
                 else {
-                    startInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                    startInfo.WorkingDirectory = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 }
 
                 //                startInfo.Arguments = @" /C for /f ""tokens=3"" %G IN ('c:\edokument\bin\handle.exe /accepteula eDokument\ -p Fox ^| findstr /i /r /c:"".*pid:.*pdf$""') DO c:\edokument\bin\pskill.exe /accepteula %G";
@@ -106,11 +115,11 @@ namespace wpfcm1.FolderTypes
             foreach (var document in checkedDocuments)
             {
                 var sourceFilePath = document.DocumentPath;
-                var fileName = Path.GetFileName(sourceFilePath);
+                var fileName = System.IO.Path.GetFileName(sourceFilePath);
                 if (Regex.IsMatch(fileName, @".*pdf.xml$", RegexOptions.IgnoreCase)) continue;
                 if (Regex.IsMatch(fileName, @".*pdf.ack$", RegexOptions.IgnoreCase)) continue;
                 var destinationFileName = string.Format("X_{0}_{1}", DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"), fileName);
-                var destinationFilePath = Path.Combine(destinationDir, destinationFileName);
+                var destinationFilePath = System.IO.Path.Combine(destinationDir, destinationFileName);
                 File.Move(sourceFilePath, destinationFilePath);
             }
         }
@@ -167,7 +176,7 @@ namespace wpfcm1.FolderTypes
                 }
 
                 string filename = string.Concat(Guid.NewGuid().ToString(), @".csv");
-                filename = string.Concat(Path.GetTempPath(), filename);
+                filename = string.Concat(System.IO.Path.GetTempPath(), filename);
                 try
                 {
                     System.Text.Encoding utf16 = System.Text.Encoding.GetEncoding(1254);
@@ -278,8 +287,8 @@ namespace wpfcm1.FolderTypes
             // promenjen način čitanja atributa, tako da ne zavisi od tipa poruke (ne koristimo deserialize)
             // Čitamo bilo kakav xml koji ima atribute koje ocekujemo... 
             // proverimo poruku koja je u samom folderu:
-            var fileName = Path.GetFileName(document.DocumentPath);
-            var file = Path.Combine(FolderPath, fileName + ".xml");
+            var fileName = System.IO.Path.GetFileName(document.DocumentPath);
+            var file = System.IO.Path.Combine(FolderPath, fileName + ".xml");
             if (File.Exists(file))
             {
                 try
@@ -318,7 +327,7 @@ namespace wpfcm1.FolderTypes
             // ukoliko postoji i neka poruka koja još nije sinhronizovan asa serverom (interna obrada u aplikaciji)
             // obradicemo i nju kao najsveziju informaciju
             var destinationDir = SigningTransferRules.LocalMap[FolderPath];
-            file = Path.Combine(destinationDir, fileName + ".xml");
+            file = System.IO.Path.Combine(destinationDir, fileName + ".xml");
             if (File.Exists(file))
             {
                 try
@@ -362,7 +371,7 @@ namespace wpfcm1.FolderTypes
             try
             {
                 var destinationDir = SigningTransferRules.LocalMap[FolderPath];
-                var destinationFilePath = Path.Combine(destinationDir, message.MessageFileName);
+                var destinationFilePath = System.IO.Path.Combine(destinationDir, message.MessageFileName);
 
                 var file = File.Create(destinationFilePath);
 
@@ -551,7 +560,174 @@ namespace wpfcm1.FolderTypes
 
         public virtual void OnCheck(object e)
         {
+            var ec = e as ActionExecutionContext;
+            var cb = ec.Source as CheckBox;
 
+            var view = ec.View as FolderView;
+            var dg = view.DocumentsCV;
+            var items = dg.SelectedItems;
+            if (items.Count > 1)
+            {
+                foreach (var item in items)
+                {
+                    var doc = item as DocumentModel;
+                    doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                }
+            }
+            else
+            {
+                foreach (var item in DocumentsCV)
+                {
+                    var doc = item as DocumentModel;
+                    doc.IsChecked = cb.IsChecked.GetValueOrDefault();
+                }
+            }
         }
+
+        public void Handle(MessageArchiveSelected message)
+        {
+            if (!IsActive) return;
+            if (APIManager.GetArchivePolicy() == "NBGP")
+            {    
+                ArchiveNBGP();
+            } else
+            {
+                ArchiveBasic();
+            }
+        }
+
+        private void ArchiveBasic()
+        {
+            string archivePath = Folders.Default.ArchiveFolder;
+            Log.Info("Ariviranje dokumenata u direktorijum: " + archivePath);
+            try
+            {
+                FolderViewModel.PsKillPdfHandlers();
+                var documents = Documents.Where(d => d.IsChecked).Cast<DocumentModel>();
+                if (!documents.Any()) { documents = Documents.Cast<DocumentModel>(); }
+
+                //prebacivanje i reimenovanje dokumenata
+                foreach (var document in documents)
+                {
+                    string fileName = document.DocumentPath;
+                    renamePdf(fileName, document.DocumentInfo.Name, archivePath);
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Arhiviranje neuspešno. Molim vas pokušajte ponovo.", "Greška pri arhiviranju");
+            }
+        }
+
+        private void ArchiveNBGP()
+        {
+            string archivePath = Folders.Default.ArchiveFolder;
+            Log.Info("Ariviranje dokumenata u direktorijum: " + archivePath);
+            try
+            {
+                FolderViewModel.PsKillPdfHandlers();
+                var documents = Documents.Where(d => d.IsChecked).Cast<DocumentModel>();
+                if (!documents.Any()) { documents = Documents.Cast<DocumentModel>(); }
+
+                //od izabranih dokumenata samo jedan treba da je sa barkodom, ostali su njegove specifikacije
+                string barcodeNumber = null;
+                string fileNameWithBarcode = null;
+                bool foundBarcode = false;
+                foreach (var document in documents)
+                {
+                    string fileName = document.DocumentPath;
+                    string extractedInfo = ExtractBarcodeNumber(fileName);
+                    if(extractedInfo != null)
+                    {
+                        if (foundBarcode)
+                        {
+                            //pronadjena dva dokumenta sa barkodom
+                            MessageBox.Show("Izabrali ste dva dokumenta sa barkodom. Izaberite jedan dokument i njegovu propratnu specifikaciju.", "Greška pri arhiviranju");
+                            return;
+                        }
+                        foundBarcode = true;
+                        barcodeNumber = extractedInfo;
+                        fileNameWithBarcode = fileName;
+                    }
+                }
+
+                if (!foundBarcode)
+                {
+                    //nije pronadjen ni jedan dokument sa barkodom
+                    MessageBox.Show("Niste izabrali ni jedan dokument sa barkodom. Izaberite jedan dokument i njegovu propratnu specifikaciju.", "Greška pri arhiviranju");
+                    return;
+                }
+
+                //prebacivanje i reimenovanje dokumenata
+                int fileCount = 0;
+                foreach (var document in documents)
+                {
+                    string fileName = document.DocumentPath;
+                    if (fileName == fileNameWithBarcode)
+                    {
+                        renamePdf(fileName, barcodeNumber, archivePath);
+                    }
+                    else
+                    {
+                        renamePdf(fileName, barcodeNumber + "_EDOKARCH_spec" + fileCount, archivePath);
+                        fileCount++;
+                    }
+                }
+
+            }
+            catch
+            {
+                MessageBox.Show("Arhiviranje neuspešno. Molim vas pokušajte ponovo.", "Greška pri arhiviranju");
+            }
+        }
+
+        public static string ExtractBarcodeNumber(string path)
+        {
+            if (!File.Exists(path))
+            {
+                return "";
+            }
+            else
+            {
+                using (var reader = new PdfReader(path))
+                {
+                    Rectangle barcodeRect = new Rectangle(10, 500, 220, 650) //coordinates of NBGP barcode
+                    {
+                        Border = Rectangle.BOX,
+                        BorderColor = BaseColor.RED,
+                        BorderWidth = 1
+                    };
+
+                    RenderFilter filterBarcode = new RegionTextRenderFilter(barcodeRect);
+                    ITextExtractionStrategy extractionStratery = new FilteredTextRenderListener(new LocationTextExtractionStrategy(), filterBarcode);
+
+                    string barcodeNumber = PdfTextExtractor.GetTextFromPage(reader, 1, extractionStratery);
+
+                    MatchCollection matches = Regex.Matches(barcodeNumber, @"\d{13}");
+                    foreach (Match match in matches)
+                    {
+                        barcodeNumber = match.Value;
+                        return barcodeNumber;
+                    }
+
+                    return null;
+                }
+            }
+        }
+
+        public static void renamePdf(string oldFile, string barcodeNumber, string newPath)
+        {
+            if (!File.Exists(oldFile))
+            {
+                return;
+            }
+            else
+            {
+                string newFile = newPath + @"\" + barcodeNumber + ".pdf";
+                System.IO.File.Move(oldFile, newFile);
+                Log.Info(oldFile + "-->" + newFile);
+            }
+        }
+
     }
 }
