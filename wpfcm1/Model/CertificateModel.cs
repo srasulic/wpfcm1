@@ -29,19 +29,20 @@ namespace wpfcm1.Model
                 return;
             }
             
-            //////////
-            // privremeno za TEST
-            //
-         //   IsQualified = true;
-         //   return;
-            //
-            //
-            /////////
+
             var chainBuildInfo = CertificateHelpers.GetChain(Certificate);
             var chain = chainBuildInfo.Item1;
             ChainElements = CertificateHelpers.GetChainElements(chain);
 
-            Errors = CertificateHelpers.CheckCertificate(Certificate, chainBuildInfo);
+                    
+            // podrška za nekvalifikovane sertifikate koje koristi Republika Srpska
+            if ( certificate.IssuerName.Name == "C=BA, S=Republika Srpska, O=Poreska uprava, CN=PURS CA 1")
+            {
+                Errors = new List<string>();
+            } else
+            {
+                Errors = CertificateHelpers.CheckCertificate(Certificate, chainBuildInfo);
+            }
 
             var bccert = DotNetUtilities.FromX509Certificate(Certificate);
             var crlUrl = CertificateUtil.GetCRLURL(bccert);
@@ -50,7 +51,15 @@ namespace wpfcm1.Model
             var hasOcsp = ocspUrl != null;
             if (!(hasOcsp || hasCrl))
                 Errors.Add("Cannot check revocation (no ocsp and crl).");
-
+          
+            //////////
+            // privremeno za TEST
+            //
+            //   IsQualified = true;
+            //   return;
+            //
+            //
+            /////////
             IsQualified = Errors.Count == 0 && (hasOcsp || hasCrl);
         }
 

@@ -30,6 +30,28 @@ namespace wpfcm1.Processing
                 Log.Info(string.Format("Uploading {0}", sourceFilePath));
                 try {
                     await ftpClient.UploadFileAsync(sourceFilePath, destinationDir, tempFileName);
+
+                    var destinationFtpUri = string.Format("{0}{1}{2}", ftpClient.Uri, destinationDir, tempFileName);
+                    ftpClient.RenameFile(destinationFtpUri, sourceFileName);
+
+                    //                var destinationFileName = string.Format("{0}_{1}", DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"), Path.GetFileName(sourceFileName));
+                    var destinationFilePath = Path.Combine(FtpTransferRules.LocalMap[sourceDir], Path.GetFileName(sourceFileName));
+                    Log.Info(string.Format("Moving to {0}", destinationFilePath));
+
+                    //  File.Move(sourceFilePath, destinationFilePath);
+                    try
+                    {
+                        File.Move(sourceFilePath, destinationFilePath);
+                    }
+                    catch (IOException e)
+                    {
+                        var fn1 = Regex.Match(Path.GetFileName(sourceFileName), @"[0-9]{9,13}_[0-9]{9,13}_.+_[0-9]+");
+                        var fn2 = Regex.Match(Path.GetFileName(sourceFileName), @"_s.+");
+                        var newDestFileName = fn1 + "x" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + "x" + fn2;
+                        var newDestPath = Path.Combine(FtpTransferRules.LocalMap[sourceDir], newDestFileName);
+                        File.Move(sourceFilePath, newDestPath);
+                        Log.Info(string.Format("IO exception - move to local_sent - već postoji takav fajl! Izvor: {0}, Odredtiste: {1} Izvorna greska:{2}", sourceFilePath, newDestPath, e));
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -47,28 +69,9 @@ namespace wpfcm1.Processing
 
                 token.ThrowIfCancellationRequested();
 
-                var destinationFtpUri = string.Format("{0}{1}{2}", ftpClient.Uri, destinationDir, tempFileName);
-                ftpClient.RenameFile(destinationFtpUri, sourceFileName);
 
-//                var destinationFileName = string.Format("{0}_{1}", DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"), Path.GetFileName(sourceFileName));
-                var destinationFilePath = Path.Combine(FtpTransferRules.LocalMap[sourceDir], Path.GetFileName(sourceFileName));
-                Log.Info(string.Format("Moving to {0}", destinationFilePath));
 
-              //  File.Move(sourceFilePath, destinationFilePath);
 
-                try
-                {
-                    File.Move(sourceFilePath, destinationFilePath);
-                }
-                catch (IOException e)
-                {
-                    var fn1 = Regex.Match(Path.GetFileName(sourceFileName), @"[0-9]{9}_[0-9]{9}_.+_[0-9]+");
-                    var fn2 = Regex.Match(Path.GetFileName(sourceFileName), @"_s.+");
-                    var newDestFileName = fn1 + "x" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + "x" + fn2;
-                    var newDestPath = Path.Combine(FtpTransferRules.LocalMap[sourceDir], newDestFileName);
-                    File.Move(sourceFilePath, newDestPath);
-                    Log.Info(string.Format("IO exception - move to local_sent - već postoji takav fajl! Izvor: {0}, Odredtiste: {1} Izvorna greska:{2}",sourceFilePath, newDestPath, e));
-                }
             }
         }
 

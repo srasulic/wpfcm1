@@ -24,7 +24,18 @@ namespace wpfcm1.Model
         public string InvoiceNo
         {
             get { return _invoiceNo; }
-            set { _invoiceNo = value; NotifyOfPropertyChange(() => InvoiceNo); }
+            set {
+                if (string.IsNullOrEmpty(value))
+                {
+                    _invoiceNo = value;
+                } else
+                {
+                    Regex regexAllowedCharacters = new Regex(@"[^0-9a-zA-Z]");
+                    _invoiceNo = regexAllowedCharacters.Replace(value, @"-");
+                }
+                //_invoiceNo = value;
+                NotifyOfPropertyChange(() => InvoiceNo);
+            }
         }
 
         private bool _multipleInvoiceNo;

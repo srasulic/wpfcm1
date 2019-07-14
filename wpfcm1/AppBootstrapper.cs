@@ -7,6 +7,7 @@ using System.ComponentModel.Composition.Primitives;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
+using wpfcm1.Settings;
 using wpfcm1.Shell;
 
 namespace wpfcm1
@@ -14,7 +15,8 @@ namespace wpfcm1
     public class AppBootstrapper : BootstrapperBase 
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        public static string appVersion = "1.5.0.05";
+        private static string appTitle = User.Default.AppTitle;
+        public static string appVersion = appTitle + " - 1.6.0.12";
 
         CompositionContainer _container;
 

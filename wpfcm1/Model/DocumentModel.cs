@@ -21,7 +21,7 @@ namespace wpfcm1.Model
             double len = fi.Length;
             LengthKB = System.Math.Round(len / 1024);
             // ovo nece raditi za Generated fajlove jer oni jos nemaju ime po konvenciji
-            if (Regex.IsMatch(fi.Name, @"[0-9]{9}_[0-9]{9}_.+_[0-9]{8}.+"))
+            if (Regex.IsMatch(fi.Name, @"[0-9]{9}_[0-9]{9}_.+_[0-9]{8}.+") || Regex.IsMatch(fi.Name, @"[0-9]{13}_[0-9]{13}_.+_[0-9]{8}.+"))
             {
                 string[] nameParts = fi.Name.Split('_');
                 namePib1 = nameParts[0];

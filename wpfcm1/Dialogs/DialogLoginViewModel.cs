@@ -132,8 +132,8 @@ namespace wpfcm1.Dialogs
                 LoginTemp.PIB = User.Default.PIB;
             }
 
-            //            var request = WebRequest.Create("http://edev.office.aserta.rs/login/remoteLogin");
-            var request = WebRequest.Create("https://edokument.aserta.rs/login/remoteLogin");
+            string reqUrl = User.Default.ApiURL + @"/login/remoteLogin";
+            var request = WebRequest.Create(reqUrl);
 
             var postData = "user_name=" + LoginTemp.UserName;
             postData += "&user_password=" + LoginTemp.Password;

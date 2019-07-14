@@ -190,49 +190,81 @@ namespace wpfcm1.FolderTypes
                 return false;
             }
             var regexPib = new Regex(@"\b\d{9}\b");
-            // ako nije 9 cifara vrati false
-            if (!regexPib.IsMatch(pib))
+            var regexJib = new Regex(@"\b\d{13}\b");
+            // ako nije 9 ili 13 cifara vrati false
+            if (!regexPib.IsMatch(pib) && !regexJib.IsMatch(pib))
             {
                 return false;
             } 
             // ako je jedan od testnih vrati true
-            if (pib == "111111111" || pib == "222222222" || pib == "333333333")
+            if (pib == "1111111111111" || pib == "2222222222222" || pib == "111111111" || pib == "222222222" || pib == "333333333")
             {
                 return true;
             }
 
-            // kontrola PIBa:
-            int ost_pret = 10;
-            string cifra;
-            int i_cifra, suma, ostatak, umnozak, kontCifraIzracunata, kontCifra;
-
-            for (int i = 0; i < 8; i++)
+            
+            if (regexPib.IsMatch(pib))  // kontrola PIBa
             {
-                cifra = pib.Substring(i, 1);
-                int.TryParse(cifra, out i_cifra);
-                suma = ost_pret + i_cifra;
-                ostatak = suma % 10;
-                if (ostatak == 0) { ostatak = 10; }
-                umnozak = ostatak * 2;
-                ost_pret = umnozak % 11;
-            }
+                int ost_pret = 10;
+                string cifra;
+                int i_cifra, suma, ostatak, umnozak, kontCifraIzracunata, kontCifra;
 
-            int.TryParse(pib.Substring(pib.Length - 1, 1), out kontCifra);
-            kontCifraIzracunata = (11 - ost_pret) % 10;
-
-
-            if (kontCifraIzracunata != kontCifra) return false;
-            else
-            {
-                //provera da li je PIB korisnika(iz settings-a isti kao pib primaoca iz dokumenta za slanje)
-                //                if (User.Default.PIB == pib) throw new ApplicationException("PIB pimaoca je isto kao i PIB korisnika!");
-                if (User.Default.PIB == pib)
+                for (int i = 0; i < 8; i++)
                 {
-                    Log.Error("ERR: IsPibOK - logical error - PIB pimaoca je isto kao i PIB korisnika!");
-                    return false;
+                    cifra = pib.Substring(i, 1);
+                    int.TryParse(cifra, out i_cifra);
+                    suma = ost_pret + i_cifra;
+                    ostatak = suma % 10;
+                    if (ostatak == 0) { ostatak = 10; }
+                    umnozak = ostatak * 2;
+                    ost_pret = umnozak % 11;
                 }
-                return true;
-            }
+
+                int.TryParse(pib.Substring(pib.Length - 1, 1), out kontCifra);
+                kontCifraIzracunata = (11 - ost_pret) % 10;
+
+
+                if (kontCifraIzracunata != kontCifra) return false;
+                else
+                {
+                    //provera da li je PIB korisnika(iz settings-a isti kao pib primaoca iz dokumenta za slanje)
+                    //                if (User.Default.PIB == pib) throw new ApplicationException("PIB pimaoca je isto kao i PIB korisnika!");
+                    if (User.Default.PIB == pib)
+                    {
+                        Log.Error("ERR: IsPibOK - logical error - PIB pimaoca je isto kao i PIB korisnika!");
+                        return false;
+                    }
+                    return true;
+                }
+            } else if (regexJib.IsMatch(pib)) {   // kontrola JIB-a
+                var j = new int[pib.Length];
+                for (var i = 0; i < pib.Length; i++)
+                {
+                    j[i] = int.Parse(pib.ElementAt(i).ToString());
+                }
+
+                //A.B.V.G.D.Đ.E.Ž.Z.I.J.K.L
+                //0.1.2.3.4.5.6.7.8.9.10.11.12
+                //L = 11 - (( 7*(A+E) + 6*(B+Ž) + 5*(V+Z) + 4*(G+I) + 3*(D+J) + 2*(Đ+K) ) % 11)
+                var l = 11 - ((7 * (j[0] + j[6]) + 6 * (j[1] + j[7]) + 5 * (j[2] + j[8]) + 4 * (j[3] + j[9]) + 3 * (j[4] + j[10]) + 2 * (j[5] + j[11])) % 11);
+                l = l >= 10 ? 0 : l;
+
+                if (l != j[12]) return false;
+                else
+                {
+                    //provera da li je PIB korisnika(iz settings-a isti kao pib primaoca iz dokumenta za slanje)
+                    if (User.Default.PIB == pib)
+                    {
+                        Log.Error("ERR: IsPibOK - logical error - PIB pimaoca je isto kao i PIB korisnika!");
+                        return false;
+                    }
+                    return true;
+                }
+            } 
+            
+            // ako je nekako kod dosao doovde
+            return false;
+            
         }
 
         public async void Handle(MessageExtractData message)
@@ -298,7 +330,10 @@ namespace wpfcm1.FolderTypes
                         {
                             var matchResults = await PdfHelpers.ExtractTextAsync(document.DocumentPath, pibAtt, docAtt);
 
-                            MatchCollection matches = Regex.Matches(matchResults.Item1, @"[1-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]");
+                            // MatchCollection matches = Regex.Matches(matchResults.Item1, @"[1-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]");
+                            //MatchCollection matches = Regex.Matches(matchResults.Item1, @"4[0-9]{12}");
+                            // vraca sve nizove brojeva tako da nema problema sa substringovima dugackih brojeva poput bank racuna
+                            MatchCollection matches = Regex.Matches(matchResults.Item1, @"[0-9]+");
                             foreach (Match match in matches)
                             {
                                 // ako mapiranje vraća neki validan PIB, idemo na traženje broja dokumenta
@@ -368,8 +403,9 @@ namespace wpfcm1.FolderTypes
                     document.InvoiceNo = recPatt.DocRegexList.notRecognizedString;
                 }
 
-                Regex regexAllowedCharacters = new Regex(@"[^0-9a-zA-Z]");
-                document.InvoiceNo = regexAllowedCharacters.Replace(document.InvoiceNo, @"-");
+                // Izmešteno u setter metodu kako bi važilo i za ručne unose
+ //               Regex regexAllowedCharacters = new Regex(@"[^0-9a-zA-Z]");
+ //               document.InvoiceNo = regexAllowedCharacters.Replace(document.InvoiceNo, @"-");
 
                 document.Processed = true;
 
