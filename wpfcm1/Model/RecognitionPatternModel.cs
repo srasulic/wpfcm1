@@ -90,7 +90,7 @@ namespace wpfcm1.Model
             }
     }
         public List<MappingElement> MappingElementList;
-
+        public List<MappingElement> MappingElementIssuerList;
 
         public class DocNumRegexList {
             private string _regex1 = "";
@@ -113,15 +113,22 @@ namespace wpfcm1.Model
         public Coordinates PibAttAlt2 { get; set; }
         public Coordinates PibAttAlt4 { get; set; }
         public Coordinates PibAttAlt5 { get; set; }
+        public Coordinates PibIssuer1 { get; set; }
+        public Coordinates PibIssuer2 { get; set; }
+        public Coordinates PibIssuer3 { get; set; }
         public Coordinates DocAttPrim { get; set; }
         public Coordinates DocAttAlt { get; set; }
         public Coordinates DocAttAlt1 { get; set; }
         public Coordinates DocAttAlt2 { get; set; }
         public Coordinates DocAttAlt4 { get; set; }
         public Coordinates DocAttAlt5 { get; set; }
+        public Coordinates DocIssuer1 { get; set; }
+        public Coordinates DocIssuer2 { get; set; }
+        public Coordinates DocIssuer3 { get; set; }
         public DocNumRegexList DocRegexList { get; set; }
     
         public RecognitionPatternModel() {
+            MappingElementIssuerList = new List<MappingElement>();
             MappingElementList = new List<MappingElement>();
             DocRegexList = new DocNumRegexList();
 
@@ -157,7 +164,17 @@ namespace wpfcm1.Model
                         this.MappingElementList.Add(new MappingElement(r.PibAttAlt2, r.DocAttAlt2));
                         this.MappingElementList.Add(new MappingElement(r.PibAttAlt4, r.DocAttAlt4));
                         this.MappingElementList.Add(new MappingElement(r.PibAttAlt5, r.DocAttAlt5));
-
+                        if (r.PibIssuer1 != null)
+                        {
+                            this.MappingElementIssuerList.Add(new MappingElement(r.PibIssuer1, r.DocIssuer1));
+                            this.MappingElementIssuerList.Add(new MappingElement(r.PibIssuer2, r.DocIssuer2));
+                            this.MappingElementIssuerList.Add(new MappingElement(r.PibIssuer3, r.DocIssuer3));
+                        } else
+                        {
+                            this.MappingElementIssuerList.Add(new MappingElement(new Coordinates(), new Coordinates()));
+                            this.MappingElementIssuerList.Add(new MappingElement(new Coordinates(), new Coordinates()));
+                            this.MappingElementIssuerList.Add(new MappingElement(new Coordinates(), new Coordinates()));
+                        }
 
                         this.DocRegexList = r.DocRegexList;
 
@@ -167,7 +184,7 @@ namespace wpfcm1.Model
             }
             catch
             {
-                SetFromSettings();
+              //  SetFromSettings();
             }
         }
 

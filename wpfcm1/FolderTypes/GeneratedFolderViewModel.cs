@@ -54,7 +54,8 @@ namespace wpfcm1.FolderTypes
                 old.IsChecked = state.IsChecked;
                 old.IsValid = state.IsValid;
                 old.InvoiceNo = state.InvoiceNo;
-                old.Pib = state.Pib;
+                old.PibReciever = state.PibReciever;
+                old.PibIssuer = state.PibIssuer;
                 old.Processed = state.Processed;
             }
             CheckForDuplicateInvNo();
@@ -121,11 +122,11 @@ namespace wpfcm1.FolderTypes
             try
             {
                 var documents = Documents.Cast<GeneratedDocumentModel>();
-                _expList = "sep=,\n\"Mark\",\"Pib primalac\",\"Fajl\",\"KB\",\"Br Dok\"\r\n";
+                _expList = "sep=,\n\"Mark\",\"PIB izdavalac\",\"PIB primalac\",\"Fajl\",\"KB\",\"Br Dok\"\r\n";
                 foreach (var document in documents)
                 {
                     string[] fileNameParts = document.DocumentPath.Split('\\');
-                    _expList = string.Concat(_expList, "\"", document.IsChecked.ToString(), "\",\"", document.Pib, "\",\"", fileNameParts.Last() , "\",\"", document.LengthKB, "\",\"", document.InvoiceNo, "\"\r\n");
+                    _expList = string.Concat(_expList, "\"", document.IsChecked.ToString(), "\",\"", document.PibIssuer, "\",\"", document.PibReciever, "\",\"", fileNameParts.Last(), "\",\"", document.LengthKB, "\",\"", document.InvoiceNo, "\"\r\n");
                 }
 
                 string filename = string.Concat(Guid.NewGuid().ToString(), @".csv");
@@ -183,7 +184,7 @@ namespace wpfcm1.FolderTypes
         }
 
 
-        public static bool IsPibOk (String pib)
+        public static bool IsPibOk (String pib, bool denyUserDefaultPib  = true)
         {
             if (string.IsNullOrWhiteSpace(pib))
             {
@@ -253,7 +254,7 @@ namespace wpfcm1.FolderTypes
                 else
                 {
                     //provera da li je PIB korisnika(iz settings-a isti kao pib primaoca iz dokumenta za slanje)
-                    if (User.Default.PIB == pib)
+                    if (denyUserDefaultPib && User.Default.PIB == pib)
                     {
                         Log.Error("ERR: IsPibOK - logical error - PIB pimaoca je isto kao i PIB korisnika!");
                         return false;
@@ -314,15 +315,51 @@ namespace wpfcm1.FolderTypes
 
 
 
-                // probamo sa svakim setom koordinata:
+                // Ako nije multi issuer uzimamo PIB iz podešavanja,
+                // ako jeste multi issuer mapiramo sa dokumenta PIB izdavaoca:
+                // PIB prefiks 99997 je rezervisan za multiissuer podešavanje
+                if (!Regex.IsMatch(User.Default.PIB, @"99997[0-9]+")  )
+                {
+                    document.PibIssuer = User.Default.PIB;
+                }
+                // ako ima mapiranja, znači da je multiissuer, tražimo pib izdavaoca sa dokumenta
+                else
+                {
+                    for (var i = 0; i < recPatt.MappingElementIssuerList.Count; i++)
+                    {
+                        var pibIssuerAtt = (RecognitionPatternModel.Coordinates)recPatt.MappingElementIssuerList[i].PibAttribute;
+                        var docIssuerAtt = (RecognitionPatternModel.Coordinates)recPatt.MappingElementIssuerList[i].DocNumAttribute;
+                        if (string.IsNullOrEmpty(document.PibReciever))
+                        {
+                            // ispunjen uslov da se mapiranje primeni (prema orjentaciji dokumenta)
+                            if (recPatt.MappingElementIssuerList[i].pageOrientationSpecific == RecognitionPatternModel.PageOrientation.Undefined
+                                || recPatt.MappingElementIssuerList[i].pageOrientationSpecific == pageOrientationType)
+                            {
+                                var matchResults = await PdfHelpers.ExtractTextAsync(document.DocumentPath, pibIssuerAtt, docIssuerAtt);
 
+                                // vraca sve nizove brojeva tako da nema problema sa substringovima dugackih brojeva poput bank racuna
+                                MatchCollection matches = Regex.Matches(matchResults.Item1, @"[0-9]+");
+                                foreach (Match match in matches)
+                                {
+                                    // ako mapiranje vraća neki validan PIB, idemo na traženje broja dokumenta
+                                    if (IsPibOk(match.Value))
+                                    {
+                                        document.PibIssuer = match.Value;  //#########
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // trazimo PIB primaoca i br dok
                 for (var i = 0; i < recPatt.MappingElementList.Count; i++)
                 {
                     var pibAtt = (RecognitionPatternModel.Coordinates)recPatt.MappingElementList[i].PibAttribute;
                     var docAtt = (RecognitionPatternModel.Coordinates)recPatt.MappingElementList[i].DocNumAttribute;
                     
 
-                    if (string.IsNullOrEmpty(document.InvoiceNo) || string.IsNullOrEmpty(document.Pib) || recPatt.MappingElementList[i].isForcedMapping)
+                    if (string.IsNullOrEmpty(document.InvoiceNo) || string.IsNullOrEmpty(document.PibReciever) || recPatt.MappingElementList[i].isForcedMapping)
                     {
                         // ispunjen uslov da se mapiranje primeni (prema orjentaciji dokumenta)
                         if (recPatt.MappingElementList[i].pageOrientationSpecific == RecognitionPatternModel.PageOrientation.Undefined
@@ -339,52 +376,80 @@ namespace wpfcm1.FolderTypes
                                 // ako mapiranje vraća neki validan PIB, idemo na traženje broja dokumenta
                                 if (IsPibOk(match.Value))
                                 {
-                                    document.Pib = match.Value;
+                                    document.PibReciever = match.Value;
+
+
                                     // nulujemo bilo kakav broj dokumenta koji je pronađen u prethodnim iteracijama (ako je mapiranjem pogođen PIB, primenjuje se novo traženje broja dokumenta
                                     // ovo je važno samo ako uvedemo mapiranje koje je obavezno (koje će se primeniti i ako se prethodnim traženjem već pronađu PIB i neki broj dok (dešava se da slab regex nađe broj pogrešnim mapiranjima)
                                     document.InvoiceNo = null;
-                                    switch (recPatt.MappingElementList[i].regexToApply)
+                                    if (recPatt.MappingElementList[i].regexToApply == 1
+                                        || recPatt.MappingElementList[i].regexToApply == 6
+                                        || recPatt.MappingElementList[i].regexToApply == 0)
                                     {
-                                        case 1:
-                                            if (string.IsNullOrEmpty(document.InvoiceNo))
-                                                document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex1, RegexOptions.Multiline).Value;
-                                            break;
-                                        case 2:
-                                            if (string.IsNullOrEmpty(document.InvoiceNo))
-                                                document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex2, RegexOptions.Multiline).Value;
-                                            break;
-                                        case 3:
-                                            if (string.IsNullOrEmpty(document.InvoiceNo))
-                                                document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex3, RegexOptions.Multiline).Value;
-                                            break;
-                                        case 4:
-                                            if (string.IsNullOrEmpty(document.InvoiceNo))
-                                                document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex4, RegexOptions.Multiline).Value;
-                                            break;
-                                        case 5:
-                                            if (string.IsNullOrEmpty(document.InvoiceNo))
-                                                document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex5, RegexOptions.Multiline).Value;
-                                            break;
-                                        case 6:
-                                            if (string.IsNullOrEmpty(document.InvoiceNo))
-                                                document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex1, RegexOptions.Multiline).Value;
-                                            if (string.IsNullOrEmpty(document.InvoiceNo))
-                                                document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex2, RegexOptions.Multiline).Value;
-                                            if (string.IsNullOrEmpty(document.InvoiceNo))
-                                                document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex3, RegexOptions.Multiline).Value;
-                                            break;
-                                        case 0:
-                                            if (string.IsNullOrEmpty(document.InvoiceNo))
-                                                document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex1, RegexOptions.Multiline).Value;
-                                            if (string.IsNullOrEmpty(document.InvoiceNo))
-                                                document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex2, RegexOptions.Multiline).Value;
-                                            if (string.IsNullOrEmpty(document.InvoiceNo))
-                                                document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex3, RegexOptions.Multiline).Value;
-                                            if (string.IsNullOrEmpty(document.InvoiceNo))
-                                                document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex4, RegexOptions.Multiline).Value;
-                                            if (string.IsNullOrEmpty(document.InvoiceNo))
-                                                document.InvoiceNo = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex5, RegexOptions.Multiline).Value;
-                                            break;
+                                        if (string.IsNullOrEmpty(document.InvoiceNo))
+                                        {
+                                            var groupsFound = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex1, RegexOptions.Multiline).Groups;
+                                            if (groupsFound.Count == 1)
+                                                document.InvoiceNo = groupsFound[0].Value;  
+                                            else
+                                                document.InvoiceNo = groupsFound[1].Value + groupsFound[2].Value + groupsFound[3].Value + groupsFound[4].Value;
+                                        }
+                                    }
+                                    if (recPatt.MappingElementList[i].regexToApply == 2
+                                                                            || recPatt.MappingElementList[i].regexToApply == 6
+                                                                            || recPatt.MappingElementList[i].regexToApply == 0)
+                                    {
+                                        if (string.IsNullOrEmpty(document.InvoiceNo))
+                                        {
+                                            var groupsFound = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex2, RegexOptions.Multiline).Groups;
+                                            if (groupsFound.Count == 1)
+                                                document.InvoiceNo = groupsFound[0].Value;
+                                            else
+                                                document.InvoiceNo = groupsFound[1].Value + groupsFound[2].Value + groupsFound[3].Value + groupsFound[4].Value;
+                                        }
+                                    }
+
+                                    if (recPatt.MappingElementList[i].regexToApply == 3
+                                        || recPatt.MappingElementList[i].regexToApply == 6
+                                        || recPatt.MappingElementList[i].regexToApply == 0)
+                                    {
+                                        if (string.IsNullOrEmpty(document.InvoiceNo))
+                                        {
+                                            var groupsFound = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex3, RegexOptions.Multiline).Groups;
+                                            if (groupsFound.Count == 1)
+                                                document.InvoiceNo = groupsFound[0].Value;
+                                            else
+                                                document.InvoiceNo = groupsFound[1].Value + groupsFound[2].Value + groupsFound[3].Value + groupsFound[4].Value;
+                                        }
+
+                                    }
+
+                                    if (recPatt.MappingElementList[i].regexToApply == 4
+                                        || recPatt.MappingElementList[i].regexToApply == 0)
+                                    {
+                                        if (string.IsNullOrEmpty(document.InvoiceNo))
+                                        {
+                                            var groupsFound = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex4, RegexOptions.Multiline).Groups;
+                                            if (groupsFound.Count == 1)
+                                                document.InvoiceNo = groupsFound[0].Value;
+                                            else
+                                                document.InvoiceNo = groupsFound[1].Value + groupsFound[2].Value + groupsFound[3].Value + groupsFound[4].Value;
+                                        }
+
+                                    }
+
+                                    if (recPatt.MappingElementList[i].regexToApply == 5
+                                        || recPatt.MappingElementList[i].regexToApply == 0)
+                                    {
+                                        if (string.IsNullOrEmpty(document.InvoiceNo))
+                                        {
+                                            var groupsFound = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex5, RegexOptions.Multiline).Groups;
+                                            if (groupsFound.Count == 1)
+                                                document.InvoiceNo = groupsFound[0].Value;
+                                            else
+                                                document.InvoiceNo = groupsFound[1].Value + groupsFound[2].Value + groupsFound[3].Value + groupsFound[4].Value;
+                                        }
+
                                     }
 
                                 }
@@ -412,7 +477,7 @@ namespace wpfcm1.FolderTypes
                 //Dodajemo proveru validnosti podataka koje smo dobili:
                 // (ovo se radi i na pregledu - gridu ali tamo se obrade samo prikazani pa IsValid ostane nedodeljeno ako se ne skroluje)
 
-                document.IsValid = IsPibOk(document.Pib);
+                document.IsValid = IsPibOk(document.PibReciever);
 
                 if (string.IsNullOrWhiteSpace(document.InvoiceNo))
                 {

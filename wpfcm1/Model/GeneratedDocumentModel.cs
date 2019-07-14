@@ -14,10 +14,17 @@ namespace wpfcm1.Model
         }
 
         private string _pib;
-        public string Pib
+        public string PibReciever
         {
             get { return _pib; }
-            set { _pib = value; NotifyOfPropertyChange(() => Pib); }
+            set { _pib = value; NotifyOfPropertyChange(() => PibReciever); }
+        }
+
+        private string _pibIssuer;
+        public string PibIssuer
+        {
+            get { return _pibIssuer; }
+            set { _pibIssuer = value; NotifyOfPropertyChange(() => PibIssuer); }
         }
 
         private string _invoiceNo;
@@ -51,17 +58,29 @@ namespace wpfcm1.Model
             {
                 switch (columnName)
                 {
-                    case "Pib":
-                        if (wpfcm1.FolderTypes.GeneratedFolderViewModel.IsPibOk(Pib))  // treba na lepše mesto staviti IsPibOk...
+                    case "PibReciever":
+                        if (wpfcm1.FolderTypes.GeneratedFolderViewModel.IsPibOk(PibReciever))  // treba na lepše mesto staviti IsPibOk...
                         {
                             IsValid = true;
                         }
-                        else 
+                        else
                         {
                             IsValid = false;
                             return "Pib is not invalid PIB number";
                         }
-                      
+
+                        break;
+                    case "PibIssuer":
+                        if (wpfcm1.FolderTypes.GeneratedFolderViewModel.IsPibOk(PibIssuer, false))  // treba na lepše mesto staviti IsPibOk...
+                        {
+                            IsValid = true;
+                        }
+                        else
+                        {
+                            IsValid = false;
+                            return "Pib is not invalid PIB number";
+                        }
+
                         break;
                     case "InvoiceNo":
                         if (string.IsNullOrWhiteSpace(InvoiceNo))

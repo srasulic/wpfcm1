@@ -150,7 +150,9 @@ namespace wpfcm1.Processing
             if (document is GeneratedDocumentModel)
             {
                 var gdoc = document as GeneratedDocumentModel;
-                var destinationFileName = string.Format("{0}_{1}_{2}_{3}_s.pdf", userPib, gdoc.Pib, gdoc.InvoiceNo, DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"));
+            //  var destinationFileName = string.Format("{0}_{1}_{2}_{3}_s.pdf", userPib, gdoc.Pib, gdoc.InvoiceNo, DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"));
+                string destinationFileName;
+                destinationFileName = string.Format("{0}_{1}_{2}_{3}_s.pdf", gdoc.PibIssuer, gdoc.PibReciever, gdoc.InvoiceNo, DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"));
                 return destinationFileName;
             }
             if (document is InboxDocumentModel)
