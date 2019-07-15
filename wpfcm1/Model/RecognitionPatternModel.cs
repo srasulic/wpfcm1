@@ -11,6 +11,8 @@ namespace wpfcm1.Model
 {
     public class RecognitionPatternModel
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public enum PageOrientation { Portrait, Landscape, RotatedPortrait, Undefined}
         public class Coordinates
         {
@@ -92,7 +94,8 @@ namespace wpfcm1.Model
         public List<MappingElement> MappingElementList;
         public List<MappingElement> MappingElementIssuerList;
 
-        public class DocNumRegexList {
+        public class DocNumRegexList
+        {
             private string _regex1 = "";
             private string _regex2 = "";
             private string _regex3 = "";
@@ -169,7 +172,8 @@ namespace wpfcm1.Model
                             this.MappingElementIssuerList.Add(new MappingElement(r.PibIssuer1, r.DocIssuer1));
                             this.MappingElementIssuerList.Add(new MappingElement(r.PibIssuer2, r.DocIssuer2));
                             this.MappingElementIssuerList.Add(new MappingElement(r.PibIssuer3, r.DocIssuer3));
-                        } else
+                        }
+                        else
                         {
                             this.MappingElementIssuerList.Add(new MappingElement(new Coordinates(), new Coordinates()));
                             this.MappingElementIssuerList.Add(new MappingElement(new Coordinates(), new Coordinates()));
@@ -182,39 +186,33 @@ namespace wpfcm1.Model
                     }
                 }
             }
-            catch
+            //catch (SqlException e)
+            //{
+            //    // Log it
+            //    if (e.ErrorCode != NO_ROW_ERROR)
+            //    { // filter out NoDataFound.
+            //      // Do special cleanup, like maybe closing the "dirty" database connection.
+            //        throw; // This preserves the stack trace
+            //    }
+            //}
+            catch (IOException e)
             {
-              //  SetFromSettings();
+                // Log it
+                Log.Error("IO error - SetRecognationPaterns", e);
+                throw;
             }
-        }
 
-        public void SetFromSettings()
-        {
-            
-            //PibAttPrim.x = (int)User.Default.LlxPib;
-            //PibAttPrim.y = (int)User.Default.LlyPib;
-            //PibAttPrim.xx = (int)User.Default.UrxPib;
-            //PibAttPrim.yy = (int)User.Default.UryPib;
-            //PibAttAlt.x = (int)User.Default.LlxPib;
-            //PibAttAlt.y = (int)User.Default.LlyPib;
-            //PibAttAlt.xx = (int)User.Default.UrxPib;
-            //PibAttAlt.yy = (int)User.Default.UryPib;
-
-            //DocAttPrim.x = (int)User.Default.LlxNo;
-            //DocAttPrim.y = (int)User.Default.LlyNo;
-            //DocAttPrim.xx = (int)User.Default.UrxNo;
-            //DocAttPrim.yy = (int)User.Default.UryNo;
-            //DocAttAlt.x = (int)User.Default.LlxNo;
-            //DocAttAlt.y = (int)User.Default.LlyNo;
-            //DocAttAlt.xx = (int)User.Default.UrxNo;
-            //DocAttAlt.yy = (int)User.Default.UryNo;
-
-            //DocRegexList.regex1 = @"F[0-9][0-9][0-9][0-9][0-9][0-9][0-9]";
-            //DocRegexList.regex2 = @"[0-9]{2}-[0-9]{3}-[0-9]+";
-            //DocRegexList.regex3 = @"[0-9]{1,3}-[0-9]+";
-            //DocRegexList.regex4 = @"DPTR[0-9]{1,3}-[0-9]+";
-            //DocRegexList.regex5 = @"[A-Z]{2,4}-[0-9]{8,9}";
-            //DocRegexList.notRecognizedString = @"ZAP";
+            catch (Exception e)
+            {
+                // Log it
+                Log.Error("Error - SetRecognationPaterns", e);
+                //                throw new DAOException("Excrement occurred", e); // wrapped & chained exceptions (just like java).
+                throw new Exception("SetRecognationPaterns error", e); // wrapped & chained exceptions (just like java).
+            }
+            finally
+            {
+                // Normal clean goes here (like closing open files).
+            }
         }
 
 

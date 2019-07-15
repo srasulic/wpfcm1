@@ -77,12 +77,13 @@ namespace wpfcm1.FolderGroups
 
         public void Dispose()
         {
-            foreach (var folder in FolderVMs.Where(folder => 
-                            folder is InboxFolderViewModel || folder is GeneratedFolderViewModel
-                         || folder is PendFolderViewModel || folder is OutboxFolderViewModel 
-                         || folder is ConfirmedFolderViewModel || folder is ConfirmedToDoFolderViewModel || folder is ConfirmedOutToDoFolderViewModel))
+            //foreach (var folder in FolderVMs.Where(folder =>
+            //                folder is InboxFolderViewModel || folder is GeneratedFolderViewModel
+            //             || folder is PendFolderViewModel || folder is OutboxFolderViewModel
+            //             || folder is ConfirmedFolderViewModel || folder is ConfirmedToDoFolderViewModel || folder is ConfirmedOutToDoFolderViewModel))
+            foreach (var folder in FolderVMs)
             {
-                folder.Dispose();
+                    folder.Dispose();
             }
         }
 

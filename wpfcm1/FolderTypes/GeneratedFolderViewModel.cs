@@ -230,7 +230,7 @@ namespace wpfcm1.FolderTypes
                 {
                     //provera da li je PIB korisnika(iz settings-a isti kao pib primaoca iz dokumenta za slanje)
                     //                if (User.Default.PIB == pib) throw new ApplicationException("PIB pimaoca je isto kao i PIB korisnika!");
-                    if (User.Default.PIB == pib)
+                    if (denyUserDefaultPib && User.Default.PIB == pib)
                     {
                         Log.Error("ERR: IsPibOK - logical error - PIB pimaoca je isto kao i PIB korisnika!");
                         return false;
@@ -502,7 +502,7 @@ namespace wpfcm1.FolderTypes
             return validDocuments;
         }
 
-        public override void Dispose()
+        public override void Dispose(bool disposing)
         {
             Serialize();
         }

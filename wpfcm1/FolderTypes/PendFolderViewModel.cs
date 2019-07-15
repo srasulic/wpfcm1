@@ -125,7 +125,7 @@ namespace wpfcm1.FolderTypes
             XlsExport();
         }
 
-        public override void Dispose()
+        public override void Dispose(bool disposing)
         {
             Serialize();
         }

@@ -53,12 +53,10 @@ namespace wpfcm1.DataAccess
 
         public static string GetArchivePolicy()
         {
-            var pib = User.Default.PIB;
-
-            if (pib == "105480755")
-                return "NBGP";
-            else
-                return "BASIC";
+            // TODO: privremeno je u Settingsu, treba dodati Web Servis i izmestiti ovo podešavanje na serversku stranu
+            if (!String.IsNullOrEmpty(User.Default.ArchivePolicy))
+                return User.Default.ArchivePolicy;
+            return "BASIC";
 
         }
 

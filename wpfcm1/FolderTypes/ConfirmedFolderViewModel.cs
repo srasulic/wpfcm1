@@ -204,7 +204,7 @@ namespace wpfcm1.FolderTypes
 
         }
 
-        public override void Dispose()
+        public override void Dispose(bool disposing)
         {
             Serialize();
         }

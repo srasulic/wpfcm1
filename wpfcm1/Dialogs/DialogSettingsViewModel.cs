@@ -11,6 +11,7 @@ namespace wpfcm1.Dialogs
     {
         private string _rootFolder;
         private string _archiveFolder;
+        private string _archivePolicy;
         private string _userName;
         private string _pib;
         private string _ftpServer;
@@ -68,9 +69,11 @@ namespace wpfcm1.Dialogs
             XSigShiftRight = user.XSigShiftRight;
             YSigShiftRight = user.YSigShiftRight;
             Variation = user.Variation != "" ? user.Variation : @"RS";
-//            ApiURL = user.ApiURL;
-//          AppTitle = user.AppTitle;
-        
+            ArchivePolicy = user.ArchivePolicy != "" ? user.ArchivePolicy : @"BASIC";
+
+            //            ApiURL = user.ApiURL;
+            //          AppTitle = user.AppTitle;
+
 
             /* boja hedera je definisana prema Variation u App.xaml.cs */
             /* Naziv u zaglavlju je definisan prema Variation u AppBootstrapper.cs */
@@ -113,6 +116,18 @@ namespace wpfcm1.Dialogs
                 _archiveFolder = value;
                 Log.Info("Change in settings - Arcive Folder");
                 NotifyOfPropertyChange(() => ArchiveFolder);
+            }
+        }
+
+        public string ArchivePolicy
+        {
+            get { return _archivePolicy; }
+            set
+            {
+                if (value == _archivePolicy) return;
+                _archivePolicy = value;
+                Log.Info("Change in settings - ArcivePolicy");
+                NotifyOfPropertyChange(() => ArchivePolicy);
             }
         }
 
@@ -511,6 +526,7 @@ namespace wpfcm1.Dialogs
             User.Default.ApiURL = UserTemp.ApiURL;
             User.Default.Variation = UserTemp.Variation;
             User.Default.AppTitle = UserTemp.AppTitle;
+            User.Default.ArchivePolicy = UserTemp.ArchivePolicy;
 
             //encrypted FTP Password
             //User.Default.FtpPassword = EncryptionHelper.Encrypt(User.Default.FtpPassword);

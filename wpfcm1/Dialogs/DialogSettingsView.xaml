@@ -7,10 +7,11 @@
     BorderBrush="{DynamicResource AccentColorBrush}"
     BorderThickness="1"
     Loaded="DialogSettingsView_OnLoaded"
-    Width="754" Height="550"
+    Width="754" Height="570"
     >
     <Grid Margin="5">
         <Grid.RowDefinitions >
+            <RowDefinition  Height="Auto"/>
             <RowDefinition  Height="Auto"/>
             <RowDefinition  Height="Auto"/>
             <RowDefinition  Height="Auto"/>
@@ -47,6 +48,7 @@
         <TextBlock Grid.Row="12" Grid.Column="0" Text="Potpis offset" VerticalAlignment="Center"/>
         <TextBlock Grid.Row="13" Grid.Column="0" Text="Api URL" VerticalAlignment="Center"/>
         <TextBlock Grid.Row="14" Grid.Column="0"  Text="FTP server address" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="15" Grid.Column="0"  Text="Polisa za arhiviranje" VerticalAlignment="Center"/>
 
         <TextBox Grid.Row="0" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.RootFolder, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBox Grid.Row="1" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.ArchiveFolder, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
@@ -134,7 +136,11 @@
             <ComboBoxItem>RSDEV</ComboBoxItem>
             <ComboBoxItem>BIHDEV</ComboBoxItem>
         </ComboBox>
-        <StackPanel Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+        <ComboBox Grid.Row="15" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.ArchivePolicy, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+            <ComboBoxItem>BASIC</ComboBoxItem>
+            <ComboBoxItem>GROUP_RENAME</ComboBoxItem>
+        </ComboBox>
+        <StackPanel Grid.Row="16" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Button Content="OK" Width="96" Height="32" x:Name="OnClose" Margin="3"/>
             <Button Content="Cancel" Width="96" Height="32" x:Name="OnCancel" Margin="3,3,0,3"/>
         </StackPanel>
