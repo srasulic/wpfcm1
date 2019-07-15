@@ -44,7 +44,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="PIB" Binding="{Binding Path=namePib1}" IsReadOnly="True" MinWidth="85">
+                <DataGridTextColumn x:Name="PibIzdavalac" Header="PIB" Binding="{Binding Path=namePib1}" IsReadOnly="True" MinWidth="85">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="Opacity" Value="{Binding tipDok, Converter={StaticResource tdok2oc}}" />
@@ -52,7 +52,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Izdavalac" Binding="{Binding Path=namePib1Name}" IsReadOnly="True">
+                <DataGridTextColumn x:Name="Izdavalac" Header="Izdavalac" Binding="{Binding Path=namePib1Name}" IsReadOnly="True">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="Opacity" Value="{Binding tipDok, Converter={StaticResource tdok2oc}}" />

@@ -27,6 +27,8 @@ namespace wpfcm1.FolderTypes
         private CertificateModel _certificate;
         private string _expList;
 
+        private static bool IssuerVisible = false;
+
         public GeneratedFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
         {
             _windowManager = winMgr;

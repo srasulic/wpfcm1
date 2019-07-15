@@ -5,24 +5,7 @@ using System.Windows.Data;
 
 namespace wpfcm1.Converters
 {
-    /*
-     * ovo nije postojalo, a BooleanToVisibilityConverter nam se koristi?! 
-     * dodavano je privremeno testa radi
-     * proveriti šta ćemo s ovim...
-     * 
-        public class BooleanToVisibilityConverter : IValueConverter
-        {
-            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                return (bool?)value == true ? Visibility.Visible : Visibility.Collapsed;
-            }
 
-            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                throw new NotImplementedException();
-            }
-        }
-    */
     public class InverseBooleanToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

@@ -408,7 +408,7 @@ namespace wpfcm1.Dialogs
                         // var regexJib = new Regex(@"\b\d{13}\b");
                         
                         // if (!regexPib.IsMatch(PIB))
-                        if (!FolderTypes.GeneratedFolderViewModel.IsPibOk(PIB))
+                        if (!FolderTypes.GeneratedFolderViewModel.IsPibOk(PIB, false))
                         {
                             return "Unesite validan pib / jib";
                         }
