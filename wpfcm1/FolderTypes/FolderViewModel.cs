@@ -711,11 +711,11 @@ namespace wpfcm1.FolderTypes
                     string fileName = document.DocumentPath;
                     if (fileName == fileNameWithBarcode)
                     {
-                        renamePdf(fileName, barcodeNumber, archivePath);
+                        renamePdf(fileName, "ef" + barcodeNumber, archivePath);
                     }
                     else
                     {
-                        renamePdf(fileName, barcodeNumber + "_EDOKARCH_spec" + fileCount, archivePath);
+                        renamePdf(fileName, "ef" + barcodeNumber + "_edokarch_spec" + fileCount, archivePath);
                         fileCount++;
                     }
                 }
