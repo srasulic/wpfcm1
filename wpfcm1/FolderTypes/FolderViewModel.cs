@@ -650,13 +650,13 @@ namespace wpfcm1.FolderTypes
             {
                 FolderViewModel.PsKillPdfHandlers();
                 var documents = Documents.Where(d => d.IsChecked).Cast<DocumentModel>();
-                if (!documents.Any()) { documents = Documents.Cast<DocumentModel>(); }
+            //    if (!documents.Any()) { documents = Documents.Cast<DocumentModel>(); }
 
                 //prebacivanje i reimenovanje dokumenata
                 foreach (var document in documents)
                 {
                     string fileName = document.DocumentPath;
-                    renamePdf(fileName, document.DocumentInfo.Name, archivePath);
+                    renamePdf(fileName, (String)document.DocumentInfo.Name.Split('.')[0], archivePath);
                 }
             }
             catch
@@ -673,7 +673,7 @@ namespace wpfcm1.FolderTypes
             {
                 FolderViewModel.PsKillPdfHandlers();
                 var documents = Documents.Where(d => d.IsChecked).Cast<DocumentModel>();
-                if (!documents.Any()) { documents = Documents.Cast<DocumentModel>(); }
+              //  if (!documents.Any()) { documents = Documents.Cast<DocumentModel>(); }
 
                 //od izabranih dokumenata samo jedan treba da je sa barkodom, ostali su njegove specifikacije
                 string barcodeNumber = null;
@@ -711,7 +711,7 @@ namespace wpfcm1.FolderTypes
                     string fileName = document.DocumentPath;
                     if (fileName == fileNameWithBarcode)
                     {
-                        renamePdf(fileName, "ef" + barcodeNumber, archivePath);
+                        renamePdf(fileName, barcodeNumber, archivePath);
                     }
                     else
                     {
@@ -864,9 +864,18 @@ namespace wpfcm1.FolderTypes
             }
             else
             {
-                string newFile = newPath + @"\" + barcodeNumber + ".pdf";
-                System.IO.File.Move(oldFile, newFile);
-                Log.Info(oldFile + "-->" + newFile);
+                string newFile = "";
+                try
+                {
+                    newFile = newPath + @"\" + barcodeNumber + ".pdf";
+                    System.IO.File.Move(oldFile, newFile);
+                    Log.Info(oldFile + "-->" + newFile);
+                }
+                catch (IOException e)
+                {
+                    Log.Error(string.Format("IO exception - move to ARCH! Izvor: {0}, Odredtiste: {1} Izvorna greska:{2}", oldFile, newFile, e));
+                    throw e;
+                }
             }
         }
 

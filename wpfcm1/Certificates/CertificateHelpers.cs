@@ -57,6 +57,7 @@ namespace wpfcm1.Certificates
                 if (Regex.IsMatch(crlUrl, @"http.+", RegexOptions.IgnoreCase)) 
                 {
 
+                    // za bosnu workaround - ako bude trebalo... System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
                     System.Net.WebRequest req = System.Net.HttpWebRequest.Create(crlUrl);
                     System.IO.Stream ins = req.GetResponse().GetResponseStream();
                     var baos = new System.IO.MemoryStream();
