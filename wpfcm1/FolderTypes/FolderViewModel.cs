@@ -510,6 +510,7 @@ namespace wpfcm1.FolderTypes
         protected void InitWatcher(string path)
         {
             _watcher = new FileSystemWatcher(path) { NotifyFilter = NotifyFilters.Size | NotifyFilters.FileName };
+            _watcher.InternalBufferSize = 65536;
             _watcher.Changed += Watcher_Changed; 
             _watcher.Deleted += Watcher_Deleted;
             _watcher.Created += Watcher_Created;
