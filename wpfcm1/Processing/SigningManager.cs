@@ -78,7 +78,7 @@ namespace wpfcm1.Processing
             {
                 var sourceFilePath = document.DocumentPath;
                 var sourceFileName = Path.GetFileName(sourceFilePath);
-                var destinationFileName = CreateSignedPdfFileName(document, User.Default.PIB);
+                var destinationFileName = CreateSignedPdfFileName(document);
                 var destinationFilePath = Path.Combine(destinationDir, destinationFileName);
 
                 if (reporter != null) reporter.Report(string.Format("Potpisivanje: {0}", sourceFileName));
@@ -145,11 +145,17 @@ namespace wpfcm1.Processing
             if (reporter != null) reporter.Report("OK");
         }
 
-        private string CreateSignedPdfFileName(DocumentModel document, string userPib = "")
+        private string CreateSignedPdfFileName(DocumentModel document)
         {
             if (document is GeneratedDocumentModel)
             {
                 var gdoc = document as GeneratedDocumentModel;
+
+                if (String.IsNullOrEmpty(gdoc.PibIssuer))
+                {
+                    gdoc.PibIssuer = User.Default.PIB;
+                }
+
             //  var destinationFileName = string.Format("{0}_{1}_{2}_{3}_s.pdf", userPib, gdoc.Pib, gdoc.InvoiceNo, DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"));
                 string destinationFileName;
                 destinationFileName = string.Format("{0}_{1}_{2}_{3}_s.pdf", gdoc.PibIssuer, gdoc.PibReciever, gdoc.InvoiceNo, DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"));
