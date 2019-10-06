@@ -114,14 +114,22 @@ namespace wpfcm1.Certificates
             var errors = new List<string>();
 
             var certificateSimpleName = certificate.GetNameInfo(X509NameType.SimpleName, false);
-            var match = Regex.Match(certificateSimpleName, @"\b(\d{6,9})(-(\d{13}))?\b");
-//            var jmbg = match.Groups[3].Value;
+
+            // blokirano korišćenje MUP CA sertifikata zbog veličine CRL liste
+            DateTime endOfMupCaSupport = DateTime.ParseExact("2019-10-31", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+            if ( Regex.IsMatch(certificate.Issuer, @"CN=MUPCA") && DateTime.Today > endOfMupCaSupport)
+            {
+                errors.Add("MUP sertifikat nije pogodan za poslovnu upotrebu.");
+            }
+
+            //            var match = Regex.Match(certificateSimpleName, @"\b(\d{6,9})(-(\d{13}))?\b");
+            //            var jmbg = match.Groups[3].Value;
             // TODO: Zasto nam je ovo uopste vazno? Da li smo imali neku ideju sta sa JMBG ili nismo znali da postoje specijlani slucajevi kada se sert moze izdati bez jmbg...
-//            if (!string.IsNullOrEmpty(jmbg))
-//            {
-//                bool jmbgOk = CheckJmbg(jmbg);
-//                if (!jmbgOk) errors.Add("Bad JMBG.");
-//            }
+            //            if (!string.IsNullOrEmpty(jmbg))
+            //            {
+            //                bool jmbgOk = CheckJmbg(jmbg);
+            //                if (!jmbgOk) errors.Add("Bad JMBG.");
+            //            }
 
             var chain = chainBuildInfo.Item1;
             var isChainValid = chainBuildInfo.Item2;

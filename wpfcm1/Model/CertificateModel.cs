@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using wpfcm1.Certificates;
 using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 using System;
+using System.Text.RegularExpressions;
 
 namespace wpfcm1.Model
 {
@@ -12,25 +13,35 @@ namespace wpfcm1.Model
     {
         public X509Certificate2 Certificate { get; private set; }
         public string CertificateSimpleName { get; private set; }
+        public string CertificateDisplayName { get; private set; }
         public List<X509Certificate> ChainElements { get; private set; }
         public List<string> Errors { get; private set; }
         public bool IsQualified { get; private set; }
+        public bool HasWarnings { get; private set; }
 
         public CertificateModel(X509Certificate2 certificate)
         {
             Certificate = certificate;
             CertificateSimpleName = Certificate.GetNameInfo(X509NameType.SimpleName, false);
+            CertificateDisplayName = CertificateSimpleName + @" - " + Regex.Match(certificate.IssuerName.Name, @"(CN=)(.[A-Za-z]+)(.*)").Groups[2];
 
             // ako nema private key, nije kvalifikovan. Ubrzava se start aplikacije jer se ne bilduju bespotrebni sertifikati
-            
             if (!Certificate.HasPrivateKey)
             {
                 IsQualified = false;
+                HasWarnings = false;
                 return;
             }
-            
 
-            var chainBuildInfo = CertificateHelpers.GetChain(Certificate);
+            if (Regex.IsMatch(certificate.Issuer, @"CN=MUPCA"))
+            {
+                HasWarnings = true;
+            } else
+            {
+                HasWarnings = false;
+            }
+
+                var chainBuildInfo = CertificateHelpers.GetChain(Certificate);
             var chain = chainBuildInfo.Item1;
             ChainElements = CertificateHelpers.GetChainElements(chain);
 

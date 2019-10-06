@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 using System.Threading;
 using wpfcm1.Extensions;
 using wpfcm1.FolderTypes;
@@ -29,7 +30,24 @@ namespace wpfcm1.Dialogs
             _reporter = new Progress<string>();
             _reporter.ProgressChanged += _reporter_ProgressChanged;
             Reports = new BindableCollection<string>();
-
+            
+            if (Regex.IsMatch(certificate.Certificate.Issuer, @"CN=MUPCA") )
+            {
+                Reports.Add("! ! ! >>UPOZORENJE<< ! ! !");
+                Reports.Add("MUP sertifikat nije pogodan za poslovnu upotrebu i neće biti podržan od 01.11.2019.");
+                Reports.Add("! ! ! >>UPOZORENJE<< ! ! !");
+                Reports.Add("Kako bi izbegli zastoj u radu, molimo da što pre uputite zahtev za PTT CA, PKS CA ili Halcom sertifikata");
+                Reports.Add("OBJAŠNJENJE:");
+                Reports.Add("  MUP CA jeste kvalifikovani sertifikat, ali nije pogodan za potpisivanje velikog broja dokumenata. ");
+                Reports.Add("  Naime, kvalifikovanim potpisivanjem dokumenta ovim sertifikatom veličina potpisanog ");
+                Reports.Add("  dokumenta prelazi 5MB. Ovo je 10 puta više od prihvatljive veličine. To znači da bi ");
+                Reports.Add("  izdatak pravnog lica za čuvanje elektronski potpisanih dokumenata koji ");
+                Reports.Add("  je projektovan na iznos od 100 EUR mesečno, narastao na 1000 EUR mesečno ");
+                Reports.Add("  ukoliko se koristi MUP sertifikat.");
+                Reports.Add("  Kako bi rast arhive podataka i budućih troškova svih korisnika sistema stavili pod kontrolu, ");
+                Reports.Add("  primorani smo da ukinemo podršku za MUP sertifikate.");
+                Reports.Add("  --------------");
+            }
             Reports.Add("Dokumenti obeleženi za potpisivanje:");
             var Documents = GetDocumentsForSigning(_folder);
             foreach (var document in Documents)

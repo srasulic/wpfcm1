@@ -5,17 +5,27 @@
              xmlns:conv="clr-namespace:wpfcm1.Converters">
     <UserControl.Resources>
         <conv:InverseBooleanToVisibilityConverter x:Key="ib2vc" />
+        <BooleanToVisibilityConverter x:Key="b2vc" />
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="21"/>
         </Grid.ColumnDefinitions>
-        <ComboBox x:Name="Certificates" DisplayMemberPath="CertificateSimpleName" IsSynchronizedWithCurrentItem="True" FontSize="13"
+        <ComboBox x:Name="Certificates" DisplayMemberPath="CertificateDisplayName" IsSynchronizedWithCurrentItem="True" FontSize="13"
                   cal:Message.Attach="[Event SelectionChanged] = [Action OnSelection($this)]; [EventLoaded] = [Action OnSelection($this)]"  
         />
-        <TextBlock Grid.Column="1" Text="!" FontWeight="Bold" FontSize="21" Foreground="{DynamicResource ControlsValidationBrush}" 
-                   VerticalAlignment="Center" HorizontalAlignment="Center"
-                   Visibility="{Binding ElementName=Certificates, Path=SelectedItem.IsQualified, Converter={StaticResource ib2vc}}"/>
+        <Rectangle Grid.Column="1" Width="21" Height="21" Fill="Orange" Visibility="{Binding ElementName=Certificates, Path=SelectedItem.HasWarnings, Converter={StaticResource b2vc}}"
+                   ToolTip="Produženi period podrške za MUP sertifikate ističe 01.11.2019. godine! Molimo da koristite sertifikate PTT CA, PKS CA ili Halcom CA.">
+            <Rectangle.OpacityMask>
+                <VisualBrush Stretch="Uniform" Visual="{DynamicResource appbar_alert}" />
+            </Rectangle.OpacityMask>
+        </Rectangle>
+        <Rectangle Grid.Column="1" Width="21" Height="21" Fill="Red" Visibility="{Binding ElementName=Certificates, Path=SelectedItem.IsQualified, Converter={StaticResource ib2vc}}"
+                   ToolTip="Sertifikat nije prošao validaciju za kvalifikovani sertifikat">
+            <Rectangle.OpacityMask>
+                <VisualBrush Stretch="Uniform" Visual="{DynamicResource appbar_alert}" />
+            </Rectangle.OpacityMask>
+        </Rectangle>
     </Grid>
 </UserControl>
