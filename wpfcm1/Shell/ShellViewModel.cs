@@ -45,7 +45,6 @@ namespace wpfcm1.Shell
             OtherInboundVM = new FolderGroupViewModel(FolderManager.OtherInboundFolders, "Ostali Ulazni", events, _windowManager);
             WebVM = new WebViewModel("Online report");
             LoginVM = new DialogLoginViewModel(_windowManager);
-            //var result = _windowManager.ShowDialog(new DialogLoginViewModel());
 
 
             ShowHome();
@@ -84,7 +83,21 @@ namespace wpfcm1.Shell
             if (first)
             {
                 first = false;
-               // _windowManager.ShowDialog(new DialogLoginViewModel(_windowManager));
+                bool showLogin = false;
+                try
+                {
+                    showLogin = Settings.User.Default.MandatoryLogin;
+                }
+                catch (System.Exception e)
+                {
+                    Settings.User.Default.MandatoryLogin = false;
+                    showLogin = false;
+                }
+                if (showLogin)
+                {
+                    var result = _windowManager.ShowDialog(LoginVM);
+                }
+
             }
         }
 
@@ -218,6 +231,7 @@ namespace wpfcm1.Shell
             OtherInboundVM.Dispose();
             OtherOutboundVM.Dispose();
             WebVM.Dispose();
+            LoginVM.Dispose();
 
         }
     }

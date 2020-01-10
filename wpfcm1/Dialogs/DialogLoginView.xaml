@@ -8,6 +8,7 @@
     BorderThickness="1"
     Loaded="DialogLoginView_OnLoaded"
     Width="500" Height="250"
+    Topmost="True"
     >
     <Grid Margin="5">
         <Grid.RowDefinitions>

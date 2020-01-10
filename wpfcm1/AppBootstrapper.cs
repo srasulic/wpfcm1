@@ -16,7 +16,7 @@ namespace wpfcm1
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static string appTitle = User.Default.AppTitle;
-        public static string appVersion = appTitle + " - 1.7.0.7";
+        public static string appVersion = appTitle + " - 2.1.0.1";
 
         CompositionContainer _container;
 

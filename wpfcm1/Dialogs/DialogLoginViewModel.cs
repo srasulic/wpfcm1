@@ -86,7 +86,7 @@ namespace wpfcm1.Dialogs
 
 
 
-    public class DialogLoginViewModel : Screen
+    public class DialogLoginViewModel : Screen, IDisposable
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public LoginModel LoginTemp { get; set; }
@@ -112,7 +112,12 @@ namespace wpfcm1.Dialogs
             TryClose(true);
         }
 
-        public  void OpenSettings()
+        public void Dispose()
+        {
+            (GetView() as Window).Close();
+        }
+
+        public void OpenSettings()
         {
             _windowManager.ShowDialog(new DialogSettingsViewModel());
             LoginTemp.PIB = User.Default.PIB;
@@ -170,11 +175,12 @@ namespace wpfcm1.Dialogs
                         Log.Info("SUCCESSFUL LOGIN (UserName = " + LoginTemp.UserName + ") - " + message);
                         LoginTemp.Message = message;
                         User.Default.Token = token; 
-                        User.Default.FtpPassword = ftpPass;
+                        User.Default.FtpPassword = "WEB ftpPass used";
                         FtpClient.WebFtpPass = ftpPass;
                         User.Default.FtpUserName = LoginTemp.PIB;
 
                         (GetView() as Window).Hide();
+                        
                     }
                     else
                     {

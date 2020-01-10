@@ -454,5 +454,16 @@ namespace wpfcm1.Settings {
                 this["ArchivePolicy"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public bool MandatoryLogin {
+            get {
+                return ((bool)(this["MandatoryLogin"]));
+            }
+            set {
+                this["MandatoryLogin"] = value;
+            }
+        }
     }
 }
