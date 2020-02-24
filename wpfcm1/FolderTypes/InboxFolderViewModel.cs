@@ -16,7 +16,7 @@ using iTextSharp.text.pdf.security;
 
 namespace wpfcm1.FolderTypes
 {
-    public class InboxFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageValidate>, IHandle<MessageAck>, IHandle<MessageXls>
+    public class InboxFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageValidate>, IHandle<MessageAck>, IHandle<MessageXls>, IHandle<MessageGetPibNames>
     {
         private readonly IWindowManager _windowManager;
         private CertificateModel _certificate;
@@ -104,6 +104,7 @@ namespace wpfcm1.FolderTypes
             _events.PublishOnUIThread(new MessageViewModelActivated(GetType().Name));
             // pri ulasku startuj automatsku validaciju 
             Handle(new MessageValidate());
+            Handle(new MessageGetPibNames());
         }
 
         protected override void OnDeactivate(bool close)
@@ -143,6 +144,11 @@ namespace wpfcm1.FolderTypes
             }
         }
 
+        public async void Handle(MessageGetPibNames message)
+        {
+            if (!IsActive) return;
+            await GetPibNamesAsync();
+        }
         public async void Handle(MessageValidate message)
         {
             if (!IsActive) return;
