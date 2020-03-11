@@ -148,8 +148,6 @@ namespace wpfcm1.Model
         {
             get
             {
-                if (String.IsNullOrEmpty(_namePib2Name))
-                    namePib2Name = APIManager.GetCustomerNameByPIB(namePib2);
                 return _namePib2Name;
             }
             set { _namePib2Name = value; NotifyOfPropertyChange(() => _namePib2Name); }
@@ -161,8 +159,6 @@ namespace wpfcm1.Model
         {
             get
             {
-                if (String.IsNullOrEmpty(_namePib1Name))
-                    namePib1Name = APIManager.GetCustomerNameByPIB(namePib1);
                 return _namePib1Name;
             }
             set { _namePib1Name = value; NotifyOfPropertyChange(() => _namePib1Name); }

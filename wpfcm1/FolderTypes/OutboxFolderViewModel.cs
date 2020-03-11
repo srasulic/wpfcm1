@@ -18,7 +18,7 @@ using System.Windows.Data;
 
 namespace wpfcm1.FolderTypes
 {
-    public class OutboxFolderViewModel : FolderViewModel, IHandle<MessageReject>, IHandle<MessageXls>
+    public class OutboxFolderViewModel : FolderViewModel, IHandle<MessageReject>, IHandle<MessageXls>, IHandle<MessageGetPibNames>
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -94,6 +94,7 @@ namespace wpfcm1.FolderTypes
         protected override void OnActivate()
         {
             _events.PublishOnUIThread(new MessageViewModelActivated(GetType().Name));
+            Handle(new MessageGetPibNames());
         }
 
         protected override void OnDeactivate(bool close)
@@ -105,6 +106,11 @@ namespace wpfcm1.FolderTypes
             dg.CommitEdit(DataGridEditingUnit.Row, true);
         }
 
+        public async void Handle(MessageGetPibNames message)
+        {
+            if (!IsActive) return;
+            await GetPibNamesAsync();
+        }
 
         public void Handle(MessageXls message)
         {

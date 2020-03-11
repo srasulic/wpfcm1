@@ -215,7 +215,7 @@ namespace wpfcm1.FolderTypes
 
         protected async Task ValidateDocSignaturesAsync()
         {
-//            var documents = Documents.Where(d => !d.Processed).Cast<InboxDocumentModel>();
+            //            var documents = Documents.Where(d => !d.Processed).Cast<InboxDocumentModel>();
             var documents = Documents.Where(d => !d.isValidated || d.IsChecked).Cast<DocumentModel>();
             foreach (var document in documents)
             {
@@ -241,7 +241,7 @@ namespace wpfcm1.FolderTypes
                     document.sigTS2 = pkcs7.TimeStampDate;
                     document.sigDateSigned2 = pkcs7.SignDate;
                     document.sigSignerName2 = System.Text.RegularExpressions.Regex.Replace(CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"CN"), @"[0-9]", "");
-                  //  document.sigOrg2 = String.Format("{0} - {1}", CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"O"), CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"OU"));
+                    //  document.sigOrg2 = String.Format("{0} - {1}", CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"O"), CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"OU"));
                     var docFields = CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetFields();
                     String organization = "";
                     foreach (var ouField in docFields.Where(f => f.Key == @"OU"))
@@ -271,6 +271,28 @@ namespace wpfcm1.FolderTypes
                     document.sigOrg = organization;
                 }
                 document.sigAdditionalInfo = "refresh";
+            }
+        }
+
+        protected async Task GetPibNamesAsync()
+        {
+            //            var documents = Documents.Where(d => !d.Processed).Cast<InboxDocumentModel>();
+            var documents = Documents.Where(d => String.IsNullOrEmpty(d.namePib1Name) || String.IsNullOrEmpty(d.namePib2Name)).Cast<DocumentModel>();
+            foreach (var document in documents)
+            {
+                try
+                {
+                    if (String.IsNullOrEmpty(document.namePib1Name))
+                        document.namePib1Name = await APIManager.GetCustomerNameByPIBAsync(document.namePib1);
+                    if (String.IsNullOrEmpty(document.namePib2Name))
+                        document.namePib2Name = await APIManager.GetCustomerNameByPIBAsync(document.namePib2);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Error GetPibNamesAsync", e);
+                    throw e;
+
+                }
             }
         }
 

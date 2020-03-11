@@ -15,7 +15,7 @@ using System.Windows.Data;
 
 namespace wpfcm1.FolderTypes
 {
-    public class PendFolderViewModel : FolderViewModel, IHandle<MessageXls>
+    public class PendFolderViewModel : FolderViewModel, IHandle<MessageXls>, IHandle<MessageGetPibNames>
     {
         private readonly IWindowManager _windowManager;
         new protected string[] Extensions = { ".pdf", ".ack", ".xml" };
@@ -108,6 +108,7 @@ namespace wpfcm1.FolderTypes
         protected override void OnActivate()
         {
             _events.PublishOnUIThread(new MessageViewModelActivated(GetType().Name));
+            Handle(new MessageGetPibNames());
         }
 
         protected override void OnDeactivate(bool close)
@@ -123,6 +124,12 @@ namespace wpfcm1.FolderTypes
         {
             if (!IsActive) return;
             XlsExport();
+        }
+
+        public async void Handle(MessageGetPibNames message)
+        {
+            if (!IsActive) return;
+            await GetPibNamesAsync();
         }
 
         public override void Dispose(bool disposing)

@@ -50,6 +50,42 @@ namespace wpfcm1.DataAccess
                 return "";
             }
         }
+        public static async Task<string> GetCustomerNameByPIBAsync(string pib)
+        {
+            try
+            {
+
+                string urlAddress = string.Format("{0}/index/api?pib={1}", User.Default.ApiURL, pib);
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
+
+                using (WebResponse response = await request.GetResponseAsync())
+                {
+                    using (Stream responseStream = response.GetResponseStream())
+                    {
+                        StreamReader readStream = null;
+
+                        readStream = new StreamReader(responseStream);
+
+                        string data = await readStream.ReadToEndAsync();
+
+                        readStream.Close();
+
+
+                        if (string.IsNullOrEmpty(data))
+                            return "";
+
+                        string[] arrayData = data.Split(',');
+                        string[] arrayName = arrayData[0].Split(':');
+                        return arrayName[1].Replace("\"", string.Empty);
+                    }
+                }
+            }
+            catch
+            {
+                return "";
+            }
+        }
 
         public static string GetArchivePolicy()
         {
