@@ -30,7 +30,7 @@
             </TabControl.ItemTemplate>
         </TabControl>
         
-        <GridSplitter Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="2" Margin="0,11,0,0"/>
+        <GridSplitter Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="6" Margin="0,11,0,0"/>
         <ContentControl Grid.Row="0" Grid.Column="2" x:Name="Preview" Margin="0,11,0,0" 
                         Visibility="{Binding Path=Preview.PreviewVisibility, Converter={StaticResource b2vc}}"
                         IsVisibleChanged="Preview_OnIsVisibleChanged" />
