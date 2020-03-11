@@ -16,7 +16,7 @@ using System.Windows.Data;
 namespace wpfcm1.FolderTypes
 {
     public class ConfirmedOutToDoFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageXls>, IHandle<MessageReject>, 
-                                                                    IHandle<MessageArchive>, IHandle<MessageValidate>, IHandle<MessageGetPibNames>
+                                                                    IHandle<MessageArchive>, IHandle<MessageValidate>
     {
         private readonly IWindowManager _windowManager;
         private CertificateModel _certificate;
@@ -206,13 +206,6 @@ namespace wpfcm1.FolderTypes
             if (!IsActive) return;
             SetArchived();
         }
-
-        public async void Handle(MessageGetPibNames message)
-        {
-            if (!IsActive) return;
-            await GetPibNamesAsync();
-        }
-
 
 
         //public IList<DocumentModel> GetDocumentsForSigning()

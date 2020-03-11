@@ -297,6 +297,13 @@ namespace wpfcm1.Dialogs
                     ApiURL = @"https://edokument.rs";
                     MandatoryLogin = true;
                 }
+                if (_variation == "RS-IZVRSITELJ")
+                {
+                    FtpServer = @"ftp://ftp.aserta.rs/";
+                    AppTitle = @"https://edokument.rs";
+                    ApiURL = @"https://edokument.rs";
+                    MandatoryLogin = true;
+                }
                 else if (_variation == "BIH") {
                     FtpServer = @"ftp://ftp.polisign.net/";
                     AppTitle = @"https://polisign.net";
