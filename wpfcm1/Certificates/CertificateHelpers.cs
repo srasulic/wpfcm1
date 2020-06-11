@@ -54,7 +54,7 @@ namespace wpfcm1.Certificates
             var crlList = new List<ICrlClient>();
             foreach (var crlUrl in crlUrls)
             {
-                if (Regex.IsMatch(crlUrl, @"http.+", RegexOptions.IgnoreCase)) 
+                if (Regex.IsMatch(crlUrl, @"http.+", RegexOptions.IgnoreCase))
                 {
 
                     // za NBGP BIH (Delta Planet) workaround ... Tamo cert telo nije umelo da zanovi SSL sertifikat na adresi koja vraća CRL
@@ -72,20 +72,31 @@ namespace wpfcm1.Certificates
                     ICrlClient ccoff = new CrlClientOffline(baos.ToArray());
                     crlList.Add(ccoff);
 
-                } else {
+                }
+                else
+                {
                     using (var de = new DirectoryEntry(crlUrl) { AuthenticationType = AuthenticationTypes.Anonymous })
                     {
-                        var crlBytes = de.Properties["certificateRevocationList;binary"].Value as byte[];
-                        // HALCOM podrška - zbog nove LDAP specifikacije, vrednost se vraća za atribut koji nema "binary" u nazivu:
-                        if (crlBytes == null || crlBytes.Length == 0)
-                        {
-                            // Log.Info(String.Format("LDAP vratio prazan byte[] za {0}", crlUrl));
-                            crlBytes = de.Properties["certificateRevocationList"].Value as byte[];
+                        try { 
+                            var crlBytes = de.Properties["certificateRevocationList;binary"].Value as byte[];
+                            // HALCOM podrška - zbog nove LDAP specifikacije, vrednost se vraća za atribut koji nema "binary" u nazivu:
+                            if (crlBytes == null || crlBytes.Length == 0)
+                            {
+                                // Log.Info(String.Format("LDAP vratio prazan byte[] za {0}", crlUrl));
+                                crlBytes = de.Properties["certificateRevocationList"].Value as byte[];
+                            }
+                            var ccoff = new CrlClientOffline(crlBytes);
+                            crlList.Add(ccoff);
                         }
-                        var ccoff = new CrlClientOffline(crlBytes);
-                        crlList.Add(ccoff);
+                        catch (Exception ex)
+                        {
+                            Log.Warn(ex.Message + +crlUrl);
+                            throw new Exception(@"Server sertifikacionog tela nije dostupan: " + crlUrl, ex);
+                        }
                     }
-               }
+                }
+
+
             }
             return crlList;
         }
