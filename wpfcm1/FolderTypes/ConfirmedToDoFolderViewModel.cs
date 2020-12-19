@@ -15,7 +15,7 @@ using System.Windows.Data;
 
 namespace wpfcm1.FolderTypes
 {
-    public class ConfirmedToDoFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageXls>, IHandle<MessageArchive>, IHandle<MessageReject>, IHandle<MessageValidate>, IHandle<MessageGetPibNames>
+    public class ConfirmedToDoFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageXls>, IHandle<MessageArchive>, IHandle<MessageReject>, IHandle<MessageValidate>
     {
         private readonly IWindowManager _windowManager;
         private CertificateModel _certificate;
@@ -190,11 +190,6 @@ namespace wpfcm1.FolderTypes
             _certificate = message;
         }
 
-        public async void Handle(MessageGetPibNames message)
-        {
-            if (!IsActive) return;
-            await GetPibNamesAsync();
-        }
         public void Handle(MessageXls message)
         {
             if (!IsActive) return;

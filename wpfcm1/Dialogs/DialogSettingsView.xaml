@@ -133,6 +133,7 @@
         <ComboBox Grid.Row="4" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.Variation, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
             <ComboBoxItem>RS</ComboBoxItem>
             <ComboBoxItem>RS-LOGIN</ComboBoxItem>
+            <ComboBoxItem>RS-IZVRSITELJ</ComboBoxItem>
             <ComboBoxItem>BIH</ComboBoxItem>
             <ComboBoxItem>RSDEV</ComboBoxItem>
             <ComboBoxItem>BIHDEV</ComboBoxItem>

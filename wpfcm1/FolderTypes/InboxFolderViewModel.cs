@@ -16,7 +16,7 @@ using iTextSharp.text.pdf.security;
 
 namespace wpfcm1.FolderTypes
 {
-    public class InboxFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageValidate>, IHandle<MessageAck>, IHandle<MessageXls>, IHandle<MessageGetPibNames>
+    public class InboxFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageValidate>, IHandle<MessageAck>, IHandle<MessageXls>
     {
         private readonly IWindowManager _windowManager;
         private CertificateModel _certificate;
@@ -144,11 +144,6 @@ namespace wpfcm1.FolderTypes
             }
         }
 
-        public async void Handle(MessageGetPibNames message)
-        {
-            if (!IsActive) return;
-            await GetPibNamesAsync();
-        }
         public async void Handle(MessageValidate message)
         {
             if (!IsActive) return;

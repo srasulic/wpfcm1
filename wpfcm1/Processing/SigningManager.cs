@@ -10,6 +10,7 @@ using wpfcm1.Model;
 using wpfcm1.PDF;
 using wpfcm1.Settings;
 using wpfcm1.FolderTypes;
+using System.Text.RegularExpressions;
 
 namespace wpfcm1.Processing
 {
@@ -156,9 +157,18 @@ namespace wpfcm1.Processing
                     gdoc.PibIssuer = User.Default.PIB;
                 }
 
-            //  var destinationFileName = string.Format("{0}_{1}_{2}_{3}_s.pdf", userPib, gdoc.Pib, gdoc.InvoiceNo, DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"));
                 string destinationFileName;
-                destinationFileName = string.Format("{0}_{1}_{2}_{3}_s.pdf", gdoc.PibIssuer, gdoc.PibReciever, gdoc.InvoiceNo, DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"));
+
+                // za izvršitelje dokumenti Others neće biti rename-ovani
+                if (User.Default.Variation == "RS-IZVRSITELJ" && Regex.IsMatch(document.DocumentInfo.FullName, @"ostali", RegexOptions.IgnoreCase) )
+                {
+                    destinationFileName = document.DocumentInfo.Name;
+
+                }
+                else
+                {
+                    destinationFileName = string.Format("{0}_{1}_{2}_{3}_s.pdf", gdoc.PibIssuer, gdoc.PibReciever, gdoc.InvoiceNo, DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"));
+                }
                 return destinationFileName;
             }
             if (document is InboxDocumentModel)

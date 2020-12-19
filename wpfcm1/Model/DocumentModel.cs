@@ -150,7 +150,7 @@ namespace wpfcm1.Model
             {
                 return _namePib2Name;
             }
-            set { _namePib2Name = value; NotifyOfPropertyChange(() => _namePib2Name); }
+            set { _namePib2Name = value; NotifyOfPropertyChange(() => namePib2Name); }
         }
 
         // 1.12 naziv izdavaoca izvucen po pib-u
@@ -161,7 +161,8 @@ namespace wpfcm1.Model
             {
                 return _namePib1Name;
             }
-            set { _namePib1Name = value; NotifyOfPropertyChange(() => _namePib1Name); }
+            set { _namePib1Name = value; 
+                NotifyOfPropertyChange(() => namePib1Name); }
         }
 
         // 1.13 za Outbox - da prikažemo tipove poruka koje se šalju

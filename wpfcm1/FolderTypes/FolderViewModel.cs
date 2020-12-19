@@ -25,7 +25,7 @@ using System.Windows;
 
 namespace wpfcm1.FolderTypes
 {
-    public class FolderViewModel : Screen, IDisposable, IHandle<MessageArchiveSelected>
+    public class FolderViewModel : Screen, IDisposable, IHandle<MessageArchiveSelected>, IHandle<MessageGetPibNames>
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         // protected string[] Extensions = { ".pdf", ".ack" };
@@ -454,6 +454,14 @@ namespace wpfcm1.FolderTypes
         protected override void OnActivate()
         {
             _events.PublishOnUIThread(new MessageViewModelActivated(GetType().Name));
+            Handle(new MessageGetPibNames());
+
+        }
+
+        public async void Handle(MessageGetPibNames message)
+        {
+            if (!IsActive) return;
+            await GetPibNamesAsync();
         }
 
         protected override void OnDeactivate(bool close)
