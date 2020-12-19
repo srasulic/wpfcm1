@@ -136,6 +136,10 @@ namespace wpfcm1.Dialogs
                 _windowManager.ShowDialog(new DialogSettingsViewModel());
                 LoginTemp.PIB = User.Default.PIB;
             }
+            if (LoginTemp.UserName=="Settings!")
+            {
+                _windowManager.ShowDialog(new DialogSettingsViewModel());
+            }
 
             string reqUrl = User.Default.ApiURL + @"/login/remoteLogin";
             var request = WebRequest.Create(reqUrl);
@@ -151,9 +155,15 @@ namespace wpfcm1.Dialogs
             request.ContentType = "application/x-www-form-urlencoded";
             request.ContentLength = data.Length;
 
-            using (var stream = request.GetRequestStream())
+            try
             {
-                stream.Write(data, 0, data.Length);
+                using (var stream = request.GetRequestStream())
+                {
+                    stream.Write(data, 0, data.Length);
+                }
+            } catch (Exception ex)
+            {
+                LoginTemp.Message = ex.Message;
             }
 
             using (WebResponse response = request.GetResponse())

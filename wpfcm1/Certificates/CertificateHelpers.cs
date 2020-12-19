@@ -90,7 +90,7 @@ namespace wpfcm1.Certificates
                         }
                         catch (Exception ex)
                         {
-                            Log.Warn(ex.Message + +crlUrl);
+                            Log.Warn(ex.Message + crlUrl);
                             throw new Exception(@"Server sertifikacionog tela nije dostupan: " + crlUrl, ex);
                         }
                     }
