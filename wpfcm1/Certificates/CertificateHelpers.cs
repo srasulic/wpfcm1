@@ -130,7 +130,7 @@ namespace wpfcm1.Certificates
             DateTime endOfMupCaSupport = DateTime.ParseExact("2019-10-31", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
             if ( Regex.IsMatch(certificate.Issuer, @"CN=MUPCA") && DateTime.Today > endOfMupCaSupport)
             {
-                errors.Add("MUP sertifikat nije pogodan za poslovnu upotrebu.");
+                errors.Add("Prevelik CRL - MUP sert. nije pogodan za poslovnu upotrebu.");
             }
 
             //            var match = Regex.Match(certificateSimpleName, @"\b(\d{6,9})(-(\d{13}))?\b");

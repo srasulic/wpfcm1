@@ -82,6 +82,12 @@
                 <mah:Tile Title="{Binding Path=Svm.OtherInboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowOtherInbound">
                     <ItemsControl ItemsSource="{Binding Path=Svm.OtherInboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}"/>
                 </mah:Tile>
+                <mah:Tile Title="{Binding Path=Svm.OtpadOutboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowOtpadOutbound">
+                    <ItemsControl ItemsSource="{Binding Path=Svm.OtpadOutboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}" />
+                </mah:Tile>
+                <mah:Tile Title="{Binding Path=Svm.OtpadInboundVM.DisplayName}" Style="{StaticResource SmallTileStyle}" cal:Message.Attach="ShowOtpadInbound">
+                    <ItemsControl ItemsSource="{Binding Path=Svm.OtpadInboundVM.FolderVMs}" ItemTemplate="{StaticResource FolderInfoDataTemplate}"/>
+                </mah:Tile>
             </ItemsControl>
         </ScrollViewer>
     </Grid>

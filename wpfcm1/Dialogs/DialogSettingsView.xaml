@@ -73,6 +73,8 @@
                 <ColumnDefinition />
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Text="UF:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
             <CheckBox Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding Path=UserTemp.InvoicesInbound, UpdateSourceTrigger=PropertyChanged}"/>
@@ -84,11 +86,15 @@
             <CheckBox Grid.Column="7" VerticalAlignment="Center" IsChecked="{Binding Path=UserTemp.OtherInbound, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBlock Grid.Column="8" Text="UPov:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
             <CheckBox Grid.Column="9" VerticalAlignment="Center" IsChecked="{Binding Path=UserTemp.PovratiInbound, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Column="10" Text="UOtp:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <CheckBox Grid.Column="11" VerticalAlignment="Center" IsChecked="{Binding Path=UserTemp.OtpadInbound, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
         <Grid Grid.Row="11" Grid.Column="1" Margin="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition />
                 <ColumnDefinition Width="Auto"/>
@@ -108,6 +114,8 @@
             <CheckBox Grid.Column="7" VerticalAlignment="Center" IsChecked="{Binding Path=UserTemp.OtherOutbound, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBlock Grid.Column="8" Text="IPov:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
             <CheckBox Grid.Column="9" VerticalAlignment="Center" IsChecked="{Binding Path=UserTemp.PovratiOutbound, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Column="10" Text="IOtp:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <CheckBox Grid.Column="11" VerticalAlignment="Center" IsChecked="{Binding Path=UserTemp.OtpadOutbound, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
         <Grid Grid.Row="12" Grid.Column="1" Margin="3">
             <Grid.ColumnDefinitions>

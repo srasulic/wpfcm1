@@ -23,6 +23,9 @@
                 </Rectangle>
             </Button>
         </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
+            <Button Content="Prikaži log" Width="96" Height="32" x:Name="ShowLog" Margin="3"/>
+        </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
             <Button Content="Close" Width="96" Height="32" x:Name="OnClose" Margin="3"/>
         </StackPanel>

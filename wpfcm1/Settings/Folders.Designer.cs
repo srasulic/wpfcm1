@@ -12,7 +12,7 @@ namespace wpfcm1.Settings {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.4.0.0")]
     internal sealed partial class Folders : global::System.Configuration.ApplicationSettingsBase {
         
         private static Folders defaultInstance = ((Folders)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Folders())));
@@ -140,6 +140,15 @@ namespace wpfcm1.Settings {
         public string IosSubfolder {
             get {
                 return ((string)(this["IosSubfolder"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Kret.otp.")]
+        public string OtpadSubfolder {
+            get {
+                return ((string)(this["OtpadSubfolder"]));
             }
         }
         

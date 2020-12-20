@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Reflection;
@@ -25,22 +26,22 @@ namespace wpfcm1.Dialogs
         {
             DisplayName = "About & Legal";
             //appVersion = AppBootstrapper.appVersion;
-            aboutText = "eDokument PoliSign ver " + AppBootstrapper.appVersion + " \r\n " + 
+            aboutText = "eDokument PoliSign ver " + AppBootstrapper.appVersion + " \r\n " +
                 " \r\n " +
-                "Opšti uslovi: \r\n " + 
+                "Opšti uslovi: \r\n " +
                 "-------------- \r\n " +
-                User.Default.ApiURL + "/download/Opsti_uslovi_eDokument.pdf \r\n " + 
+                User.Default.ApiURL + "/download/Opsti_uslovi_eDokument.pdf \r\n " +
                 "\r\n" +
                 "Licenciranje: \r\n ------------- \r\n" +
-                "eDokument PoliSign se licencira prema pravilima GNU Affero General Public \r\n" + 
-                "License (AGPL) (https://www.gnu.org/licenses/agpl.txt). eDokumentPolSign se \r\n" + 
-                "može slobodno i besplatno koristiti za potpisivanje dokumenata. \r\n" + 
-                "eDokument PoliSign se može koristiti kao klijent za razmenu dokumenata \r\n" + 
-                "putem eDokument Kliring Servera. Usluga transporta dokumenata i \r\n" + 
-                "održavanje eDokument Kliring servera su komercijalne usluge preduzeća \r\n" + 
-                "Aserta doo i njihovo korišćenje se zasebno ugovara (kontakt: office@aserta.rs). \r\n" + 
-                "\r\n" + 
-                "--\r\n" + 
+                "eDokument PoliSign se licencira prema pravilima GNU Affero General Public \r\n" +
+                "License (AGPL) (https://www.gnu.org/licenses/agpl.txt). eDokumentPolSign se \r\n" +
+                "može slobodno i besplatno koristiti za potpisivanje dokumenata. \r\n" +
+                "eDokument PoliSign se može koristiti kao klijent za razmenu dokumenata \r\n" +
+                "putem eDokument Kliring Servera. Usluga transporta dokumenata i \r\n" +
+                "održavanje eDokument Kliring servera su komercijalne usluge preduzeća \r\n" +
+                "Aserta doo i njihovo korišćenje se zasebno ugovara (kontakt: office@aserta.rs). \r\n" +
+                "\r\n" +
+                "--\r\n" +
                 "Podrška: e-dokument@aserta.rs \r\n" +
                 "Autori: \r\n" +
                 "          Sergej Petrovski \r\n" +
@@ -51,6 +52,13 @@ namespace wpfcm1.Dialogs
                 "        https://edokument.aserta.rs \r\n";
         }
 
+        public void ShowLog()
+        {
+            Process p = new Process();
+            p.StartInfo.UseShellExecute = true;
+            p.StartInfo.FileName = "fakture.log.txt";
+            p.Start();
+        }
         public string AboutText { get => aboutText; set => aboutText = value; }
 
 

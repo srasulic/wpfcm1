@@ -27,7 +27,7 @@ namespace wpfcm1.Dialogs
         private float _xSigShift, _ySigShift, _xSigShiftRight, _ySigShiftRight;
         private float _llxPib, _llyPib, _urxPib, _uryPib;
         private float _llxNo, _llyNo, _urxNo, _uryNo;
-        private bool _invoicesInbound, _invoicesOutbound, _iosInbound, _iosOutbound, _kpInbound, _kpOutbound, _povratiInbound, _povratiOutbound, _otherInbound, _otherOutbound;
+        private bool _invoicesInbound, _invoicesOutbound, _iosInbound, _iosOutbound, _otpadInbound, _otpadOutbound, _kpInbound, _kpOutbound, _povratiInbound, _povratiOutbound, _otherInbound, _otherOutbound;
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private string _appTitle;
         private bool _mandatoryLogin;
@@ -62,6 +62,8 @@ namespace wpfcm1.Dialogs
             InvoicesOutbound = user.InvoicesOutbound;
             IosInbound = user.IosInbound;
             IosOutbound = user.IosOutbound;
+            OtpadInbound = user.OtpadInbound;
+            OtpadOutbound = user.OtpadOutbound;
             KpInbound = user.KpInbound;
             KpOutbound = user.KpOutbound;
             PovratiInbound = user.PovratiInbound;
@@ -409,13 +411,15 @@ namespace wpfcm1.Dialogs
         public bool IosInbound
         {
             get { return _iosInbound; }
-            set {
+            set
+            {
                 if (_iosInbound == value) return;
                 LogChanges("_iosInbound", _iosInbound.ToString(), value.ToString());
                 _iosInbound = value;
                 NotifyOfPropertyChange(() => _iosInbound);
             }
         }
+
 
         public bool IosOutbound
         {
@@ -425,6 +429,30 @@ namespace wpfcm1.Dialogs
                 LogChanges("_iosOutbound", _iosOutbound.ToString(), value.ToString());
                 _iosOutbound = value;
                 NotifyOfPropertyChange(() => _iosOutbound);
+            }
+        }
+
+        public bool OtpadInbound
+        {
+            get { return _otpadInbound; }
+            set
+            {
+                if (_otpadInbound == value) return;
+                LogChanges("_otpadInbound", _otpadInbound.ToString(), value.ToString());
+                _otpadInbound = value;
+                NotifyOfPropertyChange(() => _otpadInbound);
+            }
+        }
+
+        public bool OtpadOutbound
+        {
+            get { return _otpadOutbound; }
+            set
+            {
+                if (_otpadOutbound == value) return;
+                LogChanges("_otpadOutbound", _otpadOutbound.ToString(), value.ToString());
+                _otpadOutbound = value;
+                NotifyOfPropertyChange(() => _otpadOutbound);
             }
         }
 
@@ -622,6 +650,8 @@ namespace wpfcm1.Dialogs
             User.Default.InvoicesOutbound = UserTemp.InvoicesOutbound;
             User.Default.IosInbound = UserTemp.IosInbound;
             User.Default.IosOutbound = UserTemp.IosOutbound;
+            User.Default.OtpadInbound = UserTemp.OtpadInbound;
+            User.Default.OtpadOutbound = UserTemp.OtpadOutbound;
             User.Default.KpInbound = UserTemp.KpInbound;
             User.Default.KpOutbound = UserTemp.KpOutbound;
             User.Default.PovratiInbound = UserTemp.PovratiInbound;

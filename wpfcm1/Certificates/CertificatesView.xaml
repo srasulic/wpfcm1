@@ -12,7 +12,7 @@
             <ColumnDefinition />
             <ColumnDefinition Width="21"/>
         </Grid.ColumnDefinitions>
-        <ComboBox x:Name="Certificates" DisplayMemberPath="CertificateDisplayName" IsSynchronizedWithCurrentItem="True" FontSize="13"
+        <ComboBox x:Name="Certificates" DisplayMemberPath="CertDisplayWithErrors" IsSynchronizedWithCurrentItem="True" FontSize="13"
                   cal:Message.Attach="[Event SelectionChanged] = [Action OnSelection($this)]; [EventLoaded] = [Action OnSelection($this)]"  
         />
         <Rectangle Grid.Column="1" Width="21" Height="21" Fill="Orange" Visibility="{Binding ElementName=Certificates, Path=SelectedItem.HasWarnings, Converter={StaticResource b2vc}}"

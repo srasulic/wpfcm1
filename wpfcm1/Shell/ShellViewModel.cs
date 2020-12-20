@@ -37,6 +37,8 @@ namespace wpfcm1.Shell
             InboundVM = new FolderGroupViewModel(FolderManager.InvoicesInboundFolders, "Ulazne Fakture", events, _windowManager);
             IosOutboundVM = new FolderGroupViewModel(FolderManager.IosOutboundFolders, "Izlazni IOS", events, _windowManager);
             IosInboundVM = new FolderGroupViewModel(FolderManager.IosInboundFolders, "Ulazni IOS", events, _windowManager);
+            OtpadOutboundVM = new FolderGroupViewModel(FolderManager.OtpadOutboundFolders, "Izl. Kret.otp", events, _windowManager);
+            OtpadInboundVM = new FolderGroupViewModel(FolderManager.OtpadInboundFolders, "Ul. Kret.otp.", events, _windowManager);
             KpOutboundVM = new FolderGroupViewModel(FolderManager.KpOutboundFolders, "Izlazna KP", events, _windowManager);
             KpInboundVM = new FolderGroupViewModel(FolderManager.KpInboundFolders, "Ulazna KP", events, _windowManager);
             PovratiOutboundVM = new FolderGroupViewModel(FolderManager.PovratiOutboundFolders, "Izlazni Povrati", events, _windowManager);
@@ -59,6 +61,8 @@ namespace wpfcm1.Shell
         public FolderGroupViewModel InboundVM { get; set; }
         public FolderGroupViewModel IosOutboundVM { get; set; }
         public FolderGroupViewModel IosInboundVM { get; set; }
+        public FolderGroupViewModel OtpadOutboundVM { get; set; }
+        public FolderGroupViewModel OtpadInboundVM { get; set; }
         public FolderGroupViewModel KpOutboundVM { get; set; }
         public FolderGroupViewModel KpInboundVM { get; set; }
         public FolderGroupViewModel PovratiOutboundVM { get; set; }
@@ -119,6 +123,15 @@ namespace wpfcm1.Shell
         public void ShowIosInbound()
         {
             ActivateItem(IosInboundVM);
+        }
+        public void ShowOtpadOutbound()
+        {
+            ActivateItem(OtpadOutboundVM);
+        }
+
+        public void ShowOtpadInbound()
+        {
+            ActivateItem(OtpadInboundVM);
         }
 
         public void ShowKpOutbound()
@@ -187,12 +200,21 @@ namespace wpfcm1.Shell
                 {FolderManager.InvoicesInboundInboxFolder, InboundVM.FolderVMs[0]},
                 {FolderManager.InvoicesInboundOutboxFolder, InboundVM.FolderVMs[1]},
                 {FolderManager.InvoicesInboundConfirmedFolder, InboundVM.FolderVMs[3]},
+
                 {FolderManager.IosOutboundOutboxFolder, IosOutboundVM.FolderVMs[1]},
                 {FolderManager.IosOutboundPendFolder, IosOutboundVM.FolderVMs[3]},
                 {FolderManager.IosOutboundConfirmedFolder, IosOutboundVM.FolderVMs[4]},
                 {FolderManager.IosInboundInboxFolder, IosInboundVM.FolderVMs[0]},
                 {FolderManager.IosInboundOutboxFolder, IosInboundVM.FolderVMs[1]},
                 {FolderManager.IosInboundConfirmedFolder, IosInboundVM.FolderVMs[3]},
+
+                {FolderManager.OtpadOutboundOutboxFolder, OtpadOutboundVM.FolderVMs[1]},
+                {FolderManager.OtpadOutboundPendFolder, OtpadOutboundVM.FolderVMs[3]},
+                {FolderManager.OtpadOutboundConfirmedFolder, OtpadOutboundVM.FolderVMs[4]},
+                {FolderManager.OtpadInboundInboxFolder, OtpadInboundVM.FolderVMs[0]},
+                {FolderManager.OtpadInboundOutboxFolder, OtpadInboundVM.FolderVMs[1]},
+                {FolderManager.OtpadInboundConfirmedFolder, OtpadInboundVM.FolderVMs[3]},
+
                 {FolderManager.KpOutboundOutboxFolder, KpOutboundVM.FolderVMs[1]},
                 {FolderManager.KpOutboundPendFolder, KpOutboundVM.FolderVMs[3]},
                 {FolderManager.KpOutboundConfirmedFolder, KpOutboundVM.FolderVMs[4]},
@@ -224,6 +246,8 @@ namespace wpfcm1.Shell
             OutboundVM.Dispose();
             IosInboundVM.Dispose();
             IosOutboundVM.Dispose();
+            OtpadInboundVM.Dispose();
+            OtpadOutboundVM.Dispose();
             KpInboundVM.Dispose();
             KpOutboundVM.Dispose();
             PovratiInboundVM.Dispose();

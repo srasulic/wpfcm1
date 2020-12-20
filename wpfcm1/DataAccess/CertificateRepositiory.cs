@@ -51,8 +51,10 @@ namespace wpfcm1.DataAccess
                     */
                     allQualifiedCerts.Add(new CertificateModel(cert));
                     
-                }catch (System.Security.Cryptography.CryptographicException ex) { allQualifiedCerts.Add(new CertificateModel(cert)); }
+                }catch (System.Security.Cryptography.CryptographicException ex) { 
+                    allQualifiedCerts.Add(new CertificateModel(cert)); 
                 }
+            }
 
             if (certFoundInSmartCard)
             {
