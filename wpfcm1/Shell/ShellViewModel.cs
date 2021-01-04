@@ -86,6 +86,7 @@ namespace wpfcm1.Shell
 
             if (first)
             {
+                System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
                 first = false;
                 bool showLogin = false;
                 try

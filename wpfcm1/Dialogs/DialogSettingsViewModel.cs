@@ -290,7 +290,7 @@ namespace wpfcm1.Dialogs
                     FtpServer = @"ftp://ftp.aserta.rs/";
                     AppTitle = @"https://edokument.rs";
                     ApiURL = @"https://edokument.rs";
-                    MandatoryLogin = false;
+                    MandatoryLogin = true;
                 }
                 if (_variation == "RS-LOGIN")
                 {
