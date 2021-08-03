@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using System.ComponentModel.Composition;
+using System.IO;
 using wpfcm1.Events;
 
 namespace wpfcm1.Preview
@@ -17,6 +18,8 @@ namespace wpfcm1.Preview
             _events = events;
             _events.Subscribe(this);
             CurrentDocument = Empty;
+            CurrentDocument1 = Empty;
+            iZatvaranje = 0;
         }
 
         private static bool _previewVisibility;
@@ -28,12 +31,47 @@ namespace wpfcm1.Preview
 
         public string CurrentDocument { get; private set; }
 
+        // ovaj property sluzi za cuvanje informacije o prethodno otvorenom dokumentu 
+        public string CurrentDocument1 { get; set; }
+        // ovaj property sluzi za flegovanje poziva Handle metode 
+        public int iZatvaranje { get; set; }
+
         public void Handle(MessageTogglePreview message)
         {
             PreviewVisibility = !PreviewVisibility;
+            // u slucaju prvog otvaranja novog dokumenta, inicijalno postavljamo fleg na 0 
+            if (CurrentDocument1 != CurrentDocument)
+            {
+                iZatvaranje = 0;
+            }
+            // cuvamo info o dokumentu, kojeg otvaramo 
+            CurrentDocument1 = CurrentDocument; 
             if (PreviewVisibility)
             {
+                // preview dokumenta je vidljiv za korisnika 
                 _events.PublishOnUIThread(new MessageShowPdf(CurrentDocument));
+            }
+            else
+            {
+                // preview dokumenta nije vidljiv za korisnika 
+                // ovde koristimo dva rekurzivna poziva iste ove metode, kako bismo simulirali otvaranje i odmah zatim, zatvaranje dummy dokumenta
+                // ovo nam je potrebno da bismo oslobodili prethodni dokument za dalju obradu 
+                if (iZatvaranje < 2)
+                {
+                    string dummypdf = @"C:\eDokument\dummy.pdf";
+                    if (!File.Exists(dummypdf))
+                    {
+                        File.Create(dummypdf).Dispose();
+                    }
+                    _events.PublishOnUIThread(new MessageShowPdf(dummypdf));
+                    iZatvaranje = 1;
+                    // prvi Handle otvara dummy.pdf
+                    Handle(message);
+                    iZatvaranje = 2;
+                    // drugi Handle zatvara dummy.pdf
+                    Handle(message);
+                    iZatvaranje = 0;
+                }
             }
         }
 
