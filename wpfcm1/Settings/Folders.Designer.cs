@@ -145,15 +145,6 @@ namespace wpfcm1.Settings {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Kret.otp.")]
-        public string OtpadSubfolder {
-            get {
-                return ((string)(this["OtpadSubfolder"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("KP")]
         public string KpSubfolder {
             get {
@@ -188,6 +179,15 @@ namespace wpfcm1.Settings {
             }
             set {
                 this["ArchiveFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Otpad")]
+        public string OtpadSubfolder {
+            get {
+                return ((string)(this["OtpadSubfolder"]));
             }
         }
     }

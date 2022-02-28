@@ -8,7 +8,7 @@ namespace wpfcm1.FolderGroups
         public HomeViewModel(ShellViewModel svm)
         {
             Svm = svm;
-        }
+    }
 
         public ShellViewModel Svm { get; private set; }
     }
