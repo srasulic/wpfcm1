@@ -114,7 +114,13 @@ namespace wpfcm1.Dialogs
 
         public void Dispose()
         {
-            (GetView() as Window).Close();
+            try
+            {
+                (GetView() as Window).Close();
+            } catch
+            {
+                // ok, ovde upadamo ako je izabrana opcija bez logina
+            }
         }
 
         public void OpenSettings()
@@ -125,6 +131,11 @@ namespace wpfcm1.Dialogs
 
         private void Login()
         {
+            // OpenSettings();
+            if (LoginTemp.UserName == "Settings!")
+            {
+                _windowManager.ShowDialog(new DialogSettingsViewModel());
+            }
             if (string.IsNullOrEmpty(LoginTemp.UserName) || string.IsNullOrEmpty(LoginTemp.Password))
             {
                 if (string.IsNullOrEmpty(LoginTemp.UserName)) LoginTemp.Message = "Nije uneto korisničko ime!";
@@ -136,10 +147,7 @@ namespace wpfcm1.Dialogs
                 _windowManager.ShowDialog(new DialogSettingsViewModel());
                 LoginTemp.PIB = User.Default.PIB;
             }
-            if (LoginTemp.UserName=="Settings!")
-            {
-                _windowManager.ShowDialog(new DialogSettingsViewModel());
-            }
+
 
             string reqUrl = User.Default.ApiURL + @"/login/remoteLogin";
             var request = WebRequest.Create(reqUrl);
@@ -161,11 +169,11 @@ namespace wpfcm1.Dialogs
                 {
                     stream.Write(data, 0, data.Length);
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 LoginTemp.Message = ex.Message;
             }
-
             using (WebResponse response = request.GetResponse())
             {
                 using (Stream stream = response.GetResponseStream())

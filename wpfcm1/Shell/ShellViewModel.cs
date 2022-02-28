@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using System;
+using Caliburn.Micro;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using wpfcm1.Certificates;
@@ -15,7 +16,7 @@ namespace wpfcm1.Shell
     public interface IShell { }
 
     [Export(typeof(IShell))]
-    public sealed class ShellViewModel : Conductor<object>, IShell, IHandle<MessageShowHome>, IHandle<MessageShowWeb>, IHandle<MessageSync>
+    public sealed class ShellViewModel : Conductor<object>, IShell, IHandle<MessageShowHome>, IHandle<MessageShowWeb>, IHandle<MessageSync>, IHandle<MessagePickCert>
     {
         private readonly IEventAggregator _events;
         private readonly IWindowManager _windowManager;
@@ -79,7 +80,7 @@ namespace wpfcm1.Shell
         public void ShowHome()
         {   //*****************************************************************
             // dok ne nađemo način da sprečimo iskakanje Please insert card, ovo će biti privremenio isključeno.
-            //CertVM.RefreshCertificateList();
+            // CertVM.RefreshCertificateList();
             //*****************************************************************
             ActivateItem(HomeVM);
             _events.PublishOnUIThread(new MessageViewModelActivated(ActiveItem.GetType().Name));
@@ -239,6 +240,12 @@ namespace wpfcm1.Shell
             //TODO: ovo mora drugacije
             _events.PublishOnUIThread(new MessageShowPdf(PreviewViewModel.Empty));
             var result = _windowManager.ShowDialog(new DialogSyncViewModel(foldersToSync));
+        }
+
+        public void Handle(MessagePickCert message)
+        {
+            bool pickCertificate = true;
+            CertVM.RefreshCertificateList(pickCertificate); 
         }
 
         protected override void OnDeactivate(bool close)

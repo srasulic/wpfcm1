@@ -22,21 +22,21 @@ namespace wpfcm1.Certificates
         public ObservableCollection<CertificateModel> Certificates { get; private set; }
 
         // 
-        private bool first = true;
+        //private bool first = true;
 
-        public void RefreshCertificateList()
+        public void RefreshCertificateList(bool pickCertificate)
         {
-            if (!first)
+         //   if (!first)
+         //   {
+            Certificates.Clear();
+            var certificateRepositiory = new CertificateRepositiory(pickCertificate);
+            int i = 0;
+            foreach(CertificateModel cert in certificateRepositiory.CertificateItems)
             {
-                Certificates.Clear();
-                var certificateRepositiory = new CertificateRepositiory();
-                int i = 0;
-                foreach(CertificateModel cert in certificateRepositiory.CertificateItems)
-                {
-                    Certificates.Add(certificateRepositiory.CertificateItems[i++]);
-                }            
+                Certificates.Add(certificateRepositiory.CertificateItems[i++]);
             }
-            else first = false;
+          //  }
+          //  else first = false;
         }
 
         public void OnSelection(CertificateModel certificate)

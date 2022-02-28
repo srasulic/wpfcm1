@@ -13,14 +13,15 @@ namespace wpfcm1.DataAccess
 {
     public class CertificateRepositiory
     {
-        public CertificateRepositiory()
+        public CertificateRepositiory() : this(false) { }
+        public CertificateRepositiory(bool pickCertificate)
         {
-            CertificateItems = LoadCertificateItems();
+            CertificateItems = LoadCertificateItems(pickCertificate);
         }
 
         public List<CertificateModel> CertificateItems { get; private set; }
 
-        private static List<CertificateModel> LoadCertificateItems()
+        private static List<CertificateModel> LoadCertificateItems(bool pickCertificate)
         {
             /*
             var store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
@@ -35,23 +36,26 @@ namespace wpfcm1.DataAccess
             List<CertificateModel> list = new List<CertificateModel>();
             List<CertificateModel> allQualifiedCerts = new List<CertificateModel>();
             foreach (X509Certificate2 cert in myStore.Certificates)
-                {
+            {
                 try {
                     if (!cert.HasPrivateKey) continue;
                     if (!CertHasNonRepudiation(cert)) continue;
-                    // privremeno komentar dok ne nadjemo bolji nacin (podiže se Insert smart card za neke sertifikate iz liste, što nije exception)
-                    /*
-                    var rsa = cert.PrivateKey as RSACryptoServiceProvider;
-                    if (rsa == null) continue;
-                    if (rsa.CspKeyContainerInfo.HardwareDevice)
+                    // privremeno uslovno, dok ne nadjemo bolji nacin (podiže se Insert smart card za neke sertifikate iz liste, što nije exception)
+                    // / *
+                    if (pickCertificate)
                     {
-                        list.Add(new CertificateModel(cert));
-                        certFoundInSmartCard= true;                    
+                        var rsa = cert.PrivateKey as RSACryptoServiceProvider;
+                        if (rsa == null) continue;
+                        if (rsa.CspKeyContainerInfo.HardwareDevice)
+                        {
+                            list.Add(new CertificateModel(cert));
+                            certFoundInSmartCard = true;
+                        }
                     }
-                    */
+                    // * /
                     allQualifiedCerts.Add(new CertificateModel(cert));
                     
-                }catch (System.Security.Cryptography.CryptographicException ex) { 
+                } catch (System.Security.Cryptography.CryptographicException ex) { 
                     allQualifiedCerts.Add(new CertificateModel(cert)); 
                 }
             }

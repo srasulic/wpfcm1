@@ -39,7 +39,8 @@ namespace wpfcm1.Model
             }
         }
 
-        [XmlIgnore] public FileInfo DocumentInfo { get; set; }
+        [XmlIgnore]
+        public FileInfo DocumentInfo { get; set; }
 
         public string DocumentPath { get; set; }
 
@@ -179,7 +180,8 @@ namespace wpfcm1.Model
                     else if (Regex.IsMatch(DocumentPath, @".+.synchstamp$", RegexOptions.IgnoreCase)) tipDok = "Interna poruka - kraj sinhronizacije";
                     else tipDok = "Dokument"; //neka vrsta default vrednosti
                 }
-                return _tipDok; }
+                return _tipDok;
+            }
             set { _tipDok = value; NotifyOfPropertyChange(() => tipDok); }
         }
 

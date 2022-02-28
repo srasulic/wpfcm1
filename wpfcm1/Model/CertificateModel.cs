@@ -12,7 +12,6 @@ namespace wpfcm1.Model
     public class CertificateModel
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         public X509Certificate2 Certificate { get; private set; }
         public string CertificateSimpleName { get; private set; }
         public string CertificateDisplayName { get; private set; }
@@ -75,14 +74,14 @@ namespace wpfcm1.Model
             //
             /////////
             IsQualified = Errors.Count == 0 && (hasOcsp || hasCrl);
-
             // linija za prikaz u listi
             CertDisplayWithErrors = CertificateDisplayName;
             if (IsQualified)
             {
-                CertDisplayWithErrors = "* " + CertDisplayWithErrors ;
+                CertDisplayWithErrors = "* " + CertDisplayWithErrors;
             }
-            else { 
+            else
+            {
                 foreach (var error in Errors)
                 {
                     Log.Info("CERT ERR: " + certificate.Subject);
@@ -91,5 +90,7 @@ namespace wpfcm1.Model
                 }
             }
         }
+
+
     }
 }

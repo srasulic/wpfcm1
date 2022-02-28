@@ -59,6 +59,7 @@ namespace wpfcm1.Dialogs
             p.StartInfo.FileName = "fakture.log.txt";
             p.Start();
         }
+
         public string AboutText { get => aboutText; set => aboutText = value; }
 
 

@@ -31,6 +31,7 @@ namespace wpfcm1.Toolbar
             Buttons.Add(new ToolBarButtonViewModel(events, "appbar_office_excel", "Izvezi listu dokumenata u Excel", new MessageXls()));
             Buttons.Add(new ToolBarButtonViewModel(events, "appbar_information", "Prikaži online informacije", new MessageShowWeb()));
             Buttons.Add(new ToolBarButtonViewModel(events, "appbar_folder", "Arhiviraj", new MessageArchiveSelected()));
+            Buttons.Add(new ToolBarButtonViewModel(events, "appbar_page_check", "Izaberi sertifikat", new MessagePickCert()));
             //Buttons.Add(new ToolBarButtonViewModel(events, "appbar_page_check", "Zavrsena obrada (označi za arhiviranje sve čekirane dokumente iz liste)", new MessageArchive()));
             //Buttons.Add(new ToolBarButtonViewModel(events, "playlist_remove24", "Označi dokumente kao neodobrene za dalju obradu", new MessageNotApprove()));
             //Buttons.Add(new ToolBarButtonViewModel(events, "playlist_check24", "Odobri dokumente za dalju obradu", new MessageApprove()));

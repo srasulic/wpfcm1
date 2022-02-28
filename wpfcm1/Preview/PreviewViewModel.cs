@@ -58,7 +58,9 @@ namespace wpfcm1.Preview
                 // ovo nam je potrebno da bismo oslobodili prethodni dokument za dalju obradu 
                 if (iZatvaranje < 2)
                 {
-                    string dummypdf = @"C:\eDokument\dummy.pdf";
+                    // string dummypdf = @"C:\eDokument\dummy.pdf";
+                    string dummypdf = Settings.Folders.Default.RootFolder+@"\dummy.pdf";
+                    
                     if (!File.Exists(dummypdf))
                     {
                         File.Create(dummypdf).Dispose();

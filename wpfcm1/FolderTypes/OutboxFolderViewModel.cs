@@ -38,7 +38,7 @@ namespace wpfcm1.FolderTypes
             Documents = new BindableCollection<DocumentModel>(
                 Directory.EnumerateFiles(FolderPath)
                 .Where(f => Extensions.Contains(Path.GetExtension(f).ToLower()))
-                .Where(f => !( Regex.IsMatch(Path.GetFileName(f) , @"stat.+\.xml",RegexOptions.IgnoreCase) ) )
+                .Where(f => !(Regex.IsMatch(Path.GetFileName(f), @"stat.+\.xml", RegexOptions.IgnoreCase)))
                 .Select(f => new OutboxDocumentModel(new FileInfo(f))));
 
             InitWatcher(FolderPath);
@@ -85,7 +85,7 @@ namespace wpfcm1.FolderTypes
 //                var found = Documents.Where(d => d.DocumentPath == docName).FirstOrDefault();
 //                if (!(found == null)) found.tipDok = "Poruka za server (promena statusa dokumenta)";
             }
-            else 
+            else
             {
                 Documents.Add(new OutboxDocumentModel(new FileInfo(filePath)));
             } 

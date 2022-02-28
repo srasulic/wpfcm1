@@ -1,16 +1,23 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using wpfcm1.Settings;
+using static wpfcm1.Common.PoliSignTypes;
 
 namespace wpfcm1.DataAccess
 {
     public class APIManager
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static HttpClient httpClient = new HttpClient();
+
         public static string GetCustomerNameByPIB(string pib)
         {
             try
@@ -45,11 +52,13 @@ namespace wpfcm1.DataAccess
 
                 return "";
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Info("ERR: GetCustomerNameByPIB" + ex);
                 return "";
             }
         }
+
         public static async Task<string> GetCustomerNameByPIBAsync(string pib)
         {
             try
@@ -94,6 +103,126 @@ namespace wpfcm1.DataAccess
                 return User.Default.ArchivePolicy;
             return "BASIC";
 
+        }
+        /**
+         * PortalAPIRequest implementira prozivanje apija na Portalu sa autentifikacijom putem tokena.
+         * 
+         */
+
+        public static async Task<string> TestRequestAsync()
+        {
+            var data = await PortalAPIRequestAsync("testRequest", null);
+
+            System.Windows.MessageBox.Show(data);
+
+            return data;
+        }
+
+        public static async Task<List<Linija>> GetSveLinijePublicAsync(string pib)
+        {
+            var pairs = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("pib", pib) };
+            var content = new FormUrlEncodedContent(pairs);
+            var response = await PortalPublicAPIRequestAsync("getSveLinije", content);
+            List<Linija> resultSet = JsonConvert.DeserializeObject<List<Linija>>(response);
+            return resultSet;
+        }
+
+        public static async Task<List<FileToDownload>> GetFilesToDownloadAsync()
+        {
+            var pairs = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("sf_voz", Common.UserDetails.RegBrVozila) };
+            var content = new FormUrlEncodedContent(pairs);
+            var response = await PortalAPIRequestAsync("getFilesToDownload", content);
+            List<FileToDownload> resultSet = JsonConvert.DeserializeObject<List<FileToDownload>>(response);
+            return resultSet;
+        }
+        public static async Task<string> GetDeliveryPointAsync(string f_naziv)
+        {
+            var pairs = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("f_naziv", f_naziv) };
+            var content = new FormUrlEncodedContent(pairs);
+            var response = await PortalAPIRequestAsync("getDeliveryPoint", content);
+            //string resultSet = JsonConvert.DeserializeObject<string>(response);
+            if (Regex.IsMatch(response, "ERROR:", RegexOptions.IgnoreCase))  return ""; 
+            else return response;
+        }
+
+        public static async Task<string> SetRazvozStavkaStatus(string f_naziv)
+        {
+            var pairs = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>("sf_voz", Common.UserDetails.RegBrVozila), new KeyValuePair<string, string>("f_naziv", f_naziv) };
+            var content = new FormUrlEncodedContent(pairs);
+            var response = await PortalAPIRequestAsync("setRazvozStavkaStatus", content);
+            return response;
+        }
+        private static async Task<string> PortalAPIRequestAsync(string remoteMethod, FormUrlEncodedContent postPayload)
+        {
+           try
+            {
+                string urlAddress = string.Format("{0}/API/{1}", User.Default.ApiURL, remoteMethod);
+
+                var httpRequestMessage = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Post,
+                    RequestUri = new Uri(urlAddress),
+                    Headers = {
+                        { HttpRequestHeader.Authorization.ToString(), "Bearer " + Common.UserDetails.CurrentToken },
+                        { HttpRequestHeader.Accept.ToString(), "application/json" },
+                        { "X-Version", "1" }
+                    },
+                    Content = postPayload
+                };
+
+                var result = await httpClient.SendAsync(httpRequestMessage);
+
+                string data = "";
+                if (result.IsSuccessStatusCode)
+                {
+                    data = await result.Content.ReadAsStringAsync();
+                }
+
+                return data;
+            }
+            catch (Exception ex)
+            {
+                Log.Info("ERR: PortalAPIRequest" + ex);
+                return ex.Message;
+
+            }
+        }
+
+
+        private static async Task<string> PortalPublicAPIRequestAsync(string remoteMethod, FormUrlEncodedContent postPayload)
+        {
+            try
+            {
+                string urlAddress = string.Format("{0}/index/{1}", User.Default.ApiURL, remoteMethod);
+
+                var httpRequestMessage = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Post,
+                    RequestUri = new Uri(urlAddress),
+                    Headers = {
+                    //    { HttpRequestHeader.Authorization.ToString(), "Bearer " + Common.UserDetails.CurrentToken },
+                        { HttpRequestHeader.Accept.ToString(), "application/json" },
+                        { "X-Version", "1" }
+                    },
+                    Content = postPayload
+                };
+
+                var result = await httpClient.SendAsync(httpRequestMessage);
+
+                string data = "";
+                if (result.IsSuccessStatusCode)
+                {
+                    data = await result.Content.ReadAsStringAsync();
+                }
+
+                return data;
+            }
+            catch (Exception ex)
+            {
+                Log.Info("ERR: PortalPublicAPIRequest" + ex);
+                return ex.Message;
+
+            }
         }
 
 

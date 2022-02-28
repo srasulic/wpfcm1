@@ -17,8 +17,9 @@ namespace wpfcm1.Toolbar
         private readonly Dictionary<string, BitArray> WorkspaceToButtonVisibility = new Dictionary<string, BitArray>()
         {
             // ( Reject - Sign - Ack - Validate - ExtractData - TogglePreview - Sync - ShowHome ) 
-            // ( - - - - ArchiveNBGP - Web Inf - Xls - Arch )
-            {"HomeViewModel",                   new BitArray(new byte[]{Convert.ToByte("00000011", 2), 0x4})}, 
+            // ( - - - PickCert - ArchiveNBGP - Web Inf - Xls - Arch )
+            {"HomeViewModel",                 new BitArray(new byte[]{Convert.ToByte("00000011", 2), Convert.ToByte("00010000", 2)})},
+//            {"HomeViewModel",                   new BitArray(new byte[]{Convert.ToByte("00000011", 2), 0x4})}, 
             {"GeneratedFolderViewModel",        new BitArray(new byte[]{Convert.ToByte("11001111", 2), 0x2})},
             {"InboxFolderViewModel",            new BitArray(new byte[]{Convert.ToByte("01010111", 2), 0x2})},
             {"PendFolderViewModel",             new BitArray(new byte[]{Convert.ToByte("00000111", 2), 0x2})},
