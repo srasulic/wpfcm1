@@ -190,5 +190,14 @@ namespace wpfcm1.Settings {
                 return ((string)(this["OtpadSubfolder"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Otpremnica")]
+        public string OtpremnicaSubfolder {
+            get {
+                return ((string)(this["OtpremnicaSubfolder"]));
+            }
+        }
     }
 }

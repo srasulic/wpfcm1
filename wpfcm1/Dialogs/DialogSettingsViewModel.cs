@@ -27,7 +27,7 @@ namespace wpfcm1.Dialogs
         private float _xSigShift, _ySigShift, _xSigShiftRight, _ySigShiftRight;
         private float _llxPib, _llyPib, _urxPib, _uryPib;
         private float _llxNo, _llyNo, _urxNo, _uryNo;
-        private bool _invoicesInbound, _invoicesOutbound, _iosInbound, _iosOutbound, _otpadInbound, _otpadOutbound, _kpInbound, _kpOutbound, _povratiInbound, _povratiOutbound, _otherInbound, _otherOutbound;
+        private bool _invoicesInbound, _invoicesOutbound, _iosInbound, _iosOutbound, _otpadInbound, _otpadOutbound, _otpremnicaInbound, _otpremnicaOutbound, _kpInbound, _kpOutbound, _povratiInbound, _povratiOutbound, _otherInbound, _otherOutbound;
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private string _appTitle;
         private bool _mandatoryLogin;
@@ -64,6 +64,8 @@ namespace wpfcm1.Dialogs
             IosOutbound = user.IosOutbound;
             OtpadInbound = user.OtpadInbound;
             OtpadOutbound = user.OtpadOutbound;
+            OtpremnicaInbound = user.OtpremnicaInbound;
+            OtpremnicaOutbound = user.OtpremnicaOutbound;
             KpInbound = user.KpInbound;
             KpOutbound = user.KpOutbound;
             PovratiInbound = user.PovratiInbound;
@@ -444,6 +446,18 @@ namespace wpfcm1.Dialogs
             }
         }
 
+        public bool OtpremnicaInbound
+        {
+            get { return _otpremnicaInbound; }
+            set
+            {
+                if (_otpremnicaInbound == value) return;
+                LogChanges("_otpadInbound", _otpremnicaInbound.ToString(), value.ToString());
+                _otpremnicaInbound = value;
+                NotifyOfPropertyChange(() => _otpremnicaInbound);
+            }
+        }
+
         public bool OtpadOutbound
         {
             get { return _otpadOutbound; }
@@ -453,6 +467,19 @@ namespace wpfcm1.Dialogs
                 LogChanges("_otpadOutbound", _otpadOutbound.ToString(), value.ToString());
                 _otpadOutbound = value;
                 NotifyOfPropertyChange(() => _otpadOutbound);
+            }
+        }
+
+
+        public bool OtpremnicaOutbound
+        {
+            get { return _otpremnicaOutbound; }
+            set
+            {
+                if (_otpremnicaOutbound == value) return;
+                LogChanges("_otpadOutbound", _otpremnicaOutbound.ToString(), value.ToString());
+                _otpremnicaOutbound = value;
+                NotifyOfPropertyChange(() => _otpremnicaOutbound);
             }
         }
 
@@ -652,6 +679,8 @@ namespace wpfcm1.Dialogs
             User.Default.IosOutbound = UserTemp.IosOutbound;
             User.Default.OtpadInbound = UserTemp.OtpadInbound;
             User.Default.OtpadOutbound = UserTemp.OtpadOutbound;
+            User.Default.OtpremnicaInbound = UserTemp.OtpremnicaInbound;
+            User.Default.OtpremnicaOutbound = UserTemp.OtpremnicaOutbound;
             User.Default.KpInbound = UserTemp.KpInbound;
             User.Default.KpOutbound = UserTemp.KpOutbound;
             User.Default.PovratiInbound = UserTemp.PovratiInbound;

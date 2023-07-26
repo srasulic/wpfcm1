@@ -64,7 +64,13 @@
     </Setting>
     <Setting Name="OtpadOutbound" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
-    </Setting>    
+    </Setting>
+    <Setting Name="OtpremnicaInbound" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="OtpremnicaOutbound" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
     <Setting Name="KpInbound" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>

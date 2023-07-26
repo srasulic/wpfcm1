@@ -21,6 +21,10 @@ namespace wpfcm1.PDF
             {FolderManager.OtpadInboundInboxFolder, SignatureLocation.UpperRight},
             {FolderManager.OtpadInboundConfirmedToDoFolder, SignatureLocation.UpperRight},
 
+            {FolderManager.OtpremnicaOutboundErpIfaceFolder, SignatureLocation.UpperLeft},
+            {FolderManager.OtpremnicaInboundInboxFolder, SignatureLocation.UpperRight},
+            {FolderManager.OtpremnicaInboundConfirmedToDoFolder, SignatureLocation.UpperRight},
+
             {FolderManager.KpOutboundErpIfaceFolder, SignatureLocation.UpperLeft},
             {FolderManager.KpInboundInboxFolder, SignatureLocation.UpperRight},
             {FolderManager.KpInboundConfirmedToDoFolder, SignatureLocation.UpperRight},
@@ -60,6 +64,11 @@ namespace wpfcm1.PDF
             {FolderManager.OtpadInboundInboxFolder,      FolderManager.OtpadInboundOutboxFolder},
             {FolderManager.OtpadInboundConfirmedFolder,  FolderManager.OtpadInboundOutboxFolder},
 
+            {FolderManager.OtpremnicaOutboundErpIfaceFolder,  FolderManager.OtpremnicaOutboundOutboxFolder},
+            {FolderManager.OtpremnicaOutboundConfirmedFolder, FolderManager.OtpremnicaOutboundOutboxFolder},
+            {FolderManager.OtpremnicaInboundInboxFolder,      FolderManager.OtpremnicaInboundOutboxFolder},
+            {FolderManager.OtpremnicaInboundConfirmedFolder,  FolderManager.OtpremnicaInboundOutboxFolder},
+
             {FolderManager.KpOutboundErpIfaceFolder,            FolderManager.KpOutboundOutboxFolder},
             //{FolderManager.KpOutboundConfirmedOutToDoFolder,    FolderManager.KpOutboundOutboxFolder},
             {FolderManager.KpOutboundConfirmedFolder,           FolderManager.KpOutboundOutboxFolder},
@@ -83,6 +92,7 @@ namespace wpfcm1.PDF
             {FolderManager.InvoicesOutboundErpIfaceFolder, FolderManager.InvoicesOutboundErpProcFolder},
             {FolderManager.IosOutboundErpIfaceFolder, FolderManager.IosOutboundErpProcFolder},
             {FolderManager.OtpadOutboundErpIfaceFolder, FolderManager.OtpadOutboundErpProcFolder},
+            {FolderManager.OtpremnicaOutboundErpIfaceFolder, FolderManager.OtpremnicaOutboundErpProcFolder},
             {FolderManager.KpOutboundErpIfaceFolder, FolderManager.KpOutboundErpProcFolder},
             {FolderManager.PovratiOutboundErpIfaceFolder, FolderManager.PovratiOutboundErpProcFolder},
             {FolderManager.OtherOutboundErpIfaceFolder, FolderManager.OtherOutboundErpProcFolder},
@@ -90,6 +100,7 @@ namespace wpfcm1.PDF
             {FolderManager.InvoicesOutboundOutboxFolder, FolderManager.InvoicesOutboundErpProcFolder},
             {FolderManager.IosOutboundOutboxFolder, FolderManager.IosOutboundErpProcFolder},
             {FolderManager.OtpadOutboundOutboxFolder, FolderManager.OtpadOutboundErpProcFolder},
+            {FolderManager.OtpremnicaOutboundOutboxFolder, FolderManager.OtpremnicaOutboundErpProcFolder},
             {FolderManager.KpOutboundOutboxFolder, FolderManager.KpOutboundErpProcFolder},
             {FolderManager.PovratiOutboundOutboxFolder, FolderManager.PovratiOutboundErpProcFolder},
             {FolderManager.OtherOutboundOutboxFolder, FolderManager.OtherOutboundErpProcFolder}
@@ -114,6 +125,10 @@ namespace wpfcm1.PDF
             {FolderManager.OtpadOutboundErpIfaceFolder, FinalAction.Store},
             {FolderManager.OtpadInboundInboxFolder, FinalAction.SecondSignatureMark},
             {FolderManager.OtpadInboundConfirmedToDoFolder, FinalAction.SecondSignatureMark},
+
+            {FolderManager.OtpremnicaOutboundErpIfaceFolder, FinalAction.Store},
+            {FolderManager.OtpremnicaInboundInboxFolder, FinalAction.SecondSignatureMark},
+            {FolderManager.OtpremnicaInboundConfirmedToDoFolder, FinalAction.SecondSignatureMark},
 
             {FolderManager.KpOutboundErpIfaceFolder, FinalAction.Store},
             {FolderManager.KpInboundInboxFolder, FinalAction.SecondSignatureMark},
@@ -153,6 +168,13 @@ namespace wpfcm1.PDF
             {FolderManager.OtpadInboundOutboxFolder, "edokument/otpad/inbound/outbox/"},
             {FolderManager.OtpadInboundConfirmedFolder, "edokument/otpad/inbound/confirmed/"},
 
+            {FolderManager.OtpremnicaOutboundOutboxFolder,    "edokument/otpremnica/outbound/outbox/"},
+            {FolderManager.OtpremnicaOutboundPendFolder,      "edokument/otpremnica/outbound/pend/"},
+            {FolderManager.OtpremnicaOutboundConfirmedFolder, "edokument/otpremnica/outbound/confirmed/"},
+            {FolderManager.OtpremnicaInboundInboxFolder,      "edokument/otpremnica/inbound/inbox/"},
+            {FolderManager.OtpremnicaInboundOutboxFolder,     "edokument/otpremnica/inbound/outbox/"},
+            {FolderManager.OtpremnicaInboundConfirmedFolder,  "edokument/otpremnica/inbound/confirmed/"},
+            
             {FolderManager.KpOutboundOutboxFolder, "edokument/kp/outbound/outbox/"},
             {FolderManager.KpOutboundPendFolder, "edokument/kp/outbound/pend/"},
             {FolderManager.KpOutboundConfirmedFolder, "edokument/kp/outbound/confirmed/"},
@@ -196,6 +218,13 @@ namespace wpfcm1.PDF
             {FolderManager.OtpadInboundOutboxFolder, (User.Default.OtpadInbound ? TransferAction.Upload : TransferAction.Exclude)},
             {FolderManager.OtpadInboundConfirmedFolder, (User.Default.OtpadInbound? TransferAction.Download : TransferAction.Exclude)},
 
+            {FolderManager.OtpremnicaOutboundOutboxFolder,    (User.Default.OtpremnicaOutbound ? TransferAction.Upload : TransferAction.Exclude)},
+            {FolderManager.OtpremnicaOutboundPendFolder,      (User.Default.OtpremnicaOutbound ? TransferAction.Sync : TransferAction.Exclude)},
+            {FolderManager.OtpremnicaOutboundConfirmedFolder, (User.Default.OtpremnicaOutbound ? TransferAction.Download : TransferAction.Exclude)},
+            {FolderManager.OtpremnicaInboundInboxFolder,      (User.Default.OtpremnicaInbound  ? TransferAction.Sync : TransferAction.Exclude)},
+            {FolderManager.OtpremnicaInboundOutboxFolder,     (User.Default.OtpremnicaInbound  ? TransferAction.Upload : TransferAction.Exclude)},
+            {FolderManager.OtpremnicaInboundConfirmedFolder,  (User.Default.OtpremnicaInbound  ? TransferAction.Download : TransferAction.Exclude)},
+
             {FolderManager.KpOutboundOutboxFolder, (User.Default.KpOutbound ? TransferAction.Upload : TransferAction.Exclude)},
             {FolderManager.KpOutboundPendFolder, (User.Default.KpOutbound ? TransferAction.Sync : TransferAction.Exclude)},
             {FolderManager.KpOutboundConfirmedFolder, (User.Default.KpOutbound ? TransferAction.Download : TransferAction.Exclude)},
@@ -224,6 +253,8 @@ namespace wpfcm1.PDF
             {FolderManager.IosInboundOutboxFolder, FolderManager.IosInboundSentFolder},
             {FolderManager.OtpadOutboundOutboxFolder, FolderManager.OtpadOutboundSentFolder},
             {FolderManager.OtpadInboundOutboxFolder, FolderManager.OtpadInboundSentFolder},
+            {FolderManager.OtpremnicaOutboundOutboxFolder, FolderManager.OtpremnicaOutboundSentFolder},
+            {FolderManager.OtpremnicaInboundOutboxFolder,  FolderManager.OtpremnicaInboundSentFolder},
             {FolderManager.KpOutboundOutboxFolder, FolderManager.KpOutboundSentFolder},
             {FolderManager.KpInboundOutboxFolder, FolderManager.KpInboundSentFolder},
             {FolderManager.PovratiOutboundOutboxFolder, FolderManager.PovratiOutboundSentFolder},

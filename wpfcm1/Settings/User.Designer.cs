@@ -277,6 +277,30 @@ namespace wpfcm1.Settings {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool OtpremnicaInbound {
+            get {
+                return ((bool)(this["OtpremnicaInbound"]));
+            }
+            set {
+                this["OtpremnicaInbound"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool OtpremnicaOutbound {
+            get {
+                return ((bool)(this["OtpremnicaOutbound"]));
+            }
+            set {
+                this["OtpremnicaOutbound"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool KpInbound {
             get {

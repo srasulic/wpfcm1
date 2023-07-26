@@ -50,6 +50,19 @@ namespace wpfcm1.DataAccess
         public static readonly string OtpadInboundConfirmedFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpadSubfolder, Folders.Default.InboundConfirmedFolder);
         public static readonly string OtpadOutboundConfirmedOutToDoFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpadSubfolder, Folders.Default.OutboundConfirmedFolder);
         public static readonly string OtpadInboundConfirmedToDoFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpadSubfolder, Folders.Default.InboundConfirmedFolder);
+        //folderi za Otpremnica
+        public static readonly string OtpremnicaOutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpremnicaSubfolder, Folders.Default.OutboundErpIfaceFolder);
+        public static readonly string OtpremnicaOutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpremnicaSubfolder, Folders.Default.OutboundErpProcFolder);
+        public static readonly string OtpremnicaOutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpremnicaSubfolder, Folders.Default.OutboundOutboxFolder);
+        public static readonly string OtpremnicaOutboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpremnicaSubfolder, Folders.Default.OutboundSentFolder);
+        public static readonly string OtpremnicaOutboundPendFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpremnicaSubfolder, Folders.Default.OutboundPendFolder);
+        public static readonly string OtpremnicaOutboundConfirmedFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpremnicaSubfolder, Folders.Default.OutboundConfirmedFolder);
+        public static readonly string OtpremnicaInboundInboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpremnicaSubfolder, Folders.Default.InboundInboxFolder);
+        public static readonly string OtpremnicaInboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpremnicaSubfolder, Folders.Default.InboundOutboxFolder);
+        public static readonly string OtpremnicaInboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpremnicaSubfolder, Folders.Default.InboundSentFolder);
+        public static readonly string OtpremnicaInboundConfirmedFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpremnicaSubfolder, Folders.Default.InboundConfirmedFolder);
+        public static readonly string OtpremnicaOutboundConfirmedOutToDoFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpremnicaSubfolder, Folders.Default.OutboundConfirmedFolder);
+        public static readonly string OtpremnicaInboundConfirmedToDoFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpremnicaSubfolder, Folders.Default.InboundConfirmedFolder);
         //folderi za KP
         public static readonly string KpOutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.OutboundErpIfaceFolder);
         public static readonly string KpOutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.OutboundErpProcFolder);
@@ -95,6 +108,8 @@ namespace wpfcm1.DataAccess
         public static Dictionary<string, string> IosInboundFolders { get; set; }
         public static Dictionary<string, string> OtpadOutboundFolders { get; set; }
         public static Dictionary<string, string> OtpadInboundFolders { get; set; }
+        public static Dictionary<string, string> OtpremnicaOutboundFolders { get; set; }
+        public static Dictionary<string, string> OtpremnicaInboundFolders { get; set; }
         public static Dictionary<string, string> KpOutboundFolders { get; set; }
         public static Dictionary<string, string> KpInboundFolders { get; set; }
         public static Dictionary<string, string> PovratiOutboundFolders { get; set; }
@@ -148,6 +163,20 @@ namespace wpfcm1.DataAccess
             {"OtpadInboundSentFolder",                "Poslato"},
             {"OtpadInboundConfirmedFolder",           "Arhiva"},
             {"OtpadInboundConfirmedToDoFolder",       "Primljeni - nepotpisani"},
+
+            {"OtpremnicaOutboundErpIfaceFolder",           "Priprema"},
+            {"OtpremnicaOutboundErpProcFolder",            "Processed"},
+            {"OtpremnicaOutboundOutboxFolder",             "Za slanje"},
+            {"OtpremnicaOutboundSentFolder",               "Poslato"},
+            {"OtpremnicaOutboundPendFolder",               "Na čekanju"},
+            {"OtpremnicaOutboundConfirmedFolder",          "Arh - uručeni"},
+            {"OtpremnicaOutboundConfirmedOutToDoFolder",   "ToDo"},
+
+            {"OtpremnicaInboundInboxFolder",               "Prijem - obrada"},
+            {"OtpremnicaInboundOutboxFolder",              "Za slanje"},
+            {"OtpremnicaInboundSentFolder",                "Poslato"},
+            {"OtpremnicaInboundConfirmedFolder",           "Arhiva"},
+            {"OtpremnicaInboundConfirmedToDoFolder",       "Primljeni - nepotpisani"},
 
             {"KpOutboundErpIfaceFolder",            "Priprema"},
             {"KpOutboundErpProcFolder",             "Processed"},
@@ -228,6 +257,18 @@ namespace wpfcm1.DataAccess
             {"OtpadInboundSentFolder", typeof(DocumentModel)},
             {"OtpadInboundConfirmedFolder", typeof(ConfirmedDocumentModel)},
             {"OtpadInboundConfirmedToDoFolder", typeof(ConfirmedToDoDocumentModel)},
+            
+            {"OtpremnicaOutboundErpIfaceFolder",         typeof(GeneratedDocumentModel)},
+            {"OtpremnicaOutboundOutboxFolder",           typeof(OutboxDocumentModel)},
+            {"OtpremnicaOutboundSentFolder",             typeof(DocumentModel)},
+            {"OtpremnicaOutboundPendFolder",             typeof(PendDocumentModel)},
+            {"OtpremnicaOutboundConfirmedFolder",        typeof(ConfirmedDocumentModel)},
+            {"OtpremnicaOutboundConfirmedOutToDoFolder", typeof(ConfirmedOutToDoDocumentModel)},
+            {"OtpremnicaInboundInboxFolder",             typeof(InboxDocumentModel)},
+            {"OtpremnicaInboundOutboxFolder",            typeof(OutboxDocumentModel)},
+            {"OtpremnicaInboundSentFolder",              typeof(DocumentModel)},
+            {"OtpremnicaInboundConfirmedFolder",         typeof(ConfirmedDocumentModel)},
+            {"OtpremnicaInboundConfirmedToDoFolder",     typeof(ConfirmedToDoDocumentModel)},
 
             {"KpOutboundErpIfaceFolder", typeof(GeneratedDocumentModel)},
             {"KpOutboundOutboxFolder", typeof(OutboxDocumentModel)},
@@ -331,6 +372,28 @@ namespace wpfcm1.DataAccess
                 {"OtpadInboundConfirmedFolder", OtpadInboundConfirmedFolder}
             };
             CheckFolders(OtpadInboundFolders);
+
+            OtpremnicaOutboundFolders = new Dictionary<string, string>
+            {
+                {"OtpremnicaOutboundErpIfaceFolder",         OtpremnicaOutboundErpIfaceFolder},
+                {"OtpremnicaOutboundOutboxFolder",           OtpremnicaOutboundOutboxFolder},
+                {"OtpremnicaOutboundSentFolder",             OtpremnicaOutboundSentFolder},
+                {"OtpremnicaOutboundPendFolder",             OtpremnicaOutboundPendFolder},
+                {"OtpremnicaOutboundConfirmedFolder",        OtpremnicaOutboundConfirmedFolder},
+                {"OtpremnicaOutboundConfirmedOutToDoFolder", OtpremnicaOutboundConfirmedFolder}
+            };
+            CheckFolders(OtpremnicaOutboundFolders);
+            if (!Directory.Exists(OtpremnicaOutboundErpProcFolder)) Directory.CreateDirectory(OtpremnicaOutboundErpProcFolder);
+
+            OtpremnicaInboundFolders = new Dictionary<string, string>
+            {
+                {"OtpremnicaInboundInboxFolder",         OtpremnicaInboundInboxFolder},
+                {"OtpremnicaInboundConfirmedToDoFolder", OtpremnicaInboundConfirmedFolder},
+                {"OtpremnicaInboundOutboxFolder",        OtpremnicaInboundOutboxFolder},
+                {"OtpremnicaInboundSentFolder",          OtpremnicaInboundSentFolder},
+                {"OtpremnicaInboundConfirmedFolder",     OtpremnicaInboundConfirmedFolder}
+            };
+            CheckFolders(OtpremnicaInboundFolders);
 
 
             KpOutboundFolders = new Dictionary<string, string>

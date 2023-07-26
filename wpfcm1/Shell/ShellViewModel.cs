@@ -40,6 +40,8 @@ namespace wpfcm1.Shell
             IosInboundVM = new FolderGroupViewModel(FolderManager.IosInboundFolders, "Ulazni IOS", events, _windowManager);
             OtpadOutboundVM = new FolderGroupViewModel(FolderManager.OtpadOutboundFolders, "Izl. Kret.otp", events, _windowManager);
             OtpadInboundVM = new FolderGroupViewModel(FolderManager.OtpadInboundFolders, "Ul. Kret.otp.", events, _windowManager);
+            OtpremnicaOutboundVM = new FolderGroupViewModel(FolderManager.OtpremnicaOutboundFolders, "Izl. Otpremnica", events, _windowManager);
+            OtpremnicaInboundVM =  new FolderGroupViewModel(FolderManager.OtpremnicaInboundFolders, "Ul. Otpremnica", events, _windowManager);
             KpOutboundVM = new FolderGroupViewModel(FolderManager.KpOutboundFolders, "Izlazna KP", events, _windowManager);
             KpInboundVM = new FolderGroupViewModel(FolderManager.KpInboundFolders, "Ulazna KP", events, _windowManager);
             PovratiOutboundVM = new FolderGroupViewModel(FolderManager.PovratiOutboundFolders, "Izlazni Povrati", events, _windowManager);
@@ -64,6 +66,8 @@ namespace wpfcm1.Shell
         public FolderGroupViewModel IosInboundVM { get; set; }
         public FolderGroupViewModel OtpadOutboundVM { get; set; }
         public FolderGroupViewModel OtpadInboundVM { get; set; }
+        public FolderGroupViewModel OtpremnicaOutboundVM { get; set; }
+        public FolderGroupViewModel OtpremnicaInboundVM { get; set; }
         public FolderGroupViewModel KpOutboundVM { get; set; }
         public FolderGroupViewModel KpInboundVM { get; set; }
         public FolderGroupViewModel PovratiOutboundVM { get; set; }
@@ -131,9 +135,19 @@ namespace wpfcm1.Shell
             ActivateItem(OtpadOutboundVM);
         }
 
+        public void ShowOtpremnicaOutbound()
+        {
+            ActivateItem(OtpremnicaOutboundVM);
+        }
+
         public void ShowOtpadInbound()
         {
             ActivateItem(OtpadInboundVM);
+        }
+
+        public void ShowOtpremnicaInbound()
+        {
+            ActivateItem(OtpremnicaInboundVM);
         }
 
         public void ShowKpOutbound()
@@ -217,6 +231,13 @@ namespace wpfcm1.Shell
                 {FolderManager.OtpadInboundOutboxFolder, OtpadInboundVM.FolderVMs[1]},
                 {FolderManager.OtpadInboundConfirmedFolder, OtpadInboundVM.FolderVMs[3]},
 
+                {FolderManager.OtpremnicaOutboundOutboxFolder,    OtpremnicaOutboundVM.FolderVMs[1]},
+                {FolderManager.OtpremnicaOutboundPendFolder,      OtpremnicaOutboundVM.FolderVMs[3]},
+                {FolderManager.OtpremnicaOutboundConfirmedFolder, OtpremnicaOutboundVM.FolderVMs[4]},
+                {FolderManager.OtpremnicaInboundInboxFolder,      OtpremnicaInboundVM.FolderVMs[0]},
+                {FolderManager.OtpremnicaInboundOutboxFolder,     OtpremnicaInboundVM.FolderVMs[1]},
+                {FolderManager.OtpremnicaInboundConfirmedFolder,  OtpremnicaInboundVM.FolderVMs[3]},
+
                 {FolderManager.KpOutboundOutboxFolder, KpOutboundVM.FolderVMs[1]},
                 {FolderManager.KpOutboundPendFolder, KpOutboundVM.FolderVMs[3]},
                 {FolderManager.KpOutboundConfirmedFolder, KpOutboundVM.FolderVMs[4]},
@@ -256,6 +277,8 @@ namespace wpfcm1.Shell
             IosOutboundVM.Dispose();
             OtpadInboundVM.Dispose();
             OtpadOutboundVM.Dispose();
+            OtpremnicaInboundVM.Dispose();
+            OtpremnicaOutboundVM.Dispose();
             KpInboundVM.Dispose();
             KpOutboundVM.Dispose();
             PovratiInboundVM.Dispose();

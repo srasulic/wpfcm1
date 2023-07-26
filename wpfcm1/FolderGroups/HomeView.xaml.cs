@@ -18,6 +18,8 @@ namespace wpfcm1.FolderGroups
             if (!Settings.User.Default.OtherInbound) TileOtherInboundVM.Visibility = System.Windows.Visibility.Collapsed; else TileOtherInboundVM.Visibility = System.Windows.Visibility.Visible;
             if (!Settings.User.Default.OtpadInbound) TileOtpadInboundVM.Visibility = System.Windows.Visibility.Collapsed; else TileOtpadInboundVM.Visibility = System.Windows.Visibility.Visible;
             if (!Settings.User.Default.OtpadOutbound) TileOtpadOutboundVM.Visibility = System.Windows.Visibility.Collapsed; else TileOtpadOutboundVM.Visibility = System.Windows.Visibility.Visible;
+            if (!Settings.User.Default.OtpremnicaInbound) TileOtpremnicaInboundVM.Visibility = System.Windows.Visibility.Collapsed; else TileOtpremnicaInboundVM.Visibility = System.Windows.Visibility.Visible;
+            if (!Settings.User.Default.OtpremnicaOutbound) TileOtpremnicaOutboundVM.Visibility = System.Windows.Visibility.Collapsed; else TileOtpremnicaOutboundVM.Visibility = System.Windows.Visibility.Visible;
             if (!Settings.User.Default.PovratiOutbound) TilePovratiOutboundVM.Visibility = System.Windows.Visibility.Collapsed; else TilePovratiOutboundVM.Visibility = System.Windows.Visibility.Visible;
         }
     }
