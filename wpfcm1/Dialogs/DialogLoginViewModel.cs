@@ -105,7 +105,7 @@ namespace wpfcm1.Dialogs
             Login();
             User.Default.UserName = LoginTemp.UserName;
             User.Default.Save();
-            //(GetView() as Window).Hide();
+            (GetView() as Window).Hide();
         }
 
         public void OnCancel()
@@ -307,7 +307,6 @@ namespace wpfcm1.Dialogs
                         User.Default.FtpUserName = "";
 
                         Log.Info("Obtaining Olympus tenant profile (UserName = " + LoginTemp.UserName);
-                        //var alfrescoClient = new AlfrescoClient(User.Default.FtpServer, LoginTemp.UserName, LoginTemp.Password);
                         string jsonResponse = @"{ ";
                         jsonResponse += @"    ""tenant_info"": {";
                         jsonResponse += @"        ""tenant"": ""108572864"", ";
@@ -372,15 +371,6 @@ namespace wpfcm1.Dialogs
                             {
                                 switch (tipDok.tip_dok)
                                 {
-                                    case "izdavanje":
-                                        User.Default.IzdavanjeInbound = true;
-                                        break;
-                                    case "razvoz":
-                                        User.Default.RazvozInbound = true;
-                                        break;
-                                    //case "utovar":
-                                    //    User.Default.UtovarInbound = true;
-                                    //    break;
                                     case "ios":
                                         User.Default.IosInbound = true;
                                         break;
@@ -405,12 +395,6 @@ namespace wpfcm1.Dialogs
                             {
                                 switch (tipDok.tip_dok)
                                 {
-                                    case "izdavanje":
-                                        User.Default.IzdavanjeOutbound = true;
-                                        break;
-                                    case "razvoz":
-                                        User.Default.RazvozOutbound = true;
-                                        break;
                                     //case "utovar":
                                     //    User.Default.UtovarOutbound = true;
                                     //    break;
