@@ -308,6 +308,20 @@ namespace wpfcm1.Dialogs
                     ApiURL = @"https://edokument.rs";
                     MandatoryLogin = true;
                 }
+                else if (_variation == "MTEL")
+                {
+                    FtpServer = @"";
+                    AppTitle = @"http://10.10.8.5";
+                    ApiURL = @"http://10.10.8.5:8000";
+                    MandatoryLogin = true;
+                }
+                else if (_variation == "MTELDEV")
+                {
+                    FtpServer = @"";
+                    AppTitle = @"http://10.10.8.5";
+                    ApiURL = @"http://10.10.8.5:8000";
+                    MandatoryLogin = true;
+                }
                 else if (_variation == "BIH") {
                     FtpServer = @"ftp://ftp.polisign.net/";
                     AppTitle = @"https://polisign.net";
