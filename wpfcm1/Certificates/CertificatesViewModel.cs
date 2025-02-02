@@ -10,6 +10,7 @@ namespace wpfcm1.Certificates
     public class CertificatesViewModel : PropertyChangedBase
     {
         private readonly IEventAggregator _events;
+        public ObservableCollection<CertificateModel> Certificates { get; private set; }
 
         [ImportingConstructor]
         public CertificatesViewModel(IEventAggregator events)
@@ -19,24 +20,15 @@ namespace wpfcm1.Certificates
             Certificates = new ObservableCollection<CertificateModel>(certificateRepositiory.CertificateItems);
         }
 
-        public ObservableCollection<CertificateModel> Certificates { get; private set; }
-
-        // 
-        //private bool first = true;
-
         public void RefreshCertificateList(bool pickCertificate)
         {
-         //   if (!first)
-         //   {
             Certificates.Clear();
             var certificateRepositiory = new CertificateRepositiory(pickCertificate);
             int i = 0;
-            foreach(CertificateModel cert in certificateRepositiory.CertificateItems)
+            foreach (CertificateModel cert in certificateRepositiory.CertificateItems)
             {
                 Certificates.Add(certificateRepositiory.CertificateItems[i++]);
             }
-          //  }
-          //  else first = false;
         }
 
         public void OnSelection(CertificateModel certificate)

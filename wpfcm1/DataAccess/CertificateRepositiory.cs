@@ -55,7 +55,8 @@ namespace wpfcm1.DataAccess
                     // * /
                     allQualifiedCerts.Add(new CertificateModel(cert));
                     
-                } catch (System.Security.Cryptography.CryptographicException ex) { 
+                } catch (System.Security.Cryptography.CryptographicException)
+                { 
                     allQualifiedCerts.Add(new CertificateModel(cert)); 
                 }
             }

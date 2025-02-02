@@ -9,11 +9,8 @@ using wpfcm1.Dialogs;
 using wpfcm1.Events;
 using wpfcm1.Model;
 using wpfcm1.PDF;
-using wpfcm1.Preview;
 using wpfcm1.Settings;
 using System.Text.RegularExpressions;
-using System.Windows;
-using System.Net;
 using System.Windows.Data;
 
 namespace wpfcm1.FolderTypes
@@ -26,8 +23,6 @@ namespace wpfcm1.FolderTypes
         private readonly IWindowManager _windowManager;
         private CertificateModel _certificate;
         private string _expList;
-
-        private static bool IssuerVisible = false;
 
         public GeneratedFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
         {

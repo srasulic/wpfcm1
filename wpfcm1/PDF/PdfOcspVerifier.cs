@@ -238,7 +238,7 @@ namespace wpfcm1.PDF
                         {
                             tempCert = cert;
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             continue;
                         }
@@ -252,7 +252,7 @@ namespace wpfcm1.PDF
                                 break;
                             }
                         }
-                        catch (CertificateParsingException ignored)
+                        catch (CertificateParsingException)
                         {
                         }
                     }
@@ -279,7 +279,7 @@ namespace wpfcm1.PDF
                                     break;
                                 }
                             }
-                            catch (GeneralSecurityException ignored)
+                            catch (GeneralSecurityException)
                             {
                             }
                         }
@@ -310,7 +310,7 @@ namespace wpfcm1.PDF
                     Stream url = WebRequest.Create(CertificateUtil.GetCRLURL(responderCert)).GetResponse().GetResponseStream();
                     crl = crlParser.ReadCrl(url);
                 }
-                catch (Exception ignored)
+                catch (Exception)
                 {
                     crl = null;
                 }
@@ -346,7 +346,7 @@ namespace wpfcm1.PDF
                 IsValidResponse(ocspResp, issuerCert);
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }

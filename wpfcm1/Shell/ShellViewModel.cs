@@ -98,7 +98,7 @@ namespace wpfcm1.Shell
                 {
                     showLogin = Settings.User.Default.MandatoryLogin;
                 }
-                catch (System.Exception e)
+                catch (System.Exception)
                 {
                     Settings.User.Default.MandatoryLogin = false;
                     showLogin = false;
