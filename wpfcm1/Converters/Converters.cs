@@ -5,7 +5,6 @@ using System.Windows.Data;
 
 namespace wpfcm1.Converters
 {
-
     public class InverseBooleanToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -44,7 +43,6 @@ namespace wpfcm1.Converters
             throw new NotImplementedException();
         }
     }
-
 
     public class ExpanderToBooleanConverter : IValueConverter
     {
@@ -103,8 +101,6 @@ namespace wpfcm1.Converters
         }
     }
 
- 
-
     public class BooleanToBackgroundColourConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -131,5 +127,37 @@ namespace wpfcm1.Converters
         }
     }
 
+    public class IsNullOrEmptyToBooleanConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool isNullOrEmpty = string.IsNullOrEmpty(value as string);
+            return isNullOrEmpty;
+        }
 
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class TextBoxesEmptyToBoolConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            foreach (object value in values)
+            {
+                if (string.IsNullOrWhiteSpace(value as string))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

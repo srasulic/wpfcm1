@@ -1,7 +1,6 @@
-﻿using System;
-using Caliburn.Micro;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using Caliburn.Micro;
 using wpfcm1.Certificates;
 using wpfcm1.DataAccess;
 using wpfcm1.Dialogs;
@@ -30,8 +29,8 @@ namespace wpfcm1.Shell
             _windowManager = windowManager;
 
             ToolBar = toolBar;
-            CertVM = certs;           
-            
+            CertVM = certs;
+
 
             HomeVM = new HomeViewModel(this);
             OutboundVM = new FolderGroupViewModel(FolderManager.InvoicesOutboundFolders, "Izlazne Fakture", events, _windowManager);
@@ -41,7 +40,7 @@ namespace wpfcm1.Shell
             OtpadOutboundVM = new FolderGroupViewModel(FolderManager.OtpadOutboundFolders, "Izl. Kret.otp", events, _windowManager);
             OtpadInboundVM = new FolderGroupViewModel(FolderManager.OtpadInboundFolders, "Ul. Kret.otp.", events, _windowManager);
             OtpremnicaOutboundVM = new FolderGroupViewModel(FolderManager.OtpremnicaOutboundFolders, "Izl. Otpremnica", events, _windowManager);
-            OtpremnicaInboundVM =  new FolderGroupViewModel(FolderManager.OtpremnicaInboundFolders, "Ul. Otpremnica", events, _windowManager);
+            OtpremnicaInboundVM = new FolderGroupViewModel(FolderManager.OtpremnicaInboundFolders, "Ul. Otpremnica", events, _windowManager);
             KpOutboundVM = new FolderGroupViewModel(FolderManager.KpOutboundFolders, "Izlazna KP", events, _windowManager);
             KpInboundVM = new FolderGroupViewModel(FolderManager.KpInboundFolders, "Ulazna KP", events, _windowManager);
             PovratiOutboundVM = new FolderGroupViewModel(FolderManager.PovratiOutboundFolders, "Izlazni Povrati", events, _windowManager);
@@ -77,9 +76,6 @@ namespace wpfcm1.Shell
         public WebViewModel WebVM { get; set; }
         public DialogLoginViewModel LoginVM { get; set; }
 
-        //For login screen 
-        private static bool first = true;
-
 
         public void ShowHome()
         {   //*****************************************************************
@@ -89,26 +85,7 @@ namespace wpfcm1.Shell
             ActivateItem(HomeVM);
             _events.PublishOnUIThread(new MessageViewModelActivated(ActiveItem.GetType().Name));
 
-            if (first)
-            {
-                System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
-                first = false;
-                bool showLogin = false;
-                try
-                {
-                    showLogin = Settings.User.Default.MandatoryLogin;
-                }
-                catch (System.Exception)
-                {
-                    Settings.User.Default.MandatoryLogin = false;
-                    showLogin = false;
-                }
-                if (showLogin)
-                {
-                    var result = _windowManager.ShowDialog(LoginVM);
-                }
-
-            }
+            _windowManager.ShowDialog(LoginVM);
         }
 
         public void ShowOutbound()
@@ -266,7 +243,7 @@ namespace wpfcm1.Shell
         public void Handle(MessagePickCert message)
         {
             bool pickCertificate = true;
-            CertVM.RefreshCertificateList(pickCertificate); 
+            CertVM.RefreshCertificateList(pickCertificate);
         }
 
         protected override void OnDeactivate(bool close)

@@ -149,7 +149,7 @@
             <TextBlock Grid.Column="6" Text="y-D:" Margin="18,0,6,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
             <TextBox Grid.Column="7" VerticalAlignment="Center" Text="{Binding Path=UserTemp.YSigShiftRight, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
-        <TextBlock Grid.Row="13" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.ApiURL, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Grid.Row="13" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.ApiUrl, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
         <ComboBox Grid.Row="4" Grid.Column="1" Margin="3" Text="{Binding Path=UserTemp.Variation, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
             <ComboBoxItem>RS</ComboBoxItem>
             <ComboBoxItem>RS-LOGIN</ComboBoxItem>

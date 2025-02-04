@@ -7,39 +7,81 @@
     BorderBrush="{DynamicResource AccentColorBrush}"
     BorderThickness="1"
     Loaded="DialogLoginView_OnLoaded"
-    Width="500" Height="250"
+    Width="500" Height="290"
     Topmost="True"
-    >
-    <Grid Margin="5">
+    FontSize="14"
+>
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition  Height="Auto"/>
-            <RowDefinition  Height="Auto"/>
-            <RowDefinition  Height="Auto"/>
-            <RowDefinition  Height="Auto"/>
-            <RowDefinition  Height="Auto"/>
-            <RowDefinition  Height="Auto"/>
-            <RowDefinition  Height="Auto"/>
-            <RowDefinition  Height="Auto"/>
-            <RowDefinition  Height="Auto"/>
-            <RowDefinition  Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="9*"/>
-            <ColumnDefinition Width="201*"/>
-            <ColumnDefinition Width="524*" />
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="3*" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="2" Text="Login" VerticalAlignment="Center" Margin="50,6,-50,10" FontSize="18" />
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Korisničko ime:" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8"/>
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Lozinka:" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8"/>
-        <TextBlock Grid.Row="10" Grid.Column="2" Text="{Binding Path=LoginTemp.Message, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,8" Foreground="Red" FontSize="14" FontFamily="Verdana" FontWeight="Light" />
+        <Label Grid.Row="0" Grid.Column="0" Content="Varijacija:" VerticalAlignment="Center" />
 
-        <TextBox Grid.Row="1" Grid.Column="2" Margin="3" Text="{Binding Path=LoginTemp.UserName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-        <PasswordBox Name="passwdBox" Grid.Row="2" Grid.Column="2" Margin="3" PasswordChanged="PasswordBox_OnPasswordChanged"/>
+        <Label Grid.Row="1" Grid.Column="0" Content="Korisničko ime:" VerticalAlignment="Center" />
 
-        <StackPanel Grid.Row="4" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
-        <Button Content="OK" x:Name="OnClose" Margin="130,21,245,-20" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="4" IsDefault="True"/>
-        <Button Content="Cancel" x:Name="OnCancel" Margin="109,21,138,-20" Grid.Column="2" Grid.Row="4"/>
- <!--       <Button Content="*" x:Name="OpenSettings" Margin="290,21,27,57" Grid.Column="2" Grid.Row="4" Grid.RowSpan="6"/>  -->
+        <Label Grid.Row="2" Grid.Column="0" Content="Lozinka:" VerticalAlignment="Center"/>
+
+        <Label Grid.Row="4" Grid.Column="0" Content="Firma:" VerticalAlignment="Center"/>
+
+
+        <ComboBox x:Name="Variations" Grid.Row="0" Grid.Column="1" Margin="8" VerticalAlignment="Center">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0} {1}">
+                                <Binding Path="Name" />
+                                <Binding Path="ApiUrl" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <TextBox x:Name="UserName"
+            Grid.Row="1" Grid.Column="1"  Margin="8" VerticalAlignment="Center"
+        />
+
+        <PasswordBox x:Name="Password" PasswordChanged="PasswordBox_PasswordChanged"
+            Grid.Row="2" Grid.Column="1" Margin="8" VerticalAlignment="Center"
+        />
+
+        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+            <Button Content="Login" x:Name="OnLogin" MinWidth="64" Margin="8"/>
+        </StackPanel>
+
+        <ComboBox x:Name="Tenants"
+            Grid.Row="4" Grid.Column="1" Margin="8" VerticalAlignment="Center">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0} {1}">
+                                <Binding Path="naziv" />
+                                <Binding Path="tenant" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+
+        <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <Button Content="OK" x:Name="OnClose" MinWidth="64" Margin="8" />
+            <Button Content="Cancel" x:Name="OnCancel" MinWidth="64" Margin="8"/>
+        </StackPanel>
+
     </Grid>
 </mah:MetroWindow>

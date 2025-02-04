@@ -1,0 +1,134 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http.Headers;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+
+namespace wpfcm1.OlympusApi
+{
+    public class OlympusService
+    {
+        private readonly HttpClient _client;
+
+        public OlympusService(string uri)
+        {
+            _client = new HttpClient
+            {
+                BaseAddress = new Uri(uri)
+            };
+        }
+
+        public async Task<Token> PostUsersLogin(string username, string password)
+        {
+            if (username is null || password is null)
+            {
+                return null;
+            }
+
+            _client.DefaultRequestHeaders.Accept.Clear();
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var parameters = new Dictionary<string, string>
+            {
+                { "username", username },
+                { "password", password }
+            };
+            var content = new FormUrlEncodedContent(parameters);
+
+            HttpResponseMessage response = await _client.PostAsync("/olympus/v1/users/login", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var token = JsonSerializer.Deserialize<Token>(responseBody);
+                return token;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<UsersMe> GetUsersMe(Token token)
+        {
+            if (token is null)
+            {
+                return null;
+            }
+
+            _client.DefaultRequestHeaders.Accept.Clear();
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token.token_type, token.access_token);
+
+            HttpResponseMessage response = await _client.GetAsync("/olympus/v1/users/me");
+
+            if (response.IsSuccessStatusCode)
+            {
+                string responseBody = await response.Content.ReadAsStringAsync();
+                UsersMe me = JsonSerializer.Deserialize<UsersMe>(responseBody);
+                return me;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<TenantsResult> GetUsersTenants(Token token)
+        {
+            if (token is null)
+            {
+                return null;
+            }
+
+            _client.DefaultRequestHeaders.Accept.Clear();
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token.token_type, token.access_token);
+
+            HttpResponseMessage response = await _client.GetAsync("/olympus/v1/users/tenants");
+
+            if (response.IsSuccessStatusCode)
+            {
+                string responseBody = await response.Content.ReadAsStringAsync();
+                JsonNode rootNode = JsonNode.Parse(responseBody);
+
+                var tenants = JsonSerializer.Deserialize<TenantsResult>(rootNode);
+                return tenants;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<ProfileResult> GetConfigPolisign(Token token, Tenant tenant)
+        {
+            if (token is null || tenant is null)
+            {
+                return null;
+            }
+
+            _client.DefaultRequestHeaders.Accept.Clear();
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token.token_type, token.access_token);
+
+            string uri = $"/olympus/v1/config/polisign?tenant={tenant.tenant}";
+            HttpResponseMessage response = await _client.GetAsync(uri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string responseBody = await response.Content.ReadAsStringAsync();
+                JsonNode rootNode = JsonNode.Parse(responseBody);
+
+                var profile = JsonSerializer.Deserialize<ProfileResult>(rootNode);
+                return profile;
+            }
+            else
+            {
+                return null;
+            }
+        }
+    }
+
+}
