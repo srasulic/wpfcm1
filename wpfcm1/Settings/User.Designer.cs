@@ -50,42 +50,6 @@ namespace wpfcm1.Settings {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string FtpUserName {
-            get {
-                return ((string)(this["FtpUserName"]));
-            }
-            set {
-                this["FtpUserName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string FtpPassword {
-            get {
-                return ((string)(this["FtpPassword"]));
-            }
-            set {
-                this["FtpPassword"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string FtpServer {
-            get {
-                return ((string)(this["FtpServer"]));
-            }
-            set {
-                this["FtpServer"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string TimestampServer {
             get {
                 return ((string)(this["TimestampServer"]));
@@ -116,246 +80,6 @@ namespace wpfcm1.Settings {
             }
             set {
                 this["TimestampPassword"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public float LlxPib {
-            get {
-                return ((float)(this["LlxPib"]));
-            }
-            set {
-                this["LlxPib"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public float LlyPib {
-            get {
-                return ((float)(this["LlyPib"]));
-            }
-            set {
-                this["LlyPib"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public float UrxPib {
-            get {
-                return ((float)(this["UrxPib"]));
-            }
-            set {
-                this["UrxPib"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public float UryPib {
-            get {
-                return ((float)(this["UryPib"]));
-            }
-            set {
-                this["UryPib"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public float LlxNo {
-            get {
-                return ((float)(this["LlxNo"]));
-            }
-            set {
-                this["LlxNo"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public float LlyNo {
-            get {
-                return ((float)(this["LlyNo"]));
-            }
-            set {
-                this["LlyNo"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public float UrxNo {
-            get {
-                return ((float)(this["UrxNo"]));
-            }
-            set {
-                this["UrxNo"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public float UryNo {
-            get {
-                return ((float)(this["UryNo"]));
-            }
-            set {
-                this["UryNo"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool InvoicesOutbound {
-            get {
-                return ((bool)(this["InvoicesOutbound"]));
-            }
-            set {
-                this["InvoicesOutbound"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool IosInbound {
-            get {
-                return ((bool)(this["IosInbound"]));
-            }
-            set {
-                this["IosInbound"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool IosOutbound {
-            get {
-                return ((bool)(this["IosOutbound"]));
-            }
-            set {
-                this["IosOutbound"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool OtpadInbound {
-            get {
-                return ((bool)(this["OtpadInbound"]));
-            }
-            set {
-                this["OtpadInbound"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool OtpadOutbound {
-            get {
-                return ((bool)(this["OtpadOutbound"]));
-            }
-            set {
-                this["OtpadOutbound"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool KpInbound {
-            get {
-                return ((bool)(this["KpInbound"]));
-            }
-            set {
-                this["KpInbound"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool KpOutbound {
-            get {
-                return ((bool)(this["KpOutbound"]));
-            }
-            set {
-                this["KpOutbound"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool PovratiInbound {
-            get {
-                return ((bool)(this["PovratiInbound"]));
-            }
-            set {
-                this["PovratiInbound"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool PovratiOutbound {
-            get {
-                return ((bool)(this["PovratiOutbound"]));
-            }
-            set {
-                this["PovratiOutbound"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool OtherInbound {
-            get {
-                return ((bool)(this["OtherInbound"]));
-            }
-            set {
-                this["OtherInbound"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool OtherOutbound {
-            get {
-                return ((bool)(this["OtherOutbound"]));
-            }
-            set {
-                this["OtherOutbound"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool InvoicesInbound {
-            get {
-                return ((bool)(this["InvoicesInbound"]));
-            }
-            set {
-                this["InvoicesInbound"] = value;
             }
         }
         
@@ -446,18 +170,6 @@ namespace wpfcm1.Settings {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Title {
-            get {
-                return ((string)(this["Title"]));
-            }
-            set {
-                this["Title"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string AppTitle {
             get {
                 return ((string)(this["AppTitle"]));
@@ -481,36 +193,13 @@ namespace wpfcm1.Settings {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public bool MandatoryLogin {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FtpServer {
             get {
-                return ((bool)(this["MandatoryLogin"]));
+                return ((string)(this["FtpServer"]));
             }
             set {
-                this["MandatoryLogin"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool OtpremnicaInbound {
-            get {
-                return ((bool)(this["OtpremnicaInbound"]));
-            }
-            set {
-                this["OtpremnicaInbound"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool OtpremnicaOutbound {
-            get {
-                return ((bool)(this["OtpremnicaOutbound"]));
-            }
-            set {
-                this["OtpremnicaOutbound"] = value;
+                this["FtpServer"] = value;
             }
         }
     }

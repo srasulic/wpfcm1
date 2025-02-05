@@ -114,17 +114,18 @@ namespace wpfcm1.Dialogs
 
         public async Task SyncAllAsync(IProgress<string> reporter = null, CancellationToken token = default(CancellationToken))
         {
-            var ftpServer = User.Default.FtpServer;
-            if (string.IsNullOrEmpty(ftpServer)) throw new ApplicationException("FTP server nije unet!");
-            var ftpUsername = User.Default.FtpUserName;
-            if (string.IsNullOrEmpty(ftpUsername)) throw new ApplicationException("Username korisnika nije unet!");
-            var ftpPassword = User.Default.FtpPassword;
-            if (string.IsNullOrEmpty(ftpPassword)) throw new ApplicationException("Password korisnika nije unet!");
+            //var ftpServer = User.Default.FtpServer;
+            //if (string.IsNullOrEmpty(ftpServer)) throw new ApplicationException("FTP server nije unet!");
+            //var ftpUsername = User.Default.UserName;
+            //if (string.IsNullOrEmpty(ftpUsername)) throw new ApplicationException("Username korisnika nije unet!");
+            //var ftpPassword = User.Default.Password;
+            //if (string.IsNullOrEmpty(ftpPassword)) throw new ApplicationException("Password korisnika nije unet!");
 
             //Decrypting FTP Password
             //ftpPassword = EncryptionHelper.Decrypt(ftpPassword);
 
-            var ftpClient = new FtpClient(ftpServer, ftpUsername, ftpPassword);
+            //TODO:
+            var ftpClient = new FtpClient("ftpServer", "ftpUsername", "ftpPassword");
 
             PrepareErrorLogForUpload();
 

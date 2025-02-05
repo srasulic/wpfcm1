@@ -239,7 +239,7 @@
     <Compile Include="Model\InboxDocumentModel.cs" />
     <Compile Include="Model\RecognitionPatternModel.cs" />
     <Compile Include="OlympusApi\OlympusService.cs" />
-    <Compile Include="OlympusApi\OlympusTypes.cs" />
+    <Compile Include="OlympusApi\OlympusServiceTypes.cs" />
     <Compile Include="PDF\PdfCertificateUtil.cs" />
     <Compile Include="PDF\PdfCrlVerifier.cs" />
     <Compile Include="PDF\PdfHelpers.cs" />

@@ -42,7 +42,7 @@ namespace wpfcm1.OlympusApi
         public string ext_tenant_id { get; set; }
         public string inbox_node_id { get; set; }
         public string ts_url { get; set; }
-        public string us_username { get; set; }
+        public string ts_username { get; set; }
         public string ts_pass { get; set; }
         public string arch_polisa { get; set; }
         public int X_SIG_SHIFT_LEVI { get; set; }

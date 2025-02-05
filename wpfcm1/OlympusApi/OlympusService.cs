@@ -19,6 +19,11 @@ namespace wpfcm1.OlympusApi
                 BaseAddress = new Uri(uri)
             };
         }
+        public static T DeepCopy<T>(T obj)
+        {
+            string json = JsonSerializer.Serialize(obj);
+            return JsonSerializer.Deserialize<T>(json);
+        }
 
         public async Task<Token> PostUsersLogin(string username, string password)
         {
