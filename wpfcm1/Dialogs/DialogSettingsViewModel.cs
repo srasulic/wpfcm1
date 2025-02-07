@@ -1,14 +1,17 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
 using Caliburn.Micro;
 using wpfcm1.Settings;
 
 namespace wpfcm1.Dialogs
 {
-    public class UserModel : PropertyChangedBase, IDataErrorInfo
+    public class DialogSettingsViewModel : Screen
     {
-        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        public DialogSettingsViewModel()
+        {
+            DisplayName = "";
+        }
 
-        public UserModel()
+        protected override void OnActivate()
         {
             Folders folders = Folders.Default;
             User user = User.Default;
@@ -23,7 +26,6 @@ namespace wpfcm1.Dialogs
             AppTitle = user.AppTitle;
             Variation = user.Variation;
             FtpServer = user.FtpServer;
-            //Token = user.Token;
             TimestampServer = user.TimestampServer;
             TimestampUserName = user.TimestampUserName;
             TimestampPassword = user.TimestampPassword;
@@ -36,7 +38,12 @@ namespace wpfcm1.Dialogs
             /* Naziv u zaglavlju je definisan prema Variation u AppBootstrapper.cs */
         }
 
-        public string AppTitle { get; set; }
+        private string _appTitle;
+        public string AppTitle
+        {
+            get { return _appTitle; }
+            set { _appTitle = value; NotifyOfPropertyChange(() => AppTitle); }
+        }
 
         private string _rootFolder;
         public string RootFolder
@@ -52,6 +59,13 @@ namespace wpfcm1.Dialogs
             set { _archiveFolder = value; NotifyOfPropertyChange(() => ArchiveFolder); }
         }
 
+        private List<string> _archivePolicies = new List<string> { "BASIC", "GROUP_RENAME" };
+        public List<string> ArchivePolicies
+        {
+            get { return _archivePolicies; }
+            set { _archivePolicies = value; NotifyOfPropertyChange(() => ArchivePolicies); }
+        }
+
         private string _archivePolicy;
         public string ArchivePolicy
         {
@@ -59,13 +73,26 @@ namespace wpfcm1.Dialogs
             set { _archivePolicy = value; NotifyOfPropertyChange(() => ArchivePolicy); }
         }
 
-        public string Variation { get; set; }
+        private string _variation;
+        public string Variation
+        {
+            get { return _variation; }
+            set { _variation = value; NotifyOfPropertyChange(() => Variation); }
+        }
 
-        public string UserName { get; set; }
+        private string _userName;
+        public string UserName
+        {
+            get => _userName;
+            set { _userName = value; NotifyOfPropertyChange(() => UserName); }
+        }
 
-        public string PIB { get; set; }
-
-        public string Token { get; set; }
+        private string _pib;
+        public string PIB
+        {
+            get { return _pib; }
+            set { _pib = value; NotifyOfPropertyChange(() => PIB); }
+        }
 
         private string _timestampServer;
         public string TimestampServer
@@ -88,9 +115,19 @@ namespace wpfcm1.Dialogs
             set { _timestampPassword = value; NotifyOfPropertyChange(() => TimestampPassword); }
         }
 
-        public string ApiURL { get; set; }
+        private string _apiUrl;
+        public string ApiURL
+        {
+            get { return _apiUrl; }
+            set { _apiUrl = value; NotifyOfPropertyChange(() => ApiURL); }
+        }
 
-        public string FtpServer { get; set; }
+        private string _ftpServer;
+        public string FtpServer
+        {
+            get { return _ftpServer; }
+            set { _ftpServer = value; NotifyOfPropertyChange(() => FtpServer); }
+        }
 
         private float _xSigShift;
         public float XSigShift
@@ -111,7 +148,7 @@ namespace wpfcm1.Dialogs
                 if (_ySigShift < 0) return 0;
                 return _ySigShift < 840 ? _ySigShift : 840;
             }
-            set { _ySigShift = value ; NotifyOfPropertyChange(() => YSigShift); }
+            set { _ySigShift = value; NotifyOfPropertyChange(() => YSigShift); }
         }
 
         private float _xSigShiftRight;
@@ -136,27 +173,6 @@ namespace wpfcm1.Dialogs
             set { _ySigShiftRight = value; NotifyOfPropertyChange(() => YSigShiftRight); }
         }
 
-        public string Error { get; set; }
-
-        public string this[string columnName]
-        { 
-            get
-            {
-                return null;
-            }
-        }
-    }
-
-    public class DialogSettingsViewModel : Screen
-    {
-        public UserModel UserTemp { get; set; }
-
-        public DialogSettingsViewModel()
-        {
-            DisplayName = "";
-            UserTemp = new UserModel();
-        }
-
         public void OnClose()
         {
             SaveUser();
@@ -170,24 +186,9 @@ namespace wpfcm1.Dialogs
 
         private void SaveUser()
         {
-            Folders.Default.RootFolder = UserTemp.RootFolder;
-            Folders.Default.ArchiveFolder = UserTemp.ArchiveFolder;
-            User.Default.ArchivePolicy = UserTemp.ArchivePolicy;
-
-            //User.Default.UserName = UserTemp.UserName;
-            //User.Default.PIB = UserTemp.PIB;
-            //User.Default.ApiURL = UserTemp.ApiURL;
-            //User.Default.AppTitle = UserTemp.AppTitle;
-            //User.Default.Variation = UserTemp.Variation;
-            //User.Default.FtpServer = UserTemp.FtpServer;
-            //User.Default.Token = UserTemp.Token;
-            User.Default.TimestampServer = UserTemp.TimestampServer;
-            User.Default.TimestampUserName = UserTemp.TimestampUserName;
-            User.Default.TimestampPassword = UserTemp.TimestampPassword;
-            //User.Default.XSigShift = UserTemp.XSigShift;
-            //User.Default.YSigShift = UserTemp.YSigShift;
-            //User.Default.XSigShiftRight = UserTemp.XSigShiftRight;
-            //User.Default.YSigShiftRight = UserTemp.YSigShiftRight;
+            Folders.Default.RootFolder = RootFolder;
+            Folders.Default.ArchiveFolder = ArchiveFolder;
+            User.Default.ArchivePolicy = ArchivePolicy;
 
             User.Default.Save();
             Folders.Default.Save();

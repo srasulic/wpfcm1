@@ -11,11 +11,6 @@ namespace wpfcm1.Dialogs
             InitializeComponent();
         }
 
-        private void DialogLoginView_OnLoaded(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             ((dynamic)DataContext).Password = (sender as PasswordBox)?.Password;

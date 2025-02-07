@@ -6,7 +6,6 @@
     WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
     BorderBrush="{DynamicResource AccentColorBrush}"
     BorderThickness="1"
-    Loaded="DialogLoginView_OnLoaded"
     Width="500" Height="290"
     Topmost="True"
     FontSize="14"
@@ -49,20 +48,15 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <TextBox x:Name="UserName"
-            Grid.Row="1" Grid.Column="1"  Margin="8" VerticalAlignment="Center"
-        />
+        <TextBox x:Name="UserName" Grid.Row="1" Grid.Column="1" Margin="8" VerticalAlignment="Center" />
 
-        <PasswordBox x:Name="Password" PasswordChanged="PasswordBox_PasswordChanged"
-            Grid.Row="2" Grid.Column="1" Margin="8" VerticalAlignment="Center"
-        />
+        <PasswordBox x:Name="Password" Grid.Row="2" Grid.Column="1" Margin="8" VerticalAlignment="Center" PasswordChanged="PasswordBox_PasswordChanged" />
 
         <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-            <Button Content="Login" x:Name="OnLogin" MinWidth="64" Margin="8"/>
+            <Button Content="Login" x:Name="Login" MinWidth="64" Margin="8"/>
         </StackPanel>
 
-        <ComboBox x:Name="Tenants"
-            Grid.Row="4" Grid.Column="1" Margin="8" VerticalAlignment="Center">
+        <ComboBox x:Name="Tenants" Grid.Row="4" Grid.Column="1" Margin="8" VerticalAlignment="Center">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock>
@@ -79,8 +73,8 @@
 
 
         <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-            <Button Content="OK" x:Name="OnClose" MinWidth="64" Margin="8" />
-            <Button Content="Cancel" x:Name="OnCancel" MinWidth="64" Margin="8"/>
+            <Button Content="OK" x:Name="SaveAndClose" MinWidth="64" Margin="8" />
+            <Button Content="Cancel" x:Name="Cancel" MinWidth="64" Margin="8"/>
         </StackPanel>
 
     </Grid>

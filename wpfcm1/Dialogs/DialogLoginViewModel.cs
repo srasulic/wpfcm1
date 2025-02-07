@@ -33,7 +33,6 @@ namespace wpfcm1.Dialogs
         public DialogLoginViewModel(IWindowManager windowManager)
         {
             DisplayName = "Polisign Login";
-
         }
 
         protected override void OnActivate()
@@ -68,7 +67,6 @@ namespace wpfcm1.Dialogs
             set
             {
                 _variations = value;
-                NotifyOfPropertyChange(() => Variations);
             }
         }
 
@@ -113,18 +111,19 @@ namespace wpfcm1.Dialogs
             {
                 _token = value;
                 NotifyOfPropertyChange(() => Token);
-                NotifyOfPropertyChange(() => CanOnClose);
+                NotifyOfPropertyChange(() => CanSaveAndClose);
             }
         }
 
-        private List<Tenant> _tenants;
-        public List<Tenant> Tenants
+        private BindableCollection<Tenant> _tenants;
+        public BindableCollection<Tenant> Tenants
         {
             get => _tenants;
             set
             {
                 _tenants = value;
                 NotifyOfPropertyChange(() => Tenants);
+                NotifyOfPropertyChange(() => CanSaveAndClose);
             }
         }
 
@@ -136,7 +135,7 @@ namespace wpfcm1.Dialogs
             {
                 _tenant = value;
                 NotifyOfPropertyChange(() => SelectedTenant);
-                NotifyOfPropertyChange(() => CanOnClose);
+                NotifyOfPropertyChange(() => CanSaveAndClose);
                 OnSelectedTenant();
             }
         }
@@ -149,11 +148,11 @@ namespace wpfcm1.Dialogs
             {
                 _profile = value;
                 NotifyOfPropertyChange(() => SelectedProfile);
-                NotifyOfPropertyChange(() => CanOnClose);
+                NotifyOfPropertyChange(() => CanSaveAndClose);
             }
         }
 
-        public async void OnLogin()
+        public async void Login()
         {
             var svc = new OlympusService(SelectedVariation.ApiUrl);
 
@@ -161,9 +160,10 @@ namespace wpfcm1.Dialogs
             if (token == null)
             {
                 Log.Error($"FAILED LOGIN: [UserName = {UserName}]");
+                Tenants = null;
+                SelectedTenant = null;
                 return;
             }
-
             Log.Info($"SUCCESSFUL LOGIN: [UserName = {UserName}]");
 
             Token = token;
@@ -174,10 +174,9 @@ namespace wpfcm1.Dialogs
                 Log.Error($"FAILED Obtaining Olympus Tenants: [UserName = {UserName}]");
                 return;
             }
+            Log.Info($"SUCCESSFUL Obtaining Olympus Tenants: [UserName = {UserName}]");
 
-            Log.Info($"Obtained Olympus Tenants: [UserName = {UserName}]");
-
-            Tenants = userTenants.tenants;
+            Tenants = new BindableCollection<Tenant>(userTenants.tenants);
             SelectedTenant = Tenants[0];
 
             _loginOkCache.Variation = OlympusService.DeepCopy(SelectedVariation);
@@ -193,11 +192,10 @@ namespace wpfcm1.Dialogs
             ProfileResult res = await svc.GetConfigPolisign(Token, SelectedTenant);
             if (res == null)
             {
-                Log.Error($"FAILED Obtaining Olympus Profile: [UserName = {UserName}] [Tenant = {SelectedTenant.tenant}]");
+                Log.Error($"FAILED Obtaining Olympus Profile: [UserName = {UserName}] [Tenant = {SelectedTenant?.tenant}]");
                 return;
             }
-
-            Log.Info($"Obtained Olympus Profile [UserName = {UserName}] [Tenant = {SelectedTenant.tenant}]");
+            Log.Info($"SUCCESSFUL Obtaining Olympus Profile [UserName = {UserName}] [Tenant = {SelectedTenant?.tenant}]");
 
             SelectedProfile = res.profile;
 
@@ -205,7 +203,7 @@ namespace wpfcm1.Dialogs
             _loginOkCache.Profile = OlympusService.DeepCopy(SelectedProfile);
         }
 
-        public void OnClose()
+        public void SaveAndClose()
         {
             User.Default.UserName = _loginOkCache.User;
             User.Default.PIB = _loginOkCache.Profile.tenant_info.ib;
@@ -224,21 +222,19 @@ namespace wpfcm1.Dialogs
 
             User.Default.Save();
 
-            // TODO: sve proslo ok, ovde sacuvaj varijaciju, user, pass, token?, tenant, profil
-            // sacuvani podaci treba da se povezu na settings dijalog
             (GetView() as Window).Hide();
         }
 
-        public bool CanOnClose => Token != null && SelectedTenant != null && SelectedProfile != null;
+        public bool CanSaveAndClose => Token != null && SelectedTenant != null && SelectedProfile != null;
 
-        public void OnCancel()
+        public void Cancel()
         {
             TryClose(true);
         }
 
         public void Dispose()
         {
-
+            (GetView() as Window)?.Close();
         }
     }
 }

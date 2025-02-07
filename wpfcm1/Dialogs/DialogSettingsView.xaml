@@ -40,14 +40,14 @@
         <Label Grid.Row="9" Grid.Column="0" Content="Api URL" VerticalAlignment="Center"/>
         <Label Grid.Row="10" Grid.Column="0"  Content="Polisa za arhiviranje" VerticalAlignment="Center"/>
 
-        <TextBox Grid.Row="0" Grid.Column="1" Margin="8" VerticalAlignment="Center" Text="{Binding Path=UserTemp.RootFolder, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Row="1" Grid.Column="1" Margin="8" VerticalAlignment="Center" Text="{Binding Path=UserTemp.ArchiveFolder, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Margin="8" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding Path=UserTemp.UserName,UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Row="3" Grid.Column="1" Margin="8" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding Path=UserTemp.PIB, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Row="4" Grid.Column="1" Margin="8" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding Path=UserTemp.Variation, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Row="5" Grid.Column="1" Margin="8" VerticalAlignment="Center" Text="{Binding Path=UserTemp.TimestampServer, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Row="6" Grid.Column="1" Margin="8" VerticalAlignment="Center" Text="{Binding Path=UserTemp.TimestampUserName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Row="7" Grid.Column="1" Margin="8" VerticalAlignment="Center" Text="{Binding Path=UserTemp.TimestampPassword, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Margin="8" VerticalAlignment="Center" x:Name="RootFolder" />
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="8" VerticalAlignment="Center" x:Name="ArchiveFolder"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Margin="8" VerticalAlignment="Center" x:Name="UserName" IsReadOnly="True" BorderThickness="0"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Margin="8" VerticalAlignment="Center" x:Name="PIB" IsReadOnly="True" BorderThickness="0"/>
+        <TextBox Grid.Row="4" Grid.Column="1" Margin="8" VerticalAlignment="Center" x:Name="Variation" IsReadOnly="True" BorderThickness="0"/>
+        <TextBox Grid.Row="5" Grid.Column="1" Margin="8" VerticalAlignment="Center" x:Name="TimestampServer" IsReadOnly="True" BorderThickness="0"/>
+        <TextBox Grid.Row="6" Grid.Column="1" Margin="8" VerticalAlignment="Center" x:Name="TimestampUserName" IsReadOnly="True" BorderThickness="0"/>
+        <TextBox Grid.Row="7" Grid.Column="1" Margin="8" VerticalAlignment="Center" x:Name="TimestampPassword" IsReadOnly="True" BorderThickness="0"/>
 
         <Grid Grid.Row="8" Grid.Column="1" Margin="8">
             <Grid.ColumnDefinitions>
@@ -61,22 +61,18 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Text="x-L:" Margin="8" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <TextBox Grid.Column="1" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding Path=UserTemp.XSigShift, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Column="1" VerticalAlignment="Center" IsReadOnly="True" x:Name="XSigShift" BorderThickness="0"/>
             <TextBlock Grid.Column="2" Text="y-L:" Margin="8" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <TextBox Grid.Column="3" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding Path=UserTemp.YSigShift, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Column="3" VerticalAlignment="Center" IsReadOnly="True" x:Name="YSigShift" BorderThickness="0"/>
             <TextBlock Grid.Column="4" Text="x-D:" Margin="8" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <TextBox Grid.Column="5" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding Path=UserTemp.XSigShiftRight, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Column="5" VerticalAlignment="Center" IsReadOnly="True" x:Name="XSigShiftRight" BorderThickness="0"/>
             <TextBlock Grid.Column="6" Text="y-D:" Margin="8" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <TextBox Grid.Column="7" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding Path=UserTemp.YSigShiftRight, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Column="7" VerticalAlignment="Center" IsReadOnly="True" x:Name="YSigShiftRight" BorderThickness="0"/>
         </Grid>
 
-        <TextBox Grid.Row="9" Grid.Column="1" Margin="8" IsReadOnly="True"  Text="{Binding Path=UserTemp.ApiURL, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-        <ComboBox Grid.Row="10" Grid.Column="1" Margin="8" Text="{Binding Path=UserTemp.ArchivePolicy, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
-            <ComboBoxItem>BASIC</ComboBoxItem>
-            <ComboBoxItem>GROUP_RENAME</ComboBoxItem>
-        </ComboBox>
-
-        <StackPanel Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2"  Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+        <TextBox Grid.Row="9" Grid.Column="1" Margin="8" IsReadOnly="True" x:Name="ApiURL" BorderThickness="0"/>
+        <ComboBox Grid.Row="10" Grid.Column="1" Margin="8" x:Name="ArchivePolicies" SelectedItem="{Binding ArchivePolicy, Mode=TwoWay}" />
+        <StackPanel Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Button Content="OK" MinWidth="64" x:Name="OnClose" Margin="8"/>
             <Button Content="Cancel"  MinWidth="64" x:Name="OnCancel" Margin="8"/>
         </StackPanel>
