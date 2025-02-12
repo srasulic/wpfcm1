@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using wpfcm1.DataAccess;
-using wpfcm1.Settings;
 
 namespace wpfcm1.PDF
 {
@@ -33,7 +32,6 @@ namespace wpfcm1.PDF
             {FolderManager.PovratiInboundConfirmedToDoFolder, SignatureLocation.UpperRight},
             {FolderManager.OtherOutboundErpIfaceFolder, SignatureLocation.UpperLeft},
             {FolderManager.OtherInboundInboxFolder, SignatureLocation.UpperRight}
-
         };
 
         public static Dictionary<SignatureLocation, string> SignatureName = new Dictionary<SignatureLocation, string>()
@@ -47,44 +45,33 @@ namespace wpfcm1.PDF
     {
         public static Dictionary<string, string> LocalMap = new Dictionary<string, string>()
         {
-            {FolderManager.InvoicesOutboundErpIfaceFolder,          FolderManager.InvoicesOutboundOutboxFolder},
-            //{FolderManager.InvoicesOutboundConfirmedOutToDoFolder,  FolderManager.InvoicesOutboundOutboxFolder},
-            {FolderManager.InvoicesOutboundConfirmedFolder,         FolderManager.InvoicesOutboundOutboxFolder},
-            {FolderManager.InvoicesInboundInboxFolder,              FolderManager.InvoicesInboundOutboxFolder},
-            //{FolderManager.InvoicesInboundConfirmedToDoFolder,      FolderManager.InvoicesInboundOutboxFolder},
-            {FolderManager.InvoicesInboundConfirmedFolder,          FolderManager.InvoicesInboundOutboxFolder},
+            {FolderManager.InvoicesOutboundErpIfaceFolder, FolderManager.InvoicesOutboundOutboxFolder},
+            {FolderManager.InvoicesInboundInboxFolder, FolderManager.InvoicesInboundOutboxFolder},
+            {FolderManager.InvoicesInboundConfirmedFolder, FolderManager.InvoicesInboundOutboxFolder},
 
             {FolderManager.IosOutboundErpIfaceFolder, FolderManager.IosOutboundOutboxFolder},
-            {FolderManager.IosOutboundConfirmedFolder, FolderManager.IosOutboundOutboxFolder},
-            {FolderManager.IosInboundInboxFolder,      FolderManager.IosInboundOutboxFolder},
-            {FolderManager.IosInboundConfirmedFolder,  FolderManager.IosInboundOutboxFolder},
+            {FolderManager.IosInboundInboxFolder, FolderManager.IosInboundOutboxFolder},
+            {FolderManager.IosInboundConfirmedFolder, FolderManager.IosInboundOutboxFolder},
 
             {FolderManager.OtpadOutboundErpIfaceFolder, FolderManager.OtpadOutboundOutboxFolder},
-            {FolderManager.OtpadOutboundConfirmedFolder, FolderManager.OtpadOutboundOutboxFolder},
-            {FolderManager.OtpadInboundInboxFolder,      FolderManager.OtpadInboundOutboxFolder},
-            {FolderManager.OtpadInboundConfirmedFolder,  FolderManager.OtpadInboundOutboxFolder},
+            {FolderManager.OtpadInboundInboxFolder, FolderManager.OtpadInboundOutboxFolder},
+            {FolderManager.OtpadInboundConfirmedFolder, FolderManager.OtpadInboundOutboxFolder},
 
-            {FolderManager.OtpremnicaOutboundErpIfaceFolder,  FolderManager.OtpremnicaOutboundOutboxFolder},
-            {FolderManager.OtpremnicaOutboundConfirmedFolder, FolderManager.OtpremnicaOutboundOutboxFolder},
-            {FolderManager.OtpremnicaInboundInboxFolder,      FolderManager.OtpremnicaInboundOutboxFolder},
-            {FolderManager.OtpremnicaInboundConfirmedFolder,  FolderManager.OtpremnicaInboundOutboxFolder},
+            {FolderManager.OtpremnicaOutboundErpIfaceFolder, FolderManager.OtpremnicaOutboundOutboxFolder},
+            {FolderManager.OtpremnicaInboundInboxFolder, FolderManager.OtpremnicaInboundOutboxFolder},
+            {FolderManager.OtpremnicaInboundConfirmedFolder, FolderManager.OtpremnicaInboundOutboxFolder},
 
-            {FolderManager.KpOutboundErpIfaceFolder,            FolderManager.KpOutboundOutboxFolder},
-            //{FolderManager.KpOutboundConfirmedOutToDoFolder,    FolderManager.KpOutboundOutboxFolder},
-            {FolderManager.KpOutboundConfirmedFolder,           FolderManager.KpOutboundOutboxFolder},
-            {FolderManager.KpInboundInboxFolder,                FolderManager.KpInboundOutboxFolder},
-            //{FolderManager.KpInboundConfirmedToDoFolder,        FolderManager.KpInboundOutboxFolder},
-            {FolderManager.KpInboundConfirmedFolder,            FolderManager.KpInboundOutboxFolder},
+            {FolderManager.KpOutboundErpIfaceFolder, FolderManager.KpOutboundOutboxFolder},
+            {FolderManager.KpInboundInboxFolder, FolderManager.KpInboundOutboxFolder},
+            {FolderManager.KpInboundConfirmedFolder, FolderManager.KpInboundOutboxFolder},
 
-            {FolderManager.PovratiOutboundErpIfaceFolder,            FolderManager.PovratiOutboundOutboxFolder},
-            {FolderManager.PovratiOutboundConfirmedFolder,           FolderManager.PovratiOutboundOutboxFolder},
-            {FolderManager.PovratiInboundInboxFolder,                FolderManager.PovratiInboundOutboxFolder},
-            {FolderManager.PovratiInboundConfirmedFolder,            FolderManager.PovratiInboundOutboxFolder},
+            {FolderManager.PovratiOutboundErpIfaceFolder, FolderManager.PovratiOutboundOutboxFolder},
+            {FolderManager.PovratiInboundInboxFolder, FolderManager.PovratiInboundOutboxFolder},
+            {FolderManager.PovratiInboundConfirmedFolder, FolderManager.PovratiInboundOutboxFolder},
 
-            {FolderManager.OtherOutboundErpIfaceFolder,   FolderManager.OtherOutboundOutboxFolder},
-            {FolderManager.OtherOutboundConfirmedFolder,  FolderManager.OtherOutboundOutboxFolder},
-            {FolderManager.OtherInboundInboxFolder,       FolderManager.OtherInboundOutboxFolder},
-            {FolderManager.OtherInboundConfirmedFolder,   FolderManager.OtherInboundOutboxFolder}
+            {FolderManager.OtherOutboundErpIfaceFolder, FolderManager.OtherOutboundOutboxFolder},
+            {FolderManager.OtherInboundInboxFolder, FolderManager.OtherInboundOutboxFolder},
+            {FolderManager.OtherInboundConfirmedFolder, FolderManager.OtherInboundOutboxFolder}
         };
 
         public static Dictionary<string, string> ProcessedMap= new Dictionary<string, string>()
@@ -148,48 +135,34 @@ namespace wpfcm1.PDF
         public static Dictionary<string, string> FtpMap = new Dictionary<string, string>()
         {
             {FolderManager.InvoicesOutboundOutboxFolder, "edokument/faktura/outbound/outbox/"},
-            {FolderManager.InvoicesOutboundPendFolder, "edokument/faktura/outbound/pend/"},
-            {FolderManager.InvoicesOutboundConfirmedFolder, "edokument/faktura/outbound/confirmed/"},
             {FolderManager.InvoicesInboundInboxFolder, "edokument/faktura/inbound/inbox/"},
             {FolderManager.InvoicesInboundOutboxFolder, "edokument/faktura/inbound/outbox/"},
             {FolderManager.InvoicesInboundConfirmedFolder, "edokument/faktura/inbound/confirmed/"},
 
             {FolderManager.IosOutboundOutboxFolder, "edokument/ios/outbound/outbox/"},
-            {FolderManager.IosOutboundPendFolder, "edokument/ios/outbound/pend/"},
-            {FolderManager.IosOutboundConfirmedFolder, "edokument/ios/outbound/confirmed/"},
             {FolderManager.IosInboundInboxFolder, "edokument/ios/inbound/inbox/"},
             {FolderManager.IosInboundOutboxFolder, "edokument/ios/inbound/outbox/"},
             {FolderManager.IosInboundConfirmedFolder, "edokument/ios/inbound/confirmed/"},
 
             {FolderManager.OtpadOutboundOutboxFolder, "edokument/otpad/outbound/outbox/"},
-            {FolderManager.OtpadOutboundPendFolder, "edokument/otpad/outbound/pend/"},
-            {FolderManager.OtpadOutboundConfirmedFolder, "edokument/otpad/outbound/confirmed/"},
             {FolderManager.OtpadInboundInboxFolder, "edokument/otpad/inbound/inbox/"},
             {FolderManager.OtpadInboundOutboxFolder, "edokument/otpad/inbound/outbox/"},
             {FolderManager.OtpadInboundConfirmedFolder, "edokument/otpad/inbound/confirmed/"},
 
-            {FolderManager.OtpremnicaOutboundOutboxFolder,    "edokument/otpremnica/outbound/outbox/"},
-            {FolderManager.OtpremnicaOutboundPendFolder,      "edokument/otpremnica/outbound/pend/"},
-            {FolderManager.OtpremnicaOutboundConfirmedFolder, "edokument/otpremnica/outbound/confirmed/"},
-            {FolderManager.OtpremnicaInboundInboxFolder,      "edokument/otpremnica/inbound/inbox/"},
-            {FolderManager.OtpremnicaInboundOutboxFolder,     "edokument/otpremnica/inbound/outbox/"},
-            {FolderManager.OtpremnicaInboundConfirmedFolder,  "edokument/otpremnica/inbound/confirmed/"},
+            {FolderManager.OtpremnicaOutboundOutboxFolder, "edokument/otpremnica/outbound/outbox/"},
+            {FolderManager.OtpremnicaInboundInboxFolder, "edokument/otpremnica/inbound/inbox/"},
+            {FolderManager.OtpremnicaInboundOutboxFolder, "edokument/otpremnica/inbound/outbox/"},
+            {FolderManager.OtpremnicaInboundConfirmedFolder, "edokument/otpremnica/inbound/confirmed/"},
             
             {FolderManager.KpOutboundOutboxFolder, "edokument/kp/outbound/outbox/"},
-            {FolderManager.KpOutboundPendFolder, "edokument/kp/outbound/pend/"},
-            {FolderManager.KpOutboundConfirmedFolder, "edokument/kp/outbound/confirmed/"},
             {FolderManager.KpInboundInboxFolder, "edokument/kp/inbound/inbox/"},
             {FolderManager.KpInboundOutboxFolder, "edokument/kp/inbound/outbox/"},
             {FolderManager.KpInboundConfirmedFolder, "edokument/kp/inbound/confirmed/"},
             {FolderManager.PovratiOutboundOutboxFolder, "edokument/povrati/outbound/outbox/"},
-            {FolderManager.PovratiOutboundPendFolder, "edokument/povrati/outbound/pend/"},
-            {FolderManager.PovratiOutboundConfirmedFolder, "edokument/povrati/outbound/confirmed/"},
             {FolderManager.PovratiInboundInboxFolder, "edokument/povrati/inbound/inbox/"},
             {FolderManager.PovratiInboundOutboxFolder, "edokument/povrati/inbound/outbox/"},
             {FolderManager.PovratiInboundConfirmedFolder, "edokument/povrati/inbound/confirmed/"},
             {FolderManager.OtherOutboundOutboxFolder, "edokument/ostali/outbound/outbox/"},
-            {FolderManager.OtherOutboundPendFolder, "edokument/ostali/outbound/pend/"},
-            {FolderManager.OtherOutboundConfirmedFolder, "edokument/ostali/outbound/confirmed/"},
             {FolderManager.OtherInboundInboxFolder, "edokument/ostali/inbound/inbox/"},
             {FolderManager.OtherInboundOutboxFolder, "edokument/ostali/inbound/outbox/"},
             {FolderManager.OtherInboundConfirmedFolder, "edokument/ostali/inbound/confirmed/"}

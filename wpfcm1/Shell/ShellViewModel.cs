@@ -31,7 +31,6 @@ namespace wpfcm1.Shell
             ToolBar = toolBar;
             CertVM = certs;
 
-
             HomeVM = new HomeViewModel(this);
             OutboundVM = new FolderGroupViewModel(FolderManager.InvoicesOutboundFolders, "Izlazne Fakture", events, _windowManager);
             InboundVM = new FolderGroupViewModel(FolderManager.InvoicesInboundFolders, "Ulazne Fakture", events, _windowManager);
@@ -49,7 +48,6 @@ namespace wpfcm1.Shell
             OtherInboundVM = new FolderGroupViewModel(FolderManager.OtherInboundFolders, "Ostali Ulazni", events, _windowManager);
             WebVM = new WebViewModel("Online report");
             LoginVM = new DialogLoginViewModel(_windowManager);
-
 
             ShowHome();
         }
@@ -75,7 +73,6 @@ namespace wpfcm1.Shell
         public FolderGroupViewModel OtherInboundVM { get; set; }
         public WebViewModel WebVM { get; set; }
         public DialogLoginViewModel LoginVM { get; set; }
-
 
         public void ShowHome()
         {   //*****************************************************************
@@ -162,7 +159,6 @@ namespace wpfcm1.Shell
             ActivateItem(WebVM);
         }
 
-
         public void ShowSettings()
         {
             var result = _windowManager.ShowDialog(new DialogSettingsViewModel());
@@ -188,48 +184,36 @@ namespace wpfcm1.Shell
             var foldersToSync = new Dictionary<string, FolderViewModel>()
             {
                 {FolderManager.InvoicesOutboundOutboxFolder, OutboundVM.FolderVMs[1]},
-                {FolderManager.InvoicesOutboundPendFolder, OutboundVM.FolderVMs[3]},
-                {FolderManager.InvoicesOutboundConfirmedFolder, OutboundVM.FolderVMs[4]},
                 {FolderManager.InvoicesInboundInboxFolder, InboundVM.FolderVMs[0]},
                 {FolderManager.InvoicesInboundOutboxFolder, InboundVM.FolderVMs[1]},
                 {FolderManager.InvoicesInboundConfirmedFolder, InboundVM.FolderVMs[3]},
 
                 {FolderManager.IosOutboundOutboxFolder, IosOutboundVM.FolderVMs[1]},
-                {FolderManager.IosOutboundPendFolder, IosOutboundVM.FolderVMs[3]},
-                {FolderManager.IosOutboundConfirmedFolder, IosOutboundVM.FolderVMs[4]},
                 {FolderManager.IosInboundInboxFolder, IosInboundVM.FolderVMs[0]},
                 {FolderManager.IosInboundOutboxFolder, IosInboundVM.FolderVMs[1]},
                 {FolderManager.IosInboundConfirmedFolder, IosInboundVM.FolderVMs[3]},
 
                 {FolderManager.OtpadOutboundOutboxFolder, OtpadOutboundVM.FolderVMs[1]},
-                {FolderManager.OtpadOutboundPendFolder, OtpadOutboundVM.FolderVMs[3]},
-                {FolderManager.OtpadOutboundConfirmedFolder, OtpadOutboundVM.FolderVMs[4]},
                 {FolderManager.OtpadInboundInboxFolder, OtpadInboundVM.FolderVMs[0]},
                 {FolderManager.OtpadInboundOutboxFolder, OtpadInboundVM.FolderVMs[1]},
                 {FolderManager.OtpadInboundConfirmedFolder, OtpadInboundVM.FolderVMs[3]},
 
-                {FolderManager.OtpremnicaOutboundOutboxFolder,    OtpremnicaOutboundVM.FolderVMs[1]},
-                {FolderManager.OtpremnicaOutboundPendFolder,      OtpremnicaOutboundVM.FolderVMs[3]},
-                {FolderManager.OtpremnicaOutboundConfirmedFolder, OtpremnicaOutboundVM.FolderVMs[4]},
-                {FolderManager.OtpremnicaInboundInboxFolder,      OtpremnicaInboundVM.FolderVMs[0]},
-                {FolderManager.OtpremnicaInboundOutboxFolder,     OtpremnicaInboundVM.FolderVMs[1]},
-                {FolderManager.OtpremnicaInboundConfirmedFolder,  OtpremnicaInboundVM.FolderVMs[3]},
+                {FolderManager.OtpremnicaOutboundOutboxFolder, OtpremnicaOutboundVM.FolderVMs[1]},
+                {FolderManager.OtpremnicaInboundInboxFolder, OtpremnicaInboundVM.FolderVMs[0]},
+                {FolderManager.OtpremnicaInboundOutboxFolder, OtpremnicaInboundVM.FolderVMs[1]},
+                {FolderManager.OtpremnicaInboundConfirmedFolder, OtpremnicaInboundVM.FolderVMs[3]},
 
                 {FolderManager.KpOutboundOutboxFolder, KpOutboundVM.FolderVMs[1]},
-                {FolderManager.KpOutboundPendFolder, KpOutboundVM.FolderVMs[3]},
-                {FolderManager.KpOutboundConfirmedFolder, KpOutboundVM.FolderVMs[4]},
                 {FolderManager.KpInboundInboxFolder, KpInboundVM.FolderVMs[0]},
                 {FolderManager.KpInboundOutboxFolder, KpInboundVM.FolderVMs[1]},
                 {FolderManager.KpInboundConfirmedFolder, KpInboundVM.FolderVMs[3]},
+
                 {FolderManager.PovratiOutboundOutboxFolder, PovratiOutboundVM.FolderVMs[1]},
-                {FolderManager.PovratiOutboundPendFolder, PovratiOutboundVM.FolderVMs[3]},
-                {FolderManager.PovratiOutboundConfirmedFolder, PovratiOutboundVM.FolderVMs[4]},
                 {FolderManager.PovratiInboundInboxFolder, PovratiInboundVM.FolderVMs[0]},
                 {FolderManager.PovratiInboundOutboxFolder, PovratiInboundVM.FolderVMs[1]},
                 {FolderManager.PovratiInboundConfirmedFolder, PovratiInboundVM.FolderVMs[3]},
+
                 {FolderManager.OtherOutboundOutboxFolder, OtherOutboundVM.FolderVMs[1]},
-                {FolderManager.OtherOutboundPendFolder, OtherOutboundVM.FolderVMs[3]},
-                {FolderManager.OtherOutboundConfirmedFolder, OtherOutboundVM.FolderVMs[4]},
                 {FolderManager.OtherInboundInboxFolder, OtherInboundVM.FolderVMs[0]},
                 {FolderManager.OtherInboundOutboxFolder, OtherInboundVM.FolderVMs[1]},
                 {FolderManager.OtherInboundConfirmedFolder, OtherInboundVM.FolderVMs[3]}
@@ -264,7 +248,6 @@ namespace wpfcm1.Shell
             OtherOutboundVM.Dispose();
             WebVM.Dispose();
             LoginVM.Dispose();
-
         }
     }
 }
