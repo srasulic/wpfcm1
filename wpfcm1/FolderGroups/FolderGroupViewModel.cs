@@ -31,9 +31,6 @@ namespace wpfcm1.FolderGroups
                     case "InboxDocumentModel":
                         FolderVMs.Add(new InboxFolderViewModel(wsFolder.Value, FolderManager.FolderNameMap[wsFolder.Key], _events, windowManager));
                         break;
-                    case "PendDocumentModel":
-                        FolderVMs.Add(new PendFolderViewModel(wsFolder.Value, FolderManager.FolderNameMap[wsFolder.Key], _events, windowManager));
-                        break;
                     case "OutboxDocumentModel":
                         FolderVMs.Add(new OutboxFolderViewModel(wsFolder.Value, FolderManager.FolderNameMap[wsFolder.Key], _events, windowManager));
                         break;
@@ -42,9 +39,6 @@ namespace wpfcm1.FolderGroups
                         break;
                     case "ConfirmedToDoDocumentModel":
                         FolderVMs.Add(new ConfirmedToDoFolderViewModel(wsFolder.Value, FolderManager.FolderNameMap[wsFolder.Key], _events, windowManager));
-                        break;
-                    case "ConfirmedOutToDoDocumentModel":
-                        FolderVMs.Add(new ConfirmedOutToDoFolderViewModel(wsFolder.Value, FolderManager.FolderNameMap[wsFolder.Key], _events, windowManager));
                         break;
                     default:
                         FolderVMs.Add(new FolderViewModel(wsFolder.Value, FolderManager.FolderNameMap[wsFolder.Key], _events));

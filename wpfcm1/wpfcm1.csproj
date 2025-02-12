@@ -205,36 +205,26 @@
       <DependentUpon>WebView.xaml</DependentUpon>
     </Compile>
     <Compile Include="FolderGroups\WebViewModel.cs" />
-    <Compile Include="FolderTypes\ConfirmedOutToDoFolderView.xaml.cs">
-      <DependentUpon>ConfirmedOutToDoFolderView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="FolderTypes\ConfirmedToDoFolderView.xaml.cs">
       <DependentUpon>ConfirmedToDoFolderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="FolderTypes\ConfirmedFolderView.xaml.cs">
       <DependentUpon>ConfirmedFolderView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FolderTypes\ConfirmedOutToDoFolderViewModel.cs" />
     <Compile Include="FolderTypes\ConfirmedToDoFolderViewModel.cs" />
     <Compile Include="FolderTypes\ConfirmedFolderViewModel.cs" />
     <Compile Include="FolderTypes\OutboxFolderView.xaml.cs">
       <DependentUpon>OutboxFolderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="FolderTypes\OutboxFolderViewModel.cs" />
-    <Compile Include="FolderTypes\PendFolderView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="FolderTypes\PendFolderViewModel.cs" />
     <Compile Include="FTP\FtpClient.cs" />
     <Compile Include="Certificates\CertificateHelpers.cs" />
     <Compile Include="Model\CertificateModel.cs" />
-    <Compile Include="Model\ConfirmedOutToDoDocumentModel.cs" />
     <Compile Include="Model\ConfirmedToDoDocumentModel.cs" />
     <Compile Include="Model\InternalMessageModel.cs" />
     <Compile Include="Model\DocumentModel.cs" />
     <Compile Include="Model\ConfirmedDocumentModel.cs" />
     <Compile Include="Model\OutboxDocumentModel.cs" />
-    <Compile Include="Model\PendDocumentModel.cs" />
     <Compile Include="Model\GeneratedDocumentModel.cs" />
     <Compile Include="Model\InboxDocumentModel.cs" />
     <Compile Include="Model\RecognitionPatternModel.cs" />
@@ -334,10 +324,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="FolderTypes\ConfirmedOutToDoFolderView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="FolderTypes\ConfirmedToDoFolderView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -349,10 +335,6 @@
     <Page Include="FolderTypes\OutboxFolderView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="FolderTypes\PendFolderView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Preview\PreviewView.xaml">
       <SubType>Designer</SubType>
