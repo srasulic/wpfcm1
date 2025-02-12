@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using wpfcm1.Settings;
 
 namespace wpfcm1.Dialogs
@@ -18,7 +17,6 @@ namespace wpfcm1.Dialogs
 
             RootFolder = folders.RootFolder;
             ArchiveFolder = folders.ArchiveFolder;
-            ArchivePolicy = user.ArchivePolicy != "" ? user.ArchivePolicy : @"BASIC";
 
             UserName = user.UserName;
             PIB = user.PIB;
@@ -57,20 +55,6 @@ namespace wpfcm1.Dialogs
         {
             get { return _archiveFolder; }
             set { _archiveFolder = value; NotifyOfPropertyChange(() => ArchiveFolder); }
-        }
-
-        private List<string> _archivePolicies = new List<string> { "BASIC", "GROUP_RENAME" };
-        public List<string> ArchivePolicies
-        {
-            get { return _archivePolicies; }
-            set { _archivePolicies = value; NotifyOfPropertyChange(() => ArchivePolicies); }
-        }
-
-        private string _archivePolicy;
-        public string ArchivePolicy
-        {
-            get { return _archivePolicy; }
-            set { _archivePolicy = value; NotifyOfPropertyChange(() => ArchivePolicy); }
         }
 
         private string _variation;
@@ -188,7 +172,6 @@ namespace wpfcm1.Dialogs
         {
             Folders.Default.RootFolder = RootFolder;
             Folders.Default.ArchiveFolder = ArchiveFolder;
-            User.Default.ArchivePolicy = ArchivePolicy;
 
             User.Default.Save();
             Folders.Default.Save();
