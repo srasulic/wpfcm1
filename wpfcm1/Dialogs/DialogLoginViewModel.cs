@@ -211,7 +211,6 @@ namespace wpfcm1.Dialogs
             User.Default.AppTitle = _loginOkCache.Variation.AppTitle;
             User.Default.Variation = _loginOkCache.Variation.Name;
             User.Default.FtpServer = _loginOkCache.Variation.FtpServer;
-            //User.Default.Token = _loginOkCache.Token.access_token;
             User.Default.TimestampServer = _loginOkCache.Profile.tenant_info.ts_url;
             User.Default.TimestampUserName = _loginOkCache.Profile.tenant_info.ts_username;
             User.Default.TimestampPassword = _loginOkCache.Profile.tenant_info.ts_pass;

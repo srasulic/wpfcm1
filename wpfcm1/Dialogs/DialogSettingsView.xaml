@@ -6,7 +6,7 @@
     WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
     BorderBrush="{DynamicResource AccentColorBrush}"
     BorderThickness="1" FontSize="14"
-    Width="600" Height="600"
+    Width="600" Height="400"
     >
     <Grid Margin="5">
         <Grid.RowDefinitions >
@@ -37,18 +37,17 @@
         <Label Grid.Row="7" Grid.Column="0" Content="Timestamp password" VerticalAlignment="Center"/>
         <Label Grid.Row="8" Grid.Column="0" Content="Potpis offset" VerticalAlignment="Center"/>
         <Label Grid.Row="9" Grid.Column="0" Content="Api URL" VerticalAlignment="Center"/>
-        <Label Grid.Row="10" Grid.Column="0"  Content="Polisa za arhiviranje" VerticalAlignment="Center"/>
 
         <TextBox Grid.Row="0" Grid.Column="1" Margin="8" VerticalAlignment="Center" x:Name="RootFolder" />
         <TextBox Grid.Row="1" Grid.Column="1" Margin="8" VerticalAlignment="Center" x:Name="ArchiveFolder"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Margin="8" VerticalAlignment="Center" x:Name="UserName" IsReadOnly="True" BorderThickness="0"/>
-        <TextBox Grid.Row="3" Grid.Column="1" Margin="8" VerticalAlignment="Center" x:Name="PIB" IsReadOnly="True" BorderThickness="0"/>
-        <TextBox Grid.Row="4" Grid.Column="1" Margin="8" VerticalAlignment="Center" x:Name="Variation" IsReadOnly="True" BorderThickness="0"/>
-        <TextBox Grid.Row="5" Grid.Column="1" Margin="8" VerticalAlignment="Center" x:Name="TimestampServer" IsReadOnly="True" BorderThickness="0"/>
-        <TextBox Grid.Row="6" Grid.Column="1" Margin="8" VerticalAlignment="Center" x:Name="TimestampUserName" IsReadOnly="True" BorderThickness="0"/>
-        <TextBox Grid.Row="7" Grid.Column="1" Margin="8" VerticalAlignment="Center" x:Name="TimestampPassword" IsReadOnly="True" BorderThickness="0"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Margin="8,0,8,0" VerticalAlignment="Center" x:Name="UserName" IsReadOnly="True" BorderThickness="0"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Margin="8,0,8,0" VerticalAlignment="Center" x:Name="PIB" IsReadOnly="True" BorderThickness="0"/>
+        <TextBox Grid.Row="4" Grid.Column="1" Margin="8,0,8,0" VerticalAlignment="Center" x:Name="Variation" IsReadOnly="True" BorderThickness="0"/>
+        <TextBox Grid.Row="5" Grid.Column="1" Margin="8,0,8,0" VerticalAlignment="Center" x:Name="TimestampServer" IsReadOnly="True" BorderThickness="0"/>
+        <TextBox Grid.Row="6" Grid.Column="1" Margin="8,0,8,0" VerticalAlignment="Center" x:Name="TimestampUserName" IsReadOnly="True" BorderThickness="0"/>
+        <TextBox Grid.Row="7" Grid.Column="1" Margin="8,0,8,0" VerticalAlignment="Center" x:Name="TimestampPassword" IsReadOnly="True" BorderThickness="0"/>
 
-        <Grid Grid.Row="8" Grid.Column="1" Margin="8">
+        <Grid Grid.Row="8" Grid.Column="1" Margin="8,0,8,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -59,17 +58,17 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Text="x-L:" Margin="8" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <TextBox Grid.Column="1" VerticalAlignment="Center" IsReadOnly="True" x:Name="XSigShift" BorderThickness="0"/>
-            <TextBlock Grid.Column="2" Text="y-L:" Margin="8" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <TextBox Grid.Column="3" VerticalAlignment="Center" IsReadOnly="True" x:Name="YSigShift" BorderThickness="0"/>
-            <TextBlock Grid.Column="4" Text="x-D:" Margin="8" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <TextBox Grid.Column="5" VerticalAlignment="Center" IsReadOnly="True" x:Name="XSigShiftRight" BorderThickness="0"/>
-            <TextBlock Grid.Column="6" Text="y-D:" Margin="8" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <TextBox Grid.Column="7" VerticalAlignment="Center" IsReadOnly="True" x:Name="YSigShiftRight" BorderThickness="0"/>
+            <TextBlock Grid.Column="0" Text="x-L:" Margin="8,0,8,0" VerticalAlignment="Center" />
+            <TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Bottom" IsReadOnly="True" x:Name="XSigShift" BorderThickness="0"/>
+            <TextBlock Grid.Column="2" Text="y-L:" Margin="8,0,8,0" VerticalAlignment="Center" />
+            <TextBox Grid.Column="3" VerticalAlignment="Center" VerticalContentAlignment="Bottom" IsReadOnly="True" x:Name="YSigShift" BorderThickness="0"/>
+            <TextBlock Grid.Column="4" Text="x-D:" Margin="8,0,8,0" VerticalAlignment="Center" />
+            <TextBox Grid.Column="5" VerticalAlignment="Center" VerticalContentAlignment="Bottom" IsReadOnly="True" x:Name="XSigShiftRight" BorderThickness="0"/>
+            <TextBlock Grid.Column="6" Text="y-D:" Margin="8,0,8,0" VerticalAlignment="Center" />
+            <TextBox Grid.Column="7" VerticalAlignment="Center" VerticalContentAlignment="Bottom" IsReadOnly="True" x:Name="YSigShiftRight" BorderThickness="0"/>
         </Grid>
 
-        <TextBox Grid.Row="9" Grid.Column="1" Margin="8" IsReadOnly="True" x:Name="ApiURL" BorderThickness="0"/>
+        <TextBox Grid.Row="9" Grid.Column="1" Margin="8,0,8,0" IsReadOnly="True" x:Name="ApiURL" BorderThickness="0"/>
         <StackPanel Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Button Content="OK" MinWidth="64" x:Name="OnClose" Margin="8"/>
             <Button Content="Cancel"  MinWidth="64" x:Name="OnCancel" Margin="8"/>
