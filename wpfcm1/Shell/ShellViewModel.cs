@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Web.UI.WebControls;
 using Caliburn.Micro;
 using wpfcm1.Certificates;
 using wpfcm1.DataAccess;
@@ -49,7 +50,27 @@ namespace wpfcm1.Shell
             WebVM = new WebViewModel("Online report");
             LoginVM = new DialogLoginViewModel(_windowManager);
 
-            ShowHome();
+            ShowLogin();
+        }
+
+        protected override void OnDeactivate(bool close)
+        {
+            InboundVM.Dispose();
+            OutboundVM.Dispose();
+            IosInboundVM.Dispose();
+            IosOutboundVM.Dispose();
+            OtpadInboundVM.Dispose();
+            OtpadOutboundVM.Dispose();
+            OtpremnicaInboundVM.Dispose();
+            OtpremnicaOutboundVM.Dispose();
+            KpInboundVM.Dispose();
+            KpOutboundVM.Dispose();
+            PovratiInboundVM.Dispose();
+            PovratiOutboundVM.Dispose();
+            OtherInboundVM.Dispose();
+            OtherOutboundVM.Dispose();
+            WebVM.Dispose();
+            LoginVM.Dispose();
         }
 
         //Imported components:
@@ -74,8 +95,9 @@ namespace wpfcm1.Shell
         public WebViewModel WebVM { get; set; }
         public DialogLoginViewModel LoginVM { get; set; }
 
-        public void ShowHome()
-        {   //*****************************************************************
+        public void ShowLogin()
+        {
+            //*****************************************************************
             // dok ne nađemo način da sprečimo iskakanje Please insert card, ovo će biti privremenio isključeno.
             // CertVM.RefreshCertificateList();
             //*****************************************************************
@@ -83,6 +105,12 @@ namespace wpfcm1.Shell
             _events.PublishOnUIThread(new MessageViewModelActivated(ActiveItem.GetType().Name));
 
             _windowManager.ShowDialog(LoginVM);
+        }
+
+        public void ShowHome()
+        {
+            ActivateItem(HomeVM);
+            _events.PublishOnUIThread(new MessageViewModelActivated(ActiveItem.GetType().Name));
         }
 
         public void ShowOutbound()
@@ -228,26 +256,6 @@ namespace wpfcm1.Shell
         {
             bool pickCertificate = true;
             CertVM.RefreshCertificateList(pickCertificate);
-        }
-
-        protected override void OnDeactivate(bool close)
-        {
-            InboundVM.Dispose();
-            OutboundVM.Dispose();
-            IosInboundVM.Dispose();
-            IosOutboundVM.Dispose();
-            OtpadInboundVM.Dispose();
-            OtpadOutboundVM.Dispose();
-            OtpremnicaInboundVM.Dispose();
-            OtpremnicaOutboundVM.Dispose();
-            KpInboundVM.Dispose();
-            KpOutboundVM.Dispose();
-            PovratiInboundVM.Dispose();
-            PovratiOutboundVM.Dispose();
-            OtherInboundVM.Dispose();
-            OtherOutboundVM.Dispose();
-            WebVM.Dispose();
-            LoginVM.Dispose();
         }
     }
 }
