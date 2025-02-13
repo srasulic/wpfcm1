@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace wpfcm1.Model
 {
@@ -12,8 +11,5 @@ namespace wpfcm1.Model
         public InboxDocumentModel(FileInfo fi) : base(fi)
         {
         }
-
-
-
     }
 }

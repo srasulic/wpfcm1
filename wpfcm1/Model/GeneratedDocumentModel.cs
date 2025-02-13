@@ -31,16 +31,17 @@ namespace wpfcm1.Model
         public string InvoiceNo
         {
             get { return _invoiceNo; }
-            set {
+            set
+            {
                 if (string.IsNullOrEmpty(value))
                 {
                     _invoiceNo = value;
-                } else
+                }
+                else
                 {
                     Regex regexAllowedCharacters = new Regex(@"[^0-9a-zA-Z]");
                     _invoiceNo = regexAllowedCharacters.Replace(value, @"-");
                 }
-                //_invoiceNo = value;
                 NotifyOfPropertyChange(() => InvoiceNo);
             }
         }
@@ -68,7 +69,6 @@ namespace wpfcm1.Model
                             IsValid = false;
                             return "Pib is not invalid PIB number";
                         }
-
                         break;
                     case "PibIssuer":
                         if (wpfcm1.FolderTypes.GeneratedFolderViewModel.IsPibOk(PibIssuer, false))  // treba na lepše mesto staviti IsPibOk...
@@ -80,7 +80,6 @@ namespace wpfcm1.Model
                             IsValid = false;
                             return "Pib is not invalid PIB number";
                         }
-
                         break;
                     case "InvoiceNo":
                         if (string.IsNullOrWhiteSpace(InvoiceNo))

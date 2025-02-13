@@ -4,7 +4,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using System;
-using wpfcm1.DataAccess;
 
 namespace wpfcm1.Model
 {
@@ -19,7 +18,7 @@ namespace wpfcm1.Model
             DocumentInfo = fi;
             DocumentPath = fi.FullName; //za serijalizaciju
             double len = fi.Length;
-            LengthKB = System.Math.Round(len / 1024);
+            LengthKB = Math.Round(len / 1024);
             // ovo nece raditi za Generated fajlove jer oni jos nemaju ime po konvenciji
             if (Regex.IsMatch(fi.Name, @"[0-9]{9}_[0-9]{9}_.+_[0-9]{8}.+") || Regex.IsMatch(fi.Name, @"[0-9]{13}_[0-9]{13}_.+_[0-9]{8}.+"))
             {
@@ -44,7 +43,6 @@ namespace wpfcm1.Model
 
         public string DocumentPath { get; set; }
 
-
         public virtual string this[string columnName]
         {
             //TODO: ovo sad nije bitno, sredi kasnije (error check)
@@ -62,7 +60,6 @@ namespace wpfcm1.Model
             get { return _processed; }
             set { _processed = value; NotifyOfPropertyChange(() => Processed); }
         }
-
 
         // 1.2 koristi se samo tokom manipulacije dokumentima u listama
         private bool _isChecked;
@@ -162,8 +159,11 @@ namespace wpfcm1.Model
             {
                 return _namePib1Name;
             }
-            set { _namePib1Name = value; 
-                NotifyOfPropertyChange(() => namePib1Name); }
+            set
+            {
+                _namePib1Name = value;
+                NotifyOfPropertyChange(() => namePib1Name);
+            }
         }
 
         // 1.13 za Outbox - da prikažemo tipove poruka koje se šalju
@@ -415,7 +415,6 @@ namespace wpfcm1.Model
 
         public bool NotSignedAgain_Approved { get { return !IsSignedAgain && isApprovedForProcessing; } set { } }
 
-
         // 5.2. remove sign
         public bool ShouldSerializeNotSignedAgain_Rejected() { return false; }
 
@@ -448,7 +447,6 @@ namespace wpfcm1.Model
             set { }
         }
 
-
         // 5.5. 
         public bool ShouldSerializeIsValid_HasSS_IsValidated_IsNotValidated2() { return false; }
 
@@ -462,7 +460,6 @@ namespace wpfcm1.Model
             }
             set { }
         }
-
 
 
         [XmlIgnore]

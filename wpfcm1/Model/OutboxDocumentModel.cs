@@ -11,6 +11,5 @@ namespace wpfcm1.Model
         public OutboxDocumentModel(FileInfo fi) : base(fi)
         {
         }
-
     }
 }

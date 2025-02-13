@@ -1,10 +1,7 @@
 ﻿using Caliburn.Micro;
 using System.ComponentModel;
 using System.IO;
-using System.Text.RegularExpressions;
 using System.Xml.Serialization;
-using System;
-using wpfcm1.PDF;
 
 namespace wpfcm1.Model
 {
@@ -35,7 +32,6 @@ namespace wpfcm1.Model
         public string DocumentPath { get; set; }
         public string MessageFileName { get; set; }
 
-
         public virtual string this[string columnName]
         {
             //TODO: ovo sad nije bitno, sredi kasnije (error check)
@@ -49,7 +45,6 @@ namespace wpfcm1.Model
             get { return _processed; }
             set { _processed = value; }
         }
-        
 
         // 4.1. interna poruka - odobren ili ne
         private bool? _isApprovedForProcessing;
@@ -67,7 +62,7 @@ namespace wpfcm1.Model
             set { _archiveReady = value; }
         }
 
-        // 4.4. odbbacen - nije za dalje procesiranje
+        // 4.4. odbacen - nije za dalje procesiranje
         private bool? _isRejected;
         public bool? isRejected
         {
@@ -75,7 +70,6 @@ namespace wpfcm1.Model
             set { _isRejected = value; }
         }
 
- 
         [XmlIgnore]
         public string Error { get; private set; }
     }
