@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Web.UI.WebControls;
 using Caliburn.Micro;
 using wpfcm1.Certificates;
 using wpfcm1.DataAccess;
@@ -214,37 +213,24 @@ namespace wpfcm1.Shell
                 {FolderManager.InvoicesOutboundOutboxFolder, OutboundVM.FolderVMs[1]},
                 {FolderManager.InvoicesInboundInboxFolder, InboundVM.FolderVMs[0]},
                 {FolderManager.InvoicesInboundOutboxFolder, InboundVM.FolderVMs[1]},
-                {FolderManager.InvoicesInboundConfirmedFolder, InboundVM.FolderVMs[3]},
-
                 {FolderManager.IosOutboundOutboxFolder, IosOutboundVM.FolderVMs[1]},
                 {FolderManager.IosInboundInboxFolder, IosInboundVM.FolderVMs[0]},
                 {FolderManager.IosInboundOutboxFolder, IosInboundVM.FolderVMs[1]},
-                {FolderManager.IosInboundConfirmedFolder, IosInboundVM.FolderVMs[3]},
-
                 {FolderManager.OtpadOutboundOutboxFolder, OtpadOutboundVM.FolderVMs[1]},
                 {FolderManager.OtpadInboundInboxFolder, OtpadInboundVM.FolderVMs[0]},
                 {FolderManager.OtpadInboundOutboxFolder, OtpadInboundVM.FolderVMs[1]},
-                {FolderManager.OtpadInboundConfirmedFolder, OtpadInboundVM.FolderVMs[3]},
-
                 {FolderManager.OtpremnicaOutboundOutboxFolder, OtpremnicaOutboundVM.FolderVMs[1]},
                 {FolderManager.OtpremnicaInboundInboxFolder, OtpremnicaInboundVM.FolderVMs[0]},
                 {FolderManager.OtpremnicaInboundOutboxFolder, OtpremnicaInboundVM.FolderVMs[1]},
-                {FolderManager.OtpremnicaInboundConfirmedFolder, OtpremnicaInboundVM.FolderVMs[3]},
-
                 {FolderManager.KpOutboundOutboxFolder, KpOutboundVM.FolderVMs[1]},
                 {FolderManager.KpInboundInboxFolder, KpInboundVM.FolderVMs[0]},
                 {FolderManager.KpInboundOutboxFolder, KpInboundVM.FolderVMs[1]},
-                {FolderManager.KpInboundConfirmedFolder, KpInboundVM.FolderVMs[3]},
-
                 {FolderManager.PovratiOutboundOutboxFolder, PovratiOutboundVM.FolderVMs[1]},
                 {FolderManager.PovratiInboundInboxFolder, PovratiInboundVM.FolderVMs[0]},
                 {FolderManager.PovratiInboundOutboxFolder, PovratiInboundVM.FolderVMs[1]},
-                {FolderManager.PovratiInboundConfirmedFolder, PovratiInboundVM.FolderVMs[3]},
-
                 {FolderManager.OtherOutboundOutboxFolder, OtherOutboundVM.FolderVMs[1]},
                 {FolderManager.OtherInboundInboxFolder, OtherInboundVM.FolderVMs[0]},
                 {FolderManager.OtherInboundOutboxFolder, OtherInboundVM.FolderVMs[1]},
-                {FolderManager.OtherInboundConfirmedFolder, OtherInboundVM.FolderVMs[3]}
             };
 
             //TODO: ovo mora drugacije

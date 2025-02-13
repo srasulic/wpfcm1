@@ -169,12 +169,10 @@
     </ApplicationDefinition>
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="Common\CommonTypes.cs" />
-    <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\UserDetails.cs" />
     <Compile Include="Converters\Converters.cs" />
     <Compile Include="DataAccess\APIManager.cs" />
     <Compile Include="DataAccess\CertificateRepositiory.cs" />
-    <Compile Include="DataAccess\EncryptionHelper.cs" />
     <Compile Include="DataAccess\FolderManager.cs" />
     <Compile Include="Dialogs\DialogAboutView.xaml.cs">
       <DependentUpon>DialogAboutView.xaml</DependentUpon>
@@ -205,14 +203,6 @@
       <DependentUpon>WebView.xaml</DependentUpon>
     </Compile>
     <Compile Include="FolderGroups\WebViewModel.cs" />
-    <Compile Include="FolderTypes\ConfirmedToDoFolderView.xaml.cs">
-      <DependentUpon>ConfirmedToDoFolderView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="FolderTypes\ConfirmedFolderView.xaml.cs">
-      <DependentUpon>ConfirmedFolderView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="FolderTypes\ConfirmedToDoFolderViewModel.cs" />
-    <Compile Include="FolderTypes\ConfirmedFolderViewModel.cs" />
     <Compile Include="FolderTypes\OutboxFolderView.xaml.cs">
       <DependentUpon>OutboxFolderView.xaml</DependentUpon>
     </Compile>
@@ -220,10 +210,8 @@
     <Compile Include="FTP\FtpClient.cs" />
     <Compile Include="Certificates\CertificateHelpers.cs" />
     <Compile Include="Model\CertificateModel.cs" />
-    <Compile Include="Model\ConfirmedToDoDocumentModel.cs" />
     <Compile Include="Model\InternalMessageModel.cs" />
     <Compile Include="Model\DocumentModel.cs" />
-    <Compile Include="Model\ConfirmedDocumentModel.cs" />
     <Compile Include="Model\OutboxDocumentModel.cs" />
     <Compile Include="Model\GeneratedDocumentModel.cs" />
     <Compile Include="Model\InboxDocumentModel.cs" />
@@ -321,14 +309,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="FolderGroups\WebView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="FolderTypes\ConfirmedToDoFolderView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="FolderTypes\ConfirmedFolderView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

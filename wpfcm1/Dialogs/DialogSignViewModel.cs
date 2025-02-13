@@ -55,7 +55,7 @@ namespace wpfcm1.Dialogs
                 Reports.Add(document.DocumentInfo.Name);
             }
 
-            if ((_folder is InboxFolderViewModel) || (_folder is ConfirmedToDoFolderViewModel) )
+            if (_folder is InboxFolderViewModel)
             {
                 _buttonApproveVisible = true;
             }
@@ -176,12 +176,6 @@ namespace wpfcm1.Dialogs
                 Reports.Clear();
                 Reports.Add("Dokumenti su označeni kao ispravni i odobreni za dalju obradu i potpisivanje...");
             }
-            if (_folder is ConfirmedToDoFolderViewModel)
-            {
-                (_folder as ConfirmedToDoFolderViewModel).SetApproved(true);
-                Reports.Clear();
-                Reports.Add("Dokumenti su označeni kao ispravni i odobreni za dalju obradu i potpisivanje...");
-            }
         }
 
         public void OnApproveNot()
@@ -189,12 +183,6 @@ namespace wpfcm1.Dialogs
             if (_folder is InboxFolderViewModel)
             {
                 (_folder as InboxFolderViewModel).SetApproved(false);
-                Reports.Clear();
-                Reports.Add("Dokumenti su označeni kao nevalidni za dalju obradu i potpisivanje...");
-            }
-            if (_folder is ConfirmedToDoFolderViewModel)
-            {
-                (_folder as ConfirmedToDoFolderViewModel).SetApproved(false);
                 Reports.Clear();
                 Reports.Add("Dokumenti su označeni kao nevalidni za dalju obradu i potpisivanje...");
             }
@@ -210,14 +198,6 @@ namespace wpfcm1.Dialogs
             {
                 return (folder as InboxFolderViewModel).GetDocumentsForSigning();
             }
-            if (folder is ConfirmedToDoFolderViewModel)
-            {
-                return (folder as ConfirmedToDoFolderViewModel).GetDocumentsForSigning();
-            }
-            //if (folder is ConfirmedOutToDoFolderViewModel)
-            //{
-            //    return (folder as ConfirmedOutToDoFolderViewModel).GetDocumentsForSigning();
-            //}
             throw new ArgumentException("folder)");
         }
     }

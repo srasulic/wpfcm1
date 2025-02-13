@@ -176,11 +176,6 @@ namespace wpfcm1.Processing
                 var destinationFileName = string.Format("{0}_s{1}", Path.GetFileNameWithoutExtension(document.DocumentInfo.Name), Path.GetExtension(document.DocumentInfo.Name));
                 return destinationFileName;
             }
-            if (document is ConfirmedToDoDocumentModel)
-            {
-                var destinationFileName = string.Format("{0}_s{1}", Path.GetFileNameWithoutExtension(document.DocumentInfo.Name), Path.GetExtension(document.DocumentInfo.Name));
-                return destinationFileName;
-            }
             throw new ArgumentException("CreateSignedPdfFileName - error.");
         }
     }
