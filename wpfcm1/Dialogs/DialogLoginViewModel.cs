@@ -155,6 +155,7 @@ namespace wpfcm1.Dialogs
         public async void Login()
         {
             var svc = new OlympusService(SelectedVariation.ApiUrl);
+            Tenants = null;
 
             var token = await svc.PostUsersLogin(UserName, Password);
             if (token == null)
@@ -206,11 +207,11 @@ namespace wpfcm1.Dialogs
         public void SaveAndClose()
         {
             User.Default.UserName = _loginOkCache.User;
-            User.Default.PIB = _loginOkCache.Profile.tenant_info.ib;
             User.Default.ApiURL = _loginOkCache.Variation.ApiUrl;
             User.Default.AppTitle = _loginOkCache.Variation.AppTitle;
             User.Default.Variation = _loginOkCache.Variation.Name;
             User.Default.FtpServer = _loginOkCache.Variation.FtpServer;
+            User.Default.PIB = _loginOkCache.Profile.tenant_info.ib;
             User.Default.TimestampServer = _loginOkCache.Profile.tenant_info.ts_url;
             User.Default.TimestampUserName = _loginOkCache.Profile.tenant_info.ts_username;
             User.Default.TimestampPassword = _loginOkCache.Profile.tenant_info.ts_pass;
@@ -219,7 +220,11 @@ namespace wpfcm1.Dialogs
             User.Default.XSigShiftRight = _loginOkCache.Profile.tenant_info.X_SIG_SHIFT_DESNI;
             User.Default.YSigShiftRight = _loginOkCache.Profile.tenant_info.Y_SIG_SHIFT_DESNI;
 
+            User.Default.JsonToken = OlympusService.SerializeToJson(_loginOkCache.Token);
+            User.Default.JsonProfile = OlympusService.SerializeToJson(_loginOkCache.Profile);
+
             User.Default.Save();
+            //TODO: treba mi DI, servis za api, login, setingse i foldere
 
             (GetView() as Window).Hide();
         }

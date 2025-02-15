@@ -3,28 +3,28 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
 using wpfcm1.Extensions;
 using wpfcm1.FolderTypes;
-using wpfcm1.FTP;
-using wpfcm1.Model;
 using wpfcm1.PDF;
 using wpfcm1.Processing;
+using wpfcm1.OlympusApi;
 using wpfcm1.Settings;
-using wpfcm1.DataAccess;
 
 namespace wpfcm1.Dialogs
 {
     public class DialogSyncViewModel : Screen
     {
-        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly Dictionary<string, FolderViewModel> _folders;
+
         private readonly Progress<string> _reporter;
         private CancellationTokenSource _cancellation;
-        
-        
+
         public DialogSyncViewModel(Dictionary<string, FolderViewModel> folders)
         {
             DisplayName = "PoliSign - sinhronizacija sa serverom";
@@ -73,7 +73,7 @@ namespace wpfcm1.Dialogs
 
         public async void OnStart()
         {
-            // ToDO: smestiti ovo negde na lepše mesto, za sad je u FolderViewModel... 
+            // TODO: smestiti ovo negde na lepše mesto, za sad je u FolderViewModel... 
             FolderViewModel.PsKillPdfHandlers();
             try
             {
@@ -91,7 +91,7 @@ namespace wpfcm1.Dialogs
             }
             catch (WebException ex)
             {
-                Log.Error("Network error..", ex); 
+                Log.Error("Network error..", ex);
                 (_reporter as IProgress<string>).Report("Network error");
                 (_reporter as IProgress<string>).Report(ex.Message);
             }
@@ -112,79 +112,62 @@ namespace wpfcm1.Dialogs
             }
         }
 
-        public async Task SyncAllAsync(IProgress<string> reporter = null, CancellationToken token = default(CancellationToken))
+        public async Task SyncAllAsync(IProgress<string> reporter = null, CancellationToken token = default)
         {
-            //var ftpServer = User.Default.FtpServer;
-            //if (string.IsNullOrEmpty(ftpServer)) throw new ApplicationException("FTP server nije unet!");
-            //var ftpUsername = User.Default.UserName;
-            //if (string.IsNullOrEmpty(ftpUsername)) throw new ApplicationException("Username korisnika nije unet!");
-            //var ftpPassword = User.Default.Password;
-            //if (string.IsNullOrEmpty(ftpPassword)) throw new ApplicationException("Password korisnika nije unet!");
-
-            //Decrypting FTP Password
-            //ftpPassword = EncryptionHelper.Decrypt(ftpPassword);
-
-            //TODO:
-            var ftpClient = new FtpClient("ftpServer", "ftpUsername", "ftpPassword");
-
             PrepareErrorLogForUpload();
 
-            foreach (var folder in _folders)
-            {
+            var svc = new OlympusService(User.Default.ApiURL);
+            var syncMgr = new SyncManager();
+            Profile profile = OlympusService.DeserializeFromJson<Profile>(User.Default.JsonProfile);
 
-                var sourceDir = folder.Key;
-                var destinationDir = FtpTransferRules.FtpMap[sourceDir];
-                //var documents = new List<DocumentModel>(folder.Value.Documents); //shallow copy, cannot iterate collection that is going to be modified
-                // uzmemo sve fajlove u direktorijumu bez obzira na to sta se nalazi u listama sa kojima korisnik radi
-                var documents = new BindableCollection<DocumentModel>(
-                    Directory.EnumerateFiles(sourceDir)
-                        .Where(f => !(System.Text.RegularExpressions.Regex.IsMatch(Path.GetFileName(f), @"stat.+\.xml", System.Text.RegularExpressions.RegexOptions.IgnoreCase)))
-                        .Select(f => new DocumentModel(new FileInfo(f))));
-                var ftpAction = FtpTransferRules.Action[sourceDir];
-                var syncMgr = new SyncManager();
-                Log.Info(string.Format("Syncing {0} with {1}", sourceDir, destinationDir));
-                switch (ftpAction)
+            foreach(var item in profile.tip_dok_pristup)
+            {
+                var pairs = SyncTransferRules.GetFoldersForDocType(item);
+                foreach(var pair in pairs)
                 {
-                    case FtpTransferRules.TransferAction.Upload:
-                        if (reporter != null) reporter.Report(string.Format("Upload:\t{0} -> {1}", sourceDir, destinationDir));
-                        await syncMgr.Upload(ftpClient, documents, sourceDir, destinationDir, reporter, token);
-                        if (reporter != null) reporter.Report("OK");
-                        File.Create(sourceDir + @"\" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + ".syncstamp").Dispose();
-                        break;
-                    case FtpTransferRules.TransferAction.Sync:
-                        if (reporter != null) reporter.Report(string.Format("Sync:\t{0} <-> {1}", sourceDir, destinationDir));
-                        await syncMgr.Sync(ftpClient, documents, sourceDir, destinationDir, true, reporter, token);
-                        if (reporter != null) reporter.Report("OK");
-                        File.Create(sourceDir + @"\" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + ".syncstamp").Dispose();
-                        break;
-                    case FtpTransferRules.TransferAction.Download:
-                        if (reporter != null) reporter.Report(string.Format("Download:\t{0} <-> {1}", sourceDir, destinationDir));
-                        await syncMgr.Sync(ftpClient, documents, sourceDir, destinationDir, false, reporter, token);
-                        if (reporter != null) reporter.Report("OK");
-                        File.Create(sourceDir + @"\" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + ".syncstamp").Dispose();
-                        break;
-                    case FtpTransferRules.TransferAction.Exclude:
-                        if (reporter != null) reporter.Report(string.Format("Excluded:\t{0} <-> {1}", sourceDir, destinationDir));
-                        break;
+                    (string folder, SyncTransferRules.TransferAction action) = pair;
+                    // get document for folder
+                    Log.Info($"Syncing {folder}");
+                    switch (action)
+                    {
+                        case SyncTransferRules.TransferAction.Upload:
+                    //        reporter?.Report($"Upload:\t{sourceDir}");
+                    //        await syncMgr.Upload(svc, documents, sourceDir, reporter, token);
+                    //        reporter?.Report("OK");
+                    //        File.Create(sourceDir + @"\" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + ".syncstamp").Dispose();
+                            break;
+                        case SyncTransferRules.TransferAction.Sync:
+                    //        reporter?.Report($"Sync:\t{sourceDir}");
+                    //        await syncMgr.Sync(svc, documents, sourceDir, true, reporter, token);
+                    //        reporter?.Report("OK");
+                    //        File.Create(sourceDir + @"\" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + ".syncstamp").Dispose();
+                            break;
+                    //    case SyncTransferRules.TransferAction.Download:
+                    //        reporter?.Report($"Download:\t{sourceDir}");
+                    //        await syncMgr.Sync(svc, documents, sourceDir, false, reporter, token);
+                    //        reporter?.Report("OK");
+                    //        File.Create(sourceDir + @"\" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + ".syncstamp").Dispose();
+                    //        break;
+                        default:
+                            break;
+                    }
                 }
             }
-            
         }
 
         private void PrepareErrorLogForUpload()
         {
-
             try
             {
-                var destinationDir = SigningTransferRules.LocalMap[wpfcm1.DataAccess.FolderManager.OtherOutboundErpIfaceFolder];
+                var destinationDir = SigningTransferRules.LocalMap[DataAccess.FolderManager.OtherOutboundErpIfaceFolder];
                 var fileName = "fakture.log.txt";
                 var destFileName = Path.Combine(destinationDir, DateTime.UtcNow.ToString("yyyyMMddHHmmssfff")) + ".errorlog";
                 File.Copy(fileName, destFileName, true);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Log.Error("ERR: PrepareErrorLogForUpload ", e);
             }
-  
         }
     }
 }

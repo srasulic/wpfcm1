@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using wpfcm1.DataAccess;
+using wpfcm1.OlympusApi;
+using static iTextSharp.text.pdf.AcroFields;
 
 namespace wpfcm1.PDF
 {
@@ -52,7 +55,7 @@ namespace wpfcm1.PDF
             {FolderManager.OtherInboundInboxFolder, FolderManager.OtherInboundOutboxFolder},
         };
 
-        public static Dictionary<string, string> ProcessedMap= new Dictionary<string, string>()
+        public static Dictionary<string, string> ProcessedMap = new Dictionary<string, string>()
         {
             {FolderManager.InvoicesOutboundErpIfaceFolder, FolderManager.InvoicesOutboundErpProcFolder},
             {FolderManager.IosOutboundErpIfaceFolder, FolderManager.IosOutboundErpProcFolder},
@@ -60,7 +63,7 @@ namespace wpfcm1.PDF
             {FolderManager.OtpremnicaOutboundErpIfaceFolder, FolderManager.OtpremnicaOutboundErpProcFolder},
             {FolderManager.KpOutboundErpIfaceFolder, FolderManager.KpOutboundErpProcFolder},
             {FolderManager.PovratiOutboundErpIfaceFolder, FolderManager.PovratiOutboundErpProcFolder},
-            {FolderManager.OtherOutboundErpIfaceFolder, FolderManager.OtherOutboundErpProcFolder},            
+            {FolderManager.OtherOutboundErpIfaceFolder, FolderManager.OtherOutboundErpProcFolder},
             {FolderManager.InvoicesOutboundOutboxFolder, FolderManager.InvoicesOutboundErpProcFolder},
             {FolderManager.IosOutboundOutboxFolder, FolderManager.IosOutboundErpProcFolder},
             {FolderManager.OtpadOutboundOutboxFolder, FolderManager.OtpadOutboundErpProcFolder},
@@ -96,40 +99,143 @@ namespace wpfcm1.PDF
         };
     }
 
-    public static class FtpTransferRules
+    public static class SyncTransferRules
     {
         public enum TransferAction { Upload, Download, Sync, Exclude };
 
-        public static Dictionary<string, TransferAction> Action = new Dictionary<string, TransferAction>()
-        {
-            //{FolderManager.InvoicesOutboundOutboxFolder, (User.Default.InvoicesOutbound ? TransferAction.Upload : TransferAction.Exclude)},
-            //{FolderManager.InvoicesInboundInboxFolder, (User.Default.InvoicesInbound ? TransferAction.Sync : TransferAction.Exclude)},
-            //{FolderManager.InvoicesInboundOutboxFolder, (User.Default.InvoicesInbound ? TransferAction.Upload : TransferAction.Exclude)},
-
-            //{FolderManager.IosOutboundOutboxFolder, (User.Default.IosOutbound ? TransferAction.Upload : TransferAction.Exclude)},
-            //{FolderManager.IosInboundInboxFolder, (User.Default.IosInbound ? TransferAction.Sync : TransferAction.Exclude)},
-            //{FolderManager.IosInboundOutboxFolder, (User.Default.IosInbound ? TransferAction.Upload : TransferAction.Exclude)},
-
-            //{FolderManager.OtpadOutboundOutboxFolder, (User.Default.OtpadOutbound ? TransferAction.Upload : TransferAction.Exclude)},
-            //{FolderManager.OtpadInboundInboxFolder, (User.Default.OtpadInbound ? TransferAction.Sync : TransferAction.Exclude)},
-            //{FolderManager.OtpadInboundOutboxFolder, (User.Default.OtpadInbound ? TransferAction.Upload : TransferAction.Exclude)},
-
-            //{FolderManager.OtpremnicaOutboundOutboxFolder, (User.Default.OtpremnicaOutbound ? TransferAction.Upload : TransferAction.Exclude)},
-            //{FolderManager.OtpremnicaInboundInboxFolder, (User.Default.OtpremnicaInbound  ? TransferAction.Sync : TransferAction.Exclude)},
-            //{FolderManager.OtpremnicaInboundOutboxFolder, (User.Default.OtpremnicaInbound  ? TransferAction.Upload : TransferAction.Exclude)},
-
-            //{FolderManager.KpOutboundOutboxFolder, (User.Default.KpOutbound ? TransferAction.Upload : TransferAction.Exclude)},
-            //{FolderManager.KpInboundInboxFolder, (User.Default.KpInbound ? TransferAction.Sync : TransferAction.Exclude)},
-            //{FolderManager.KpInboundOutboxFolder, (User.Default.KpInbound ? TransferAction.Upload : TransferAction.Exclude)},
-
-            //{FolderManager.PovratiOutboundOutboxFolder, (User.Default.PovratiOutbound ? TransferAction.Upload : TransferAction.Exclude)},
-            //{FolderManager.PovratiInboundInboxFolder, (User.Default.PovratiInbound ? TransferAction.Sync : TransferAction.Exclude)},
-            //{FolderManager.PovratiInboundOutboxFolder, (User.Default.PovratiInbound ? TransferAction.Upload : TransferAction.Exclude)},
-
-            //{FolderManager.OtherOutboundOutboxFolder, (User.Default.OtherOutbound ? TransferAction.Upload : TransferAction.Exclude)},
-            //{FolderManager.OtherInboundInboxFolder, (User.Default.OtherInbound ? TransferAction.Sync : TransferAction.Exclude)},
-            //{FolderManager.OtherInboundOutboxFolder, (User.Default.OtherInbound ? TransferAction.Upload : TransferAction.Exclude)},
+        public static Dictionary<string, bool> DocDirection = new Dictionary<string, bool> {
+            {"InvoicesOutbound", false},
+            {"InvoicesInbound", false},
+            {"IosOutbound", false},
+            {"IosInbound", false},
+            {"OtpadOutbound", false},
+            {"OtpadInbound", false},
+            {"OtpremnicaOutbound", false},
+            {"OtpremnicaInbound", false},
+            {"KpOutbound", false},
+            {"KpInbound", false},
+            {"PovratiOutbound", false},
+            {"PovratiInbound", false},
+            {"OtherOutbound", false},
+            {"OtherInbound", false}
         };
+
+        public static List<(string Folder, TransferAction Action)> GetFoldersForDocType(TipDokPristup item)
+        {
+            if (item.tip_dok == "faktura" && item.smer == "outbound")
+            {
+                return new List<(string, TransferAction)>
+                {
+                    (FolderManager.InvoicesOutboundOutboxFolder, TransferAction.Upload),
+                };
+            }
+            if (item.tip_dok == "faktura" && item.smer == "inbound")
+            {
+                return new List<(string, TransferAction)>
+                {
+                    (FolderManager.InvoicesInboundInboxFolder, TransferAction.Sync),
+                    (FolderManager.InvoicesInboundOutboxFolder, TransferAction.Upload)
+                };
+            }
+
+            if (item.tip_dok == "ios" && item.smer == "outbound")
+            {
+                return new List<(string, TransferAction)>
+                {
+                    (FolderManager.IosOutboundOutboxFolder, TransferAction.Upload),
+                };
+            }
+            if (item.tip_dok == "ios" && item.smer == "inbound")
+            {
+                return new List<(string, TransferAction)>
+                {
+                    (FolderManager.IosInboundInboxFolder, TransferAction.Sync),
+                    (FolderManager.IosInboundOutboxFolder, TransferAction.Upload)
+                };
+            }
+
+            if (item.tip_dok == "otpad" && item.smer == "outbound")
+            {
+                return new List<(string, TransferAction)>
+                {
+                    (FolderManager.OtpadOutboundOutboxFolder, TransferAction.Upload),
+                };
+            }
+            if (item.tip_dok == "otpad" && item.smer == "inbound")
+            {
+                return new List<(string, TransferAction)>
+                {
+                    (FolderManager.OtpadInboundInboxFolder, TransferAction.Sync),
+                    (FolderManager.OtpadInboundOutboxFolder, TransferAction.Upload)
+                };
+            }
+
+            if (item.tip_dok == "otpremnica" && item.smer == "outbound")
+            {
+                return new List<(string, TransferAction)>
+                {
+                    (FolderManager.OtpremnicaOutboundOutboxFolder, TransferAction.Upload),
+                };
+            }
+            if (item.tip_dok == "otpremnica" && item.smer == "inbound")
+            {
+                return new List<(string, TransferAction)>
+                {
+                    (FolderManager.OtpremnicaInboundInboxFolder, TransferAction.Sync),
+                    (FolderManager.OtpremnicaInboundOutboxFolder, TransferAction.Upload)
+                };
+            }
+
+            if (item.tip_dok == "kp" && item.smer == "outbound")
+            {
+                return new List<(string, TransferAction)>
+                {
+                    (FolderManager.KpOutboundOutboxFolder, TransferAction.Upload),
+                };
+            }
+            if (item.tip_dok == "kp" && item.smer == "inbound")
+            {
+                return new List<(string, TransferAction)>
+                {
+                    (FolderManager.KpInboundInboxFolder, TransferAction.Sync),
+                    (FolderManager.KpInboundOutboxFolder, TransferAction.Upload)
+                };
+            }
+
+            if (item.tip_dok == "povrati" && item.smer == "outbound")
+            {
+                return new List<(string, TransferAction)>
+                {
+                    (FolderManager.PovratiOutboundOutboxFolder, TransferAction.Upload),
+                };
+            }
+            if (item.tip_dok == "povrati" && item.smer == "inbound")
+            {
+                return new List<(string, TransferAction)>
+                {
+                    (FolderManager.PovratiInboundInboxFolder, TransferAction.Sync),
+                    (FolderManager.PovratiInboundOutboxFolder, TransferAction.Upload)
+                };
+            }
+
+            if (item.tip_dok == "ostali" && item.smer == "outbound")
+            {
+                return new List<(string, TransferAction)>
+                {
+                    (FolderManager.OtherOutboundOutboxFolder, TransferAction.Upload),
+                };
+            }
+            if (item.tip_dok == "ostali" && item.smer == "inbound")
+            {
+                return new List<(string, TransferAction)>
+                {
+                    (FolderManager.OtherInboundInboxFolder, TransferAction.Sync),
+                    (FolderManager.OtherInboundOutboxFolder, TransferAction.Upload)
+                };
+            }
+
+            return new List<(string, TransferAction)>();
+        }
 
         public static Dictionary<string, string> LocalMap = new Dictionary<string, string>()
         {
