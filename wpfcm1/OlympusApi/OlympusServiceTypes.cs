@@ -71,6 +71,7 @@ namespace wpfcm1.OlympusApi
 
     public class Payload
     {
+        public string tenant { get; set; }
         public string tip_dok { get; set; }
         public string teh_naziv_fajla { get; set; }
         public string sadrzaj { get; set; }

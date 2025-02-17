@@ -99,7 +99,7 @@ namespace wpfcm1.PDF
 
     public static class SyncTransferRules
     {
-        public enum TransferAction { Upload, Download, Sync, Exclude };
+        public enum TransferAction { Upload, Sync };
 
         public static Dictionary<string, bool> DocDirection = new Dictionary<string, bool> {
             {"InvoicesOutbound", false},

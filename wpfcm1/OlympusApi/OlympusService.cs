@@ -7,11 +7,15 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text;
 using System.IO;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace wpfcm1.OlympusApi
 {
     public class OlympusService
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly HttpClient _client;
 
         public OlympusService(string uri)
@@ -65,6 +69,7 @@ namespace wpfcm1.OlympusApi
             }
             else
             {
+                Log.Error(response.ReasonPhrase);
                 return null;
             }
         }
@@ -90,6 +95,7 @@ namespace wpfcm1.OlympusApi
             }
             else
             {
+                Log.Error(response.ReasonPhrase);
                 return null;
             }
         }
@@ -117,6 +123,7 @@ namespace wpfcm1.OlympusApi
             }
             else
             {
+                Log.Error(response.ReasonPhrase);
                 return null;
             }
         }
@@ -145,13 +152,14 @@ namespace wpfcm1.OlympusApi
             }
             else
             {
+                Log.Error(response.ReasonPhrase);
                 return null;
             }
         }
 
-        public async Task<bool> PostDocumentsUploadOutbound(Token token, string tipDok, string filePath)
+        public async Task<bool> PostDocumentsUpload(TipDokPristup tdp, Token token, string tenant, string filePath)
         {
-            if (token is null || filePath is null)
+            if (tdp is null || token is null || tenant is null || filePath is null)
             {
                 return false;
             }
@@ -161,15 +169,50 @@ namespace wpfcm1.OlympusApi
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token.token_type, token.access_token);
 
             string base64Content = Convert.ToBase64String(File.ReadAllBytes(filePath));
-            var payload = new Payload { tip_dok = tipDok, teh_naziv_fajla = Path.GetFileName(filePath), sadrzaj = base64Content };
+            var payload = new Payload { tenant = tenant, tip_dok = tdp.tip_dok, teh_naziv_fajla = Path.GetFileName(filePath), sadrzaj = base64Content };
             var jsonPayload = JsonSerializer.Serialize(payload);
 
+            string uri = $"/olympus/v1/documents/upload_{tdp.smer}";
             using (StringContent jsonContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json"))
-            using (HttpResponseMessage response = await _client.PostAsync("/olympus/v1/documents/upload_outbound", jsonContent))
+            using (HttpResponseMessage response = await _client.PostAsync(uri, jsonContent))
             {
+                if (!response.IsSuccessStatusCode)
+                {
+                    Log.Error(response.ReasonPhrase);
+                }
                 return response.IsSuccessStatusCode;
             }
         }
-    }
 
+        public async Task<DocumentsResult> GetDocuments(TipDokPristup tdp, Token token, string tenant)
+        {
+            if (tdp is null || token is null || tenant is null)
+            {
+                return null;
+            }
+
+            _client.DefaultRequestHeaders.Accept.Clear();
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token.token_type, token.access_token);
+
+            string uri = $"/olympus/v1/documents/{tdp.smer}?tenant={tenant}&tip_dok={tdp.tip_dok}&edok_status=PEND&created_since=2025-01-01&start_index=0&page_size=50";
+            using (HttpResponseMessage response = await _client.GetAsync(uri))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    JsonNode rootNode = JsonNode.Parse(responseBody);
+
+                    var docs = JsonSerializer.Deserialize<DocumentsResult>(rootNode);
+                    return docs;
+                }
+                else
+                {
+                    Log.Error(response.ReasonPhrase);
+                    return null;
+                }
+            }
+        }
+
+    }
 }

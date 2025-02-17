@@ -129,16 +129,13 @@ namespace wpfcm1.Dialogs
                 foreach (var pair in pairs)
                 {
                     (var folder, var action) = pair;
-                    //var documents = new List<DocumentModel>(_folders[folder].Documents);
-                    //var exts = new[] { "*.pdf", "*.errorlog" };
-                    var documents = Directory.EnumerateFiles(folder, "*.pdf");
 
                     Log.Info($"Syncing {folder}");
                     switch (action)
                     {
                         case SyncTransferRules.TransferAction.Upload:
                             reporter?.Report($"Upload:\t{folder}");
-                            await syncMgr.Upload(svc, authToken, item.tip_dok, documents, reporter, cancelToken);
+                            await syncMgr.Upload(svc, authToken, item, profile.tenant_info.tenant, folder, reporter, cancelToken);
                             reporter?.Report("OK");
                             break;
                         case SyncTransferRules.TransferAction.Sync:
