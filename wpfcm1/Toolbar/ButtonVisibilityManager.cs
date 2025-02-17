@@ -12,20 +12,16 @@ namespace wpfcm1.Toolbar
     {
         private readonly ToolBarViewModel _toolBar;
 
-
-
         private readonly Dictionary<string, BitArray> WorkspaceToButtonVisibility = new Dictionary<string, BitArray>()
         {
             // ( Reject - Sign - Ack - Validate - ExtractData - TogglePreview - Sync - ShowHome ) 
             // ( - - - PickCert - ArchiveNBGP - Web Inf - Xls - Arch )
-            {"HomeViewModel",                 new BitArray(new byte[]{Convert.ToByte("00000011", 2), Convert.ToByte("00010000", 2)})},
-//            {"HomeViewModel",                   new BitArray(new byte[]{Convert.ToByte("00000011", 2), 0x4})}, 
-            {"GeneratedFolderViewModel",        new BitArray(new byte[]{Convert.ToByte("11001111", 2), 0x2})},
-            {"InboxFolderViewModel",            new BitArray(new byte[]{Convert.ToByte("01010111", 2), 0x2})},
-            {"OutboxFolderViewModel",           new BitArray(new byte[]{Convert.ToByte("10000111", 2), 0x2})},
-            {"FolderViewModel",                 new BitArray(new byte[]{Convert.ToByte("00000111", 2), Convert.ToByte("00001000", 2)})} //ArchiveNBGP
+            {"HomeViewModel",               new BitArray(new byte[]{Convert.ToByte("00000011", 2), Convert.ToByte("00010000", 2)})},
+            {"GeneratedFolderViewModel",    new BitArray(new byte[]{Convert.ToByte("11001111", 2), 0x2})},
+            {"InboxFolderViewModel",        new BitArray(new byte[]{Convert.ToByte("01010111", 2), 0x2})},
+            {"OutboxFolderViewModel",       new BitArray(new byte[]{Convert.ToByte("10000111", 2), 0x2})},
+            {"FolderViewModel",             new BitArray(new byte[]{Convert.ToByte("00000111", 2), Convert.ToByte("00001000", 2)})} //ArchiveNBGP
         };
-
 
         public ButtonVisibilityManager(ToolBarViewModel toolbar, IEventAggregator events)
         {
@@ -42,7 +38,9 @@ namespace wpfcm1.Toolbar
         private void SetButtonsvisibility(BitArray flags)
         {
             for (var i = 0; i < _toolBar.Buttons.Count; i++)
+            {
                 _toolBar.Buttons.ElementAt(i).ButtonVisibility = flags.Get(i);
+            }
         }
     }
 }
