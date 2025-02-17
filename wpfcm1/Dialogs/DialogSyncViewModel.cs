@@ -13,6 +13,7 @@ using wpfcm1.PDF;
 using wpfcm1.Processing;
 using wpfcm1.OlympusApi;
 using wpfcm1.Settings;
+using wpfcm1.Model;
 
 namespace wpfcm1.Dialogs
 {
@@ -79,9 +80,9 @@ namespace wpfcm1.Dialogs
             {
                 _cancellation = new CancellationTokenSource();
                 InProgress = true;
-                Log.Info("Ftp sync started...");
+                Log.Info("Sync started...");
                 await SyncAllAsync(_reporter, _cancellation.Token).WithCancellation(_cancellation.Token);
-                Log.Info("Ftp sync finished...");
+                Log.Info("Sync finished...");
             }
             catch (OperationCanceledException ex)
             {
@@ -112,42 +113,39 @@ namespace wpfcm1.Dialogs
             }
         }
 
-        public async Task SyncAllAsync(IProgress<string> reporter = null, CancellationToken token = default)
+        public async Task SyncAllAsync(IProgress<string> reporter = null, CancellationToken cancelToken = default)
         {
             PrepareErrorLogForUpload();
 
             var svc = new OlympusService(User.Default.ApiURL);
             var syncMgr = new SyncManager();
-            Profile profile = OlympusService.DeserializeFromJson<Profile>(User.Default.JsonProfile);
 
-            foreach(var item in profile.tip_dok_pristup)
+            Profile profile = OlympusService.DeserializeFromJson<Profile>(User.Default.JsonProfile);
+            Token authToken = OlympusService.DeserializeFromJson<Token>(User.Default.JsonToken);
+
+            foreach (var item in profile.tip_dok_pristup)
             {
                 var pairs = SyncTransferRules.GetFoldersForDocType(item);
-                foreach(var pair in pairs)
+                foreach (var pair in pairs)
                 {
-                    (string folder, SyncTransferRules.TransferAction action) = pair;
-                    // get document for folder
+                    (var folder, var action) = pair;
+                    //var documents = new List<DocumentModel>(_folders[folder].Documents);
+                    //var exts = new[] { "*.pdf", "*.errorlog" };
+                    var documents = Directory.EnumerateFiles(folder, "*.pdf");
+
                     Log.Info($"Syncing {folder}");
                     switch (action)
                     {
                         case SyncTransferRules.TransferAction.Upload:
-                    //        reporter?.Report($"Upload:\t{sourceDir}");
-                    //        await syncMgr.Upload(svc, documents, sourceDir, reporter, token);
-                    //        reporter?.Report("OK");
-                    //        File.Create(sourceDir + @"\" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + ".syncstamp").Dispose();
+                            reporter?.Report($"Upload:\t{folder}");
+                            await syncMgr.Upload(svc, authToken, item.tip_dok, documents, reporter, cancelToken);
+                            reporter?.Report("OK");
                             break;
                         case SyncTransferRules.TransferAction.Sync:
-                    //        reporter?.Report($"Sync:\t{sourceDir}");
-                    //        await syncMgr.Sync(svc, documents, sourceDir, true, reporter, token);
-                    //        reporter?.Report("OK");
-                    //        File.Create(sourceDir + @"\" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + ".syncstamp").Dispose();
+                            reporter?.Report($"Sync:\t{folder}");
+                            //await syncMgr.Sync(svc, documents, folder, true, reporter, token);
+                            reporter?.Report("OK");
                             break;
-                    //    case SyncTransferRules.TransferAction.Download:
-                    //        reporter?.Report($"Download:\t{sourceDir}");
-                    //        await syncMgr.Sync(svc, documents, sourceDir, false, reporter, token);
-                    //        reporter?.Report("OK");
-                    //        File.Create(sourceDir + @"\" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + ".syncstamp").Dispose();
-                    //        break;
                         default:
                             break;
                     }

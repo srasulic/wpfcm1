@@ -69,4 +69,38 @@ namespace wpfcm1.OlympusApi
         public Profile profile { get; set; }
     }
 
+    public class Payload
+    {
+        public string tip_dok { get; set; }
+        public string teh_naziv_fajla { get; set; }
+        public string sadrzaj { get; set; }
+    }
+
+    public class Document
+    {
+        public string tenant { get; set; }
+        public string id_dokument { get; set; }
+        public string tip_dok { get; set; }
+        public string tenant_izv { get; set; }
+        public string tenant_odr { get; set; }
+        public string br_dok { get; set; }
+        public string status { get; set; }
+        public string status_s { get; set; }
+        public string status_ss { get; set; }
+        public string status_sss { get; set; }
+        public string dat_kreiranja { get; set; }
+        public string dat_pripreme { get; set; }
+        public string id_edok_status { get; set; }
+        public string naziv { get; set; }
+        public string opis { get; set; }
+    }
+
+    public class DocumentsResult
+    {
+        public Result result { get; set; }
+        public int start_index { get; set; }
+        public int index_count { get; set; }
+        public List<Document> collection { get; set; }
+    }
+
 }

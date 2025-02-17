@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text;
+using System.IO;
 
 namespace wpfcm1.OlympusApi
 {
@@ -29,7 +31,7 @@ namespace wpfcm1.OlympusApi
 
         public static string SerializeToJson<T>(T obj)
         {
-           return JsonSerializer.Serialize(obj);
+            return JsonSerializer.Serialize(obj);
         }
 
         public static T DeserializeFromJson<T>(string json)
@@ -144,6 +146,28 @@ namespace wpfcm1.OlympusApi
             else
             {
                 return null;
+            }
+        }
+
+        public async Task<bool> PostDocumentsUploadOutbound(Token token, string tipDok, string filePath)
+        {
+            if (token is null || filePath is null)
+            {
+                return false;
+            }
+
+            _client.DefaultRequestHeaders.Accept.Clear();
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token.token_type, token.access_token);
+
+            string base64Content = Convert.ToBase64String(File.ReadAllBytes(filePath));
+            var payload = new Payload { tip_dok = tipDok, teh_naziv_fajla = Path.GetFileName(filePath), sadrzaj = base64Content };
+            var jsonPayload = JsonSerializer.Serialize(payload);
+
+            using (StringContent jsonContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json"))
+            using (HttpResponseMessage response = await _client.PostAsync("/olympus/v1/documents/upload_outbound", jsonContent))
+            {
+                return response.IsSuccessStatusCode;
             }
         }
     }

@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using wpfcm1.DataAccess;
 using wpfcm1.OlympusApi;
-using static iTextSharp.text.pdf.AcroFields;
 
 namespace wpfcm1.PDF
 {
