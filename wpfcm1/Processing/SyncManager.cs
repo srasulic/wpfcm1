@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,15 +44,42 @@ namespace wpfcm1.Processing
         }
 
         public async Task Sync(
-            OlympusService client, Token authToken, string tipDok,
-            IEnumerable<string> documents,
-            string sourceDir, bool deleteLocal,
+            OlympusService client, Token authToken, TipDokPristup tdp, string tenant, string sinceDate,
+            string folder, bool deleteLocal,
             IProgress<string> reporter = null,
             CancellationToken token = default)
         {
-            //var docs = await client.GetDocumentsOutbound(authToken);
-            //List<string> names = docs.collection.Select(s => s.id_dokument).ToList();
+            var since = DateTime.Parse(sinceDate).ToString("yyyy-MM-dd");
+            var docs = await client.GetDocuments(tdp, authToken, tenant, since);
 
+            List<string> remoteFileNames = docs.collection.Select(s => $"{s.id_dokument}.pdf").ToList();
+            List<string> localFileNames = Directory.EnumerateFiles(folder, "*.pdf").Select(f => Path.GetFileName(f)).ToList();
+
+            var local = new SortedSet<string>(localFileNames);
+            var remote = new SortedSet<string>(remoteFileNames);
+            var diffLocal = local.Except(remote);
+            var diffRemote = remote.Except(local);
+
+            //foreach (var fileName in diffRemote)
+            //{
+            //    var filePath = Path.Combine(folder, fileName);
+            //    reporter?.Report($"Download: {fileName}");
+            //    Log.Info($"Downloading {filePath}");
+
+            //    token.ThrowIfCancellationRequested();
+            //    //await download
+            //}
+
+            //if (deleteLocal)
+            //{
+            //    foreach (var fileName in diffLocal)
+            //    {
+            //        var filePath = Path.Combine(folder, fileName);
+            //        reporter?.Report($"Delete: {fileName}");
+            //        Log.Info($"Deleting {filePath}");
+            //        File.Delete(filePath);
+            //    }
+            //}
         }
     }
 }

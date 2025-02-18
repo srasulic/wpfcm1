@@ -9,6 +9,7 @@
     Width="500" Height="290"
     Topmost="True"
     FontSize="14"
+    Loaded="DialogLoginView_Loaded"
 >
     <Grid>
         <Grid.RowDefinitions>
@@ -53,7 +54,7 @@
         <PasswordBox x:Name="Password" Grid.Row="2" Grid.Column="1" Margin="8" VerticalAlignment="Center" PasswordChanged="PasswordBox_PasswordChanged" />
 
         <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-            <Button Content="Login" x:Name="Login" MinWidth="64" Margin="8"/>
+            <Button Content="Login" x:Name="Login" MinWidth="64" Margin="8" IsDefault="True"/>
         </StackPanel>
 
         <ComboBox x:Name="Tenants" Grid.Row="4" Grid.Column="1" Margin="8" VerticalAlignment="Center">
@@ -73,8 +74,8 @@
 
 
         <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-            <Button Content="OK" x:Name="SaveAndClose" MinWidth="64" Margin="8" />
-            <Button Content="Cancel" x:Name="Cancel" MinWidth="64" Margin="8"/>
+            <Button Content="OK" x:Name="SaveAndClose" MinWidth="64" Margin="8"/>
+            <Button Content="Cancel" x:Name="Cancel" MinWidth="64" Margin="8" IsCancel="True"/>
         </StackPanel>
 
     </Grid>

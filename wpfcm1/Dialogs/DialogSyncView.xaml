@@ -9,11 +9,13 @@
     Height="300" Width="500">
     <Grid Margin="5">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition />
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ListBox x:Name="Reports" />
-        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+        <DatePicker x:Name="SinceDate" Grid.Row="0"/>
+        <ListBox x:Name="Reports" Grid.Row="1"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
             <Button Content="Start" Width="96" Height="32" x:Name="OnStart" Margin="3"/>
             <Button Content="Close" Width="96" Height="32" x:Name="OnClose" Margin="3"/>
             <Button Content="Cancel" Width="96" Height="32" x:Name="OnCancel" Margin="3,3,0,3" IsEnabled="False"/>

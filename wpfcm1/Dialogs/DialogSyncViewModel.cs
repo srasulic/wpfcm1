@@ -35,6 +35,18 @@ namespace wpfcm1.Dialogs
             Reports = new BindableCollection<string>();
         }
 
+        private string _sinceDate;
+        public string SinceDate
+        {
+            get { return _sinceDate; }
+            set
+            {
+                _sinceDate = value;
+                NotifyOfPropertyChange(() => SinceDate);
+                NotifyOfPropertyChange(() => CanOnStart);
+            }
+        }
+
         public BindableCollection<string> Reports { get; set; }
 
         private bool _inProgress;
@@ -68,7 +80,7 @@ namespace wpfcm1.Dialogs
             if (_cancellation != null) _cancellation.Cancel();
         }
 
-        public bool CanOnStart { get { return !InProgress; } }
+        public bool CanOnStart { get { return !InProgress && SinceDate != null; } }
 
         public bool CanOnCancel { get { return InProgress; } }
 
@@ -140,7 +152,7 @@ namespace wpfcm1.Dialogs
                             break;
                         case SyncTransferRules.TransferAction.Sync:
                             reporter?.Report($"Sync:\t{folder}");
-                            //await syncMgr.Sync(svc, documents, folder, true, reporter, token);
+                            await syncMgr.Sync(svc, authToken, item, profile.tenant_info.tenant, SinceDate, folder, true, reporter, cancelToken);
                             reporter?.Report("OK");
                             break;
                         default:

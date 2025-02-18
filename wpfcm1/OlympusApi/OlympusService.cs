@@ -184,7 +184,7 @@ namespace wpfcm1.OlympusApi
             }
         }
 
-        public async Task<DocumentsResult> GetDocuments(TipDokPristup tdp, Token token, string tenant)
+        public async Task<DocumentsResult> GetDocuments(TipDokPristup tdp, Token token, string tenant, string sinceDate)
         {
             if (tdp is null || token is null || tenant is null)
             {
@@ -195,7 +195,7 @@ namespace wpfcm1.OlympusApi
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token.token_type, token.access_token);
 
-            string uri = $"/olympus/v1/documents/{tdp.smer}?tenant={tenant}&tip_dok={tdp.tip_dok}&edok_status=PEND&created_since=2025-01-01&start_index=0&page_size=50";
+            string uri = $"/olympus/v1/documents/{tdp.smer}?tenant={tenant}&tip_dok={tdp.tip_dok}&edok_status=PEND&created_since={sinceDate}&start_index=0&page_size=50";
             using (HttpResponseMessage response = await _client.GetAsync(uri))
             {
                 if (response.IsSuccessStatusCode)
