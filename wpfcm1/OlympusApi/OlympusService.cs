@@ -9,6 +9,7 @@ using System.Text;
 using System.IO;
 using System.Reflection;
 using System.Reflection.Emit;
+using Newtonsoft.Json.Linq;
 
 namespace wpfcm1.OlympusApi
 {
@@ -211,6 +212,37 @@ namespace wpfcm1.OlympusApi
                     Log.Error(response.ReasonPhrase);
                     return null;
                 }
+            }
+        }
+
+        public async Task<byte[]> PostFilesDownload(string tenant, string fileId)
+        {
+            if (tenant is null || fileId is null)
+            {
+                return null;
+            }
+
+            _client.DefaultRequestHeaders.Accept.Clear();
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            var jsonPayload = $"{{\"tenant\": \"{tenant}\", \"id_fajl\": \"{fileId}\"}}";
+            var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await _client.PostAsync("olympus/v1/files/download", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string responseBody = await response.Content.ReadAsStringAsync();
+                JsonNode rootNode = JsonNode.Parse(responseBody);
+
+                var result = JsonSerializer.Deserialize<DownloadResult>(rootNode);
+                byte[] fileBytes = Convert.FromBase64String(result.content);
+
+                return fileBytes;
+            }
+            else
+            {
+                return null;
             }
         }
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using iTextSharp.text;
 using wpfcm1.OlympusApi;
 using wpfcm1.PDF;
 
@@ -49,10 +50,22 @@ namespace wpfcm1.Processing
             IProgress<string> reporter = null,
             CancellationToken token = default)
         {
+            token.ThrowIfCancellationRequested();
             var since = DateTime.Parse(sinceDate).ToString("yyyy-MM-dd");
             var docs = await client.GetDocuments(tdp, authToken, tenant, since);
+            if (docs == null)
+            {
+                Log.Info($"No documents for {folder}");
+                return;
+            }
 
-            List<string> remoteFileNames = docs.collection.Select(s => $"{s.id_dokument}.pdf").ToList();
+            Dictionary<string, string> remoteFilesMap = new Dictionary<string, string>();
+            foreach(var d in docs.collection)
+            {
+                remoteFilesMap.Add(d.teh_naziv, d.id_fajl);
+            }
+
+            List<string> remoteFileNames = remoteFilesMap.Keys.ToList();
             List<string> localFileNames = Directory.EnumerateFiles(folder, "*.pdf").Select(f => Path.GetFileName(f)).ToList();
 
             var local = new SortedSet<string>(localFileNames);
@@ -60,26 +73,31 @@ namespace wpfcm1.Processing
             var diffLocal = local.Except(remote);
             var diffRemote = remote.Except(local);
 
-            //foreach (var fileName in diffRemote)
-            //{
-            //    var filePath = Path.Combine(folder, fileName);
-            //    reporter?.Report($"Download: {fileName}");
-            //    Log.Info($"Downloading {filePath}");
+            foreach (var fileName in diffRemote)
+            {
+                token.ThrowIfCancellationRequested();
 
-            //    token.ThrowIfCancellationRequested();
-            //    //await download
-            //}
+                var filePath = Path.Combine(folder, fileName);
 
-            //if (deleteLocal)
-            //{
-            //    foreach (var fileName in diffLocal)
-            //    {
-            //        var filePath = Path.Combine(folder, fileName);
-            //        reporter?.Report($"Delete: {fileName}");
-            //        Log.Info($"Deleting {filePath}");
-            //        File.Delete(filePath);
-            //    }
-            //}
+                reporter?.Report($"Download: {fileName}");
+                Log.Info($"Downloading {filePath}");
+
+                //var bytes = await client.PostFilesDownload(tenant, remoteFilesMap[fileName]);
+                //File.WriteAllBytes("test.pdf", bytes);
+            }
+
+            if (deleteLocal)
+            {
+                foreach (var fileName in diffLocal)
+                {
+                    var filePath = Path.Combine(folder, fileName);
+
+                    reporter?.Report($"Delete: {fileName}");
+                    Log.Info($"Deleting {filePath}");
+
+                    //File.Delete(filePath);
+                }
+            }
         }
     }
 }

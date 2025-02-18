@@ -94,6 +94,8 @@ namespace wpfcm1.OlympusApi
         public string id_edok_status { get; set; }
         public string naziv { get; set; }
         public string opis { get; set; }
+        public string teh_naziv { get; set; }
+        public string id_fajl { get; set; }
     }
 
     public class DocumentsResult
@@ -102,6 +104,12 @@ namespace wpfcm1.OlympusApi
         public int start_index { get; set; }
         public int index_count { get; set; }
         public List<Document> collection { get; set; }
+    }
+
+    public class DownloadResult
+    {
+        public Result result { get; set; }
+        public string content { get; set; }
     }
 
 }
