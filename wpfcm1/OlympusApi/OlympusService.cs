@@ -8,8 +8,6 @@ using System.Text.Json.Nodes;
 using System.Text;
 using System.IO;
 using System.Reflection;
-using System.Reflection.Emit;
-using Newtonsoft.Json.Linq;
 
 namespace wpfcm1.OlympusApi
 {
@@ -129,6 +127,25 @@ namespace wpfcm1.OlympusApi
             }
         }
 
+        public async Task<bool> PutUsersSetTenant(Token token, Tenant tenant)
+        {
+            if (token is null || tenant is null)
+            {
+                return false;
+            }
+
+            _client.DefaultRequestHeaders.Accept.Clear();
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token.token_type, token.access_token);
+
+            string jsonPayload = $"{{ \"tenant\": \"{tenant.tenant}\" }}";
+            var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await _client.PutAsync("/olympus/v1/users/set_tenant", content);
+
+            return response.IsSuccessStatusCode;
+        }
+
         public async Task<ProfileResult> GetConfigPolisign(Token token, Tenant tenant)
         {
             if (token is null || tenant is null)
@@ -215,7 +232,7 @@ namespace wpfcm1.OlympusApi
             }
         }
 
-        public async Task<byte[]> PostFilesDownload(string tenant, string fileId)
+        public async Task<byte[]> PostFilesDownload(Token token, string tenant, string fileId)
         {
             if (tenant is null || fileId is null)
             {
@@ -224,6 +241,7 @@ namespace wpfcm1.OlympusApi
 
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token.token_type, token.access_token);
 
             var jsonPayload = $"{{\"tenant\": \"{tenant}\", \"id_fajl\": \"{fileId}\"}}";
             var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");

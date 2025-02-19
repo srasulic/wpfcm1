@@ -190,13 +190,22 @@ namespace wpfcm1.Dialogs
         {
             var svc = new OlympusService(SelectedVariation.ApiUrl);
 
+            var setOk = await svc.PutUsersSetTenant(Token, SelectedTenant);
+            if (!setOk)
+            {
+                Log.Error($"FAILED PUT set tenant: [UserName = {UserName}] [Tenant = {SelectedTenant?.tenant}]");
+                SelectedTenant = null;
+                return;
+            }
+            Log.Info($"SUCCESSFUL PUT set tenant: [UserName = {UserName}] [Tenant = {SelectedTenant?.tenant}]");
+
             ProfileResult res = await svc.GetConfigPolisign(Token, SelectedTenant);
             if (res == null)
             {
                 Log.Error($"FAILED Obtaining Olympus Profile: [UserName = {UserName}] [Tenant = {SelectedTenant?.tenant}]");
                 return;
             }
-            Log.Info($"SUCCESSFUL Obtaining Olympus Profile [UserName = {UserName}] [Tenant = {SelectedTenant?.tenant}]");
+            Log.Info($"SUCCESSFUL Obtaining Olympus Profile: [UserName = {UserName}] [Tenant = {SelectedTenant?.tenant}]");
 
             SelectedProfile = res.profile;
 

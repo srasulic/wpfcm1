@@ -82,7 +82,7 @@ namespace wpfcm1.Processing
                 reporter?.Report($"Download: {fileName}");
                 Log.Info($"Downloading {filePath}");
 
-                //var bytes = await client.PostFilesDownload(tenant, remoteFilesMap[fileName]);
+                //var bytes = await client.PostFilesDownload(authToken, tenant, remoteFilesMap[fileName]);
                 //File.WriteAllBytes("test.pdf", bytes);
             }
 
