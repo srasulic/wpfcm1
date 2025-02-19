@@ -82,8 +82,8 @@ namespace wpfcm1.Processing
                 reporter?.Report($"Download: {fileName}");
                 Log.Info($"Downloading {filePath}");
 
-                //var bytes = await client.PostFilesDownload(authToken, tenant, remoteFilesMap[fileName]);
-                //File.WriteAllBytes("test.pdf", bytes);
+                var bytes = await client.PostFilesDownload(authToken, tenant, remoteFilesMap[fileName]);
+                File.WriteAllBytes(filePath, bytes);
             }
 
             if (deleteLocal)
@@ -95,7 +95,7 @@ namespace wpfcm1.Processing
                     reporter?.Report($"Delete: {fileName}");
                     Log.Info($"Deleting {filePath}");
 
-                    //File.Delete(filePath);
+                    File.Delete(filePath);
                 }
             }
         }
