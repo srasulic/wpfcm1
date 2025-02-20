@@ -34,7 +34,7 @@ namespace wpfcm1.Certificates
         public void OnSelection(CertificateModel certificate)
         {
             if (certificate == null) return;
-            _events.PublishOnUIThread(certificate);
+            _events.PublishOnUIThreadAsync(certificate);
         }
     }
 }

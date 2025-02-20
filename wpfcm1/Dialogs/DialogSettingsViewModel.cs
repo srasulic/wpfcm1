@@ -1,4 +1,6 @@
-﻿using Caliburn.Micro;
+﻿using System.Threading.Tasks;
+using System.Threading;
+using Caliburn.Micro;
 using wpfcm1.Settings;
 
 namespace wpfcm1.Dialogs
@@ -10,7 +12,7 @@ namespace wpfcm1.Dialogs
             DisplayName = "";
         }
 
-        protected override void OnActivate()
+        protected override Task OnActivateAsync(CancellationToken cancellationToken)
         {
             Folders folders = Folders.Default;
             User user = User.Default;
@@ -34,6 +36,7 @@ namespace wpfcm1.Dialogs
 
             /* boja hedera je definisana prema Variation u App.xaml.cs */
             /* Naziv u zaglavlju je definisan prema Variation u AppBootstrapper.cs */
+            return Task.CompletedTask;
         }
 
         private string _appTitle;
@@ -157,15 +160,15 @@ namespace wpfcm1.Dialogs
             set { _ySigShiftRight = value; NotifyOfPropertyChange(() => YSigShiftRight); }
         }
 
-        public void OnClose()
+        public async Task OnClose()
         {
             SaveUser();
-            TryClose(true);
+            await TryCloseAsync(true);
         }
 
-        public void OnCancel()
+        public async Task OnCancel()
         {
-            TryClose(true);
+            await TryCloseAsync(true);
         }
 
         private void SaveUser()

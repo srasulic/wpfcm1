@@ -13,6 +13,8 @@ using System;
 using System.Text.RegularExpressions;
 using System.Windows.Data;
 using iTextSharp.text.pdf.security;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace wpfcm1.FolderTypes
 {
@@ -99,21 +101,23 @@ namespace wpfcm1.FolderTypes
             }
         }
 
-        protected override void OnActivate()
+        protected override Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            _events.PublishOnUIThread(new MessageViewModelActivated(GetType().Name));
+            _events.PublishOnUIThreadAsync(new MessageViewModelActivated(GetType().Name));
             // pri ulasku startuj automatsku validaciju 
-            Handle(new MessageValidate());
-            Handle(new MessageGetPibNames());
+            HandleAsync(new MessageValidate(), cancellationToken);
+            HandleAsync(new MessageGetPibNames(), cancellationToken);
+            return Task.CompletedTask;
         }
 
-        protected override void OnDeactivate(bool close)
+        protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
-            base.OnDeactivate(close);
+            base.OnDeactivateAsync(close, cancellationToken);
             //TODO: hack: checkbox checkmark moze da se izgubi prilikom promene taba, ako promena nije komitovana
             var v = GetView() as UserControl;
             var dg = v.FindName("DocumentsCV") as DataGrid;
             dg.CommitEdit(DataGridEditingUnit.Row, true);
+            return Task.CompletedTask;
         }
 
         public void Handle(CertificateModel message)
@@ -140,7 +144,7 @@ namespace wpfcm1.FolderTypes
 
                 //TODO: ovo mora drugacije
                 //_events.PublishOnUIThread(new MessageShowPdf(PreviewViewModel.Empty));
-                var result = _windowManager.ShowDialog(new DialogSignViewModel(_certificate, this));
+                var result = _windowManager.ShowDialogAsync(new DialogSignViewModel(_certificate, this));
             }
         }
 
@@ -341,6 +345,36 @@ namespace wpfcm1.FolderTypes
                     doc.IsChecked = cb.IsChecked.GetValueOrDefault();
                 }
             }
-        } 
+        }
+
+        public Task HandleAsync(CertificateModel message, CancellationToken cancellationToken)
+        {
+            Handle(message);
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(MessageSign message, CancellationToken cancellationToken)
+        {
+            Handle(message);
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(MessageValidate message, CancellationToken cancellationToken)
+        {
+            Handle(message);
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(MessageAck message, CancellationToken cancellationToken)
+        {
+            Handle(message);
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(MessageXls message, CancellationToken cancellationToken)
+        {
+            Handle(message);
+            return Task.CompletedTask;
+        }
     }
 }

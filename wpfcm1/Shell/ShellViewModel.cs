@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Threading;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 using wpfcm1.Certificates;
 using wpfcm1.DataAccess;
@@ -25,7 +27,7 @@ namespace wpfcm1.Shell
         {
             DisplayName = "eDokument PoliSign     " + AppBootstrapper.appVersion;
             _events = events;
-            _events.Subscribe(this);
+            _events.SubscribeOnUIThread(this);
             _windowManager = windowManager;
 
             ToolBar = toolBar;
@@ -52,7 +54,7 @@ namespace wpfcm1.Shell
             ShowLogin();
         }
 
-        protected override void OnDeactivate(bool close)
+        protected override Task OnDeactivateAsync(bool close, CancellationToken cancellation = default)
         {
             InboundVM.Dispose();
             OutboundVM.Dispose();
@@ -70,6 +72,8 @@ namespace wpfcm1.Shell
             OtherOutboundVM.Dispose();
             WebVM.Dispose();
             LoginVM.Dispose();
+
+            return Task.CompletedTask;
         }
 
         //Imported components:
@@ -100,100 +104,100 @@ namespace wpfcm1.Shell
             // dok ne nađemo način da sprečimo iskakanje Please insert card, ovo će biti privremenio isključeno.
             // CertVM.RefreshCertificateList();
             //*****************************************************************
-            ActivateItem(HomeVM);
-            _events.PublishOnUIThread(new MessageViewModelActivated(ActiveItem.GetType().Name));
+            ActivateItemAsync(HomeVM);
+            _events.PublishOnUIThreadAsync(new MessageViewModelActivated(ActiveItem.GetType().Name));
 
-            _windowManager.ShowDialog(LoginVM);
+            var result = _windowManager.ShowDialogAsync(LoginVM);
         }
 
         public void ShowHome()
         {
-            ActivateItem(HomeVM);
-            _events.PublishOnUIThread(new MessageViewModelActivated(ActiveItem.GetType().Name));
+            ActivateItemAsync(HomeVM);
+            _events.PublishOnUIThreadAsync(new MessageViewModelActivated(ActiveItem.GetType().Name));
         }
 
         public void ShowOutbound()
         {
-            ActivateItem(OutboundVM);
+            ActivateItemAsync(OutboundVM);
         }
 
         public void ShowInbound()
         {
-            ActivateItem(InboundVM);
+            ActivateItemAsync(InboundVM);
         }
 
         public void ShowIosOutbound()
         {
-            ActivateItem(IosOutboundVM);
+            ActivateItemAsync(IosOutboundVM);
         }
 
         public void ShowIosInbound()
         {
-            ActivateItem(IosInboundVM);
+            ActivateItemAsync(IosInboundVM);
         }
         public void ShowOtpadOutbound()
         {
-            ActivateItem(OtpadOutboundVM);
+            ActivateItemAsync(OtpadOutboundVM);
         }
 
         public void ShowOtpremnicaOutbound()
         {
-            ActivateItem(OtpremnicaOutboundVM);
+            ActivateItemAsync(OtpremnicaOutboundVM);
         }
 
         public void ShowOtpadInbound()
         {
-            ActivateItem(OtpadInboundVM);
+            ActivateItemAsync(OtpadInboundVM);
         }
 
         public void ShowOtpremnicaInbound()
         {
-            ActivateItem(OtpremnicaInboundVM);
+            ActivateItemAsync(OtpremnicaInboundVM);
         }
 
         public void ShowKpOutbound()
         {
-            ActivateItem(KpOutboundVM);
+            ActivateItemAsync(KpOutboundVM);
         }
 
         public void ShowKpInbound()
         {
-            ActivateItem(KpInboundVM);
+            ActivateItemAsync(KpInboundVM);
         }
 
         public void ShowPovratiOutbound()
         {
-            ActivateItem(PovratiOutboundVM);
+            ActivateItemAsync(PovratiOutboundVM);
         }
 
         public void ShowPovratiInbound()
         {
-            ActivateItem(PovratiInboundVM);
+            ActivateItemAsync(PovratiInboundVM);
         }
 
         public void ShowOtherOutbound()
         {
-            ActivateItem(OtherOutboundVM);
+            ActivateItemAsync(OtherOutboundVM);
         }
 
         public void ShowOtherInbound()
         {
-            ActivateItem(OtherInboundVM);
+            ActivateItemAsync(OtherInboundVM);
         }
 
         public void ShowWeb()
         {
-            ActivateItem(WebVM);
+            ActivateItemAsync(WebVM);
         }
 
         public void ShowSettings()
         {
-            var result = _windowManager.ShowDialog(new DialogSettingsViewModel());
+            var result = _windowManager.ShowDialogAsync(new DialogSettingsViewModel());
         }
 
         public void ShowAbout()
         {
-            var result = _windowManager.ShowDialog(new DialogAboutViewModel());
+            var result = _windowManager.ShowDialogAsync(new DialogAboutViewModel());
         }
 
         public void Handle(MessageShowHome message)
@@ -234,14 +238,38 @@ namespace wpfcm1.Shell
             };
 
             //TODO: ovo mora drugacije
-            _events.PublishOnUIThread(new MessageShowPdf(PreviewViewModel.Empty));
-            var result = _windowManager.ShowDialog(new DialogSyncViewModel(foldersToSync));
+            _events.PublishOnUIThreadAsync(new MessageShowPdf(PreviewViewModel.Empty));
+            var result = _windowManager.ShowDialogAsync(new DialogSyncViewModel(foldersToSync));
         }
 
         public void Handle(MessagePickCert message)
         {
             bool pickCertificate = true;
             CertVM.RefreshCertificateList(pickCertificate);
+        }
+
+        public Task HandleAsync(MessageShowHome message, CancellationToken cancellationToken)
+        {
+            Handle(message);
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(MessageShowWeb message, CancellationToken cancellationToken)
+        {
+            Handle(message);
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(MessageSync message, CancellationToken cancellationToken)
+        {
+            Handle(message);
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(MessagePickCert message, CancellationToken cancellationToken)
+        {
+            Handle(message);
+            return Task.CompletedTask;
         }
     }
 }

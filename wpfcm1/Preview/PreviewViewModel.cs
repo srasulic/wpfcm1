@@ -1,6 +1,8 @@
 ﻿using Caliburn.Micro;
 using System.ComponentModel.Composition;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using wpfcm1.Events;
 
 namespace wpfcm1.Preview
@@ -49,7 +51,7 @@ namespace wpfcm1.Preview
             if (PreviewVisibility)
             {
                 // preview dokumenta je vidljiv za korisnika 
-                _events.PublishOnUIThread(new MessageShowPdf(CurrentDocument));
+                _events.PublishOnUIThreadAsync(new MessageShowPdf(CurrentDocument));
             }
             else
             {
@@ -65,7 +67,7 @@ namespace wpfcm1.Preview
                     {
                         File.Create(dummypdf).Dispose();
                     }
-                    _events.PublishOnUIThread(new MessageShowPdf(dummypdf));
+                    _events.PublishOnUIThreadAsync(new MessageShowPdf(dummypdf));
                     iZatvaranje = 1;
                     // prvi Handle otvara dummy.pdf
                     Handle(message);
@@ -82,6 +84,18 @@ namespace wpfcm1.Preview
             //var uri = message.Uri == Empty ? Empty : string.Format("{0}#toolbar=0&navpanes=0", message.Uri);
             CurrentDocument = message.Uri;
             
+        }
+
+        public Task HandleAsync(MessageTogglePreview message, CancellationToken cancellationToken)
+        {
+            Handle(message);
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(MessageShowPdf message, CancellationToken cancellationToken)
+        {
+            Handle(message);
+            return Task.CompletedTask;
         }
     }
 }

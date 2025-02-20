@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 using Caliburn.Micro;
 using wpfcm1.OlympusApi;
@@ -35,7 +37,7 @@ namespace wpfcm1.Dialogs
             DisplayName = "Polisign Login";
         }
 
-        protected override void OnActivate()
+        protected override Task OnActivateAsync(CancellationToken cancellationToken)
         {
             int index = Variations.FindIndex(p => p.Name == User.Default.Variation);
             if (index != -1)
@@ -48,6 +50,7 @@ namespace wpfcm1.Dialogs
             }
 
             UserName = User.Default.UserName;
+            return Task.CompletedTask;
         }
 
         private List<Variation> _variations = new List<Variation>
@@ -235,15 +238,16 @@ namespace wpfcm1.Dialogs
             User.Default.Save();
             //TODO: treba mi DI, servis za api, login, setingse i foldere
 
+            (GetView() as Window).DialogResult = true;
             (GetView() as Window).Hide();
         }
 
         public bool CanSaveAndClose => Token != null && SelectedTenant != null && SelectedProfile != null;
 
-        public void Cancel()
-        {
-            TryClose(true);
-        }
+        //public async Task Cancel()
+        //{
+        //    await TryCloseAsync(true);
+        //}
 
         public void Dispose()
         {

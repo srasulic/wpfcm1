@@ -86,9 +86,9 @@ namespace wpfcm1.Dialogs
         }
     
 
-        public void OnClose()
+        private async Task OnClose()
         {
-            TryClose(true);
+            await TryCloseAsync(true);
         }
 
     }

@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.Linq;
 using wpfcm1.Events;
 using System;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace wpfcm1.Toolbar
 {
@@ -33,6 +35,12 @@ namespace wpfcm1.Toolbar
         {
             Debug.Assert(WorkspaceToButtonVisibility.ContainsKey(message.Name));
             SetButtonsvisibility(WorkspaceToButtonVisibility[message.Name]);
+        }
+
+        public Task HandleAsync(MessageViewModelActivated message, CancellationToken cancellationToken)
+        {
+            Handle(message);
+            return Task.CompletedTask;
         }
 
         private void SetButtonsvisibility(BitArray flags)

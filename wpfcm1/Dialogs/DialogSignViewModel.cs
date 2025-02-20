@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using wpfcm1.Extensions;
 using wpfcm1.FolderTypes;
 using wpfcm1.Model;
@@ -97,9 +98,9 @@ namespace wpfcm1.Dialogs
             Reports.Add(e);
         }
 
-        public void OnClose()
+        public async Task OnClose()
         {
-            TryClose(true);
+            await TryCloseAsync(true);
         }
 
         public bool CanOnClose { get { return !InProgress; } }

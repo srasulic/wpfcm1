@@ -38,7 +38,7 @@ namespace wpfcm1.Toolbar
         public void SendMessage()
         {
             if (_msg != null)
-                _events.PublishOnUIThread(_msg);
+                _events.PublishOnUIThreadAsync(_msg);
         }
     }
 }

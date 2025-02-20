@@ -57,9 +57,9 @@ namespace wpfcm1
             _container.SatisfyImportsOnce(instance);
         }
 
-        protected override void OnStartup(object sender, StartupEventArgs e)
+        protected override async void OnStartup(object sender, StartupEventArgs e)
         {
-            DisplayRootViewFor<IShell>();
+            await DisplayRootViewForAsync<IShell>();
             Log.Info("Session started! " + appVersion);
         }
 

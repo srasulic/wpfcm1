@@ -22,6 +22,7 @@ using wpfcm1.DataAccess;
 using System.Collections.Generic;
 
 using System.Windows;
+using System.Threading;
 
 namespace wpfcm1.FolderTypes
 {
@@ -451,11 +452,10 @@ namespace wpfcm1.FolderTypes
             }
         }
 
-        protected override void OnActivate()
+        protected override Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            _events.PublishOnUIThread(new MessageViewModelActivated(GetType().Name));
-            Handle(new MessageGetPibNames());
-
+            _events.PublishOnUIThreadAsync(new MessageViewModelActivated(GetType().Name));
+            return HandleAsync(new MessageGetPibNames(), cancellationToken);
         }
 
         public async void Handle(MessageGetPibNames message)
@@ -464,9 +464,9 @@ namespace wpfcm1.FolderTypes
             await GetPibNamesAsync();
         }
 
-        protected override void OnDeactivate(bool close)
+        protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
-            _events.PublishOnUIThread(new MessageShowPdf(PreviewViewModel.Empty));
+            return _events.PublishOnUIThreadAsync(new MessageShowPdf(PreviewViewModel.Empty));
         }
 
         protected override void OnViewAttached(object view, object context)
@@ -501,7 +501,7 @@ namespace wpfcm1.FolderTypes
                 if (path.ToLower().EndsWith(".pdf"))
                     message = path;
             }
-            _events.PublishOnUIThread(new MessageShowPdf(message)); 
+            _events.PublishOnUIThreadAsync(new MessageShowPdf(message)); 
         }
 
         public bool FilterDocument(Object item)
@@ -910,5 +910,16 @@ namespace wpfcm1.FolderTypes
             }
         }
 
+        public Task HandleAsync(MessageArchiveSelected message, CancellationToken cancellationToken)
+        {
+            Handle(message);
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(MessageGetPibNames message, CancellationToken cancellationToken)
+        {
+            Handle(message);
+            return Task.CompletedTask;
+        }
     }
 }

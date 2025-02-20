@@ -68,9 +68,9 @@ namespace wpfcm1.Dialogs
             Reports.Add(e);
         }
 
-        public void OnClose()
+        public async Task OnClose()
         {
-            TryClose(true);
+            await TryCloseAsync(true);
         }
 
         public bool CanOnClose { get { return !InProgress; } }

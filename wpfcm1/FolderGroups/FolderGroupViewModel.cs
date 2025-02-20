@@ -2,6 +2,8 @@
 using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using wpfcm1.DataAccess;
 using wpfcm1.Events;
@@ -48,18 +50,18 @@ namespace wpfcm1.FolderGroups
             if (e.AddedItems.Count > 0)
             {
                 var item = e.AddedItems[0] as FolderViewModel;
-                if (item != null) ActivateItem(item);
+                if (item != null) ActivateItemAsync(item);
             }
         }
 
-        protected override void OnActivate()
+        protected override Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            ActivateItem(ActiveItem ?? FolderVMs[0]);
+            return ActivateItemAsync(ActiveItem ?? FolderVMs[0]);
         }
 
-        protected override void OnDeactivate(bool close)
+        protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
-            DeactivateItem(ActiveItem, false);
+            return DeactivateItemAsync (ActiveItem, false);
         }
 
         public void Dispose()
@@ -85,6 +87,12 @@ namespace wpfcm1.FolderGroups
 
                 pdfBrowser.Navigate(new System.Uri(message.Uri));
             }
+        }
+
+        public Task HandleAsync(MessageShowPdf message, CancellationToken cancellationToken)
+        {
+            Handle(message);
+            return Task.CompletedTask;
         }
     }
 }

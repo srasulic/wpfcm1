@@ -14,6 +14,8 @@ using wpfcm1.Settings;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Data;
+using System.Threading.Tasks;
+using System.Threading;
 
 
 namespace wpfcm1.FolderTypes
@@ -91,19 +93,20 @@ namespace wpfcm1.FolderTypes
             } 
         }
 
-        protected override void OnActivate()
+        protected override Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            _events.PublishOnUIThread(new MessageViewModelActivated(GetType().Name));
-            Handle(new MessageGetPibNames());
+            _events.PublishOnUIThreadAsync(new MessageViewModelActivated(GetType().Name));
+            return HandleAsync(new MessageGetPibNames(), cancellationToken);
         }
 
-        protected override void OnDeactivate(bool close)
+        protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
-            base.OnDeactivate(close);
+            base.OnDeactivateAsync(close, cancellationToken);
             //TODO: hack: checkbox checkmark moze da se izgubi prilikom promene taba, ako promena nije komitovana
             var v = GetView() as UserControl;
             var dg = v.FindName("DocumentsCV") as DataGrid;
             dg.CommitEdit(DataGridEditingUnit.Row, true);
+            return Task.CompletedTask;
         }
 
 
@@ -190,6 +193,18 @@ namespace wpfcm1.FolderTypes
                 }
 
             }
+        }
+
+        Task IHandle<MessageReject>.HandleAsync(MessageReject message, CancellationToken cancellationToken)
+        {
+            Handle(message);
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(MessageXls message, CancellationToken cancellationToken)
+        {
+            Handle(message);
+            return Task.CompletedTask;
         }
     }
 }

@@ -83,7 +83,14 @@ namespace wpfcm1.Processing
                 Log.Info($"Downloading {filePath}");
 
                 var bytes = await client.PostFilesDownload(authToken, tenant, remoteFilesMap[fileName]);
-                File.WriteAllBytes(filePath, bytes);
+                if (bytes == null)
+                {
+                    Log.Error($"ERROR: PostFilesDownload returned null for {fileName}");
+                }
+                else
+                {
+                    File.WriteAllBytes(filePath, bytes);
+                }
             }
 
             if (deleteLocal)
