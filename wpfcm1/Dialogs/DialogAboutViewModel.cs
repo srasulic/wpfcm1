@@ -1,18 +1,9 @@
 ﻿using Caliburn.Micro;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
-using wpfcm1.Extensions;
-using wpfcm1.FolderTypes;
-using wpfcm1.FTP;
-using wpfcm1.Model;
-using wpfcm1.PDF;
-using wpfcm1.Processing;
 using wpfcm1.Settings;
 
 namespace wpfcm1.Dialogs
@@ -67,9 +58,9 @@ namespace wpfcm1.Dialogs
         {
             try
             {
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                Process process = new Process();
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 startInfo.FileName = "Aeroadmin.exe";
 
                 startInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -77,16 +68,14 @@ namespace wpfcm1.Dialogs
                 process.StartInfo = startInfo;
                 process.Start();
                // process.WaitForExit();
-
             }
             catch (Exception ex)
             {
                 Log.Error("Error while running Aeroadmin.exe ...", ex);
             }
         }
-    
 
-        private async Task OnClose()
+        public async Task Close()
         {
             await TryCloseAsync(true);
         }

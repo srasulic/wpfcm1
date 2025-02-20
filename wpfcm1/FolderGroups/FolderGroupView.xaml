@@ -14,7 +14,7 @@
             <ColumnDefinition Width="Auto" Name="PreviewColumn" />
         </Grid.ColumnDefinitions>
 
-        <TabControl x:Name="FolderVMs" IsSynchronizedWithCurrentItem="True" mah:TabControlHelper.IsUnderlined="True"
+        <TabControl x:Name="FolderVMs" IsSynchronizedWithCurrentItem="True" mah:TabControlHelper.Underlined="TabItems"
                     cal:Message.Attach="[Event SelectionChanged] = [Action ActivateTabItem($eventArgs)]">
             <TabControl.ItemTemplate>
                 <DataTemplate>

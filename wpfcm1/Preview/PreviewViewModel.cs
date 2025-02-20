@@ -18,7 +18,7 @@ namespace wpfcm1.Preview
         public PreviewViewModel(IEventAggregator events)
         {
             _events = events;
-            _events.Subscribe(this);
+            _events.SubscribeOnUIThread(this);
             CurrentDocument = Empty;
             CurrentDocument1 = Empty;
             iZatvaranje = 0;

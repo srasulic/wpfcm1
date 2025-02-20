@@ -42,7 +42,7 @@ namespace wpfcm1.FolderTypes
             DisplayName = name;
             _dispatcher = Dispatcher.CurrentDispatcher;
             _events = events;
-            _events.Subscribe(this);
+            _events.SubscribeOnUIThread(this);
 
             InitDocuments();
         }

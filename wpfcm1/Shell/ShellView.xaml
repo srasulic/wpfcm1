@@ -6,7 +6,7 @@
              WindowStartupLocation="CenterScreen" 
              Icon="../Media/SignatureShow.ico" ShowIconOnTitleBar="False"
              Width="1100" Height="640"
-             TitleCaps="False">
+             TitleCharacterCasing="Normal">
     
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands>

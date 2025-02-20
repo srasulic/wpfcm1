@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using MahApps.Metro.Controls;
+﻿using MahApps.Metro.Controls;
 
 namespace wpfcm1.Dialogs
 {
@@ -7,9 +6,7 @@ namespace wpfcm1.Dialogs
     {
         public void DialogAboutView()
         {
-            //Owner = Application.Current.MainWindow;
             InitializeComponent();
         }
-
     }
 }

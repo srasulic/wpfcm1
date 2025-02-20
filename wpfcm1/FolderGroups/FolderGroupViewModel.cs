@@ -20,7 +20,7 @@ namespace wpfcm1.FolderGroups
         {
             DisplayName = name;
             _events = events;
-            _events.Subscribe(this);
+            _events.SubscribeOnUIThread(this);
             Preview = IoC.Get<PreviewViewModel>();
 
             FolderVMs = new BindableCollection<FolderViewModel>();

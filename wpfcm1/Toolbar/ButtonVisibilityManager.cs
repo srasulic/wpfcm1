@@ -28,7 +28,7 @@ namespace wpfcm1.Toolbar
         public ButtonVisibilityManager(ToolBarViewModel toolbar, IEventAggregator events)
         {
             _toolBar = toolbar;
-            events.Subscribe(this);
+            events.SubscribeOnUIThread(this);
         }
 
         public void Handle(MessageViewModelActivated message)

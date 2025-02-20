@@ -165,7 +165,7 @@ namespace wpfcm1.Dialogs
             {
                 Log.Error($"FAILED LOGIN: [UserName = {UserName}]");
                 Tenants = null;
-                SelectedTenant = null;
+                //SelectedTenant = null;
                 return;
             }
             Log.Info($"SUCCESSFUL LOGIN: [UserName = {UserName}]");
@@ -197,7 +197,8 @@ namespace wpfcm1.Dialogs
             if (!setOk)
             {
                 Log.Error($"FAILED PUT set tenant: [UserName = {UserName}] [Tenant = {SelectedTenant?.tenant}]");
-                SelectedTenant = null;
+                Tenants = null;
+                //SelectedTenant = null;
                 return;
             }
             Log.Info($"SUCCESSFUL PUT set tenant: [UserName = {UserName}] [Tenant = {SelectedTenant?.tenant}]");
@@ -244,10 +245,10 @@ namespace wpfcm1.Dialogs
 
         public bool CanSaveAndClose => Token != null && SelectedTenant != null && SelectedProfile != null;
 
-        //public async Task Cancel()
-        //{
-        //    await TryCloseAsync(true);
-        //}
+        public async Task Cancel()
+        {
+            await TryCloseAsync(true);
+        }
 
         public void Dispose()
         {
