@@ -9,6 +9,7 @@
     Width="500" Height="290"
     Topmost="True"
     FontSize="14"
+    TitleCharacterCasing="Normal"
     Loaded="DialogLoginView_Loaded"
 >
     <Grid>

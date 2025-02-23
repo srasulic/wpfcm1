@@ -25,7 +25,7 @@ namespace wpfcm1.Shell
         [ImportingConstructor]
         public ShellViewModel(IEventAggregator events, IWindowManager windowManager, ToolBarViewModel toolBar, CertificatesViewModel certs)
         {
-            DisplayName = "eDokument PoliSign     " + AppBootstrapper.appVersion;
+            DisplayName = "m:dok app    " + AppBootstrapper.appVersion;
             _events = events;
             _events.SubscribeOnUIThread(this);
             _windowManager = windowManager;

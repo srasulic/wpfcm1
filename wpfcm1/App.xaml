@@ -17,9 +17,6 @@
                     <local:AppBootstrapper x:Key="bootstrapper" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
-
-            <SolidColorBrush x:Key="WindowTitleColorBrush" Color="{DynamicResource WinTitleColor}" />
-
         </ResourceDictionary>
     </Application.Resources>
 </Application>
