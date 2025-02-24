@@ -112,4 +112,46 @@ namespace wpfcm1.OlympusApi
         public string content { get; set; }
     }
 
+    public class Rect
+    {
+        public int x1 { get; set; }
+        public int x2 { get; set; }
+        public int y1 { get; set; }
+        public int y2 { get; set; }
+    }
+
+    public class RegexEl
+    {
+        public string regex { get; set; }
+        public int orderNumber { get; set; }
+    }
+
+    public class Mapping
+    {
+        public int orderNumber { get; set; }
+        public Rect pib { get; set; }
+        public Rect doc { get; set; }
+        public string pageOrientation { get; set; }
+        public string forcedMap { get; set; }
+        public List<RegexEl> regexList { get; set; }
+    }
+
+    public class TipDokList
+    {
+        public string tipDok { get; set; }
+        public List<Mapping> mappings { get; set; }
+    }
+
+    public class Mappings
+    {
+        public string tenant { get; set; }
+        public List<TipDokList> tipDokList { get; set; }
+    }
+
+    public class DocumentTypeMappingsResult
+    {
+        public Result result { get; set; }
+        public Mappings mappings { get; set; }
+    }
+
 }
