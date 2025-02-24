@@ -54,9 +54,10 @@ namespace wpfcm1.FolderGroups
             }
         }
 
-        protected override Task OnActivateAsync(CancellationToken cancellationToken)
+        protected override async Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            return ActivateItemAsync(ActiveItem ?? FolderVMs[0]);
+            await ActivateItemAsync(ActiveItem ?? FolderVMs[0]);
+            await _events.PublishOnUIThreadAsync(new MessageViewModelActivated(ActiveItem.GetType().Name));
         }
 
         protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
