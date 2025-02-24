@@ -56,6 +56,7 @@ namespace wpfcm1.FolderGroups
 
         protected override async Task OnActivateAsync(CancellationToken cancellationToken)
         {
+            //TODO: ShowOutbound poziva ovu funkciju, ali ne moze da nasetuje IsActive za FolderVMs[0]
             await ActivateItemAsync(ActiveItem ?? FolderVMs[0]);
             await _events.PublishOnUIThreadAsync(new MessageViewModelActivated(ActiveItem.GetType().Name));
         }

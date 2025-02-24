@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Data;
 using System.Threading.Tasks;
 using System.Threading;
+using wpfcm1.FolderGroups;
 
 namespace wpfcm1.FolderTypes
 {
@@ -270,13 +271,17 @@ namespace wpfcm1.FolderTypes
 
         public async void Handle(MessageExtractData message)
         {
-            if (!IsActive) return;
-
+            // TODO: vidi komentare za ShowOutbound i FolderGroupViewModel.OnActivateAsync
+            // ne mogu da setujem IsActive za FolderVM[0] u FolderGroupViewModel!!!!
+            //if (!IsActive) return; 
+            if (Parent == null) return;
+            if (!(Parent as FolderGroupViewModel).IsActive) return;
 
             var documents = Documents.Where(d => !d.Processed || d.IsChecked).Cast<GeneratedDocumentModel>();
             var pib = User.Default.PIB;
             if (string.IsNullOrEmpty(pib))
                 throw new ApplicationException("PIB korisnika nije unet!");
+            return;
 
 
             // iz putanje koja je u obliku "c:\\eDokument\\Faktura\\ERP_outbound_interface" uzimamo tip dokumenta
