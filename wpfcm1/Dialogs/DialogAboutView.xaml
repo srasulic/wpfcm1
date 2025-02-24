@@ -27,7 +27,7 @@
             <Button Content="Prikaži log" Width="96" Height="32" x:Name="ShowLog" Margin="3"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
-            <Button Content="Close" x:Name="Close" Width="96" Height="32" Margin="3"/>
+            <Button Content="Close" x:Name="OnClose" Width="96" Height="32" Margin="3"/>
         </StackPanel>
     </Grid>
 </mah:MetroWindow>

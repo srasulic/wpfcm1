@@ -16,11 +16,8 @@ using wpfcm1.Model;
 using wpfcm1.PDF;
 using wpfcm1.Preview;
 using wpfcm1.Settings;
-
-
 using wpfcm1.DataAccess;
 using System.Collections.Generic;
-
 using System.Windows;
 using System.Threading;
 
@@ -28,7 +25,7 @@ namespace wpfcm1.FolderTypes
 {
     public class FolderViewModel : Screen, IDisposable, IHandle<MessageArchiveSelected>, IHandle<MessageGetPibNames>
     {
-        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         // protected string[] Extensions = { ".pdf", ".ack" };
         protected string[] Extensions = { ".pdf" };
         protected FileSystemWatcher _watcher;

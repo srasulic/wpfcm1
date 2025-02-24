@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using wpfcm1.OlympusApi;
 using wpfcm1.Settings;
 
 namespace wpfcm1.Model
@@ -14,6 +12,7 @@ namespace wpfcm1.Model
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public enum PageOrientation { Portrait, Landscape, RotatedPortrait, Undefined}
+
         public class Coordinates
         {
             public int x { get; set; }
@@ -90,7 +89,8 @@ namespace wpfcm1.Model
 
 
             }
-    }
+        }
+
         public List<MappingElement> MappingElementList;
         public List<MappingElement> MappingElementIssuerList;
 
@@ -134,13 +134,13 @@ namespace wpfcm1.Model
             MappingElementIssuerList = new List<MappingElement>();
             MappingElementList = new List<MappingElement>();
             DocRegexList = new DocNumRegexList();
-
         }
 
-        // web upit kojim dobijamo parametre. Ako ne uspe, uzimamo ih iz settingsa
-        public void SetRecognitionPatterns (string pib, string tipDok) {
-            // TODO: promeniti API da vraća JSON kao listu mapiranja pibova i kao listu mapiranja dokumenata
-            // pa ovde izmeniti da se deserijalizacija uradi odmah u liste
+        public async void SetRecognitionPatterns (string pib, string tipDok) {
+
+            var svc = new OlympusService(User.Default.ApiURL);
+            Token authToken = OlympusService.DeserializeFromJson<Token>(User.Default.JsonToken);
+            var result = await svc.GetConfigDocumentTypeMappings(authToken);
 
 
             var uri = String.Format("{0}/index/mapping_rules?pib={1}&tip_dok={2}", User.Default.ApiURL, pib, tipDok);
@@ -157,7 +157,8 @@ namespace wpfcm1.Model
                         string responseFromServer = reader.ReadToEnd();
                         Console.WriteLine(responseFromServer);
 
-                        RecognitionPatternModel r = Newtonsoft.Json.JsonConvert.DeserializeObject<RecognitionPatternModel>(responseFromServer);
+                        //RecognitionPatternModel r = Newtonsoft.Json.JsonConvert.DeserializeObject<RecognitionPatternModel>(responseFromServer);
+                        RecognitionPatternModel r = new RecognitionPatternModel();
 
                         //MappingElement map = new MappingElement(r.PibAttPrim, r.DocAttPrim);
 

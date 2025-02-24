@@ -8,7 +8,7 @@
             Style="{DynamicResource MahApps.Styles.Button.Circle}" 
             ToolTip="{Binding Description}"
             Visibility="{Binding Path=ButtonVisibility, Converter={StaticResource b2vc}}" 
-            Width="55" Height="55">
+            Width="56" Height="56" Margin="2">
         <Rectangle Width="22" Height="22"
                    Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
             <Rectangle.OpacityMask>

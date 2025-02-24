@@ -29,7 +29,7 @@
 
         <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
             <ContentControl x:Name="CertVM" VerticalAlignment="Center" Width="377" Margin="2"/>
-            <ContentControl x:Name="ToolBar" VerticalAlignment="Center" />
+            <ContentControl x:Name="ToolBar" VerticalAlignment="Center" Margin="2"/>
         </StackPanel>
         <ContentControl Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" x:Name="ActiveItem" />
     </Grid>

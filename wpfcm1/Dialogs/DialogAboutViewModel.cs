@@ -10,7 +10,7 @@ namespace wpfcm1.Dialogs
 {
     public class DialogAboutViewModel : Screen
     {
-        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private string aboutText = "";
         public DialogAboutViewModel()
@@ -75,7 +75,7 @@ namespace wpfcm1.Dialogs
             }
         }
 
-        public async Task Close()
+        public async Task OnClose()
         {
             await TryCloseAsync(true);
         }
