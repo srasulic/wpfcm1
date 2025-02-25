@@ -1,11 +1,10 @@
-﻿using iTextSharp.text.pdf.security;
-using Org.BouncyCastle.Security;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
+using iTextSharp.text.pdf.security;
+using Org.BouncyCastle.Security;
 using wpfcm1.Certificates;
 using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
-using System;
-using System.Text.RegularExpressions;
 
 namespace wpfcm1.Model
 {
@@ -38,21 +37,23 @@ namespace wpfcm1.Model
             if (Regex.IsMatch(certificate.Issuer, @"CN=MUPCA"))
             {
                 HasWarnings = true;
-            } else
+            }
+            else
             {
                 HasWarnings = false;
             }
 
-                var chainBuildInfo = CertificateHelpers.GetChain(Certificate);
+            var chainBuildInfo = CertificateHelpers.GetChain(Certificate);
             var chain = chainBuildInfo.Item1;
             ChainElements = CertificateHelpers.GetChainElements(chain);
 
-                    
+
             // podrška za nekvalifikovane sertifikate koje koristi Republika Srpska
-            if ( certificate.IssuerName.Name == "C=BA, S=Republika Srpska, O=Poreska uprava, CN=PURS CA 1")
+            if (certificate.IssuerName.Name == "C=BA, S=Republika Srpska, O=Poreska uprava, CN=PURS CA 1")
             {
                 Errors = new List<string>();
-            } else
+            }
+            else
             {
                 Errors = CertificateHelpers.CheckCertificate(Certificate, chainBuildInfo);
             }
@@ -63,8 +64,10 @@ namespace wpfcm1.Model
             var hasCrl = crlUrl != null;
             var hasOcsp = ocspUrl != null;
             if (!(hasOcsp || hasCrl))
+            {
                 Errors.Add("Cannot check revocation (no ocsp and crl).");
-          
+            }
+
             //////////
             // privremeno za TEST
             //
@@ -90,7 +93,5 @@ namespace wpfcm1.Model
                 }
             }
         }
-
-
     }
 }

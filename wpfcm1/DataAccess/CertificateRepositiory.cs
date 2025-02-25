@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using wpfcm1.Model;
-
 
 namespace wpfcm1.DataAccess
 {
@@ -40,8 +35,8 @@ namespace wpfcm1.DataAccess
                 try {
                     if (!cert.HasPrivateKey) continue;
                     if (!CertHasNonRepudiation(cert)) continue;
+
                     // privremeno uslovno, dok ne nadjemo bolji nacin (podiže se Insert smart card za neke sertifikate iz liste, što nije exception)
-                    // / *
                     if (pickCertificate)
                     {
                         var rsa = cert.PrivateKey as RSACryptoServiceProvider;
@@ -52,10 +47,10 @@ namespace wpfcm1.DataAccess
                             certFoundInSmartCard = true;
                         }
                     }
-                    // * /
+
                     allQualifiedCerts.Add(new CertificateModel(cert));
                     
-                } catch (System.Security.Cryptography.CryptographicException)
+                } catch (CryptographicException)
                 { 
                     allQualifiedCerts.Add(new CertificateModel(cert)); 
                 }
@@ -86,7 +81,5 @@ namespace wpfcm1.DataAccess
 
             return false;
         }
-
     };
-
 }

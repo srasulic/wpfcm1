@@ -175,8 +175,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppBootstrapper.cs" />
-    <Compile Include="Common\CommonTypes.cs" />
-    <Compile Include="Common\UserDetails.cs" />
     <Compile Include="Converters\Converters.cs" />
     <Compile Include="DataAccess\APIManager.cs" />
     <Compile Include="DataAccess\CertificateRepositiory.cs" />
