@@ -212,7 +212,6 @@
       <DependentUpon>OutboxFolderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="FolderTypes\OutboxFolderViewModel.cs" />
-    <Compile Include="FTP\FtpClient.cs" />
     <Compile Include="Certificates\CertificateHelpers.cs" />
     <Compile Include="Model\CertificateModel.cs" />
     <Compile Include="Model\InternalMessageModel.cs" />
