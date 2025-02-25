@@ -30,9 +30,7 @@ namespace wpfcm1.Model
             public List<string> RegexList { get; set; }
         }
 
-       public List<MappingElement> MappingElementList { get; set; }
-
-        public async Task<List<MappingElement>> GetMappings (string tipDok) {
+        public static async Task<List<MappingElement>> GetMappings (string tipDok) {
 
             Token authToken = OlympusService.DeserializeFromJson<Token>(User.Default.JsonToken);
 
@@ -71,11 +69,7 @@ namespace wpfcm1.Model
                 mappingElementList.Add(me);
             }
 
-            MappingElementList = mappingElementList;
-
             return mappingElementList;
         }
-
-
     }
 }

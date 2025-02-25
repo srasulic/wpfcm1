@@ -222,7 +222,7 @@
     <Compile Include="Model\OutboxDocumentModel.cs" />
     <Compile Include="Model\GeneratedDocumentModel.cs" />
     <Compile Include="Model\InboxDocumentModel.cs" />
-    <Compile Include="Model\RecognitionPatternModel.cs" />
+    <Compile Include="Model\RecognitionPattern.cs" />
     <Compile Include="OlympusApi\OlympusService.cs" />
     <Compile Include="OlympusApi\OlympusServiceTypes.cs" />
     <Compile Include="PDF\PdfCertificateUtil.cs" />

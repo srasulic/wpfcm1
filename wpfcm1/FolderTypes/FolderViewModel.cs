@@ -310,7 +310,6 @@ namespace wpfcm1.FolderTypes
                 document.WaitForServerProcessing = true;
             }
         }
-        
 
         public void InternalMessengerGetStates(DocumentModel document)
         {
@@ -395,7 +394,6 @@ namespace wpfcm1.FolderTypes
             }
         }
 
-
         public void SerializeMessage(InternalMessageModel message)
         {
             try
@@ -429,7 +427,6 @@ namespace wpfcm1.FolderTypes
                 SerializeMessage(message);
             }
         }
-
 
         protected void SetArchived()
         {

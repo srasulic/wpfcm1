@@ -1,10 +1,10 @@
-﻿using Caliburn.Micro;
-using MahApps.Metro.Controls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using Caliburn.Micro;
+using MahApps.Metro.Controls;
 using wpfcm1.DataAccess;
 using wpfcm1.Events;
 using wpfcm1.FolderTypes;

@@ -1,20 +1,20 @@
-﻿using Caliburn.Micro;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Xml.Serialization;
+using Caliburn.Micro;
 using wpfcm1.Dialogs;
 using wpfcm1.Events;
+using wpfcm1.FolderGroups;
 using wpfcm1.Model;
 using wpfcm1.PDF;
 using wpfcm1.Settings;
-using System.Text.RegularExpressions;
-using System.Windows.Data;
-using System.Threading.Tasks;
-using System.Threading;
-using wpfcm1.FolderGroups;
 
 namespace wpfcm1.FolderTypes
 {
@@ -276,8 +276,7 @@ namespace wpfcm1.FolderTypes
             var pib = User.Default.PIB;
             var tipDok = Regex.Match(FolderPath, @"edokument\\(.*)\\", RegexOptions.IgnoreCase).Groups[1].ToString().ToLower();
 
-            RecognitionPattern recPatt = new RecognitionPattern();
-            var mappings = await recPatt.GetMappings(tipDok);
+            var mappings = await RecognitionPattern.GetMappings(tipDok);
 
             var documents = Documents.Where(d => !d.Processed || d.IsChecked).Cast<GeneratedDocumentModel>();
 
@@ -308,15 +307,15 @@ namespace wpfcm1.FolderTypes
                     pageOrientationType = RecognitionPattern.PageOrientation.Undefined;
                 }
 
-                for (var i = 0; i < recPatt.MappingElementList.Count; i++)
+                foreach (var mapping in mappings)
                 {
-                    var pibAtt = recPatt.MappingElementList[i].PibAttribute;
-                    var docAtt = recPatt.MappingElementList[i].DocNumAttribute;
+                    var pibAtt = mapping.PibAttribute;
+                    var docAtt = mapping.DocNumAttribute;
 
-                    if (string.IsNullOrEmpty(document.InvoiceNo) || string.IsNullOrEmpty(document.PibReciever) || recPatt.MappingElementList[i].isForcedMapping)
+                    if (string.IsNullOrEmpty(document.InvoiceNo) || string.IsNullOrEmpty(document.PibReciever) || mapping.isForcedMapping)
                     {
-                        if (recPatt.MappingElementList[i].pageOrientationSpecific == RecognitionPattern.PageOrientation.Undefined ||
-                            recPatt.MappingElementList[i].pageOrientationSpecific == pageOrientationType)
+                        if (mapping.pageOrientationSpecific == RecognitionPattern.PageOrientation.Undefined ||
+                            mapping.pageOrientationSpecific == pageOrientationType)
                         {
                             var matchResults = await PdfHelpers.ExtractTextAsync(document.DocumentPath, pibAtt, docAtt);
                             MatchCollection matches = Regex.Matches(matchResults.Item1, @"[0-9]+");
@@ -326,7 +325,7 @@ namespace wpfcm1.FolderTypes
                                 {
                                     document.PibReciever = match.Value;
                                     document.InvoiceNo = null;
-                                    foreach (var r in recPatt.MappingElementList[i].RegexList)
+                                    foreach (var r in mapping.RegexList)
                                     {
                                         var groupsFound = Regex.Match(matchResults.Item2, r, RegexOptions.Multiline).Groups;
                                         if (groupsFound.Count > 1)
