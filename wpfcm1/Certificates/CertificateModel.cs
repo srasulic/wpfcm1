@@ -6,7 +6,7 @@ using Org.BouncyCastle.Security;
 using wpfcm1.Certificates;
 using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 
-namespace wpfcm1.Model
+namespace wpfcm1.Certificates
 {
     public class CertificateModel
     {

@@ -1,20 +1,19 @@
-﻿using Caliburn.Micro;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Xml.Serialization;
+using Caliburn.Micro;
+using wpfcm1.Certificates;
 using wpfcm1.Dialogs;
 using wpfcm1.Events;
 using wpfcm1.Model;
 using wpfcm1.PDF;
-using wpfcm1.Preview;
-using System;
-using System.Text.RegularExpressions;
-using System.Windows.Data;
-using iTextSharp.text.pdf.security;
-using System.Threading.Tasks;
-using System.Threading;
 
 namespace wpfcm1.FolderTypes
 {

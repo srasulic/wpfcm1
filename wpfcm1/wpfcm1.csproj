@@ -213,7 +213,7 @@
     </Compile>
     <Compile Include="FolderTypes\OutboxFolderViewModel.cs" />
     <Compile Include="Certificates\CertificateHelpers.cs" />
-    <Compile Include="Model\CertificateModel.cs" />
+    <Compile Include="Certificates\CertificateModel.cs" />
     <Compile Include="Model\InternalMessageModel.cs" />
     <Compile Include="Model\DocumentModel.cs" />
     <Compile Include="Model\OutboxDocumentModel.cs" />

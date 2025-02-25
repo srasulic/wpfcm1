@@ -1,5 +1,4 @@
-﻿using Caliburn.Micro;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Runtime.InteropServices;
@@ -7,6 +6,8 @@ using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Caliburn.Micro;
+using wpfcm1.Certificates;
 using wpfcm1.Extensions;
 using wpfcm1.FolderTypes;
 using wpfcm1.Model;
