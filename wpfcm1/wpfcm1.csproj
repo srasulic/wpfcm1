@@ -220,7 +220,11 @@
     <Compile Include="Model\GeneratedDocumentModel.cs" />
     <Compile Include="Model\InboxDocumentModel.cs" />
     <Compile Include="Model\RecognitionPattern.cs" />
+    <Compile Include="OlympusApi\OlympusService.Config.cs" />
     <Compile Include="OlympusApi\OlympusService.cs" />
+    <Compile Include="OlympusApi\OlympusService.Documents.cs" />
+    <Compile Include="OlympusApi\OlympusService.Files.cs" />
+    <Compile Include="OlympusApi\OlympusService.Users.cs" />
     <Compile Include="OlympusApi\OlympusServiceTypes.cs" />
     <Compile Include="PDF\PdfCertificateUtil.cs" />
     <Compile Include="PDF\PdfCrlVerifier.cs" />
