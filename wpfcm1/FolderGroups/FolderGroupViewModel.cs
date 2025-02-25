@@ -45,12 +45,16 @@ namespace wpfcm1.FolderGroups
         public PreviewViewModel Preview { get; set; }
         public IObservableCollection<FolderViewModel> FolderVMs { get; private set; }
 
-        public void ActivateTabItem(SelectionChangedEventArgs e)
+        public async void ActivateTabItem(SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count > 0)
             {
                 var item = e.AddedItems[0] as FolderViewModel;
-                if (item != null) ActivateItemAsync(item);
+                if (item != null)
+                {
+                    await ActivateItemAsync(item);
+                    await _events.PublishOnUIThreadAsync(new MessageViewModelActivated(item.GetType().Name));
+                }
             }
         }
 
