@@ -66,10 +66,12 @@ namespace wpfcm1.FolderGroups
                 //kada se aktivira njegov parent kontejner FolderGroupView
                 //inace, tabovi se aktiviraju porukom ActivateTabItem iz UI
                 await FolderVMs[0].ActivateAsync();
+                await _events.PublishOnUIThreadAsync(new MessageViewModelActivated(FolderVMs[0].GetType().Name));
             }
             else
             {
-                await ActivateItemAsync(ActiveItem ?? FolderVMs[0]);
+                await ActivateItemAsync(ActiveItem);
+                await _events.PublishOnUIThreadAsync(new MessageViewModelActivated(ActiveItem.GetType().Name));
             }
         }
 

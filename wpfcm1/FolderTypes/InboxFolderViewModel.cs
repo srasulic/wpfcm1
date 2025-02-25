@@ -103,7 +103,6 @@ namespace wpfcm1.FolderTypes
 
         protected override Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            _events.PublishOnUIThreadAsync(new MessageViewModelActivated(GetType().Name));
             // pri ulasku startuj automatsku validaciju 
             HandleAsync(new MessageValidate(), cancellationToken);
             HandleAsync(new MessageGetPibNames(), cancellationToken);

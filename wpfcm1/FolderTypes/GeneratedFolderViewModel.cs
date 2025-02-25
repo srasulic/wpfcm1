@@ -75,7 +75,7 @@ namespace wpfcm1.FolderTypes
 
         protected override Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            return _events.PublishOnUIThreadAsync(new MessageViewModelActivated(GetType().Name));
+            return Task.CompletedTask;
         }
 
         protected void CheckForDuplicateInvNo()
