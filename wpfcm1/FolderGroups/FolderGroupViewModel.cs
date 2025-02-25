@@ -56,9 +56,17 @@ namespace wpfcm1.FolderGroups
 
         protected override async Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            //TODO: ShowOutbound poziva ovu funkciju, ali ne moze da nasetuje IsActive za FolderVMs[0]
-            await ActivateItemAsync(ActiveItem ?? FolderVMs[0]);
-            await _events.PublishOnUIThreadAsync(new MessageViewModelActivated(ActiveItem.GetType().Name));
+            if (ActiveItem == null)
+            {
+                //FIX za aktivaciju prvog taba (u ovom slucaju GenerateFolderView)
+                //kada se aktivira njegov parent kontejner FolderGroupView
+                //inace, tabovi se aktiviraju porukom ActivateTabItem iz UI
+                await FolderVMs[0].ActivateAsync();
+            }
+            else
+            {
+                await ActivateItemAsync(ActiveItem ?? FolderVMs[0]);
+            }
         }
 
         protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)

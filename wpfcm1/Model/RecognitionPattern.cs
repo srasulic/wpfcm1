@@ -39,11 +39,17 @@ namespace wpfcm1.Model
             if (result == null)
             {
                 Log.Error($"FAILED GetConfigDocumentTypeMappings");
+                return new List<MappingElement>();
+            }
+
+            var td = result.mappings.tipDokList.Find(p => p.tipDok == tipDok);
+            if (td == null)
+            {
+                Log.Error($"FAILED cannot find tipDokList {tipDok}");
+                return new List<MappingElement>();
             }
 
             var mappingElementList = new List<MappingElement>();
-
-            var td = result.mappings.tipDokList.Find(p => p.tipDok == tipDok);
             foreach (var m in td.mappings)
             {
                 MappingElement me = new MappingElement();

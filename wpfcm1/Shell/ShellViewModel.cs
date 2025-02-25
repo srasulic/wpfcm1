@@ -118,7 +118,6 @@ namespace wpfcm1.Shell
 
         public void ShowOutbound()
         {
-            //TODO: ovo poziva FolderGroupViewModel.OnActivateAsync
             ActivateItemAsync(OutboundVM);
         }
 

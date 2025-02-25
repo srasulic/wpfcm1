@@ -267,11 +267,9 @@ namespace wpfcm1.FolderTypes
 
         public async void Handle(MessageExtractData message)
         {
-            // TODO: vidi komentare za ShowOutbound i FolderGroupViewModel.OnActivateAsync
-            // ne mogu da setujem IsActive za FolderVM[0] u FolderGroupViewModel!!!!
-            //if (!IsActive) return; 
-            if (Parent == null) return;
-            if (!(Parent as FolderGroupViewModel).IsActive) return;
+            if (!IsActive) return; 
+            //if (Parent == null) return;
+            //if (!(Parent as FolderGroupViewModel).IsActive) return;
 
             var pib = User.Default.PIB;
             var tipDok = Regex.Match(FolderPath, @"edokument\\(.*)\\", RegexOptions.IgnoreCase).Groups[1].ToString().ToLower();
