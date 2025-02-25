@@ -17,12 +17,12 @@ namespace wpfcm1.Toolbar
         private readonly Dictionary<string, BitArray> WorkspaceToButtonVisibility = new Dictionary<string, BitArray>()
         {
             // ( Reject - Sign - Ack - Validate - ExtractData - TogglePreview - Sync - ShowHome ) 
-            // ( - - - PickCert - ArchiveNBGP - Web Inf - Xls - Arch )
-            {"HomeViewModel",               new BitArray(new byte[]{Convert.ToByte("00000011", 2), Convert.ToByte("00010000", 2)})},
+            // ( - - - PickCert - Web Inf - Xls )
+            {"HomeViewModel",               new BitArray(new byte[]{Convert.ToByte("00000011", 2), Convert.ToByte("00000100", 2)})},
             {"GeneratedFolderViewModel",    new BitArray(new byte[]{Convert.ToByte("11001111", 2), 0x2})},
             {"InboxFolderViewModel",        new BitArray(new byte[]{Convert.ToByte("01010111", 2), 0x2})},
             {"OutboxFolderViewModel",       new BitArray(new byte[]{Convert.ToByte("10000111", 2), 0x2})},
-            {"FolderViewModel",             new BitArray(new byte[]{Convert.ToByte("00000111", 2), Convert.ToByte("00001000", 2)})} //ArchiveNBGP
+            {"FolderViewModel",             new BitArray(new byte[]{Convert.ToByte("00000111", 2), Convert.ToByte("00000000", 2)})}
         };
 
         public ButtonVisibilityManager(ToolBarViewModel toolbar, IEventAggregator events)

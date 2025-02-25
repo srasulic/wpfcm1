@@ -1,10 +1,10 @@
-﻿using iTextSharp.text;
-using iTextSharp.text.pdf;
-using iTextSharp.text.pdf.security;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.text.pdf.security;
 using wpfcm1.Settings;
 using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 
@@ -63,7 +63,7 @@ namespace wpfcm1.PDF
             var rect = GetSignatureRect(reader, sigLocation);
             var sigName = SignatureRules.SignatureName[sigLocation];
             appearance.SetVisibleSignature(rect, 1, sigName);
-            
+
             // podrška za YU i Cir slova
             string path = System.Environment.GetEnvironmentVariable("SystemRoot") + @"\fonts\Arial.ttf";
             Font font = FontFactory.GetFont(path, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
@@ -77,7 +77,7 @@ namespace wpfcm1.PDF
             IExternalSignature pks;
             if (cert.SignatureAlgorithm.FriendlyName == "sha1RSA" || cert.IssuerName.Name == "C=BA, S=Republika Srpska, O=Poreska uprava, CN=PURS CA 1")
             {
-                pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA1); 
+                pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA1);
             }
             else
             {
@@ -106,7 +106,7 @@ namespace wpfcm1.PDF
             {
                 if (sigLocation == SignatureRules.SignatureLocation.UpperLeft)
                 {
-                    //                    var signatureRect = new Rectangle(10, pageRect.Height - 60, 200, pageRect.Height - 10);
+                    //var signatureRect = new Rectangle(10, pageRect.Height - 60, 200, pageRect.Height - 10);
                     var x = User.Default.XSigShift + 10;
                     var y = pageRect.Height - User.Default.YSigShift - 60;
                     var xx = x + sigWidth;
@@ -118,7 +118,7 @@ namespace wpfcm1.PDF
                 }
                 else
                 {
-//                    var signatureRect = new Rectangle(pageRect.Width - 200, pageRect.Height - 60, pageRect.Width - 10, pageRect.Height - 10);
+                    //var signatureRect = new Rectangle(pageRect.Width - 200, pageRect.Height - 60, pageRect.Width - 10, pageRect.Height - 10);
                     var x = pageRect.Width - User.Default.XSigShiftRight - 200;
                     var y = pageRect.Height - User.Default.YSigShiftRight - 60;
                     var xx = x + sigWidth;
@@ -132,7 +132,7 @@ namespace wpfcm1.PDF
             {
                 if (sigLocation == SignatureRules.SignatureLocation.UpperLeft)
                 {
-                    //                    var signatureRect = new Rectangle(10, pageRect.Width - 60, 200, pageRect.Width - 10);
+                    //var signatureRect = new Rectangle(10, pageRect.Width - 60, 200, pageRect.Width - 10);
                     var x = User.Default.XSigShift + 10;
                     var y = pageRect.Width - User.Default.YSigShift - 60;
                     var xx = x + sigWidth;
@@ -143,7 +143,7 @@ namespace wpfcm1.PDF
                 }
                 else
                 {
-//                    var signatureRect = new Rectangle(pageRect.Height - 200, pageRect.Width - 60, pageRect.Height - 10, pageRect.Width - 10);
+                    //var signatureRect = new Rectangle(pageRect.Height - 200, pageRect.Width - 60, pageRect.Height - 10, pageRect.Width - 10);
                     var x = pageRect.Height - User.Default.XSigShiftRight - 200;
                     var y = pageRect.Width - User.Default.YSigShiftRight - 60;
                     var xx = x + sigWidth;
@@ -151,9 +151,9 @@ namespace wpfcm1.PDF
                     var signatureRect = new Rectangle(x, y, xx, yy);
                     return signatureRect;
                 }
-            }            
+            }
             // ako nije ni landscape ni portrait, stavi potpise bilo gde na strani gde ce se uvek videti:
-            else 
+            else
             {
                 if (sigLocation == SignatureRules.SignatureLocation.UpperLeft)
                 {

@@ -1,18 +1,16 @@
-﻿using iTextSharp.text.pdf;
-using iTextSharp.text.pdf.parser;
-using iTextSharp.text.pdf.security;
-using Org.BouncyCastle.Ocsp;
-using Org.BouncyCastle.X509;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.text.pdf.parser;
+using iTextSharp.text.pdf.security;
+using Org.BouncyCastle.Ocsp;
+using Org.BouncyCastle.X509;
 using wpfcm1.Certificates;
-using wpfcm1.Settings;
-using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 using wpfcm1.Model;
-//using Org.BouncyCastle.Security;
+using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 
 namespace wpfcm1.PDF
 {
@@ -21,11 +19,11 @@ namespace wpfcm1.PDF
         //
         // 1.0 - Manipulacija tekstom
         //
-        public static Tuple<string, string> ExtractText(string path, RecognitionPatternModel.Coordinates pibAtt, RecognitionPatternModel.Coordinates docAtt)
+        public static Tuple<string, string> ExtractText(string path, RecognitionPattern.Coordinates pibAtt, RecognitionPattern.Coordinates docAtt)
         {
             using (var reader = new PdfReader(path))
             {
-              //  Rectangle rectPib = new Rectangle(User.Default.LlxPib, User.Default.LlyPib, User.Default.UrxPib, User.Default.UryPib)
+                //  Rectangle rectPib = new Rectangle(User.Default.LlxPib, User.Default.LlyPib, User.Default.UrxPib, User.Default.UryPib)
                 Rectangle rectPib = new Rectangle(pibAtt.x, pibAtt.y, pibAtt.xx, pibAtt.yy)
                 {
                     Border = Rectangle.BOX,
@@ -64,13 +62,14 @@ namespace wpfcm1.PDF
             {
                 //  Rectangle rectPib = new Rectangle(User.Default.LlxPib, User.Default.LlyPib, User.Default.UrxPib, User.Default.UryPib)
                 pageRotation = reader.GetPageRotation(1);
-                
+
 
                 var pageRect = reader.GetPageSize(1);
                 if (pageRect.Height > pageRect.Width)
                 {
                     isPortrait = true;
-                } else
+                }
+                else
                 {
                     isPortrait = false;
                 }
@@ -79,24 +78,19 @@ namespace wpfcm1.PDF
             }
         }
 
-
         public static Task<Tuple<bool, int>> ExtractOrientationRotationAsync(string path)
         {
             return Task.Run(() => ExtractOrientationRotation(path));
         }
 
-
-
-        public static Task<Tuple<string, string>> ExtractTextAsync(string path, RecognitionPatternModel.Coordinates pibAtt, RecognitionPatternModel.Coordinates docAtt)
+        public static Task<Tuple<string, string>> ExtractTextAsync(string path, RecognitionPattern.Coordinates pibAtt, RecognitionPattern.Coordinates docAtt)
         {
             return Task.Run(() => ExtractText(path, pibAtt, docAtt));
         }
 
-
         //
         // 2.0 - validacija sertifikata
         //
-
         public static Tuple<bool, string> ValidatePdfCertificatesWithInfo(string path)
         {
             bool isValid = true;
@@ -139,13 +133,13 @@ namespace wpfcm1.PDF
                     }
                     // Dodoati LTV proveru!!!
 
-                 //   PdfLtvVerifier verifier = new PdfLtvVerifier(reader);
-                 //   List<VerificationOK> xxx = new List<VerificationOK>();
-                 //   verifier.Verify(xxx);
-                 //   if (xxx == null)
-                 //   {
-                 //       validationInfo = validationInfo + "Ovo je test ";
-                 //   }
+                    //   PdfLtvVerifier verifier = new PdfLtvVerifier(reader);
+                    //   List<VerificationOK> xxx = new List<VerificationOK>();
+                    //   verifier.Verify(xxx);
+                    //   if (xxx == null)
+                    //   {
+                    //       validationInfo = validationInfo + "Ovo je test ";
+                    //   }
 
                 }
             }
@@ -156,7 +150,6 @@ namespace wpfcm1.PDF
             }
             return Tuple.Create(isValid, validationInfo);
         }
-
 
         public static PdfPKCS7 GetPcks7(string path, int position)
         {
@@ -175,19 +168,17 @@ namespace wpfcm1.PDF
                 }
                 return null;
             }
-            catch 
+            catch
             {
                 return null;
             }
         }
-
 
         // dodajemo Validate Pdf Cert funkciju koja će umeti da vrati <Tuple<bool, string>> gde će string biti dodatna informacija na temu sertifikata
         public static Task<Tuple<bool, string>> ValidatePdfCertificatesWithInfoAsync(string path)
         {
             return Task.Run(() => ValidatePdfCertificatesWithInfo(path));
         }
-
 
         public static Task<PdfPKCS7> GetPcks7Async(string path, int position)
         {
@@ -226,7 +217,7 @@ namespace wpfcm1.PDF
                 var c2 = new X509Certificate2();
                 c2.Import(pkcs7.SigningCertificate.GetEncoded());
                 var c2chain = CertificateHelpers.GetChain(c2);
- 
+
                 // Isključeno jer proverava da li su sertifikati validni u ovom trenutku
                 // TODO: dodati validaciju na ispravan način!!!!!
 
@@ -240,7 +231,7 @@ namespace wpfcm1.PDF
                 DateTime signDate = pkcs7.SignDate;
                 cert.CheckValidity(signDate);
 
-               
+
                 // zasto nismo uzeli SigningCertificate iz prethodnog koraka?
                 X509Certificate[] certs = pkcs7.SignCertificateChain;
                 X509Certificate signCert = certs[0];
@@ -274,7 +265,7 @@ namespace wpfcm1.PDF
                 verification.AddRange(verification);
             }
             if (verification.Count == 0)
-                throw  new Exception("Nije bilo moguće proveriti da li je sertifikat opozvan / Certificate revocation check failed.");
+                throw new Exception("Nije bilo moguće proveriti da li je sertifikat opozvan / Certificate revocation check failed.");
         }
     }
 }

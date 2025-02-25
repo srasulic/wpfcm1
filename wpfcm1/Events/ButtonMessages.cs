@@ -11,10 +11,7 @@ namespace wpfcm1.Events
     public class MessageValidate :IButtonMessage { }
     public class MessageAck :IButtonMessage { }
     public class MessageXls : IButtonMessage { }
-    public class MessageArchive : IButtonMessage { }
     public class MessagePickCert : IButtonMessage { }
     public class MessageShowWeb : IButtonMessage { }
-    public class MessageArchiveSelected : IButtonMessage { }
     public class MessageGetPibNames : IButtonMessage { }
-
 }

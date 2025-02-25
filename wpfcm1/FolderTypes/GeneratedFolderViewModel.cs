@@ -18,8 +18,6 @@ using wpfcm1.FolderGroups;
 
 namespace wpfcm1.FolderTypes
 {
-
-
     public class GeneratedFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageExtractData>, IHandle<MessageReject>, IHandle<MessageXls>
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -147,7 +145,6 @@ namespace wpfcm1.FolderTypes
                 {
 
                 }
-                                
                 System.Diagnostics.Process.Start(filename);
             }
             catch
@@ -183,7 +180,6 @@ namespace wpfcm1.FolderTypes
                 var result = _windowManager.ShowDialogAsync(new DialogSignViewModel(_certificate, this));
             }
         }
-
 
         public static bool IsPibOk (String pib, bool denyUserDefaultPib  = true)
         {
@@ -277,219 +273,86 @@ namespace wpfcm1.FolderTypes
             if (Parent == null) return;
             if (!(Parent as FolderGroupViewModel).IsActive) return;
 
-            var documents = Documents.Where(d => !d.Processed || d.IsChecked).Cast<GeneratedDocumentModel>();
             var pib = User.Default.PIB;
-            if (string.IsNullOrEmpty(pib))
-                throw new ApplicationException("PIB korisnika nije unet!");
-            return;
+            var tipDok = Regex.Match(FolderPath, @"edokument\\(.*)\\", RegexOptions.IgnoreCase).Groups[1].ToString().ToLower();
 
+            RecognitionPattern recPatt = new RecognitionPattern();
+            var mappings = await recPatt.GetMappings(tipDok);
 
-            // iz putanje koja je u obliku "c:\\eDokument\\Faktura\\ERP_outbound_interface" uzimamo tip dokumenta
-            var tipDok = Regex.Match(FolderPath, @"edokument\\(.*)\\", RegexOptions.IgnoreCase).Groups[1].ToString();
-            // sada imamo PIB i tip dokumenta - možemo da uputimo web request upit za mapiranje i za regex
+            var documents = Documents.Where(d => !d.Processed || d.IsChecked).Cast<GeneratedDocumentModel>();
 
-            RecognitionPatternModel recPatt = new RecognitionPatternModel();
-            recPatt.SetRecognitionPatterns(pib, tipDok);
-
-            // Probamo sve setove koordinata, dok ne pronadjemo i PIB i InvoiceNo. 
-            // Uvek će ostati zapamćen poslednji prepoznati PIB
-            // InvoiceNo će se prepoznavati SAMO ako je u toj grani prepoznat validan PIB
-            // Ovo znači da pozicija PIBa diktira i da li će se broj dokumenta prepoznavati ili ne.
             foreach (var document in documents)
             {
-                // odredimo da li je portrait, landsacpe ili rotirani portrait, kako bi odredili koje će se mapiranje koristiti:
                 var pageOrientationResults = await PdfHelpers.ExtractOrientationRotationAsync(document.DocumentPath);
 
                 bool isPortrait = pageOrientationResults.Item1;
                 int pageRotation = pageOrientationResults.Item2;
-                RecognitionPatternModel.PageOrientation pageOrientationType;
-                if (isPortrait && pageRotation == 0) {
-                    pageOrientationType = RecognitionPatternModel.PageOrientation.Portrait;
-                } else if (!isPortrait && pageRotation == 0)
+
+                RecognitionPattern.PageOrientation pageOrientationType;
+                if (isPortrait && pageRotation == 0)
                 {
-                    pageOrientationType = RecognitionPatternModel.PageOrientation.Landscape;
-                } else if (isPortrait && pageRotation == 90)
+                    pageOrientationType = RecognitionPattern.PageOrientation.Portrait;
+                }
+                else if (!isPortrait && pageRotation == 0)
                 {
-                    pageOrientationType = RecognitionPatternModel.PageOrientation.RotatedPortrait;
-                } else
+                    pageOrientationType = RecognitionPattern.PageOrientation.Landscape;
+                }
+                else if (isPortrait && pageRotation == 90)
+                {
+                    pageOrientationType = RecognitionPattern.PageOrientation.RotatedPortrait;
+                }
+                else
                 {
                     string orj = isPortrait ? "Portrait" : "Landscape";
                     Log.Error("ERR: Neprepoznata orjentacija dokumenta. Rotacija: " + pageRotation + "Orjentacija: " + orj);
-                    pageOrientationType = RecognitionPatternModel.PageOrientation.Undefined;
+                    pageOrientationType = RecognitionPattern.PageOrientation.Undefined;
                 }
 
-
-
-                // Ako nije multi issuer uzimamo PIB iz podešavanja,
-                // ako jeste multi issuer mapiramo sa dokumenta PIB izdavaoca:
-                // PIB prefiks 99997 je rezervisan za multiissuer podešavanje
-                if (!Regex.IsMatch(User.Default.PIB, @"99997[0-9]+")  )
-                {
-                    document.PibIssuer = User.Default.PIB;
-                }
-                // ako ima mapiranja, znači da je multiissuer, tražimo pib izdavaoca sa dokumenta
-                else
-                {
-                    for (var i = 0; i < recPatt.MappingElementIssuerList.Count; i++)
-                    {
-                        var pibIssuerAtt = (RecognitionPatternModel.Coordinates)recPatt.MappingElementIssuerList[i].PibAttribute;
-                        var docIssuerAtt = (RecognitionPatternModel.Coordinates)recPatt.MappingElementIssuerList[i].DocNumAttribute;
-                        if (string.IsNullOrEmpty(document.PibReciever))
-                        {
-                            // ispunjen uslov da se mapiranje primeni (prema orjentaciji dokumenta)
-                            if (recPatt.MappingElementIssuerList[i].pageOrientationSpecific == RecognitionPatternModel.PageOrientation.Undefined
-                                || recPatt.MappingElementIssuerList[i].pageOrientationSpecific == pageOrientationType)
-                            {
-                                var matchResults = await PdfHelpers.ExtractTextAsync(document.DocumentPath, pibIssuerAtt, docIssuerAtt);
-
-                                // vraca sve nizove brojeva tako da nema problema sa substringovima dugackih brojeva poput bank racuna
-                                MatchCollection matches = Regex.Matches(matchResults.Item1, @"[0-9]+");
-                                foreach (Match match in matches)
-                                {
-                                    // ako mapiranje vraća neki validan PIB, idemo na traženje broja dokumenta
-                                    if (IsPibOk(match.Value))
-                                    {
-                                        document.PibIssuer = match.Value;  //#########
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // trazimo PIB primaoca i br dok
                 for (var i = 0; i < recPatt.MappingElementList.Count; i++)
                 {
-                    var pibAtt = (RecognitionPatternModel.Coordinates)recPatt.MappingElementList[i].PibAttribute;
-                    var docAtt = (RecognitionPatternModel.Coordinates)recPatt.MappingElementList[i].DocNumAttribute;
-                    
+                    var pibAtt = recPatt.MappingElementList[i].PibAttribute;
+                    var docAtt = recPatt.MappingElementList[i].DocNumAttribute;
 
                     if (string.IsNullOrEmpty(document.InvoiceNo) || string.IsNullOrEmpty(document.PibReciever) || recPatt.MappingElementList[i].isForcedMapping)
                     {
-                        // ispunjen uslov da se mapiranje primeni (prema orjentaciji dokumenta)
-                        if (recPatt.MappingElementList[i].pageOrientationSpecific == RecognitionPatternModel.PageOrientation.Undefined
-                            || recPatt.MappingElementList[i].pageOrientationSpecific == pageOrientationType)
+                        if (recPatt.MappingElementList[i].pageOrientationSpecific == RecognitionPattern.PageOrientation.Undefined ||
+                            recPatt.MappingElementList[i].pageOrientationSpecific == pageOrientationType)
                         {
                             var matchResults = await PdfHelpers.ExtractTextAsync(document.DocumentPath, pibAtt, docAtt);
-
-                            // MatchCollection matches = Regex.Matches(matchResults.Item1, @"[1-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]");
-                            //MatchCollection matches = Regex.Matches(matchResults.Item1, @"4[0-9]{12}");
-                            // vraca sve nizove brojeva tako da nema problema sa substringovima dugackih brojeva poput bank racuna
                             MatchCollection matches = Regex.Matches(matchResults.Item1, @"[0-9]+");
                             foreach (Match match in matches)
                             {
-                                // ako mapiranje vraća neki validan PIB, idemo na traženje broja dokumenta
                                 if (IsPibOk(match.Value))
                                 {
                                     document.PibReciever = match.Value;
-
-
-                                    // nulujemo bilo kakav broj dokumenta koji je pronađen u prethodnim iteracijama (ako je mapiranjem pogođen PIB, primenjuje se novo traženje broja dokumenta
-                                    // ovo je važno samo ako uvedemo mapiranje koje je obavezno (koje će se primeniti i ako se prethodnim traženjem već pronađu PIB i neki broj dok (dešava se da slab regex nađe broj pogrešnim mapiranjima)
                                     document.InvoiceNo = null;
-                                    if (recPatt.MappingElementList[i].regexToApply == 1
-                                        || recPatt.MappingElementList[i].regexToApply == 6
-                                        || recPatt.MappingElementList[i].regexToApply == 0)
+                                    foreach (var r in recPatt.MappingElementList[i].RegexList)
                                     {
-                                        if (string.IsNullOrEmpty(document.InvoiceNo))
+                                        var groupsFound = Regex.Match(matchResults.Item2, r, RegexOptions.Multiline).Groups;
+                                        if (groupsFound.Count > 1)
                                         {
-                                            var groupsFound = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex1, RegexOptions.Multiline).Groups;
-                                            if (groupsFound.Count == 1)
-                                                document.InvoiceNo = groupsFound[0].Value;  
-                                            else
-                                                document.InvoiceNo = groupsFound[1].Value + groupsFound[2].Value + groupsFound[3].Value + groupsFound[4].Value;
+                                            document.InvoiceNo = groupsFound[1].Value + groupsFound[2].Value + groupsFound[3].Value + groupsFound[4].Value;
+                                            if (!String.IsNullOrEmpty(document.InvoiceNo)) break;
                                         }
                                     }
-                                    if (recPatt.MappingElementList[i].regexToApply == 2
-                                                                            || recPatt.MappingElementList[i].regexToApply == 6
-                                                                            || recPatt.MappingElementList[i].regexToApply == 0)
-                                    {
-                                        if (string.IsNullOrEmpty(document.InvoiceNo))
-                                        {
-                                            var groupsFound = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex2, RegexOptions.Multiline).Groups;
-                                            if (groupsFound.Count == 1)
-                                                document.InvoiceNo = groupsFound[0].Value;
-                                            else
-                                                document.InvoiceNo = groupsFound[1].Value + groupsFound[2].Value + groupsFound[3].Value + groupsFound[4].Value;
-                                        }
-                                    }
-
-                                    if (recPatt.MappingElementList[i].regexToApply == 3
-                                        || recPatt.MappingElementList[i].regexToApply == 6
-                                        || recPatt.MappingElementList[i].regexToApply == 0)
-                                    {
-                                        if (string.IsNullOrEmpty(document.InvoiceNo))
-                                        {
-                                            var groupsFound = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex3, RegexOptions.Multiline).Groups;
-                                            if (groupsFound.Count == 1)
-                                                document.InvoiceNo = groupsFound[0].Value;
-                                            else
-                                                document.InvoiceNo = groupsFound[1].Value + groupsFound[2].Value + groupsFound[3].Value + groupsFound[4].Value;
-                                        }
-
-                                    }
-
-                                    if (recPatt.MappingElementList[i].regexToApply == 4
-                                        || recPatt.MappingElementList[i].regexToApply == 0)
-                                    {
-                                        if (string.IsNullOrEmpty(document.InvoiceNo))
-                                        {
-                                            var groupsFound = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex4, RegexOptions.Multiline).Groups;
-                                            if (groupsFound.Count == 1)
-                                                document.InvoiceNo = groupsFound[0].Value;
-                                            else
-                                                document.InvoiceNo = groupsFound[1].Value + groupsFound[2].Value + groupsFound[3].Value + groupsFound[4].Value;
-                                        }
-
-                                    }
-
-                                    if (recPatt.MappingElementList[i].regexToApply == 5
-                                        || recPatt.MappingElementList[i].regexToApply == 0)
-                                    {
-                                        if (string.IsNullOrEmpty(document.InvoiceNo))
-                                        {
-                                            var groupsFound = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex5, RegexOptions.Multiline).Groups;
-                                            if (groupsFound.Count == 1)
-                                                document.InvoiceNo = groupsFound[0].Value;
-                                            else
-                                                document.InvoiceNo = groupsFound[1].Value + groupsFound[2].Value + groupsFound[3].Value + groupsFound[4].Value;
-                                        }
-
-                                    }
-
                                 }
                             }
                         }
                     }
                 }
 
-
-
-
-
-                // ako posle svega nije prepoznat broj, dodeli mu vrednost za Neprepoznat string
                 if (string.IsNullOrEmpty(document.InvoiceNo))
                 {
-                    document.InvoiceNo = recPatt.DocRegexList.notRecognizedString;
+                    document.InvoiceNo = ""; //TODO: NOT RECOGNIZED STRING
                 }
-
-                // Izmešteno u setter metodu kako bi važilo i za ručne unose
- //               Regex regexAllowedCharacters = new Regex(@"[^0-9a-zA-Z]");
- //               document.InvoiceNo = regexAllowedCharacters.Replace(document.InvoiceNo, @"-");
-
                 document.Processed = true;
-
-                //Dodajemo proveru validnosti podataka koje smo dobili:
-                // (ovo se radi i na pregledu - gridu ali tamo se obrade samo prikazani pa IsValid ostane nedodeljeno ako se ne skroluje)
-
                 document.IsValid = IsPibOk(document.PibReciever);
-
                 if (string.IsNullOrWhiteSpace(document.InvoiceNo))
                 {
                     document.IsValid = false;
                 }
-
             }
+
             CheckForDuplicateInvNo();
         }
 

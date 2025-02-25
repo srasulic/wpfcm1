@@ -1,29 +1,27 @@
-﻿using Caliburn.Micro;
-using iTextSharp.text.pdf.security;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Threading;
 using System.Xml;
 using System.Xml.Serialization;
+using Caliburn.Micro;
+using iTextSharp.text.pdf.security;
+using wpfcm1.DataAccess;
 using wpfcm1.Events;
 using wpfcm1.Model;
 using wpfcm1.PDF;
 using wpfcm1.Preview;
-using wpfcm1.Settings;
-using wpfcm1.DataAccess;
-using System.Collections.Generic;
-using System.Windows;
-using System.Threading;
 
 namespace wpfcm1.FolderTypes
 {
-    public class FolderViewModel : Screen, IDisposable, IHandle<MessageArchiveSelected>, IHandle<MessageGetPibNames>
+    public class FolderViewModel : Screen, IDisposable, IHandle<MessageGetPibNames>
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         // protected string[] Extensions = { ".pdf", ".ack" };
@@ -657,233 +655,6 @@ namespace wpfcm1.FolderTypes
             }
         }
 
-        public async void Handle(MessageArchiveSelected message)
-        {
-            if (!IsActive) return;
-            if (APIManager.GetArchivePolicy() == "GROUP_RENAME")
-            {    
-                // NBGP style archive 
-                await ArchiveNBGPAsync();
-            } else
-            {
-                ArchiveBasic();
-            }
-        }
-
-        private void ArchiveBasic()
-        {
-            string archivePath = Folders.Default.ArchiveFolder;
-            Log.Info("Ariviranje dokumenata u direktorijum: " + archivePath);
-            try
-            {
-                FolderViewModel.PsKillPdfHandlers();
-                var documents = Documents.Where(d => d.IsChecked).Cast<DocumentModel>();
-            //    if (!documents.Any()) { documents = Documents.Cast<DocumentModel>(); }
-
-                //prebacivanje i reimenovanje dokumenata
-                foreach (var document in documents)
-                {
-                    string fileName = document.DocumentPath;
-                    renamePdf(fileName, (String)document.DocumentInfo.Name.Split('.')[0], archivePath);
-                }
-            }
-            catch
-            {
-                MessageBox.Show("Arhiviranje neuspešno. Molim vas pokušajte ponovo.", "Greška pri arhiviranju");
-            }
-        }
-
-        private async Task ArchiveNBGPAsync()
-        {
-            string archivePath = Folders.Default.ArchiveFolder;
-            Log.Info("Ariviranje dokumenata u direktorijum: " + archivePath);
-            try
-            {
-                FolderViewModel.PsKillPdfHandlers();
-                var documents = Documents.Where(d => d.IsChecked).Cast<DocumentModel>();
-              //  if (!documents.Any()) { documents = Documents.Cast<DocumentModel>(); }
-
-                //od izabranih dokumenata samo jedan treba da je sa barkodom, ostali su njegove specifikacije
-                string barcodeNumber = null;
-                string fileNameWithBarcode = null;
-                bool foundBarcode = false;
-                foreach (var document in documents)
-                {
-                    string fileName = document.DocumentPath;
-                    var extractedInfo = await ExtractBarcodeNumber(fileName);
-                    if(!String.IsNullOrEmpty(extractedInfo))
-                    {
-                        if (foundBarcode)
-                        {
-                            //pronadjena dva dokumenta sa barkodom
-                            MessageBox.Show("Izabrali ste dva dokumenta sa barkodom. Izaberite jedan dokument i njegovu propratnu specifikaciju.", "Greška pri arhiviranju");
-                            return;
-                        }
-                        foundBarcode = true;
-                        barcodeNumber = extractedInfo;
-                        fileNameWithBarcode = fileName;
-                    }
-                }
-
-                if (!foundBarcode)
-                {
-                    //nije pronadjen ni jedan dokument sa barkodom
-                    MessageBox.Show("Niste izabrali ni jedan dokument sa barkodom. Izaberite jedan dokument i njegovu propratnu specifikaciju.", "Greška pri arhiviranju");
-                    return;
-                }
-
-                //prebacivanje i reimenovanje dokumenata
-                int fileCount = 0;
-                foreach (var document in documents)
-                {
-                    string fileName = document.DocumentPath;
-                    if (fileName == fileNameWithBarcode)
-                    {
-                        renamePdf(fileName, barcodeNumber, archivePath);
-                    }
-                    else
-                    {
-                        renamePdf(fileName, "ef" + barcodeNumber + "_edokarch_spec" + fileCount, archivePath);
-                        fileCount++;
-                    }
-                }
-
-            }
-            catch
-            {
-                MessageBox.Show("Arhiviranje neuspešno. Molim vas pokušajte ponovo.", "Greška pri arhiviranju");
-            }
-        }
-
-        public async Task<string> ExtractBarcodeNumber(string path)
-        {
-            string barcodeFoundValue = "";
-            if (!File.Exists(path))
-            {
-                return barcodeFoundValue;
-            }
-            else
-            {
-                using (var reader = new iTextSharp.text.pdf.PdfReader(path))
-                {
-                    var pib = User.Default.PIB;
-                    if (string.IsNullOrEmpty(pib))
-                        throw new ApplicationException("PIB korisnika nije unet!");
-
-
-                    // iz putanje koja je u obliku "c:\\eDokument\\Faktura\\ERP_outbound_interface" uzimamo tip dokumenta i dodajemo "ARCH" 
-                    var tipDok = Regex.Match(path, @"(.*)(edokument\\)(.*)(\\.*)(\\.*)(\\.*)", RegexOptions.IgnoreCase).Groups[3].ToString();
-                    tipDok = String.Concat(tipDok, "ARCH");
-                    RecognitionPatternModel recPatt = new RecognitionPatternModel();
-                    recPatt.SetRecognitionPatterns(pib, tipDok);
-
-                    for (var i = 0; i < recPatt.MappingElementList.Count; i++)
-                    {
-                        var docAtt = (RecognitionPatternModel.Coordinates)recPatt.MappingElementList[i].DocNumAttribute;
-                        if (string.IsNullOrEmpty(barcodeFoundValue))
-                        {
-                            var matchResults = await PdfHelpers.ExtractTextAsync(path, new RecognitionPatternModel.Coordinates(), docAtt);
-                            barcodeFoundValue = null;
-                            if (recPatt.MappingElementList[i].regexToApply == 1
-                                || recPatt.MappingElementList[i].regexToApply == 6
-                                || recPatt.MappingElementList[i].regexToApply == 0)
-                            {
-                                if (string.IsNullOrEmpty(barcodeFoundValue))
-                                {
-                                    var groupsFound = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex1, RegexOptions.Multiline).Groups;
-                                    if (groupsFound.Count == 1)
-                                        barcodeFoundValue = groupsFound[0].Value;
-                                    else
-                                        barcodeFoundValue = groupsFound[1].Value + groupsFound[2].Value + groupsFound[3].Value + groupsFound[4].Value;
-                                }
-                            }
-                            if (recPatt.MappingElementList[i].regexToApply == 2
-                                                                    || recPatt.MappingElementList[i].regexToApply == 6
-                                                                    || recPatt.MappingElementList[i].regexToApply == 0)
-                            {
-                                if (string.IsNullOrEmpty(barcodeFoundValue))
-                                {
-                                    var groupsFound = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex2, RegexOptions.Multiline).Groups;
-                                    if (groupsFound.Count == 1)
-                                        barcodeFoundValue = groupsFound[0].Value;
-                                    else
-                                        barcodeFoundValue = groupsFound[1].Value + groupsFound[2].Value + groupsFound[3].Value + groupsFound[4].Value;
-                                }
-                            }
-
-                            if (recPatt.MappingElementList[i].regexToApply == 3
-                                || recPatt.MappingElementList[i].regexToApply == 6
-                                || recPatt.MappingElementList[i].regexToApply == 0)
-                            {
-                                if (string.IsNullOrEmpty(barcodeFoundValue))
-                                {
-                                    var groupsFound = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex3, RegexOptions.Multiline).Groups;
-                                    if (groupsFound.Count == 1)
-                                        barcodeFoundValue = groupsFound[0].Value;
-                                    else
-                                        barcodeFoundValue = groupsFound[1].Value + groupsFound[2].Value + groupsFound[3].Value + groupsFound[4].Value;
-                                }
-
-                            }
-
-                            if (recPatt.MappingElementList[i].regexToApply == 4
-                                || recPatt.MappingElementList[i].regexToApply == 0)
-                            {
-                                if (string.IsNullOrEmpty(barcodeFoundValue))
-                                {
-                                    var groupsFound = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex4, RegexOptions.Multiline).Groups;
-                                    if (groupsFound.Count == 1)
-                                        barcodeFoundValue = groupsFound[0].Value;
-                                    else
-                                        barcodeFoundValue = groupsFound[1].Value + groupsFound[2].Value + groupsFound[3].Value + groupsFound[4].Value;
-                                }
-
-                            }
-
-                            if (recPatt.MappingElementList[i].regexToApply == 5
-                                || recPatt.MappingElementList[i].regexToApply == 0)
-                            {
-                                if (string.IsNullOrEmpty(barcodeFoundValue))
-                                {
-                                    var groupsFound = Regex.Match(matchResults.Item2, recPatt.DocRegexList.Regex5, RegexOptions.Multiline).Groups;
-                                    if (groupsFound.Count == 1)
-                                        barcodeFoundValue = groupsFound[0].Value;
-                                    else
-                                        barcodeFoundValue = groupsFound[1].Value + groupsFound[2].Value + groupsFound[3].Value + groupsFound[4].Value;
-                                }
-
-                            }
-                        }
-                    }
-                }
-                return barcodeFoundValue;
-
-                /*
-                 * verzija iz prototipa
-                Rectangle barcodeRect = new Rectangle(10, 500, 220, 650) //coordinates of NBGP barcode
-                {
-                    Border = Rectangle.BOX,
-                    BorderColor = BaseColor.RED,
-                    BorderWidth = 1
-                };
-
-                RenderFilter filterBarcode = new RegionTextRenderFilter(barcodeRect);
-                ITextExtractionStrategy extractionStratery = new FilteredTextRenderListener(new LocationTextExtractionStrategy(), filterBarcode);
-
-                string barcodeNumber = PdfTextExtractor.GetTextFromPage(reader, 1, extractionStratery);
-
-                MatchCollection matches1 = Regex.Matches(barcodeNumber, @"\d{13}");
-                foreach (Match match in matches1)
-                {
-                    barcodeNumber = match.Value;
-                    return barcodeNumber;
-                }
-
-                return null;
-                */
-            }
-        }
-
         public static void renamePdf(string oldFile, string barcodeNumber, string newPath)
         {
             if (!File.Exists(oldFile))
@@ -905,12 +676,6 @@ namespace wpfcm1.FolderTypes
                     throw e;
                 }
             }
-        }
-
-        public Task HandleAsync(MessageArchiveSelected message, CancellationToken cancellationToken)
-        {
-            Handle(message);
-            return Task.CompletedTask;
         }
 
         public Task HandleAsync(MessageGetPibNames message, CancellationToken cancellationToken)
