@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using Caliburn.Micro;
-using wpfcm1.DataAccess;
 using wpfcm1.Model;
 
 namespace wpfcm1.Certificates

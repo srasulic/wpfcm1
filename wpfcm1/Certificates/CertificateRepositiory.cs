@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using wpfcm1.Model;
 
-namespace wpfcm1.DataAccess
+namespace wpfcm1.Certificates
 {
     public class CertificateRepositiory
     {

@@ -177,7 +177,7 @@
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="Converters\Converters.cs" />
     <Compile Include="DataAccess\APIManager.cs" />
-    <Compile Include="DataAccess\CertificateRepositiory.cs" />
+    <Compile Include="Certificates\CertificateRepositiory.cs" />
     <Compile Include="DataAccess\FolderManager.cs" />
     <Compile Include="Dialogs\DialogAboutView.xaml.cs">
       <DependentUpon>DialogAboutView.xaml</DependentUpon>
