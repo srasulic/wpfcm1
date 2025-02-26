@@ -49,7 +49,7 @@ namespace wpfcm1.OlympusApi
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token.token_type, token.access_token);
 
-            string uri = $"/olympus/v1/documents/{tdp.smer}?tenant={tenant}&tip_dok={tdp.tip_dok}&edok_status=CONFIRMED&created_since={sinceDate}&start_index=0&page_size=1000";
+            string uri = $"/olympus/v1/documents/{tdp.smer}?tenant={tenant}&tip_dok={tdp.tip_dok}&edok_status=SS_PEND&created_since={sinceDate}&start_index=0&page_size=1000";
             using (HttpResponseMessage response = await _client.GetAsync(uri))
             {
                 if (response.IsSuccessStatusCode)
