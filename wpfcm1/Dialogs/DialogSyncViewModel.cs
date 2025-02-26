@@ -142,7 +142,7 @@ namespace wpfcm1.Dialogs
                 {
                     (var folder, var action) = pair;
 
-                    Log.Info($"Syncing {folder}");
+                    Log.Info($"Syncing({action}): {folder}");
                     switch (action)
                     {
                         case SyncTransferRules.TransferAction.Upload:

@@ -40,6 +40,7 @@ namespace wpfcm1.Processing
                 else
                 {
                     Log.Error($"ERROR Uploading {srcFilePath}");
+                    reporter?.Report($"ERROR Uploading: {srcFilePath}");
                 }
             }
         }
