@@ -239,7 +239,14 @@ namespace wpfcm1.Dialogs
             User.Default.Save();
             //TODO: treba mi DI, servis za api, login, setingse i foldere
 
-            (GetView() as Window).DialogResult = true;
+            try
+            {
+                (GetView() as Window).DialogResult = true;
+            }
+            catch (Exception)
+            {
+                //TODO: caliburn nece da nasetuje DialogResult, ali bez ovoga aplikacija visi
+            }
             (GetView() as Window).Hide();
         }
 
