@@ -87,6 +87,7 @@ namespace wpfcm1.Processing
                 if (bytes == null)
                 {
                     Log.Error($"ERROR: PostFilesDownload returned null for {fileName}");
+                    reporter?.Report($"ERROR Downloading: {fileName}");
                 }
                 else
                 {
