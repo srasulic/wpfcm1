@@ -98,16 +98,20 @@ namespace wpfcm1.Shell
         public WebViewModel WebVM { get; set; }
         public DialogLoginViewModel LoginVM { get; set; }
 
-        public void ShowLogin()
+        public async void ShowLogin()
         {
             //*****************************************************************
             // dok ne nađemo način da sprečimo iskakanje Please insert card, ovo će biti privremenio isključeno.
             // CertVM.RefreshCertificateList();
             //*****************************************************************
-            ActivateItemAsync(HomeVM);
-            _events.PublishOnUIThreadAsync(new MessageViewModelActivated(ActiveItem.GetType().Name));
+            await ActivateItemAsync(HomeVM);
+            await _events.PublishOnUIThreadAsync(new MessageViewModelActivated(ActiveItem.GetType().Name));
 
-            var result = _windowManager.ShowDialogAsync(LoginVM);
+            var result = await _windowManager.ShowDialogAsync(LoginVM);
+            if (result == false)
+            {
+                System.Windows.Application.Current.Shutdown();
+            }
         }
 
         public void ShowHome()

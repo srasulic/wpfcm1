@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 using wpfcm1.OlympusApi;
@@ -239,27 +239,19 @@ namespace wpfcm1.Dialogs
             User.Default.Save();
             //TODO: treba mi DI, servis za api, login, setingse i foldere
 
-            try
-            {
-                (GetView() as Window).DialogResult = true;
-            }
-            catch (Exception)
-            {
-                //TODO: caliburn nece da nasetuje DialogResult, ali bez ovoga aplikacija visi
-            }
-            (GetView() as Window).Hide();
+            (GetView() as Window).DialogResult = true;
         }
 
         public bool CanSaveAndClose => Token != null && SelectedTenant != null && SelectedProfile != null;
 
-        public async Task Cancel()
+        public void Cancel()
         {
-            await TryCloseAsync(true);
+            (GetView() as Window).DialogResult = false;
         }
 
         public void Dispose()
         {
-            (GetView() as Window)?.Close();
+
         }
     }
 }
