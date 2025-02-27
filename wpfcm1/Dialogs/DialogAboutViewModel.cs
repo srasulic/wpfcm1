@@ -1,9 +1,9 @@
-﻿using Caliburn.Micro;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using Caliburn.Micro;
 using wpfcm1.Settings;
 
 namespace wpfcm1.Dialogs
@@ -53,21 +53,25 @@ namespace wpfcm1.Dialogs
 
         public string AboutText { get => aboutText; set => aboutText = value; }
 
-
         public void AeroHelp()
         {
             try
             {
-                Process process = new Process();
-                ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                startInfo.FileName = "Aeroadmin.exe";
+                ProcessStartInfo startInfo = new ProcessStartInfo
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = "Aeroadmin.exe",
 
-                startInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                    WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+                };
 
-                process.StartInfo = startInfo;
+                Process process = new Process
+                {
+                    StartInfo = startInfo
+                };
+
                 process.Start();
-               // process.WaitForExit();
+                // process.WaitForExit();
             }
             catch (Exception ex)
             {
@@ -79,6 +83,5 @@ namespace wpfcm1.Dialogs
         {
             await TryCloseAsync(true);
         }
-
     }
 }

@@ -1,16 +1,15 @@
-﻿using iTextSharp.text.pdf.security;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using iTextSharp.text.pdf.security;
 using wpfcm1.Certificates;
+using wpfcm1.FolderTypes;
 using wpfcm1.Model;
 using wpfcm1.PDF;
 using wpfcm1.Settings;
-using wpfcm1.FolderTypes;
-using System.Text.RegularExpressions;
 
 namespace wpfcm1.Processing
 {
@@ -31,7 +30,7 @@ namespace wpfcm1.Processing
         public CertificateModel Certificate { get; private set; }
         public FolderViewModel Folder { get; set; }
 
-        public async Task SignAsync(string reason = "", IProgress<string> reporter = null, CancellationToken token = default(CancellationToken))
+        public async Task SignAsync(string reason = "", IProgress<string> reporter = null, CancellationToken token = default)
         {
             // preuzmemo vrednosti - stringove iz podešavanja aplikacije:
             string tsServer = User.Default.TimestampServer;
@@ -43,10 +42,12 @@ namespace wpfcm1.Processing
 
             var crlList = await CertificateHelpers.GetCrlClentsOfflineAsync(Certificate.ChainElements);
             var ocspClient = new OcspClientBouncyCastle();
+
             // posebna podrska za definisanje željenog SHA algoritma
             // default će biti SHA1
             TSAClientBouncyCastle tsaClient = null;
-            if (tsServer.IndexOf( @":SHA1") > 0){
+            if (tsServer.IndexOf(@":SHA1") > 0)
+            {
                 tsServer = tsServer.Replace(@":SHA1", "");
                 tsaClient = new TSAClientBouncyCastle(tsServer, tsUser, tsPass, 0, DigestAlgorithms.SHA1);
             }
@@ -65,10 +66,10 @@ namespace wpfcm1.Processing
                 tsServer = tsServer.Replace(@":SHA512", "");
                 tsaClient = new TSAClientBouncyCastle(tsServer, tsUser, tsPass, 0, DigestAlgorithms.SHA512);
             }
-            else if (tsServer != @"N" )
+            else if (tsServer != @"N")
             {
                 tsaClient = new TSAClientBouncyCastle(tsServer, tsUser, tsPass, 0, DigestAlgorithms.SHA1);
-            };
+            }
 
             var destinationDir = SigningTransferRules.LocalMap[SourceDir];
             var signatureLocation = SignatureRules.Map[SourceDir];
@@ -82,8 +83,8 @@ namespace wpfcm1.Processing
                 var destinationFileName = CreateSignedPdfFileName(document);
                 var destinationFilePath = Path.Combine(destinationDir, destinationFileName);
 
-                if (reporter != null) reporter.Report(string.Format("Potpisivanje: {0}", sourceFileName));
-                Log.Info(string.Format("Signing src file: {0}", sourceFilePath));
+                reporter?.Report($"Potpisivanje: {sourceFileName}");
+                Log.Info($"Signing src file: {sourceFilePath}");
 
                 try
                 {
@@ -103,7 +104,9 @@ namespace wpfcm1.Processing
                 catch (Exception)
                 {
                     if (File.Exists(destinationFilePath))
-                        File.Delete(destinationFilePath); // dest file already created
+                    {
+                        File.Delete(destinationFilePath);
+                    }
                     throw;
                 }
 
@@ -112,10 +115,13 @@ namespace wpfcm1.Processing
                 {
                     case SigningTransferRules.FinalAction.Acknowledge:
                         var destinationAckFilePath = Path.Combine(destinationDir, sourceFileName + ".ack");
-                        if (reporter != null) reporter.Report(string.Format("Potvrdjen kao: {0}", destinationAckFilePath));
-                        Log.Info(string.Format("Acknowledged: {0}", destinationAckFilePath));
+
+                        reporter?.Report($"Potvrdjen kao: {destinationAckFilePath}");
+                        Log.Info($"Acknowledged: {destinationAckFilePath}");
+
                         File.Create(destinationAckFilePath).Dispose();
                         document.IsAcknowledged = true;
+
                         break;
                     case SigningTransferRules.FinalAction.SecondSignatureMark:
                         //document.HasSecondSignature = true;
@@ -126,24 +132,29 @@ namespace wpfcm1.Processing
 
                         var message = new InternalMessageModel(document);
                         Folder.SerializeMessage(message);
-                        
+
                         break;
                     case SigningTransferRules.FinalAction.Store:
                         var processedDir = SigningTransferRules.ProcessedMap[SourceDir];
+
                         // ovako cemo obezbediti da se ne desi da je u Obradjeno vec postoji takav fajl 
                         var processedFileName = string.Format("{0}_{1}", DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"), sourceFileName);
                         var processedFilePath = Path.Combine(processedDir, processedFileName);
-                        Log.Info(string.Format("Copying: {0}", processedFilePath));
+
+                        Log.Info($"Copying: {processedFilePath}");
                         File.Copy(sourceFilePath, processedFilePath);
-                        Log.Info(string.Format("Deleting: {0}", sourceFilePath));
+
+                        Log.Info($"Deleting: {sourceFilePath}");
                         File.Delete(sourceFilePath);
                         //document.IsSigned = true;
+
                         break;
                 }
 
-                if (reporter != null) reporter.Report(string.Format("Potpisan kao:  {0}", destinationFileName));
+                reporter?.Report(string.Format("Potpisan kao:  {0}", destinationFileName));
             }
-            if (reporter != null) reporter.Report("OK");
+
+            reporter?.Report("OK");
         }
 
         private string CreateSignedPdfFileName(DocumentModel document)
@@ -160,7 +171,7 @@ namespace wpfcm1.Processing
                 string destinationFileName;
 
                 // za izvršitelje dokumenti Others neće biti rename-ovani
-                if (User.Default.Variation == "RS-IZVRSITELJ" && Regex.IsMatch(document.DocumentInfo.FullName, @"ostali", RegexOptions.IgnoreCase) )
+                if (User.Default.Variation == "RS-IZVRSITELJ" && Regex.IsMatch(document.DocumentInfo.FullName, @"ostali", RegexOptions.IgnoreCase))
                 {
                     destinationFileName = document.DocumentInfo.Name;
 
