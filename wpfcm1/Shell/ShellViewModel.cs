@@ -17,7 +17,7 @@ namespace wpfcm1.Shell
     public interface IShell { }
 
     [Export(typeof(IShell))]
-    public sealed class ShellViewModel : Conductor<object>, IShell, IHandle<MessageShowHome>, IHandle<MessageShowWeb>, IHandle<MessageSync>, IHandle<MessagePickCert>
+    public sealed class ShellViewModel : Conductor<object>, IShell, IHandle<MessageShowHome>, IHandle<MessageSync>, IHandle<MessagePickCert>
     {
         private readonly IEventAggregator _events;
         private readonly IWindowManager _windowManager;
@@ -48,7 +48,6 @@ namespace wpfcm1.Shell
             PovratiInboundVM = new FolderGroupViewModel(FolderManager.PovratiInboundFolders, "Ulazni Povrati", events, _windowManager);
             OtherOutboundVM = new FolderGroupViewModel(FolderManager.OtherOutboundFolders, "Ostali Izlazni", events, _windowManager);
             OtherInboundVM = new FolderGroupViewModel(FolderManager.OtherInboundFolders, "Ostali Ulazni", events, _windowManager);
-            WebVM = new WebViewModel("Online report");
             LoginVM = new DialogLoginViewModel(_windowManager);
 
             ShowLogin();
@@ -70,7 +69,6 @@ namespace wpfcm1.Shell
             PovratiOutboundVM.Dispose();
             OtherInboundVM.Dispose();
             OtherOutboundVM.Dispose();
-            WebVM.Dispose();
             LoginVM.Dispose();
 
             return Task.CompletedTask;
@@ -95,7 +93,6 @@ namespace wpfcm1.Shell
         public FolderGroupViewModel PovratiInboundVM { get; set; }
         public FolderGroupViewModel OtherOutboundVM { get; set; }
         public FolderGroupViewModel OtherInboundVM { get; set; }
-        public WebViewModel WebVM { get; set; }
         public DialogLoginViewModel LoginVM { get; set; }
 
         public async void ShowLogin()
@@ -189,11 +186,6 @@ namespace wpfcm1.Shell
             ActivateItemAsync(OtherInboundVM);
         }
 
-        public void ShowWeb()
-        {
-            ActivateItemAsync(WebVM);
-        }
-
         public void ShowSettings()
         {
             var result = _windowManager.ShowDialogAsync(new DialogSettingsViewModel());
@@ -207,11 +199,6 @@ namespace wpfcm1.Shell
         public void Handle(MessageShowHome message)
         {
             ShowHome();
-        }
-
-        public void Handle(MessageShowWeb message)
-        {
-            ShowWeb();
         }
 
         public void Handle(MessageSync message)
@@ -253,12 +240,6 @@ namespace wpfcm1.Shell
         }
 
         public Task HandleAsync(MessageShowHome message, CancellationToken cancellationToken)
-        {
-            Handle(message);
-            return Task.CompletedTask;
-        }
-
-        public Task HandleAsync(MessageShowWeb message, CancellationToken cancellationToken)
         {
             Handle(message);
             return Task.CompletedTask;

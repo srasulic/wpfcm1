@@ -204,10 +204,6 @@
     <Compile Include="Events\MessageViewModelActivated.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="Extensions\TaskCancellationExtensions.cs" />
-    <Compile Include="FolderGroups\WebView.xaml.cs">
-      <DependentUpon>WebView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="FolderGroups\WebViewModel.cs" />
     <Compile Include="FolderTypes\OutboxFolderView.xaml.cs">
       <DependentUpon>OutboxFolderView.xaml</DependentUpon>
     </Compile>
@@ -315,10 +311,6 @@
     <Page Include="Dialogs\DialogSyncView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="FolderGroups\WebView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="FolderTypes\OutboxFolderView.xaml">
       <Generator>MSBuild:Compile</Generator>

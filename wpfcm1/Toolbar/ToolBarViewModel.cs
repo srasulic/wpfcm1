@@ -26,7 +26,6 @@ namespace wpfcm1.Toolbar
 
                 //SECOND 8 BUTTONS: bits = {0.. 7}
                 new ToolBarButtonViewModel(events, "appbar_office_excel", "Izvezi listu dokumenata u Excel", new MessageXls()),
-                new ToolBarButtonViewModel(events, "appbar_information", "Prikaži online informacije", new MessageShowWeb()),
                 new ToolBarButtonViewModel(events, "appbar_page_check", "Izaberi sertifikat", new MessagePickCert())
             };
 

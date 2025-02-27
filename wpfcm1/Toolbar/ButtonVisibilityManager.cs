@@ -1,12 +1,12 @@
-﻿using Caliburn.Micro;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using wpfcm1.Events;
-using System;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
+using Caliburn.Micro;
+using wpfcm1.Events;
 
 namespace wpfcm1.Toolbar
 {
@@ -17,11 +17,11 @@ namespace wpfcm1.Toolbar
         private readonly Dictionary<string, BitArray> WorkspaceToButtonVisibility = new Dictionary<string, BitArray>()
         {
             // ( Reject - Sign - Ack - Validate - ExtractData - TogglePreview - Sync - ShowHome ) 
-            // ( - - - PickCert - Web Inf - Xls )
-            {"HomeViewModel",               new BitArray(new byte[]{Convert.ToByte("00000011", 2), Convert.ToByte("00000100", 2)})},
-            {"GeneratedFolderViewModel",    new BitArray(new byte[]{Convert.ToByte("11001111", 2), 0x2})},
-            {"InboxFolderViewModel",        new BitArray(new byte[]{Convert.ToByte("01010111", 2), 0x2})},
-            {"OutboxFolderViewModel",       new BitArray(new byte[]{Convert.ToByte("10000111", 2), 0x2})},
+            // ( PickCert - Xls )
+            {"HomeViewModel",               new BitArray(new byte[]{Convert.ToByte("00000011", 2), Convert.ToByte("00000010", 2)})},
+            {"GeneratedFolderViewModel",    new BitArray(new byte[]{Convert.ToByte("11001111", 2), 0x1})},
+            {"InboxFolderViewModel",        new BitArray(new byte[]{Convert.ToByte("01010111", 2), 0x1})},
+            {"OutboxFolderViewModel",       new BitArray(new byte[]{Convert.ToByte("10000111", 2), 0x1})},
             {"FolderViewModel",             new BitArray(new byte[]{Convert.ToByte("00000111", 2), Convert.ToByte("00000000", 2)})}
         };
 
