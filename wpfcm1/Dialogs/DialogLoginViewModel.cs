@@ -173,9 +173,10 @@ namespace wpfcm1.Dialogs
             Token = token;
 
             var userTenants = await svc.GetUsersTenants(token);
-            if (userTenants == null)
+            if (userTenants == null || userTenants.result.code != 0)
             {
                 Log.Error($"FAILED Obtaining Olympus Tenants: [UserName = {UserName}]");
+                Log.Error($"ERROR GetUsersTenants {userTenants.result.userMessage}");
                 return;
             }
             Log.Info($"SUCCESSFUL Obtaining Olympus Tenants: [UserName = {UserName}]");
@@ -193,10 +194,11 @@ namespace wpfcm1.Dialogs
         {
             var svc = new OlympusService(SelectedVariation.ApiUrl);
 
-            var setOk = await svc.PutUsersSetTenant(Token, SelectedTenant);
-            if (!setOk)
+            var putres = await svc.PutUsersSetTenant(Token, SelectedTenant);
+            if (putres == null || putres.code != 0)
             {
                 Log.Error($"FAILED PUT set tenant: [UserName = {UserName}] [Tenant = {SelectedTenant?.tenant}]");
+                Log.Error($"ERROR PutUsersSetTenant {putres.userMessage}");
                 Tenants = null;
                 //SelectedTenant = null;
                 return;

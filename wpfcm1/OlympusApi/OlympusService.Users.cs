@@ -78,28 +78,22 @@ namespace wpfcm1.OlympusApi
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token.token_type, token.access_token);
 
-            HttpResponseMessage response = await _client.GetAsync("/olympus/v1/users/tenants");
-
-            if (response.IsSuccessStatusCode)
+            using (HttpResponseMessage response = await _client.GetAsync("/olympus/v1/users/tenants"))
             {
                 string responseBody = await response.Content.ReadAsStringAsync();
-                JsonNode rootNode = JsonNode.Parse(responseBody);
 
+                JsonNode rootNode = JsonNode.Parse(responseBody);
                 var tenants = JsonSerializer.Deserialize<TenantsResult>(rootNode);
+
                 return tenants;
-            }
-            else
-            {
-                Log.Error(response.ReasonPhrase);
-                return null;
             }
         }
 
-        public async Task<bool> PutUsersSetTenant(Token token, Tenant tenant)
+        public async Task<Result> PutUsersSetTenant(Token token, Tenant tenant)
         {
             if (token is null || tenant is null)
             {
-                return false;
+                return null;
             }
 
             _client.DefaultRequestHeaders.Accept.Clear();
@@ -109,9 +103,15 @@ namespace wpfcm1.OlympusApi
             string jsonPayload = $"{{ \"tenant\": \"{tenant.tenant}\" }}";
             var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = await _client.PutAsync("/olympus/v1/users/set_tenant", content);
+            using (HttpResponseMessage response = await _client.PutAsync("/olympus/v1/users/set_tenant", content))
+            {
+                string responseBody = await response.Content.ReadAsStringAsync();
+                
+                JsonNode rootNode = JsonNode.Parse(responseBody);
+                var result = JsonSerializer.Deserialize<Result>(rootNode["result"]);
 
-            return response.IsSuccessStatusCode;
+                return result;
+            }
         }
 
     }
