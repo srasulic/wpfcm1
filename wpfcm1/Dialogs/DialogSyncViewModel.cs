@@ -1,19 +1,18 @@
-﻿using Caliburn.Micro;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
+using Caliburn.Micro;
 using wpfcm1.Extensions;
 using wpfcm1.FolderTypes;
+using wpfcm1.OlympusApi;
 using wpfcm1.PDF;
 using wpfcm1.Processing;
-using wpfcm1.OlympusApi;
 using wpfcm1.Settings;
-using wpfcm1.Model;
 
 namespace wpfcm1.Dialogs
 {

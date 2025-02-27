@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using iTextSharp.text;
 using wpfcm1.OlympusApi;
 using wpfcm1.PDF;
 
@@ -31,7 +30,7 @@ namespace wpfcm1.Processing
 
                 var result = await client.PostDocumentsUpload(tdp, authToken, tenant, srcFilePath);
 
-                if (result)
+                if (result != null && result.code == 0)
                 {
                     var dstFilePath = Path.Combine(SyncTransferRules.LocalMap[Path.GetDirectoryName(srcFilePath)], Path.GetFileName(srcFilePath));
                     Log.Info(string.Format("Moving to {0}", dstFilePath));
@@ -40,6 +39,7 @@ namespace wpfcm1.Processing
                 else
                 {
                     Log.Error($"ERROR Uploading {srcFilePath}");
+                    Log.Error(result?.userMessage);
                     reporter?.Report($"ERROR Uploading: {srcFilePath}");
                 }
             }
@@ -54,14 +54,15 @@ namespace wpfcm1.Processing
             token.ThrowIfCancellationRequested();
             var since = DateTime.Parse(sinceDate).ToString("yyyy-MM-dd");
             var docs = await client.GetDocuments(tdp, authToken, tenant, since);
-            if (docs == null)
+            if ((docs == null) || (docs != null && docs.result.code != 0))
             {
-                Log.Info($"No documents for {folder}");
+                Log.Error($"ERROR GetDocuments: {folder}");
+                Log.Error($"ERROR GetDocuments: {docs?.result.userMessage}");
                 return;
             }
 
             Dictionary<string, string> remoteFilesMap = new Dictionary<string, string>();
-            foreach(var d in docs.collection)
+            foreach (var d in docs.collection)
             {
                 remoteFilesMap.Add(d.teh_naziv, d.id_fajl);
             }
@@ -83,15 +84,16 @@ namespace wpfcm1.Processing
                 reporter?.Report($"Download: {fileName}");
                 Log.Info($"Downloading {filePath}");
 
-                var bytes = await client.PostFilesDownload(authToken, tenant, remoteFilesMap[fileName]);
-                if (bytes == null)
+                var downloadResult = await client.PostFilesDownload(authToken, tenant, remoteFilesMap[fileName]);
+                if (downloadResult == null || (downloadResult != null && downloadResult.result.result.code != 0))
                 {
-                    Log.Error($"ERROR: PostFilesDownload returned null for {fileName}");
+                    Log.Error($"ERROR PostFilesDownload: {fileName}");
+                    Log.Error($"ERROR PostFilesDownload: {downloadResult.result.result.userMessage}");
                     reporter?.Report($"ERROR Downloading: {fileName}");
                 }
                 else
                 {
-                    File.WriteAllBytes(filePath, bytes);
+                    File.WriteAllBytes(filePath, downloadResult.bytes);
                 }
             }
 

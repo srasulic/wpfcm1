@@ -11,11 +11,11 @@ namespace wpfcm1.OlympusApi
 {
     partial class OlympusService
     {
-        public async Task<bool> PostDocumentsUpload(TipDokPristup tdp, Token token, string tenant, string filePath)
+        public async Task<Result> PostDocumentsUpload(TipDokPristup tdp, Token token, string tenant, string filePath)
         {
             if (tdp is null || token is null || tenant is null || filePath is null)
             {
-                return false;
+                return null;
             }
 
             _client.DefaultRequestHeaders.Accept.Clear();
@@ -30,11 +30,11 @@ namespace wpfcm1.OlympusApi
             using (StringContent jsonContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json"))
             using (HttpResponseMessage response = await _client.PostAsync(uri, jsonContent))
             {
-                if (!response.IsSuccessStatusCode)
-                {
-                    Log.Error(response.ReasonPhrase);
-                }
-                return response.IsSuccessStatusCode;
+                string responseBody = await response.Content.ReadAsStringAsync();
+                JsonNode rootNode = JsonNode.Parse(responseBody);
+
+                var result = JsonSerializer.Deserialize<Result>(rootNode["result"]);
+                return result;
             }
         }
 
@@ -52,19 +52,11 @@ namespace wpfcm1.OlympusApi
             string uri = $"/olympus/v1/documents/{tdp.smer}?tenant={tenant}&tip_dok={tdp.tip_dok}&edok_status=SS_PEND&created_since={sinceDate}&start_index=0&page_size=1000";
             using (HttpResponseMessage response = await _client.GetAsync(uri))
             {
-                if (response.IsSuccessStatusCode)
-                {
-                    string responseBody = await response.Content.ReadAsStringAsync();
-                    JsonNode rootNode = JsonNode.Parse(responseBody);
+                string responseBody = await response.Content.ReadAsStringAsync();
+                JsonNode rootNode = JsonNode.Parse(responseBody);
 
-                    var docs = JsonSerializer.Deserialize<DocumentsResult>(rootNode);
-                    return docs;
-                }
-                else
-                {
-                    Log.Error(response.ReasonPhrase);
-                    return null;
-                }
+                var docs = JsonSerializer.Deserialize<DocumentsResult>(rootNode);
+                return docs;
             }
         }
 

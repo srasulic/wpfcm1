@@ -112,6 +112,12 @@ namespace wpfcm1.OlympusApi
         public string content { get; set; }
     }
 
+    public class DownloadResultWithBytes
+    {
+        public DownloadResult result { get; set; }
+        public byte[] bytes { get; set; }
+    }
+
     public class Rect
     {
         public int x1 { get; set; }

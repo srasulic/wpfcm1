@@ -10,7 +10,7 @@ namespace wpfcm1.OlympusApi
 {
     partial class OlympusService
     {
-        public async Task<byte[]> PostFilesDownload(Token token, string tenant, string fileId)
+        public async Task<DownloadResultWithBytes> PostFilesDownload(Token token, string tenant, string fileId)
         {
             if (tenant is null || fileId is null)
             {
@@ -24,21 +24,33 @@ namespace wpfcm1.OlympusApi
             var jsonPayload = $"{{\"tenant\": \"{tenant}\", \"id_fajl\": \"{fileId}\"}}";
             var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = await _client.PostAsync("olympus/v1/files/download", content);
-
-            if (response.IsSuccessStatusCode)
+            using (HttpResponseMessage response = await _client.PostAsync("olympus/v1/files/download", content))
             {
                 string responseBody = await response.Content.ReadAsStringAsync();
                 JsonNode rootNode = JsonNode.Parse(responseBody);
 
-                var result = JsonSerializer.Deserialize<DownloadResult>(rootNode);
-                byte[] fileBytes = Convert.FromBase64String(result.content);
+                var downloadResult = JsonSerializer.Deserialize<DownloadResult>(rootNode);
 
-                return fileBytes;
-            }
-            else
-            {
-                return null;
+                if (downloadResult.result.code == 0)
+                {
+                    byte[] fileBytes = Convert.FromBase64String(downloadResult.content);
+
+                    var result = new DownloadResultWithBytes
+                    {
+                        result = downloadResult,
+                        bytes = fileBytes
+                    };
+                    return result;
+                }
+                else
+                {
+                    var result = new DownloadResultWithBytes
+                    {
+                        result = downloadResult,
+                        bytes = null
+                    };
+                    return result;
+                }
             }
         }
     }
