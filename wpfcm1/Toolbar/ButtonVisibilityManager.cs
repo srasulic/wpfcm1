@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -18,11 +17,11 @@ namespace wpfcm1.Toolbar
         {
             // ( Reject - Sign - Ack - Validate - ExtractData - TogglePreview - Sync - ShowHome ) 
             // ( PickCert - Xls )
-            {"HomeViewModel",               new BitArray(new byte[]{Convert.ToByte("00000011", 2), Convert.ToByte("00000010", 2)})},
-            {"GeneratedFolderViewModel",    new BitArray(new byte[]{Convert.ToByte("11001111", 2), 0x1})},
-            {"InboxFolderViewModel",        new BitArray(new byte[]{Convert.ToByte("01010111", 2), 0x1})},
-            {"OutboxFolderViewModel",       new BitArray(new byte[]{Convert.ToByte("10000111", 2), 0x1})},
-            {"FolderViewModel",             new BitArray(new byte[]{Convert.ToByte("00000111", 2), Convert.ToByte("00000000", 2)})}
+            {"HomeViewModel",               new BitArray(new byte[]{0b00000011, 0b00000010})},
+            {"GeneratedFolderViewModel",    new BitArray(new byte[]{0b11001111, 0b00000001})},
+            {"InboxFolderViewModel",        new BitArray(new byte[]{0b01010111, 0b00000001})},
+            {"OutboxFolderViewModel",       new BitArray(new byte[]{0b10000111, 0x00000001})},
+            {"FolderViewModel",             new BitArray(new byte[]{0b00000111, 0b00000000})}
         };
 
         public ButtonVisibilityManager(ToolBarViewModel toolbar, IEventAggregator events)

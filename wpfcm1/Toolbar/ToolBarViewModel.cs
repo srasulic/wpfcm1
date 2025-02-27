@@ -1,5 +1,5 @@
-﻿using Caliburn.Micro;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
+using Caliburn.Micro;
 using wpfcm1.Events;
 
 namespace wpfcm1.Toolbar
