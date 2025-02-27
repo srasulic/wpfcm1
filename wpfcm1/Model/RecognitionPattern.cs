@@ -30,15 +30,15 @@ namespace wpfcm1.Model
             public List<string> RegexList { get; set; }
         }
 
-        public static async Task<List<MappingElement>> GetMappings (string tipDok) {
+        public static async Task<List<MappingElement>> GetMappings(string tipDok) {
 
             Token authToken = OlympusService.DeserializeFromJson<Token>(User.Default.JsonToken);
 
             var svc = new OlympusService(User.Default.ApiURL);
             var result = await svc.GetConfigDocumentTypeMappings(authToken);
-            if (result == null)
+            if (result == null || result.result.code != 0)
             {
-                Log.Error($"FAILED GetConfigDocumentTypeMappings");
+                Log.Error($"ERROR GetConfigDocumentTypeMappings: {result.result.userMessage}");
                 return new List<MappingElement>();
             }
 

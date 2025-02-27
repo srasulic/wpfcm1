@@ -204,9 +204,10 @@ namespace wpfcm1.Dialogs
             Log.Info($"SUCCESSFUL PUT set tenant: [UserName = {UserName}] [Tenant = {SelectedTenant?.tenant}]");
 
             ProfileResult res = await svc.GetConfigPolisign(Token, SelectedTenant);
-            if (res == null)
+            if (res == null || res.result.code != 0)
             {
                 Log.Error($"FAILED Obtaining Olympus Profile: [UserName = {UserName}] [Tenant = {SelectedTenant?.tenant}]");
+                Log.Error($"ERROR GetConfigPolisign {res.result.userMessage}");
                 return;
             }
             Log.Info($"SUCCESSFUL Obtaining Olympus Profile: [UserName = {UserName}] [Tenant = {SelectedTenant?.tenant}]");

@@ -54,7 +54,8 @@ namespace wpfcm1.Processing
             token.ThrowIfCancellationRequested();
             var since = DateTime.Parse(sinceDate).ToString("yyyy-MM-dd");
             var docs = await client.GetDocuments(tdp, authToken, tenant, since);
-            if ((docs == null) || (docs != null && docs.result.code != 0))
+
+            if (docs == null || docs.result.code != 0)
             {
                 Log.Error($"ERROR GetDocuments: {folder}");
                 Log.Error($"ERROR GetDocuments: {docs?.result.userMessage}");
@@ -85,7 +86,8 @@ namespace wpfcm1.Processing
                 Log.Info($"Downloading {filePath}");
 
                 var downloadResult = await client.PostFilesDownload(authToken, tenant, remoteFilesMap[fileName]);
-                if (downloadResult == null || (downloadResult != null && downloadResult.result.result.code != 0))
+
+                if (downloadResult == null || downloadResult.result.result.code != 0)
                 {
                     Log.Error($"ERROR PostFilesDownload: {fileName}");
                     Log.Error($"ERROR PostFilesDownload: {downloadResult.result.result.userMessage}");
