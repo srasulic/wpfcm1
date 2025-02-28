@@ -14,6 +14,7 @@ using wpfcm1.Dialogs;
 using wpfcm1.Events;
 using wpfcm1.Model;
 using wpfcm1.PDF;
+using wpfcm1.Preview;
 
 namespace wpfcm1.FolderTypes
 {
@@ -33,7 +34,7 @@ namespace wpfcm1.FolderTypes
                 Directory.EnumerateFiles(FolderPath)
                 .Where(f => Extensions.Contains(Path.GetExtension(f).ToLower()))
                 .Select(f => new InboxDocumentModel(new FileInfo(f))));
-            
+
             InitWatcher(FolderPath);
 
             DocumentsCV = CollectionViewSource.GetDefaultView(Documents) as ListCollectionView;
@@ -100,22 +101,25 @@ namespace wpfcm1.FolderTypes
             }
         }
 
-        protected override Task OnActivateAsync(CancellationToken cancellationToken)
+        protected override async Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            // pri ulasku startuj automatsku validaciju 
-            HandleAsync(new MessageValidate(), cancellationToken);
-            HandleAsync(new MessageGetPibNames(), cancellationToken);
-            return Task.CompletedTask;
+            await HandleAsync(new MessageValidate(), cancellationToken);
+            await HandleAsync(new MessageGetPibNames(), cancellationToken);
         }
 
-        protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
+        protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
-            base.OnDeactivateAsync(close, cancellationToken);
+            await base.OnDeactivateAsync(close, cancellationToken);
+
             //TODO: hack: checkbox checkmark moze da se izgubi prilikom promene taba, ako promena nije komitovana
             var v = GetView() as UserControl;
             var dg = v.FindName("DocumentsCV") as DataGrid;
             dg.CommitEdit(DataGridEditingUnit.Row, true);
-            return Task.CompletedTask;
+        }
+
+        protected override void OnViewReady(object view)
+        {
+            // IsActive == true
         }
 
         public void Handle(CertificateModel message)
@@ -127,7 +131,6 @@ namespace wpfcm1.FolderTypes
         {
             if (!IsActive) return;
             XlsExport();
-
         }
 
         public void Handle(MessageSign message)
@@ -151,7 +154,7 @@ namespace wpfcm1.FolderTypes
             if (!IsActive) return;
             await ValidateDocSignaturesAsync();
             // kada završimo validaciju okinućemo i slanje ack fajlova
-            var documents = Documents.Where(d => d.isValidated  && !d.IsAcknowledged).Cast<DocumentModel>();
+            var documents = Documents.Where(d => d.isValidated && !d.IsAcknowledged).Cast<DocumentModel>();
             var destinationDir = SigningTransferRules.LocalMap[FolderPath];
             foreach (var document in documents)
             {
@@ -169,7 +172,7 @@ namespace wpfcm1.FolderTypes
             }
 
             // Trebaju nam i konfirmacije o pdf-ovima koji nisu prošli validaciju potpisa
-            documents = Documents.Where(d => ! d.isValidated && !d.IsAcknowledged).Cast<DocumentModel>();
+            documents = Documents.Where(d => !d.isValidated && !d.IsAcknowledged).Cast<DocumentModel>();
             foreach (var document in documents)
             {
                 var fileName = Path.GetFileName(document.DocumentPath);
@@ -227,8 +230,8 @@ namespace wpfcm1.FolderTypes
                 using (FileStream fs = File.Create(filename))
                 {
 
-                    Byte[] info = new System.Text.UTF8Encoding(true).GetBytes("Poruka o preuzimanju PoliSign : " 
-                                + filename 
+                    Byte[] info = new System.Text.UTF8Encoding(true).GetBytes("Poruka o preuzimanju PoliSign : "
+                                + filename
                                 + ackInfo + " \r\n "
                                 + "OS time: " + DateTime.Now.ToString("dd MMM yyyy HH:mm:ss") + " \r\n "
                                 + "OS username: " + Environment.UserName + " \r\n "
@@ -238,8 +241,7 @@ namespace wpfcm1.FolderTypes
                     fs.Write(info, 0, info.Length);
                 }
 
-
-              //  File.Create(filename).Dispose();
+                //  File.Create(filename).Dispose();
                 return true;
             }
             catch
@@ -247,21 +249,6 @@ namespace wpfcm1.FolderTypes
                 return false;
             }
         }
-
-        //public void Handle(MessageToDo message)
-        //{
-        //    if (!IsActive) return;
-        //    var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<InboxDocumentModel>();
-        //    var validDocuments = checkedDocuments.Where(d => d.IsValid.GetValueOrDefault() && !d.IsAcknowledged).ToList();
-        //    var destinationDir = SigningTransferRules.LocalMap[FolderPath];
-        //    foreach (var document in validDocuments)
-        //    {
-        //        var fileName = Path.GetFileName(document.DocumentPath);
-        //        var destinationFilePath = Path.Combine(destinationDir, fileName + ".ack");
-        //        File.Create(destinationFilePath).Dispose();
-        //        document.IsAcknowledged = true;
-        //    }
-        //}
 
         public IList<DocumentModel> GetDocumentsForSigning()
         {
@@ -274,7 +261,7 @@ namespace wpfcm1.FolderTypes
         public void SetApproved(bool approved)
         {
             if (!IsActive) return;
-            
+
             var documents = GetDocumentsForSigning();
             foreach (var document in documents)
             {
@@ -310,11 +297,11 @@ namespace wpfcm1.FolderTypes
             try
             {
                 using (Stream s = File.OpenRead(file))
-                    oldList = (List<InboxDocumentModel>) xs.Deserialize(s);
+                    oldList = (List<InboxDocumentModel>)xs.Deserialize(s);
             }
             catch
             {
-                
+
             }
             return oldList;
         }

@@ -1,22 +1,16 @@
-﻿using Caliburn.Micro;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Xml.Serialization;
-using wpfcm1.Dialogs;
+using Caliburn.Micro;
 using wpfcm1.Events;
 using wpfcm1.Model;
-using wpfcm1.PDF;
-using wpfcm1.Preview;
-using wpfcm1.Settings;
-using System.Text.RegularExpressions;
-using System.Windows;
-using System.Windows.Data;
-using System.Threading.Tasks;
-using System.Threading;
-
 
 namespace wpfcm1.FolderTypes
 {
@@ -27,7 +21,7 @@ namespace wpfcm1.FolderTypes
         private readonly IWindowManager _windowManager;
         //        new protected string[] Extensions = { ".pdf", ".ack", ".xml" };
         //        new protected string[] Extensions = { ".pdf", ".ack" };
-        new protected string[] Extensions = { ".pdf"};
+        new protected string[] Extensions = { ".pdf" };
 
 
         public OutboxFolderViewModel(string path, string name, IEventAggregator events, IWindowManager winMgr) : base(path, name, events)
@@ -74,40 +68,44 @@ namespace wpfcm1.FolderTypes
             else if (Regex.IsMatch(filePath, @".+.pdf.ack$", RegexOptions.IgnoreCase))
             {
                 // mesto za akciju za ack fajl
-               // Documents.Add(new OutboxDocumentModel(new FileInfo(filePath)));
-//                var docName = filePath;
-//                var found = Documents.Where(d => d.DocumentPath == docName).FirstOrDefault();
-//                if (!(found == null)) found.tipDok = "Potvrda prijema";    
+                // Documents.Add(new OutboxDocumentModel(new FileInfo(filePath)));
+                //                var docName = filePath;
+                //                var found = Documents.Where(d => d.DocumentPath == docName).FirstOrDefault();
+                //                if (!(found == null)) found.tipDok = "Potvrda prijema";    
             }
             else if (Regex.IsMatch(filePath, @".+.pdf.xml$", RegexOptions.IgnoreCase))
             {
                 // xml-ove ne prikazujemo - mesto za akciju za xml fajl
-//                Documents.Add(new OutboxDocumentModel(new FileInfo(filePath)));
-//                var docName = filePath;
-//                var found = Documents.Where(d => d.DocumentPath == docName).FirstOrDefault();
-//                if (!(found == null)) found.tipDok = "Poruka za server (promena statusa dokumenta)";
+                //                Documents.Add(new OutboxDocumentModel(new FileInfo(filePath)));
+                //                var docName = filePath;
+                //                var found = Documents.Where(d => d.DocumentPath == docName).FirstOrDefault();
+                //                if (!(found == null)) found.tipDok = "Poruka za server (promena statusa dokumenta)";
             }
             else
             {
                 Documents.Add(new OutboxDocumentModel(new FileInfo(filePath)));
-            } 
+            }
         }
 
-        protected override Task OnActivateAsync(CancellationToken cancellationToken)
+        protected override async Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            return HandleAsync(new MessageGetPibNames(), cancellationToken);
+            await HandleAsync(new MessageGetPibNames(), cancellationToken);
         }
 
-        protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
+        protected override void OnViewReady(object view)
         {
-            base.OnDeactivateAsync(close, cancellationToken);
+            // IsActive == true
+        }
+
+        protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
+        {
+            await base.OnDeactivateAsync(close, cancellationToken);
+
             //TODO: hack: checkbox checkmark moze da se izgubi prilikom promene taba, ako promena nije komitovana
             var v = GetView() as UserControl;
             var dg = v.FindName("DocumentsCV") as DataGrid;
             dg.CommitEdit(DataGridEditingUnit.Row, true);
-            return Task.CompletedTask;
         }
-
 
         public void Handle(MessageXls message)
         {
@@ -125,6 +123,18 @@ namespace wpfcm1.FolderTypes
             }
             PsKillPdfHandlers(); // workaround - pskill ubija sve procese koji rade nad PDF-ovima u eDokument
             RejectDocument();
+        }
+
+        Task IHandle<MessageReject>.HandleAsync(MessageReject message, CancellationToken cancellationToken)
+        {
+            Handle(message);
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(MessageXls message, CancellationToken cancellationToken)
+        {
+            Handle(message);
+            return Task.CompletedTask;
         }
 
         //public IList<DocumentModel> GetDocumentsForSigning()
@@ -162,16 +172,16 @@ namespace wpfcm1.FolderTypes
             }
             catch
             {
-                
+
             }
             return oldList;
         }
 
-    public override void OnCheck(object e)
+        public override void OnCheck(object e)
         {
             var ec = e as ActionExecutionContext;
             var cb = ec.Source as CheckBox;
-            
+
             var view = ec.View as OutboxFolderView;
             var dg = view.DocumentsCV;
             var items = dg.SelectedItems;
@@ -192,18 +202,6 @@ namespace wpfcm1.FolderTypes
                 }
 
             }
-        }
-
-        Task IHandle<MessageReject>.HandleAsync(MessageReject message, CancellationToken cancellationToken)
-        {
-            Handle(message);
-            return Task.CompletedTask;
-        }
-
-        public Task HandleAsync(MessageXls message, CancellationToken cancellationToken)
-        {
-            Handle(message);
-            return Task.CompletedTask;
         }
     }
 }

@@ -15,12 +15,14 @@ using wpfcm1.Events;
 using wpfcm1.Model;
 using wpfcm1.PDF;
 using wpfcm1.Settings;
+using System.Reflection;
 
 namespace wpfcm1.FolderTypes
 {
     public class GeneratedFolderViewModel : FolderViewModel, IHandle<CertificateModel>, IHandle<MessageSign>, IHandle<MessageExtractData>, IHandle<MessageReject>, IHandle<MessageXls>
     {
-        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly IWindowManager _windowManager;
         private CertificateModel _certificate;
         private string _expList;
@@ -78,6 +80,21 @@ namespace wpfcm1.FolderTypes
             return Task.CompletedTask;
         }
 
+        protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
+        {
+            await base.OnDeactivateAsync(close, cancellationToken);
+
+            //TODO: hack: checkbox checkmark moze da se izgubi prilikom promene taba, ako promena nije komitovana
+            var v = GetView() as UserControl;
+            var dg = v.FindName("DocumentsCV") as DataGrid;
+            dg.CommitEdit(DataGridEditingUnit.Row, true);
+        }
+
+        protected override void OnViewReady(object view)
+        {
+            // IsActive == true
+        }
+
         protected void CheckForDuplicateInvNo()
         {
             //if (!IsActive) return;
@@ -106,18 +123,8 @@ namespace wpfcm1.FolderTypes
             if (found == 1 && document.multipleInvoiceNo) document.multipleInvoiceNo = false;
         }
 
-        protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
-        {
-            base.OnDeactivateAsync(close, cancellationToken);
-            //TODO: hack: checkbox checkmark moze da se izgubi prilikom promene taba, ako promena nije komitovana
-            var v = GetView() as UserControl;
-            var dg = v.FindName("DocumentsCV") as DataGrid;
-            dg.CommitEdit(DataGridEditingUnit.Row, true);
-            return Task.CompletedTask;
-        }
-
         private new void XlsExport()
-        { 
+        {
             try
             {
                 var documents = Documents.Cast<GeneratedDocumentModel>();
@@ -153,35 +160,7 @@ namespace wpfcm1.FolderTypes
             }
         }
 
-        public void Handle(CertificateModel message)
-        {
-            _certificate = message;
-        }
-
-        public void Handle(MessageXls message)
-        {
-            if (!IsActive) return;
-            XlsExport();
-            
-        }
-
-        public void Handle(MessageSign message)
-        {
-            if (IsActive)
-            {
-                //PsKillPdfHandlers(); // workaround - pskill ubija sve procese koji rade nad PDF-ovima u eDokument
-                var certificateOk = _certificate != null && _certificate.IsQualified;
-                if (!certificateOk) return;
-                var validDocuments = GetDocumentsForSigning();
-                if (!validDocuments.Any()) return;
-
-                //TODO: ovo mora drugacije
-                // _events.PublishOnUIThread(new MessageShowPdf(PreviewViewModel.Empty));
-                var result = _windowManager.ShowDialogAsync(new DialogSignViewModel(_certificate, this));
-            }
-        }
-
-        public static bool IsPibOk (String pib, bool denyUserDefaultPib  = true)
+        public static bool IsPibOk(String pib, bool denyUserDefaultPib = true)
         {
             if (string.IsNullOrWhiteSpace(pib))
             {
@@ -193,14 +172,14 @@ namespace wpfcm1.FolderTypes
             if (!regexPib.IsMatch(pib) && !regexJib.IsMatch(pib))
             {
                 return false;
-            } 
+            }
             // ako je jedan od testnih vrati true
             if (pib == "1111111111111" || pib == "2222222222222" || pib == "111111111" || pib == "222222222" || pib == "333333333")
             {
                 return true;
             }
 
-            
+
             if (regexPib.IsMatch(pib))  // kontrola PIBa
             {
                 int ost_pret = 10;
@@ -234,7 +213,9 @@ namespace wpfcm1.FolderTypes
                     }
                     return true;
                 }
-            } else if (regexJib.IsMatch(pib)) {   // kontrola JIB-a
+            }
+            else if (regexJib.IsMatch(pib))
+            {   // kontrola JIB-a
                 var j = new int[pib.Length];
                 for (var i = 0; i < pib.Length; i++)
                 {
@@ -258,16 +239,16 @@ namespace wpfcm1.FolderTypes
                     }
                     return true;
                 }
-            } 
-            
+            }
+
             // ako je nekako kod dosao doovde
             return false;
-            
+
         }
 
         public async void Handle(MessageExtractData message)
         {
-            if (!IsActive) return; 
+            if (!IsActive) return;
             //if (Parent == null) return;
             //if (!(Parent as FolderGroupViewModel).IsActive) return;
 
@@ -353,13 +334,6 @@ namespace wpfcm1.FolderTypes
             CheckForDuplicateInvNo();
         }
 
-        public void Handle(MessageReject message)
-        {
-            if (!IsActive) return;
-            PsKillPdfHandlers(); // workaround - pskill ubija sve procese koji rade nad PDF-ovima u eDokument
-            RejectDocument();
-        }
-
         public IList<DocumentModel> GetDocumentsForSigning()
         {
             var checkedDocuments = Documents.Where(d => d.IsChecked).Cast<GeneratedDocumentModel>();
@@ -391,11 +365,11 @@ namespace wpfcm1.FolderTypes
             try
             {
                 using (Stream s = File.OpenRead(file))
-                    oldList = (List<GeneratedDocumentModel>) xs.Deserialize(s);
+                    oldList = (List<GeneratedDocumentModel>)xs.Deserialize(s);
             }
             catch
             {
-                
+
             }
             return oldList;
         }
@@ -404,7 +378,7 @@ namespace wpfcm1.FolderTypes
         {
             var ec = e as ActionExecutionContext;
             var cb = ec.Source as CheckBox;
-            
+
             var view = ec.View as GeneratedFolderView;
             var dg = view.DocumentsCV;
             var items = dg.SelectedItems;
@@ -426,7 +400,47 @@ namespace wpfcm1.FolderTypes
             }
         }
 
+        public void Handle(CertificateModel message)
+        {
+            _certificate = message;
+        }
+
+        public void Handle(MessageXls message)
+        {
+            if (!IsActive) return;
+            XlsExport();
+        }
+
+        public void Handle(MessageSign message)
+        {
+            if (IsActive)
+            {
+                //PsKillPdfHandlers(); // workaround - pskill ubija sve procese koji rade nad PDF-ovima u eDokument
+                var certificateOk = _certificate != null && _certificate.IsQualified;
+                if (!certificateOk) return;
+                var validDocuments = GetDocumentsForSigning();
+                if (!validDocuments.Any()) return;
+
+                //TODO: ovo mora drugacije
+                // _events.PublishOnUIThread(new MessageShowPdf(PreviewViewModel.Empty));
+                var result = _windowManager.ShowDialogAsync(new DialogSignViewModel(_certificate, this));
+            }
+        }
+
+        public void Handle(MessageReject message)
+        {
+            if (!IsActive) return;
+            PsKillPdfHandlers(); // workaround - pskill ubija sve procese koji rade nad PDF-ovima u eDokument
+            RejectDocument();
+        }
+
         public Task HandleAsync(CertificateModel message, CancellationToken cancellationToken)
+        {
+            Handle(message);
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(MessageXls message, CancellationToken cancellationToken)
         {
             Handle(message);
             return Task.CompletedTask;
@@ -445,12 +459,6 @@ namespace wpfcm1.FolderTypes
         }
 
         public Task HandleAsync(MessageReject message, CancellationToken cancellationToken)
-        {
-            Handle(message);
-            return Task.CompletedTask;
-        }
-
-        public Task HandleAsync(MessageXls message, CancellationToken cancellationToken)
         {
             Handle(message);
             return Task.CompletedTask;

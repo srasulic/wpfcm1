@@ -15,6 +15,7 @@ using Caliburn.Micro;
 using iTextSharp.text.pdf.security;
 using wpfcm1.DataAccess;
 using wpfcm1.Events;
+using wpfcm1.FolderGroups;
 using wpfcm1.Model;
 using wpfcm1.PDF;
 using wpfcm1.Preview;
@@ -24,6 +25,7 @@ namespace wpfcm1.FolderTypes
     public class FolderViewModel : Screen, IDisposable, IHandle<MessageGetPibNames>
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         // protected string[] Extensions = { ".pdf", ".ack" };
         protected string[] Extensions = { ".pdf" };
         protected FileSystemWatcher _watcher;
@@ -211,7 +213,7 @@ namespace wpfcm1.FolderTypes
 
         protected async Task ValidateDocSignaturesAsync()
         {
-            //            var documents = Documents.Where(d => !d.Processed).Cast<InboxDocumentModel>();
+            //var documents = Documents.Where(d => !d.Processed).Cast<InboxDocumentModel>();
             var documents = Documents.Where(d => !d.isValidated || d.IsChecked).Cast<DocumentModel>();
             foreach (var document in documents)
             {
@@ -236,7 +238,7 @@ namespace wpfcm1.FolderTypes
                     document.sigReason2 = pkcs7.Reason;
                     document.sigTS2 = pkcs7.TimeStampDate;
                     document.sigDateSigned2 = pkcs7.SignDate;
-                    document.sigSignerName2 = System.Text.RegularExpressions.Regex.Replace(CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"CN"), @"[0-9]", "");
+                    document.sigSignerName2 = Regex.Replace(CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"CN"), @"[0-9]", "");
                     //  document.sigOrg2 = String.Format("{0} - {1}", CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"O"), CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetField(@"OU"));
                     var docFields = CertificateInfo.GetSubjectFields(pkcs7.SigningCertificate).GetFields();
                     String organization = "";
@@ -270,10 +272,13 @@ namespace wpfcm1.FolderTypes
             }
         }
 
-        protected async Task GetPibNamesAsync()
+        protected async Task GetPibNamesAsync(BindableCollection<DocumentModel> folderDocuments)
         {
-            //            var documents = Documents.Where(d => !d.Processed).Cast<InboxDocumentModel>();
-            var documents = Documents.Where(d => String.IsNullOrEmpty(d.namePib1Name) || String.IsNullOrEmpty(d.namePib2Name)).Cast<DocumentModel>();
+            if (folderDocuments == null) return;
+
+            //var documents = Documents.Where(d => !d.Processed).Cast<InboxDocumentModel>();
+            //var documents = Documents.Where(d => String.IsNullOrEmpty(d.namePib1Name) || String.IsNullOrEmpty(d.namePib2Name)).Cast<DocumentModel>();
+            var documents = folderDocuments.Where(d => String.IsNullOrEmpty(d.namePib1Name) || String.IsNullOrEmpty(d.namePib2Name)).Cast<DocumentModel>();
             foreach (var document in documents)
             {
                 try
@@ -428,36 +433,33 @@ namespace wpfcm1.FolderTypes
             }
         }
 
-        protected void SetArchived()
+        protected override async Task OnActivateAsync(CancellationToken cancellationToken)
         {
-            if (!IsActive) return;
-            var checkedDocuments = Documents.Where(d => d.IsChecked); //.Where(d => !d.Processed);
-            if (!checkedDocuments.Any()) return;
-            // TODO: dodati dijalog, sada radimo bez upozorenja
-            foreach (var document in checkedDocuments)
-            {
-                document.Processed = true;
-                document.archiveReady = true;
-                if (!(document.isRejected)) document.isApprovedForProcessing = true;
-                var message = new InternalMessageModel(document);
-                SerializeMessage(message);
-            }
+            await HandleAsync(new MessageGetPibNames(), cancellationToken);
         }
 
-        protected override Task OnActivateAsync(CancellationToken cancellationToken)
+        protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
-            return HandleAsync(new MessageGetPibNames(), cancellationToken);
+            await _events.PublishOnUIThreadAsync(new MessageShowPdf(PreviewViewModel.Empty));
         }
 
-        public async void Handle(MessageGetPibNames message)
+        protected override void OnViewReady(object view)
         {
-            if (!IsActive) return;
-            await GetPibNamesAsync();
+            // IsActive == true
         }
 
-        protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
+        public async Task HandleAsync(MessageGetPibNames message, CancellationToken cancellationToken)
         {
-            return _events.PublishOnUIThreadAsync(new MessageShowPdf(PreviewViewModel.Empty));
+            var pf = Parent as FolderGroupViewModel;
+            var activeFolder = pf?.FolderVMs.SingleOrDefault(f => f == pf.ActiveItem);
+
+            //if (!IsActive) return;
+            await GetPibNamesAsync(activeFolder?.Documents);
+        }
+
+        protected override void OnViewLoaded(object view)
+        {
+
         }
 
         protected override void OnViewAttached(object view, object context)
@@ -663,7 +665,7 @@ namespace wpfcm1.FolderTypes
                 try
                 {
                     newFile = newPath + @"\" + barcodeNumber + ".pdf";
-                    System.IO.File.Move(oldFile, newFile);
+                    File.Move(oldFile, newFile);
                     Log.Info(oldFile + "-->" + newFile);
                 }
                 catch (IOException e)
@@ -672,12 +674,6 @@ namespace wpfcm1.FolderTypes
                     throw e;
                 }
             }
-        }
-
-        public Task HandleAsync(MessageGetPibNames message, CancellationToken cancellationToken)
-        {
-            Handle(message);
-            return Task.CompletedTask;
         }
     }
 }

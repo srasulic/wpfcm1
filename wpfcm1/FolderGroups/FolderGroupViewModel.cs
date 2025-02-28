@@ -16,7 +16,7 @@ namespace wpfcm1.FolderGroups
     {
         private readonly IEventAggregator _events;
 
-        public FolderGroupViewModel(Dictionary<string,string> wsFolders, string name, IEventAggregator events, IWindowManager windowManager)
+        public FolderGroupViewModel(Dictionary<string, string> wsFolders, string name, IEventAggregator events, IWindowManager windowManager)
         {
             DisplayName = name;
             _events = events;
@@ -75,9 +75,9 @@ namespace wpfcm1.FolderGroups
             }
         }
 
-        protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
+        protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
-            return DeactivateItemAsync (ActiveItem, false);
+            await DeactivateItemAsync(ActiveItem, false);
         }
 
         public void Dispose()
@@ -101,7 +101,7 @@ namespace wpfcm1.FolderGroups
                 var newUri = new Uri(message.Uri).AbsolutePath;
                 if (String.Compare(oldUri, newUri, StringComparison.OrdinalIgnoreCase) == 0) return;
 
-                pdfBrowser.Navigate(new System.Uri(message.Uri));
+                pdfBrowser.Navigate(new Uri(message.Uri));
             }
         }
 
