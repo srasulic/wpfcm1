@@ -67,6 +67,27 @@ namespace wpfcm1.OlympusApi
             }
         }
 
+        public async Task<TenantSingleResult> GetUsersTenant(Token token, Tenant tenant)
+        {
+            if (token is null)
+            {
+                return null;
+            }
+
+            _client.DefaultRequestHeaders.Accept.Clear();
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token.token_type, token.access_token);
+
+            string uri = $"/olympus/v1/users/tenant?tenant={tenant.tenant}";
+            using (HttpResponseMessage response = await _client.GetAsync(uri))
+            {
+                string responseBody = await response.Content.ReadAsStringAsync();
+                JsonNode rootNode = JsonNode.Parse(responseBody);
+                var tr = JsonSerializer.Deserialize<TenantSingleResult>(rootNode);
+                return tr;
+            }
+        }
+
         public async Task<TenantsResult> GetUsersTenants(Token token)
         {
             if (token is null)
@@ -106,7 +127,7 @@ namespace wpfcm1.OlympusApi
             using (HttpResponseMessage response = await _client.PutAsync("/olympus/v1/users/set_tenant", content))
             {
                 string responseBody = await response.Content.ReadAsStringAsync();
-                
+
                 JsonNode rootNode = JsonNode.Parse(responseBody);
                 var result = JsonSerializer.Deserialize<Result>(rootNode["result"]);
 

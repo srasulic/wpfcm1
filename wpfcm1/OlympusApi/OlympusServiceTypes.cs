@@ -13,6 +13,17 @@ namespace wpfcm1.OlympusApi
         public string token_type { get; set; }
     }
 
+    public class TenantSingle
+    {
+        public string name { get; set; }
+    }
+
+    public class TenantSingleResult
+    {
+        public Result result { get; set; }
+        public TenantSingle tenant { get; set; }
+    }
+
     public class Tenant
     {
         public string tenant { get; set; }
