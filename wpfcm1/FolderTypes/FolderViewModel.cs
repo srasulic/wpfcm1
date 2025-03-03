@@ -17,8 +17,10 @@ using wpfcm1.DataAccess;
 using wpfcm1.Events;
 using wpfcm1.FolderGroups;
 using wpfcm1.Model;
+using wpfcm1.OlympusApi;
 using wpfcm1.PDF;
 using wpfcm1.Preview;
+using wpfcm1.Settings;
 
 namespace wpfcm1.FolderTypes
 {
@@ -276,6 +278,10 @@ namespace wpfcm1.FolderTypes
         {
             if (folderDocuments == null) return;
 
+            var svc = new OlympusService(User.Default.ApiURL);
+            Profile profile = OlympusService.DeserializeFromJson<Profile>(User.Default.JsonProfile);
+            Token authToken = OlympusService.DeserializeFromJson<Token>(User.Default.JsonToken);
+
             //var documents = Documents.Where(d => !d.Processed).Cast<InboxDocumentModel>();
             //var documents = Documents.Where(d => String.IsNullOrEmpty(d.namePib1Name) || String.IsNullOrEmpty(d.namePib2Name)).Cast<DocumentModel>();
             var documents = folderDocuments.Where(d => String.IsNullOrEmpty(d.namePib1Name) || String.IsNullOrEmpty(d.namePib2Name)).Cast<DocumentModel>();
@@ -284,9 +290,22 @@ namespace wpfcm1.FolderTypes
                 try
                 {
                     if (String.IsNullOrEmpty(document.namePib1Name))
-                        document.namePib1Name = await APIManager.GetCustomerNameByPIBAsync(document.namePib1);
+                    {
+                        var result = await svc.GetUsersTenant(authToken, document.namePib1);
+                        if (result != null && result.result.code == 0)
+                        {
+                            document.namePib1Name = result.tenant.name;
+                        }
+                    }
                     if (String.IsNullOrEmpty(document.namePib2Name))
-                        document.namePib2Name = await APIManager.GetCustomerNameByPIBAsync(document.namePib2);
+                    {
+                        var result = await svc.GetUsersTenant(authToken, document.namePib2);
+                        if (result != null && result.result.code == 0)
+                        {
+                            document.namePib2Name = result.tenant.name;
+                        }
+
+                    }
                 }
                 catch (Exception e)
                 {
