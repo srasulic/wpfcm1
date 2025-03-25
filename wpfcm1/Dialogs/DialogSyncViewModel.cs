@@ -146,7 +146,14 @@ namespace wpfcm1.Dialogs
                     {
                         case SyncTransferRules.TransferAction.Upload:
                             reporter?.Report($"Upload:\t{folder}");
-                            await syncMgr.Upload(svc, authToken, item, profile.tenant_info.tenant, folder, reporter, cancelToken);
+                            if (!string.IsNullOrEmpty(profile.tenant_info.alf_ticket) && item.smer == "outbound" && item.tip_dok == "otpremnica")
+                            {
+                                await syncMgr.UploadAlfresco(profile.tenant_info.alf_ticket, profile.tenant_info.alf_host, profile.tenant_info.alf_folder_node_id, folder, reporter, cancelToken);
+                            }
+                            else
+                            {
+                                await syncMgr.Upload(svc, authToken, item, profile.tenant_info.tenant, folder, reporter, cancelToken);
+                            }
                             reporter?.Report("OK");
                             break;
                         case SyncTransferRules.TransferAction.Sync:

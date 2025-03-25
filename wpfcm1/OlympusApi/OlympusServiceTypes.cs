@@ -60,6 +60,9 @@ namespace wpfcm1.OlympusApi
         public int Y_SIG_SHIFT_LEVI { get; set; }
         public int X_SIG_SHIFT_DESNI { get; set; }
         public int Y_SIG_SHIFT_DESNI { get; set; }
+        public string alf_ticket { get; set; }
+        public string alf_host { get; set; }
+        public string alf_folder_node_id { get; set; }
     }
 
     public class TipDokPristup

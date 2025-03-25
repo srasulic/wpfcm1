@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using wpfcm1.AlfrescoApi;
 using wpfcm1.OlympusApi;
 using wpfcm1.PDF;
 
@@ -13,6 +14,38 @@ namespace wpfcm1.Processing
     public class SyncManager
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+        public async Task UploadAlfresco(
+            string AlfTicket, string AlfHost, string AlfNodeId,
+            string folder,
+            IProgress<string> reporter = null,
+            CancellationToken token = default)
+        {
+            var svc = new AlfrescoService($"https://{AlfHost}");
+
+            var documents = Directory.EnumerateFiles(folder, "*.pdf");
+            foreach (var srcFilePath in documents)
+            {
+                token.ThrowIfCancellationRequested();
+
+                reporter?.Report($"Uploading: {Path.GetFileName(srcFilePath)}");
+                Log.Info($"Uploading Alfresco {srcFilePath}");
+
+                var result = await svc.PostDocument(AlfTicket, AlfNodeId, srcFilePath);
+
+                if (result)
+                {
+                    var dstFilePath = Path.Combine(SyncTransferRules.LocalMap[Path.GetDirectoryName(srcFilePath)], Path.GetFileName(srcFilePath));
+                    Log.Info(string.Format("Moving to {0}", dstFilePath));
+                    File.Move(srcFilePath, dstFilePath);
+                }
+                else
+                {
+                    Log.Error($"ERROR Uploading Alfresco {srcFilePath}");
+                    reporter?.Report($"ERROR Uploading: {srcFilePath}");
+                }
+            }
+        }
 
         public async Task Upload(
             OlympusService client, Token authToken, TipDokPristup tdp, string tenant,
