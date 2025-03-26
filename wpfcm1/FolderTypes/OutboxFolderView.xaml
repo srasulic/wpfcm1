@@ -27,7 +27,19 @@
         <DataGrid x:Name="DocumentsCV" Grid.Row="1" cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChanged($eventArgs)]" 
                   AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False">
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}" Binding="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource CheckBoxHeaderStyle}"/>
+                <!--<DataGridCheckBoxColumn 
+                    ElementStyle="{DynamicResource MetroDataGridCheckBox}" 
+                    Binding="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}" 
+                    HeaderStyle="{StaticResource CheckBoxHeaderStyle}"/>-->
+
+                <DataGridTemplateColumn HeaderStyle="{StaticResource CheckBoxHeaderStyle}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
                 <DataGridTextColumn Header="Naziv fajla" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True" Width="200">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">

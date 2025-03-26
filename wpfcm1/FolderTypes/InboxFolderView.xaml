@@ -12,12 +12,10 @@
                 <BooleanToVisibilityConverter x:Key="b2vc" />
                 <conv:InverseBooleanToVisibilityConverter x:Key="ib2vc" />
                 <conv:InverseBooleanToBoldConverter x:Key="ib2bc" />
-
                 <conv:BooleanToColourConverter x:Key="b2cc" />
                 <conv:BooleanToBackgroundColourConverter x:Key="b2bcc" />
                 <conv:BooleanToUnderlineConverter x:Key="b2uc" />
                 <conv:BooleanToOpacityConverter x:Key="b2oc" />
-
                 <DataTemplate x:Key="ImgCol">
                     <StackPanel>
                         <Image Source="{StaticResource PngGreenPdf}" Visibility="{Binding Path=IsValid, Converter={StaticResource b2vc}}" ToolTip="{Binding sigAdditionalInfo}"/>
@@ -49,9 +47,21 @@
         <TextBlock Text="Pretraga: " VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" ></TextBlock>
         <TextBox x:Name="FilterText" VerticalAlignment="Center" HorizontalAlignment="Stretch" Height="8" Margin="60,0,58,0" BorderThickness="0" />
         <DataGrid x:Name="DocumentsCV" Grid.Row="1" cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChanged($eventArgs)]"
-                  AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False" >
+                  AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" >
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}" Binding="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource CheckBoxHeaderStyle}"/>
+                <!--<DataGridCheckBoxColumn 
+                    ElementStyle="{DynamicResource MetroDataGridCheckBox}" 
+                    Binding="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}" 
+                    HeaderStyle="{StaticResource CheckBoxHeaderStyle}"/>-->
+
+                <DataGridTemplateColumn HeaderStyle="{StaticResource CheckBoxHeaderStyle}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
                 <DataGridTextColumn Header="Naziv fajla" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
@@ -67,8 +77,7 @@
                 <DataGridTextColumn Header="Br Dok" Binding="{Binding Path=nameDocNum}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Datum" Binding="{Binding Path=nameDate}" IsReadOnly="True" />
                 <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}" Binding="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource CheckBoxHeaderStyle}"/>
-                <DataGridTemplateColumn Header="{StaticResource appbar_checkmark16}" CellTemplate="{StaticResource ImgCol}" MinWidth="32" IsReadOnly="True">
-                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{StaticResource appbar_checkmark16}" CellTemplate="{StaticResource ImgCol}" MinWidth="32" IsReadOnly="True" />
                 <DataGridTemplateColumn Header="{StaticResource appbar_reply_email16}" CellTemplate="{StaticResource AckCol}" MinWidth="32" IsReadOnly="True"/>
                 <DataGridTemplateColumn  Header="{StaticResource appbar_draw_pen_reflection16}"  CellTemplate="{StaticResource HasSecSign}" MinWidth="32" IsReadOnly="True"/>
                 <DataGridTemplateColumn  CellTemplate="{StaticResource WaitForSrvProcessing}" MinWidth="32" IsReadOnly="True"/>

@@ -9,14 +9,13 @@
                 <ResourceDictionary.MergedDictionaries>
                     <ResourceDictionary Source="FolderResources.xaml" />
                 </ResourceDictionary.MergedDictionaries>
-
                 <BooleanToVisibilityConverter x:Key="b2vc" />
                 <conv:InverseBooleanToVisibilityConverter x:Key="ib2vc" />
                 <conv:InverseBooleanToBoldConverter x:Key="ib2bc" />
                 <conv:BooleanToColourConverter x:Key="b2cc" />
                 <conv:BooleanToBackgroundColourConverter x:Key="b2bcc" />
                 <conv:BooleanToUnderlineConverter x:Key="b2uc" />
-                <conv:BooleanToOpacityConverter x:Key="b2oc" />
+                <conv:BooleanToOpacityConverter x:Key="b2oc" />                
                 <DataTemplate x:Key="ImgCol">
                     <StackPanel>
                         <Image Source="{StaticResource PngGreenPdf}" Visibility="{Binding Path=IsValid_HasNotSS, Converter={StaticResource b2vc}}" ToolTip="{Binding sigAdditionalInfo}"/>
@@ -42,18 +41,31 @@
             <RowDefinition Height="0.1*"/>
             <RowDefinition />
         </Grid.RowDefinitions>
-        <TextBlock Text="Pretraga: " VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" ></TextBlock>
+        <TextBlock Text="Pretraga: " VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" />
         <TextBox x:Name="FilterText" VerticalAlignment="Center" HorizontalAlignment="Stretch" Height="8" Margin="60,0,58,0" BorderThickness="0" />
         <DataGrid x:Name="DocumentsCV" Grid.Row="1" cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChanged($eventArgs)]"
-                  AutoGenerateColumns="False" CanUserAddRows="false" CanUserDeleteRows="False" IsReadOnly="True">
+                  AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}" Binding="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}" HeaderStyle="{StaticResource CheckBoxHeaderStyle}" IsReadOnly="False"/>
-                <DataGridTextColumn Header="Naziv fajla" Binding="{Binding Path=DocumentInfo.Name}"/>
+                <!--<DataGridCheckBoxColumn
+                    ElementStyle="{DynamicResource MetroDataGridCheckBox}"
+                    Binding="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}"
+                    HeaderStyle="{StaticResource CheckBoxHeaderStyle}" />-->
+
+                <DataGridTemplateColumn HeaderStyle="{StaticResource CheckBoxHeaderStyle}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn Header="Naziv fajla" Binding="{Binding Path=DocumentInfo.Name}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Pib primalac" Binding="{Binding Path=namePib2}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Naziv primaoca" Binding="{Binding Path=namePib2Name}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Br Dok" Binding="{Binding Path=nameDocNum}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Datum" Binding="{Binding Path=DocumentInfo.LastWriteTime}" />
-                <DataGridTextColumn Header="Size" Binding="{Binding Path=LengthKB, StringFormat='\{0:N0\} KB'}" IsReadOnly="True"/>            </DataGrid.Columns>
+                <DataGridTextColumn Header="Datum" Binding="{Binding Path=DocumentInfo.LastWriteTime}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Size" Binding="{Binding Path=LengthKB, StringFormat='\{0:N0\} KB'}" IsReadOnly="True"/>
+            </DataGrid.Columns>
         </DataGrid>
     </Grid>
 </UserControl>
