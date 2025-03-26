@@ -45,6 +45,17 @@ namespace wpfcm1.FolderGroups
         public PreviewViewModel Preview { get; set; }
         public IObservableCollection<FolderViewModel> FolderVMs { get; private set; }
 
+        private bool _isVisible;
+        public bool IsVisible
+        {
+            get => _isVisible;
+            set
+            {
+                _isVisible = value;
+                NotifyOfPropertyChange(() => IsVisible);
+            }
+        }
+
         public async void ActivateTabItem(SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count > 0)

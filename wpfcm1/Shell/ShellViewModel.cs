@@ -9,7 +9,9 @@ using wpfcm1.Dialogs;
 using wpfcm1.Events;
 using wpfcm1.FolderGroups;
 using wpfcm1.FolderTypes;
+using wpfcm1.OlympusApi;
 using wpfcm1.Preview;
+using wpfcm1.Settings;
 using wpfcm1.Toolbar;
 
 namespace wpfcm1.Shell
@@ -108,6 +110,80 @@ namespace wpfcm1.Shell
             if (result == false)
             {
                 System.Windows.Application.Current.Shutdown();
+            }
+            else
+            {
+                SetFolderGroupVisibility();
+            }
+        }
+
+        private void SetFolderGroupVisibility()
+        {
+            Profile profile = OlympusService.DeserializeFromJson<Profile>(User.Default.JsonProfile);
+            foreach (var item in profile.tip_dok_pristup)
+            {
+                if (item.tip_dok == "faktura" && item.smer == "outbound")
+                {
+                    OutboundVM.IsVisible = true;
+                }
+                if (item.tip_dok == "faktura" && item.smer == "inbound")
+                {
+                    InboundVM.IsVisible = true;
+                }
+
+                if (item.tip_dok == "ios" && item.smer == "outbound")
+                {
+                    IosOutboundVM.IsVisible = true;
+                }
+                if (item.tip_dok == "ios" && item.smer == "inbound")
+                {
+                    IosInboundVM.IsVisible = true;
+                }
+
+                if (item.tip_dok == "otpad" && item.smer == "outbound")
+                {
+                    OtpadOutboundVM.IsVisible = true;
+                }
+                if (item.tip_dok == "otpad" && item.smer == "inbound")
+                {
+                    OtpadInboundVM.IsVisible = true;
+                }
+
+                if (item.tip_dok == "otpremnica" && item.smer == "outbound")
+                {
+                    OtpremnicaOutboundVM.IsVisible = true;
+                }
+                if (item.tip_dok == "otpremnica" && item.smer == "inbound")
+                {
+                    OtpremnicaInboundVM.IsVisible = true;
+                }
+
+                if (item.tip_dok == "kp" && item.smer == "outbound")
+                {
+                    KpOutboundVM.IsVisible = true;
+                }
+                if (item.tip_dok == "kp" && item.smer == "inbound")
+                {
+                    KpInboundVM.IsVisible = true;
+                }
+
+                if (item.tip_dok == "povrati" && item.smer == "outbound")
+                {
+                    PovratiOutboundVM.IsVisible = true;
+                }
+                if (item.tip_dok == "povrati" && item.smer == "inbound")
+                {
+                    PovratiInboundVM.IsVisible = true;
+                }
+
+                if (item.tip_dok == "ostali" && item.smer == "outbound")
+                {
+                    OtherOutboundVM.IsVisible = true;
+                }
+                if (item.tip_dok == "ostali" && item.smer == "inbound")
+                {
+                    OtherInboundVM.IsVisible = true;
+                }
             }
         }
 
