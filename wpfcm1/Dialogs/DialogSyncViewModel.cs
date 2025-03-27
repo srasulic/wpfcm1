@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -20,18 +19,17 @@ namespace wpfcm1.Dialogs
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly Dictionary<string, FolderViewModel> _folders;
-
         private readonly Progress<string> _reporter;
         private CancellationTokenSource _cancellation;
 
-        public DialogSyncViewModel(Dictionary<string, FolderViewModel> folders)
+        public DialogSyncViewModel()
         {
             DisplayName = "PoliSign - sinhronizacija sa serverom";
-            _folders = folders;
             _reporter = new Progress<string>();
             _reporter.ProgressChanged += _reporter_ProgressChanged;
             Reports = new BindableCollection<string>();
+
+            SinceDate = DateTime.Now.AddDays(-45).ToString();
         }
 
         private string _sinceDate;

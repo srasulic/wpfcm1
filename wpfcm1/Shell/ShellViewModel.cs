@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
@@ -8,7 +7,6 @@ using wpfcm1.DataAccess;
 using wpfcm1.Dialogs;
 using wpfcm1.Events;
 using wpfcm1.FolderGroups;
-using wpfcm1.FolderTypes;
 using wpfcm1.OlympusApi;
 using wpfcm1.Preview;
 using wpfcm1.Settings;
@@ -279,34 +277,9 @@ namespace wpfcm1.Shell
 
         public void Handle(MessageSync message)
         {
-            var foldersToSync = new Dictionary<string, FolderViewModel>()
-            {
-                {FolderManager.InvoicesOutboundOutboxFolder, OutboundVM.FolderVMs[1]},
-                {FolderManager.InvoicesInboundInboxFolder, InboundVM.FolderVMs[0]},
-                {FolderManager.InvoicesInboundOutboxFolder, InboundVM.FolderVMs[1]},
-                {FolderManager.IosOutboundOutboxFolder, IosOutboundVM.FolderVMs[1]},
-                {FolderManager.IosInboundInboxFolder, IosInboundVM.FolderVMs[0]},
-                {FolderManager.IosInboundOutboxFolder, IosInboundVM.FolderVMs[1]},
-                {FolderManager.OtpadOutboundOutboxFolder, OtpadOutboundVM.FolderVMs[1]},
-                {FolderManager.OtpadInboundInboxFolder, OtpadInboundVM.FolderVMs[0]},
-                {FolderManager.OtpadInboundOutboxFolder, OtpadInboundVM.FolderVMs[1]},
-                {FolderManager.OtpremnicaOutboundOutboxFolder, OtpremnicaOutboundVM.FolderVMs[1]},
-                {FolderManager.OtpremnicaInboundInboxFolder, OtpremnicaInboundVM.FolderVMs[0]},
-                {FolderManager.OtpremnicaInboundOutboxFolder, OtpremnicaInboundVM.FolderVMs[1]},
-                {FolderManager.KpOutboundOutboxFolder, KpOutboundVM.FolderVMs[1]},
-                {FolderManager.KpInboundInboxFolder, KpInboundVM.FolderVMs[0]},
-                {FolderManager.KpInboundOutboxFolder, KpInboundVM.FolderVMs[1]},
-                {FolderManager.PovratiOutboundOutboxFolder, PovratiOutboundVM.FolderVMs[1]},
-                {FolderManager.PovratiInboundInboxFolder, PovratiInboundVM.FolderVMs[0]},
-                {FolderManager.PovratiInboundOutboxFolder, PovratiInboundVM.FolderVMs[1]},
-                {FolderManager.OtherOutboundOutboxFolder, OtherOutboundVM.FolderVMs[1]},
-                {FolderManager.OtherInboundInboxFolder, OtherInboundVM.FolderVMs[0]},
-                {FolderManager.OtherInboundOutboxFolder, OtherInboundVM.FolderVMs[1]},
-            };
-
             //TODO: ovo mora drugacije
             _events.PublishOnUIThreadAsync(new MessageShowPdf(PreviewViewModel.Empty));
-            var result = _windowManager.ShowDialogAsync(new DialogSyncViewModel(foldersToSync));
+            var result = _windowManager.ShowDialogAsync(new DialogSyncViewModel());
         }
 
         public void Handle(MessagePickCert message)
