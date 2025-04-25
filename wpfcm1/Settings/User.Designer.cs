@@ -226,5 +226,17 @@ namespace wpfcm1.Settings {
                 this["JsonProfile"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string JsonMappings {
+            get {
+                return ((string)(this["JsonMappings"]));
+            }
+            set {
+                this["JsonMappings"] = value;
+            }
+        }
     }
 }

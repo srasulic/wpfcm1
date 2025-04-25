@@ -31,7 +31,7 @@ namespace wpfcm1.AlfrescoApi
             }
         }
 
-        public async Task<bool> PostDocument(string ticket, string node_id, string filePath)
+        public async Task<bool> PostDocument(string ticket, string node_id, string filePath, string dmsIstovarAdr)
         {
             string uri = $"/alfresco/api/-default-/public/alfresco/versions/1/nodes/{node_id}/children?alf_ticket={ticket}";
 
@@ -71,6 +71,11 @@ namespace wpfcm1.AlfrescoApi
                     form.Add(new StringContent(dms_podVrstaDokumenta), "dms:podVrstaDokumenta");
                     form.Add(new StringContent(dms_brojDokumenta), "dms:brojDokumenta");
                     form.Add(new StringContent(dms_tip), "dms:tip");
+                    if (!string.IsNullOrEmpty(dmsIstovarAdr))
+                    {
+                        // umesto dmsIstovarAdr mozda staviti neki dictionary za opcione dms podatke?
+                        form.Add(new StringContent(dmsIstovarAdr), "dms:mestoIstovaraAdresa");
+                    }
 
                     using (HttpResponseMessage response = await _client.PostAsync(uri, form))
                     {

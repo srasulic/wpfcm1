@@ -25,6 +25,7 @@ namespace wpfcm1.Dialogs
         public Token Token { get; set; }
         public Tenant Tenant { get; set; }
         public Profile Profile { get; set; }
+        public Mappings Mappings { get; set; }
     }
 
     public class DialogLoginViewModel : Screen, IDisposable
@@ -216,6 +217,14 @@ namespace wpfcm1.Dialogs
 
             SelectedProfile = res.profile;
 
+            var mapres = await svc.GetConfigDocumentTypeMappings(Token);
+            if (mapres == null || mapres.result.code != 0)
+            {
+                Log.Error($"ERROR GetConfigDocumentTypeMappings: {mapres.result.userMessage}");
+                return;
+            }
+
+            _loginOkCache.Mappings = OlympusService.DeepCopy(mapres.mappings);
             _loginOkCache.Tenant = OlympusService.DeepCopy(SelectedTenant);
             _loginOkCache.Profile = OlympusService.DeepCopy(SelectedProfile);
         }
@@ -236,6 +245,7 @@ namespace wpfcm1.Dialogs
             User.Default.XSigShiftRight = _loginOkCache.Profile.tenant_info.X_SIG_SHIFT_DESNI;
             User.Default.YSigShiftRight = _loginOkCache.Profile.tenant_info.Y_SIG_SHIFT_DESNI;
 
+            User.Default.JsonMappings = OlympusService.SerializeToJson(_loginOkCache.Mappings);
             User.Default.JsonToken = OlympusService.SerializeToJson(_loginOkCache.Token);
             User.Default.JsonProfile = OlympusService.SerializeToJson(_loginOkCache.Profile);
 

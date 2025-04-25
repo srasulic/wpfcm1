@@ -151,6 +151,7 @@ namespace wpfcm1.OlympusApi
         public int orderNumber { get; set; }
         public Rect pib { get; set; }
         public Rect doc { get; set; }
+        public Rect adresa_mi { get; set; }
         public string pageOrientation { get; set; }
         public string forcedMap { get; set; }
         public List<RegexEl> regexList { get; set; }

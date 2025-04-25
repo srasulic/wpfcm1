@@ -255,7 +255,7 @@ namespace wpfcm1.FolderTypes
             var pib = User.Default.PIB;
             var tipDok = Regex.Match(FolderPath, @"edokument\\(.*)\\", RegexOptions.IgnoreCase).Groups[1].ToString().ToLower();
 
-            var mappings = await RecognitionPattern.GetMappings(tipDok);
+            var mappings = RecognitionPattern.GetMappings(tipDok);
 
             var documents = Documents.Where(d => !d.Processed || d.IsChecked).Cast<GeneratedDocumentModel>();
 

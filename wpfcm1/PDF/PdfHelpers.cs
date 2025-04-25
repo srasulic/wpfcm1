@@ -51,6 +51,22 @@ namespace wpfcm1.PDF
             }
         }
 
+        public static string Extract(string path, float llx, float lly, float urx, float ury)
+        {
+            using (var reader = new PdfReader(path))
+            {
+                //int rotation = reader.GetPageRotation(1);
+                //Rectangle pageSize = reader.GetPageSizeWithRotation(1);
+
+                var rect = new Rectangle(llx, lly, urx, ury);
+                RenderFilter filter = new RegionTextRenderFilter(rect);
+                ITextExtractionStrategy strategy = new FilteredTextRenderListener(new LocationTextExtractionStrategy(), filter);
+
+                var text = PdfTextExtractor.GetTextFromPage(reader, 1, strategy);
+                return text;
+            }
+        }
+
         //
         // 1.1 - Utvrdi orjentaciju i rotaciju strane
         //
