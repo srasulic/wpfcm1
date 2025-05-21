@@ -220,8 +220,8 @@ namespace wpfcm1.Dialogs
             var mapres = await svc.GetConfigDocumentTypeMappings(Token);
             if (mapres == null || mapres.result.code != 0)
             {
-                Log.Error($"ERROR GetConfigDocumentTypeMappings: {mapres.result.userMessage}");
-                return;
+                Log.Info($"INFO GetConfigDocumentTypeMappings: {mapres.result.userMessage}");
+                //return;
             }
 
             _loginOkCache.Mappings = OlympusService.DeepCopy(mapres.mappings);

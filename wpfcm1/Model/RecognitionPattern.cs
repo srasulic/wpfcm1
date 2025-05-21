@@ -32,6 +32,10 @@ namespace wpfcm1.Model
 
         public static List<MappingElement> GetMappings(string tipDok) {
             Mappings mappings = OlympusService.DeserializeFromJson<Mappings>(User.Default.JsonMappings);
+            if (mappings == null)
+            {
+                return new List<MappingElement>();
+            }
 
             var td = mappings.tipDokList.Find(p => p.tipDok == tipDok);
             if (td == null)

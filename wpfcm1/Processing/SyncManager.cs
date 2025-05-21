@@ -25,8 +25,12 @@ namespace wpfcm1.Processing
             var svc = new AlfrescoService($"https://{AlfHost}");
 
             Mappings mappings = OlympusService.DeserializeFromJson<Mappings>(User.Default.JsonMappings);
-            var td = mappings.tipDokList.Find(p => p.tipDok == "otpremnica");
-            var mi_mapping = td.mappings.FirstOrDefault(i => i.adresa_mi != null);
+            Mapping mi_mapping = null;
+            if (mappings != null)
+            {
+                var td = mappings.tipDokList.Find(p => p.tipDok == "otpremnica");
+                mi_mapping = td.mappings.FirstOrDefault(i => i.adresa_mi != null);
+            }
 
             var documents = Directory.EnumerateFiles(folder, "*.pdf");
             foreach (var srcFilePath in documents)
@@ -37,7 +41,7 @@ namespace wpfcm1.Processing
                 Log.Info($"Uploading Alfresco {srcFilePath}");
 
                 string dmsIstovarAdr = "";
-                if (mi_mapping.adresa_mi != null)
+                if (mi_mapping != null && mi_mapping.adresa_mi != null)
                 {
                     dmsIstovarAdr = PdfHelpers.Extract(srcFilePath, mi_mapping.adresa_mi.x1, mi_mapping.adresa_mi.y1, mi_mapping.adresa_mi.x2, mi_mapping.adresa_mi.y2);
                 }
