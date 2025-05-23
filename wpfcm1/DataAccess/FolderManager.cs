@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using wpfcm1.Model;
+using wpfcm1.OlympusApi;
 using wpfcm1.Settings;
 
 namespace wpfcm1.DataAccess
@@ -11,62 +12,64 @@ namespace wpfcm1.DataAccess
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        private static Profile profile = OlympusService.DeserializeFromJson<Profile>(User.Default.JsonProfile);
+
         //folderi za fakture
-        public static readonly string InvoicesOutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundErpIfaceFolder);
-        public static readonly string InvoicesOutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundErpProcFolder);
-        public static readonly string InvoicesOutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundOutboxFolder);
-        public static readonly string InvoicesOutboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundSentFolder);
-        public static readonly string InvoicesInboundInboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundInboxFolder);
-        public static readonly string InvoicesInboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundOutboxFolder);
-        public static readonly string InvoicesInboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.InvoicesSubfolder, Folders.Default.InboundSentFolder);
+        public static readonly string InvoicesOutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundErpIfaceFolder);
+        public static readonly string InvoicesOutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundErpProcFolder);
+        public static readonly string InvoicesOutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundOutboxFolder);
+        public static readonly string InvoicesOutboundSentFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.InvoicesSubfolder, Folders.Default.OutboundSentFolder);
+        public static readonly string InvoicesInboundInboxFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.InvoicesSubfolder, Folders.Default.InboundInboxFolder);
+        public static readonly string InvoicesInboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.InvoicesSubfolder, Folders.Default.InboundOutboxFolder);
+        public static readonly string InvoicesInboundSentFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.InvoicesSubfolder, Folders.Default.InboundSentFolder);
         //folderi za IOS
-        public static readonly string IosOutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.IosSubfolder, Folders.Default.OutboundErpIfaceFolder);
-        public static readonly string IosOutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.IosSubfolder, Folders.Default.OutboundErpProcFolder);
-        public static readonly string IosOutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.IosSubfolder, Folders.Default.OutboundOutboxFolder);
-        public static readonly string IosOutboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.IosSubfolder, Folders.Default.OutboundSentFolder);
-        public static readonly string IosInboundInboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.IosSubfolder, Folders.Default.InboundInboxFolder);
-        public static readonly string IosInboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.IosSubfolder, Folders.Default.InboundOutboxFolder);
-        public static readonly string IosInboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.IosSubfolder, Folders.Default.InboundSentFolder);
+        public static readonly string IosOutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.IosSubfolder, Folders.Default.OutboundErpIfaceFolder);
+        public static readonly string IosOutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.IosSubfolder, Folders.Default.OutboundErpProcFolder);
+        public static readonly string IosOutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.IosSubfolder, Folders.Default.OutboundOutboxFolder);
+        public static readonly string IosOutboundSentFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.IosSubfolder, Folders.Default.OutboundSentFolder);
+        public static readonly string IosInboundInboxFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.IosSubfolder, Folders.Default.InboundInboxFolder);
+        public static readonly string IosInboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.IosSubfolder, Folders.Default.InboundOutboxFolder);
+        public static readonly string IosInboundSentFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.IosSubfolder, Folders.Default.InboundSentFolder);
         //folderi za Kretanje otpada
-        public static readonly string OtpadOutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpadSubfolder, Folders.Default.OutboundErpIfaceFolder);
-        public static readonly string OtpadOutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpadSubfolder, Folders.Default.OutboundErpProcFolder);
-        public static readonly string OtpadOutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpadSubfolder, Folders.Default.OutboundOutboxFolder);
-        public static readonly string OtpadOutboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpadSubfolder, Folders.Default.OutboundSentFolder);
-        public static readonly string OtpadInboundInboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpadSubfolder, Folders.Default.InboundInboxFolder);
-        public static readonly string OtpadInboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpadSubfolder, Folders.Default.InboundOutboxFolder);
-        public static readonly string OtpadInboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpadSubfolder, Folders.Default.InboundSentFolder);
+        public static readonly string OtpadOutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.OtpadSubfolder, Folders.Default.OutboundErpIfaceFolder);
+        public static readonly string OtpadOutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.OtpadSubfolder, Folders.Default.OutboundErpProcFolder);
+        public static readonly string OtpadOutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.OtpadSubfolder, Folders.Default.OutboundOutboxFolder);
+        public static readonly string OtpadOutboundSentFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.OtpadSubfolder, Folders.Default.OutboundSentFolder);
+        public static readonly string OtpadInboundInboxFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.OtpadSubfolder, Folders.Default.InboundInboxFolder);
+        public static readonly string OtpadInboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.OtpadSubfolder, Folders.Default.InboundOutboxFolder);
+        public static readonly string OtpadInboundSentFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.OtpadSubfolder, Folders.Default.InboundSentFolder);
         //folderi za Otpremnica
-        public static readonly string OtpremnicaOutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpremnicaSubfolder, Folders.Default.OutboundErpIfaceFolder);
-        public static readonly string OtpremnicaOutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpremnicaSubfolder, Folders.Default.OutboundErpProcFolder);
-        public static readonly string OtpremnicaOutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpremnicaSubfolder, Folders.Default.OutboundOutboxFolder);
-        public static readonly string OtpremnicaOutboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpremnicaSubfolder, Folders.Default.OutboundSentFolder);
-        public static readonly string OtpremnicaInboundInboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpremnicaSubfolder, Folders.Default.InboundInboxFolder);
-        public static readonly string OtpremnicaInboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpremnicaSubfolder, Folders.Default.InboundOutboxFolder);
-        public static readonly string OtpremnicaInboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtpremnicaSubfolder, Folders.Default.InboundSentFolder);
+        public static readonly string OtpremnicaOutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.OtpremnicaSubfolder, Folders.Default.OutboundErpIfaceFolder);
+        public static readonly string OtpremnicaOutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.OtpremnicaSubfolder, Folders.Default.OutboundErpProcFolder);
+        public static readonly string OtpremnicaOutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.OtpremnicaSubfolder, Folders.Default.OutboundOutboxFolder);
+        public static readonly string OtpremnicaOutboundSentFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.OtpremnicaSubfolder, Folders.Default.OutboundSentFolder);
+        public static readonly string OtpremnicaInboundInboxFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.OtpremnicaSubfolder, Folders.Default.InboundInboxFolder);
+        public static readonly string OtpremnicaInboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.OtpremnicaSubfolder, Folders.Default.InboundOutboxFolder);
+        public static readonly string OtpremnicaInboundSentFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.OtpremnicaSubfolder, Folders.Default.InboundSentFolder);
         //folderi za KP
-        public static readonly string KpOutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.OutboundErpIfaceFolder);
-        public static readonly string KpOutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.OutboundErpProcFolder);
-        public static readonly string KpOutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.OutboundOutboxFolder);
-        public static readonly string KpOutboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.OutboundSentFolder);
-        public static readonly string KpInboundInboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.InboundInboxFolder);
-        public static readonly string KpInboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.InboundOutboxFolder);
-        public static readonly string KpInboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.KpSubfolder, Folders.Default.InboundSentFolder);
+        public static readonly string KpOutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.KpSubfolder, Folders.Default.OutboundErpIfaceFolder);
+        public static readonly string KpOutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.KpSubfolder, Folders.Default.OutboundErpProcFolder);
+        public static readonly string KpOutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.KpSubfolder, Folders.Default.OutboundOutboxFolder);
+        public static readonly string KpOutboundSentFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.KpSubfolder, Folders.Default.OutboundSentFolder);
+        public static readonly string KpInboundInboxFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.KpSubfolder, Folders.Default.InboundInboxFolder);
+        public static readonly string KpInboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.KpSubfolder, Folders.Default.InboundOutboxFolder);
+        public static readonly string KpInboundSentFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.KpSubfolder, Folders.Default.InboundSentFolder);
         //folderi za povrati
-        public static readonly string PovratiOutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.PovratiSubfolder, Folders.Default.OutboundErpIfaceFolder);
-        public static readonly string PovratiOutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.PovratiSubfolder, Folders.Default.OutboundErpProcFolder);
-        public static readonly string PovratiOutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.PovratiSubfolder, Folders.Default.OutboundOutboxFolder);
-        public static readonly string PovratiOutboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.PovratiSubfolder, Folders.Default.OutboundSentFolder);
-        public static readonly string PovratiInboundInboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.PovratiSubfolder, Folders.Default.InboundInboxFolder);
-        public static readonly string PovratiInboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.PovratiSubfolder, Folders.Default.InboundOutboxFolder);
-        public static readonly string PovratiInboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.PovratiSubfolder, Folders.Default.InboundSentFolder);
+        public static readonly string PovratiOutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.PovratiSubfolder, Folders.Default.OutboundErpIfaceFolder);
+        public static readonly string PovratiOutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.PovratiSubfolder, Folders.Default.OutboundErpProcFolder);
+        public static readonly string PovratiOutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.PovratiSubfolder, Folders.Default.OutboundOutboxFolder);
+        public static readonly string PovratiOutboundSentFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.PovratiSubfolder, Folders.Default.OutboundSentFolder);
+        public static readonly string PovratiInboundInboxFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.PovratiSubfolder, Folders.Default.InboundInboxFolder);
+        public static readonly string PovratiInboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.PovratiSubfolder, Folders.Default.InboundOutboxFolder);
+        public static readonly string PovratiInboundSentFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.PovratiSubfolder, Folders.Default.InboundSentFolder);
         //folderi za ostale ulazne/izlazne
-        public static readonly string OtherOutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtherSubfolder, Folders.Default.OutboundErpIfaceFolder);
-        public static readonly string OtherOutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtherSubfolder, Folders.Default.OutboundErpProcFolder);
-        public static readonly string OtherOutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtherSubfolder, Folders.Default.OutboundOutboxFolder);
-        public static readonly string OtherOutboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtherSubfolder, Folders.Default.OutboundSentFolder);
-        public static readonly string OtherInboundInboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtherSubfolder, Folders.Default.InboundInboxFolder);
-        public static readonly string OtherInboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtherSubfolder, Folders.Default.InboundOutboxFolder);
-        public static readonly string OtherInboundSentFolder = Path.Combine(Folders.Default.RootFolder, Folders.Default.OtherSubfolder, Folders.Default.InboundSentFolder);
+        public static readonly string OtherOutboundErpIfaceFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.OtherSubfolder, Folders.Default.OutboundErpIfaceFolder);
+        public static readonly string OtherOutboundErpProcFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.OtherSubfolder, Folders.Default.OutboundErpProcFolder);
+        public static readonly string OtherOutboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.OtherSubfolder, Folders.Default.OutboundOutboxFolder);
+        public static readonly string OtherOutboundSentFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.OtherSubfolder, Folders.Default.OutboundSentFolder);
+        public static readonly string OtherInboundInboxFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.OtherSubfolder, Folders.Default.InboundInboxFolder);
+        public static readonly string OtherInboundOutboxFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.OtherSubfolder, Folders.Default.InboundOutboxFolder);
+        public static readonly string OtherInboundSentFolder = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant, Folders.Default.OtherSubfolder, Folders.Default.InboundSentFolder);
 
         //grupe foldera
         public static Dictionary<string, string> InvoicesOutboundFolders { get; set; }

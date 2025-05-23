@@ -34,20 +34,22 @@ namespace wpfcm1.Shell
             CertVM = certs;
 
             HomeVM = new HomeViewModel(this);
-            OutboundVM = new FolderGroupViewModel(FolderManager.InvoicesOutboundFolders, "Izlazne Fakture", events, _windowManager);
-            InboundVM = new FolderGroupViewModel(FolderManager.InvoicesInboundFolders, "Ulazne Fakture", events, _windowManager);
-            IosOutboundVM = new FolderGroupViewModel(FolderManager.IosOutboundFolders, "Izlazni IOS", events, _windowManager);
-            IosInboundVM = new FolderGroupViewModel(FolderManager.IosInboundFolders, "Ulazni IOS", events, _windowManager);
-            OtpadOutboundVM = new FolderGroupViewModel(FolderManager.OtpadOutboundFolders, "Izl. Kret.otp", events, _windowManager);
-            OtpadInboundVM = new FolderGroupViewModel(FolderManager.OtpadInboundFolders, "Ul. Kret.otp.", events, _windowManager);
-            OtpremnicaOutboundVM = new FolderGroupViewModel(FolderManager.OtpremnicaOutboundFolders, "Izl. Otpremnica", events, _windowManager);
-            OtpremnicaInboundVM = new FolderGroupViewModel(FolderManager.OtpremnicaInboundFolders, "Ul. Otpremnica", events, _windowManager);
-            KpOutboundVM = new FolderGroupViewModel(FolderManager.KpOutboundFolders, "Izlazna KP", events, _windowManager);
-            KpInboundVM = new FolderGroupViewModel(FolderManager.KpInboundFolders, "Ulazna KP", events, _windowManager);
-            PovratiOutboundVM = new FolderGroupViewModel(FolderManager.PovratiOutboundFolders, "Izlazni Povrati", events, _windowManager);
-            PovratiInboundVM = new FolderGroupViewModel(FolderManager.PovratiInboundFolders, "Ulazni Povrati", events, _windowManager);
-            OtherOutboundVM = new FolderGroupViewModel(FolderManager.OtherOutboundFolders, "Ostali Izlazni", events, _windowManager);
-            OtherInboundVM = new FolderGroupViewModel(FolderManager.OtherInboundFolders, "Ostali Ulazni", events, _windowManager);
+
+            //OutboundVM = new FolderGroupViewModel(FolderManager.InvoicesOutboundFolders, "Izlazne Fakture", events, _windowManager);
+            //InboundVM = new FolderGroupViewModel(FolderManager.InvoicesInboundFolders, "Ulazne Fakture", events, _windowManager);
+            //IosOutboundVM = new FolderGroupViewModel(FolderManager.IosOutboundFolders, "Izlazni IOS", events, _windowManager);
+            //IosInboundVM = new FolderGroupViewModel(FolderManager.IosInboundFolders, "Ulazni IOS", events, _windowManager);
+            //OtpadOutboundVM = new FolderGroupViewModel(FolderManager.OtpadOutboundFolders, "Izl. Kret.otp", events, _windowManager);
+            //OtpadInboundVM = new FolderGroupViewModel(FolderManager.OtpadInboundFolders, "Ul. Kret.otp.", events, _windowManager);
+            //OtpremnicaOutboundVM = new FolderGroupViewModel(FolderManager.OtpremnicaOutboundFolders, "Izl. Otpremnica", events, _windowManager);
+            //OtpremnicaInboundVM = new FolderGroupViewModel(FolderManager.OtpremnicaInboundFolders, "Ul. Otpremnica", events, _windowManager);
+            //KpOutboundVM = new FolderGroupViewModel(FolderManager.KpOutboundFolders, "Izlazna KP", events, _windowManager);
+            //KpInboundVM = new FolderGroupViewModel(FolderManager.KpInboundFolders, "Ulazna KP", events, _windowManager);
+            //PovratiOutboundVM = new FolderGroupViewModel(FolderManager.PovratiOutboundFolders, "Izlazni Povrati", events, _windowManager);
+            //PovratiInboundVM = new FolderGroupViewModel(FolderManager.PovratiInboundFolders, "Ulazni Povrati", events, _windowManager);
+            //OtherOutboundVM = new FolderGroupViewModel(FolderManager.OtherOutboundFolders, "Ostali Izlazni", events, _windowManager);
+            //OtherInboundVM = new FolderGroupViewModel(FolderManager.OtherInboundFolders, "Ostali Ulazni", events, _windowManager);
+
             LoginVM = new DialogLoginViewModel(_windowManager);
 
             ShowLogin();
@@ -111,7 +113,26 @@ namespace wpfcm1.Shell
             }
             else
             {
+                OutboundVM = new FolderGroupViewModel(FolderManager.InvoicesOutboundFolders, "Izlazne Fakture", _events, _windowManager);
+                InboundVM = new FolderGroupViewModel(FolderManager.InvoicesInboundFolders, "Ulazne Fakture", _events, _windowManager);
+                IosOutboundVM = new FolderGroupViewModel(FolderManager.IosOutboundFolders, "Izlazni IOS", _events, _windowManager);
+                IosInboundVM = new FolderGroupViewModel(FolderManager.IosInboundFolders, "Ulazni IOS", _events, _windowManager);
+                OtpadOutboundVM = new FolderGroupViewModel(FolderManager.OtpadOutboundFolders, "Izl. Kret.otp", _events, _windowManager);
+                OtpadInboundVM = new FolderGroupViewModel(FolderManager.OtpadInboundFolders, "Ul. Kret.otp.", _events, _windowManager);
+                OtpremnicaOutboundVM = new FolderGroupViewModel(FolderManager.OtpremnicaOutboundFolders, "Izl. Otpremnica", _events, _windowManager);
+                OtpremnicaInboundVM = new FolderGroupViewModel(FolderManager.OtpremnicaInboundFolders, "Ul. Otpremnica", _events, _windowManager);
+                KpOutboundVM = new FolderGroupViewModel(FolderManager.KpOutboundFolders, "Izlazna KP", _events, _windowManager);
+                KpInboundVM = new FolderGroupViewModel(FolderManager.KpInboundFolders, "Ulazna KP", _events, _windowManager);
+                PovratiOutboundVM = new FolderGroupViewModel(FolderManager.PovratiOutboundFolders, "Izlazni Povrati", _events, _windowManager);
+                PovratiInboundVM = new FolderGroupViewModel(FolderManager.PovratiInboundFolders, "Ulazni Povrati", _events, _windowManager);
+                OtherOutboundVM = new FolderGroupViewModel(FolderManager.OtherOutboundFolders, "Ostali Izlazni", _events, _windowManager);
+                OtherInboundVM = new FolderGroupViewModel(FolderManager.OtherInboundFolders, "Ostali Ulazni", _events, _windowManager);
+
                 SetFolderGroupVisibility();
+
+                HomeVM = new HomeViewModel(this);
+                await ActivateItemAsync(HomeVM);
+                await _events.PublishOnUIThreadAsync(new MessageViewModelActivated(ActiveItem.GetType().Name));
             }
         }
 

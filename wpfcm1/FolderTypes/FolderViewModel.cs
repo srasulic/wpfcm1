@@ -13,7 +13,6 @@ using System.Xml;
 using System.Xml.Serialization;
 using Caliburn.Micro;
 using iTextSharp.text.pdf.security;
-using wpfcm1.DataAccess;
 using wpfcm1.Events;
 using wpfcm1.FolderGroups;
 using wpfcm1.Model;
