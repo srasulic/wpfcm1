@@ -60,7 +60,7 @@ namespace wpfcm1.Dialogs
             new Variation { Name = "RS-LOGIN", FtpServer = @"ftp://ftp.aserta.rs/", AppTitle = @"https://edokument.rs", ApiUrl = @"https://edokument.rs"},
             new Variation { Name = "RS-IZVRSITELJ", FtpServer = @"ftp://ftp.aserta.rs/", AppTitle = @"https://edokument.rs", ApiUrl = @"https://edokument.rs"},
             new Variation { Name = "MTEL", FtpServer = @"", AppTitle = @"http://10.10.8.5", ApiUrl = @"http://10.10.8.5:8000"},
-            new Variation { Name = "MTELDEV", FtpServer = @"", AppTitle = @"http://10.10.8.5", ApiUrl = @"http://10.10.8.5:8000"},
+            new Variation { Name = "MTELDEV", FtpServer = @"", AppTitle = @"http://mteldev.edokument.rs", ApiUrl = @"http://mteldev.edokument.rs"},
             new Variation { Name = "BIH", FtpServer = @"ftp://ftp.polisign.net/", AppTitle = @"https://polisign.net", ApiUrl = @"https://polisign.net"},
             new Variation { Name = "RSDEV", FtpServer = @"ftp://edokument.dev.aserta.rs/", AppTitle = @"https://edokument.dev.aserta.rs", ApiUrl = @"https://edokument.dev.aserta.rs"},
             new Variation { Name = "BIHDEV", FtpServer = @"ftp://116.203.101.59/", AppTitle = @"https://116.203.101.59", ApiUrl = @"https://116.203.101.59"}
