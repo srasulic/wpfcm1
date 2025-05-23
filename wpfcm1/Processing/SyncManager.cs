@@ -29,7 +29,10 @@ namespace wpfcm1.Processing
             if (mappings != null)
             {
                 var td = mappings.tipDokList.Find(p => p.tipDok == "otpremnica");
-                mi_mapping = td.mappings.FirstOrDefault(i => i.adresa_mi != null);
+                if (td != null)
+                {
+                    mi_mapping = td.mappings.FirstOrDefault(i => i.adresa_mi != null);
+                }
             }
 
             var documents = Directory.EnumerateFiles(folder, "*.pdf");

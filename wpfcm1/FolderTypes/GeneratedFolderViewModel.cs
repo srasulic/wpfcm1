@@ -253,7 +253,7 @@ namespace wpfcm1.FolderTypes
             //if (!(Parent as FolderGroupViewModel).IsActive) return;
 
             var pib = User.Default.PIB;
-            var tipDok = Regex.Match(FolderPath, @"edokument\\(.*)\\", RegexOptions.IgnoreCase).Groups[1].ToString().ToLower();
+            var tipDok = Regex.Match(FolderPath, @"edokument\\(.*)\\(.*)\\", RegexOptions.IgnoreCase).Groups[2].ToString().ToLower();
 
             var mappings = RecognitionPattern.GetMappings(tipDok);
 
