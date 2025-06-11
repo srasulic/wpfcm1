@@ -1,7 +1,6 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
+using System.Linq;
 using Caliburn.Micro;
-using wpfcm1.Model;
 
 namespace wpfcm1.Certificates
 {
@@ -9,31 +8,62 @@ namespace wpfcm1.Certificates
     public class CertificatesViewModel : PropertyChangedBase
     {
         private readonly IEventAggregator _events;
-        public ObservableCollection<CertificateModel> Certificates { get; private set; }
+
+        private BindableCollection<CertificateModel> _certificates;
+        public BindableCollection<CertificateModel> Certificates
+        {
+            get => _certificates;
+            set
+            {
+                _certificates = value;
+                NotifyOfPropertyChange(() => Certificates);
+            }
+        }
+
+        private CertificateModel _certificate;
+        public CertificateModel SelectedCertificate
+        {
+            get => _certificate;
+            set
+            {
+                _certificate = value;
+                NotifyOfPropertyChange(() => SelectedCertificate);
+                OnSelectedCertificate();
+            }
+        }
+
 
         [ImportingConstructor]
         public CertificatesViewModel(IEventAggregator events)
         {
             _events = events;
             var certificateRepositiory = new CertificateRepositiory();
-            Certificates = new ObservableCollection<CertificateModel>(certificateRepositiory.CertificateItems);
+
+            Certificates = new BindableCollection<CertificateModel>(certificateRepositiory.CertificateItems);
+
+            if (SelectedCertificate == null && Certificates.Any())
+            {
+                SelectedCertificate = Certificates.First();
+            }
         }
 
         public void RefreshCertificateList(bool pickCertificate)
         {
             Certificates.Clear();
             var certificateRepositiory = new CertificateRepositiory(pickCertificate);
-            int i = 0;
-            foreach (CertificateModel cert in certificateRepositiory.CertificateItems)
+
+            Certificates = new BindableCollection<CertificateModel>(certificateRepositiory.CertificateItems);
+
+            if (SelectedCertificate == null && Certificates.Any())
             {
-                Certificates.Add(certificateRepositiory.CertificateItems[i++]);
+                SelectedCertificate = Certificates.First();
             }
         }
 
-        public void OnSelection(CertificateModel certificate)
+        public void OnSelectedCertificate()
         {
-            if (certificate == null) return;
-            _events.PublishOnUIThreadAsync(certificate);
+            if (SelectedCertificate == null) return;
+            _events.PublishOnUIThreadAsync(SelectedCertificate);
         }
     }
 }

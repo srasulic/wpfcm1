@@ -133,6 +133,10 @@ namespace wpfcm1.Shell
                 HomeVM = new HomeViewModel(this);
                 await ActivateItemAsync(HomeVM);
                 await _events.PublishOnUIThreadAsync(new MessageViewModelActivated(ActiveItem.GetType().Name));
+
+                // mora ovako jer je izgubljen publish sertifikata na UI thread
+                // (CertVM raspalio poruku pre nego sto je formiran HomeVM)
+                CertVM.OnSelectedCertificate();
             }
         }
 
