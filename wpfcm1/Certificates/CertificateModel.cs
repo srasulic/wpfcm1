@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using iTextSharp.text.pdf.security;
 using Org.BouncyCastle.Security;
-using wpfcm1.Certificates;
 using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 
 namespace wpfcm1.Certificates
@@ -12,13 +14,19 @@ namespace wpfcm1.Certificates
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public X509Certificate2 Certificate { get; private set; }
+        public List<X509Certificate> ChainElements { get; private set; }
+
         public string CertificateSimpleName { get; private set; }
         public string CertificateDisplayName { get; private set; }
-        public List<X509Certificate> ChainElements { get; private set; }
+
         public List<string> Errors { get; private set; }
         public string CertDisplayWithErrors { get; private set; }
+
         public bool IsQualified { get; private set; }
-        public bool HasWarnings { get; private set; }
+
+        public bool HasDigitalSignature { get; private set; }
+        public bool HasNonRepudiation { get; private set; }
+        public bool HasExtendedDigitalSigning { get; private set; }
 
         public CertificateModel(X509Certificate2 certificate)
         {
@@ -26,37 +34,17 @@ namespace wpfcm1.Certificates
             CertificateSimpleName = Certificate.GetNameInfo(X509NameType.SimpleName, false);
             CertificateDisplayName = CertificateSimpleName + @" - " + Regex.Match(certificate.IssuerName.Name, @"(CN=)(.[A-Za-z]+)(.*)").Groups[2];
 
-            // ako nema private key, nije kvalifikovan. Ubrzava se start aplikacije jer se ne bilduju bespotrebni sertifikati
             if (!Certificate.HasPrivateKey)
             {
                 IsQualified = false;
-                HasWarnings = false;
                 return;
-            }
-
-            if (Regex.IsMatch(certificate.Issuer, @"CN=MUPCA"))
-            {
-                HasWarnings = true;
-            }
-            else
-            {
-                HasWarnings = false;
             }
 
             var chainBuildInfo = CertificateHelpers.GetChain(Certificate);
             var chain = chainBuildInfo.Item1;
             ChainElements = CertificateHelpers.GetChainElements(chain);
 
-
-            // podrška za nekvalifikovane sertifikate koje koristi Republika Srpska
-            if (certificate.IssuerName.Name == "C=BA, S=Republika Srpska, O=Poreska uprava, CN=PURS CA 1")
-            {
-                Errors = new List<string>();
-            }
-            else
-            {
-                Errors = CertificateHelpers.CheckCertificate(Certificate, chainBuildInfo);
-            }
+            Errors = CheckCertificate(Certificate, chainBuildInfo);
 
             var bccert = DotNetUtilities.FromX509Certificate(Certificate);
             var crlUrl = CertificateUtil.GetCRLURL(bccert);
@@ -68,16 +56,9 @@ namespace wpfcm1.Certificates
                 Errors.Add("Cannot check revocation (no ocsp and crl).");
             }
 
-            //////////
-            // privremeno za TEST
-            //
-            //   IsQualified = true;
-            //   return;
-            //
-            //
-            /////////
-            IsQualified = Errors.Count == 0 && (hasOcsp || hasCrl);
-            // linija za prikaz u listi
+            //IsQualified = Errors.Count == 0 && (hasOcsp || hasCrl);
+            IsQualified = HasDigitalSignature && (HasExtendedDigitalSigning || HasNonRepudiation) && (hasOcsp || hasCrl);
+
             CertDisplayWithErrors = CertificateDisplayName;
             if (IsQualified)
             {
@@ -92,6 +73,60 @@ namespace wpfcm1.Certificates
                     CertDisplayWithErrors = "* " + CertDisplayWithErrors + System.Environment.NewLine + "      err: " + error;
                 }
             }
+        }
+
+        private List<string> CheckCertificate(X509Certificate2 certificate, Tuple<X509Chain, bool> chainBuildInfo)
+        {
+            var errors = new List<string>();
+
+            var chain = chainBuildInfo.Item1;
+            var isChainValid = chainBuildInfo.Item2;
+            if (!isChainValid)
+            {
+                errors.Add(string.Format("Certificate not valid - {0}", chain.ChainStatus[0].Status));
+            }
+
+            foreach (var extension in certificate.Extensions)
+            {
+                if (extension is X509KeyUsageExtension)
+                {
+                    var keyUsageExtension = extension as X509KeyUsageExtension;
+
+                    HasNonRepudiation = (keyUsageExtension.KeyUsages & X509KeyUsageFlags.NonRepudiation) != 0;
+                    HasDigitalSignature = (keyUsageExtension.KeyUsages & X509KeyUsageFlags.DigitalSignature) != 0;
+
+                    //if (!(hasDigitalSignature || (hasNonRepudiation && hasDigitalSignature)))
+                    if (!(HasNonRepudiation && HasDigitalSignature))
+                    {
+                        errors.Add(string.Format("Bad key usage - {0}", keyUsageExtension.KeyUsages));
+                    }
+                }
+
+                if (extension is X509EnhancedKeyUsageExtension)
+                {
+                    var enhancedKeyUsageExtension = extension as X509EnhancedKeyUsageExtension;
+
+                    var oids = enhancedKeyUsageExtension.EnhancedKeyUsages.Cast<Oid>();
+                    var result = oids.Where(u => u.FriendlyName.Contains("Document Signing")).ToList();
+
+                    HasExtendedDigitalSigning = result.Count() > 0;
+                }
+
+                //if (v == "1.3.6.1.5.5.7.1.3") //QcStatements
+                //{
+                //    Asn1OctetString octetString = bccert.GetExtensionValue(new DerObjectIdentifier(v));
+                //    byte[] der = octetString.GetOctets();
+                //    Asn1Object asn1obj = Asn1Object.FromByteArray(der);
+                //}
+                //if (v == "2.5.29.32") //policy ids
+                //{
+                //    Asn1OctetString octetString = bccert.GetExtensionValue(new DerObjectIdentifier(v));
+                //    byte[] der = octetString.GetOctets();
+                //    Asn1Object asn1obj = Asn1Object.FromByteArray(der);
+                //}
+            }
+
+            return errors;
         }
     }
 }

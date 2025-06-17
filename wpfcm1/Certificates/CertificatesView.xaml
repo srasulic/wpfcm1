@@ -12,13 +12,16 @@
             <ColumnDefinition />
             <ColumnDefinition Width="21"/>
         </Grid.ColumnDefinitions>
-        <ComboBox x:Name="Certificates" DisplayMemberPath="CertDisplayWithErrors" FontSize="13" Margin="2"  SelectedItem="{Binding SelectedCertificate, Mode=TwoWay}"/>
-        <Rectangle Grid.Column="1" Width="21" Height="21" Fill="Orange" Visibility="{Binding ElementName=Certificates, Path=SelectedItem.HasWarnings, Converter={StaticResource b2vc}}"
+        <ComboBox x:Name="Certificates" DisplayMemberPath="CertDisplayWithErrors" SelectedItem="{Binding SelectedCertificate, Mode=TwoWay}" 
+                  FontSize="13" Margin="2" />
+        
+        <!-- <Rectangle Grid.Column="1" Width="21" Height="21" Fill="Orange" Visibility="{Binding ElementName=Certificates, Path=SelectedItem.HasWarnings, Converter={StaticResource b2vc}}"
                    ToolTip="Produženi period podrške za MUP sertifikate ističe 01.11.2019. godine! Molimo da koristite sertifikate PTT CA, PKS CA ili Halcom CA.">
             <Rectangle.OpacityMask>
                 <VisualBrush Stretch="Uniform" Visual="{DynamicResource appbar_alert}" />
             </Rectangle.OpacityMask>
-        </Rectangle>
+        </Rectangle> -->
+        
         <Rectangle Grid.Column="1" Width="21" Height="21" Fill="Red" Visibility="{Binding ElementName=Certificates, Path=SelectedItem.IsQualified, Converter={StaticResource ib2vc}}"
                    ToolTip="Sertifikat nije prošao validaciju za kvalifikovani sertifikat">
             <Rectangle.OpacityMask>

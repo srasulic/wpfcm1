@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using iTextSharp.text;
@@ -53,7 +54,6 @@ namespace wpfcm1.PDF
             bool provideCertificationLevel,
             string reason)
         {
-
             PdfSignatureAppearance appearance = stamper.SignatureAppearance;
             appearance.Reason = reason;
             //appearance.Location = location;
@@ -69,24 +69,17 @@ namespace wpfcm1.PDF
             Font font = FontFactory.GetFont(path, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
             appearance.Layer2Font = new Font(font);
 
-
-            // unapredjeno na SHA256 sem ako sertifikat podržava samo SHA1  
-            // unapređeno na CADES umesto CMS
-            // dodata podrška za nekvalifikovane sertifikate koje koristi Republika Srpska - SHA1
-
             IExternalSignature pks;
-            if (cert.SignatureAlgorithm.FriendlyName == "sha1RSA" || cert.IssuerName.Name == "C=BA, S=Republika Srpska, O=Poreska uprava, CN=PURS CA 1")
-            {
-                pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA1);
-            }
-            else
+            RSA rsa = cert.GetRSAPrivateKey();
+            if (rsa.KeySize >= 2048)
             {
                 pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA256);
             }
-
+            else
+            {
+                pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA1);
+            }
             MakeSignature.SignDetached(appearance, pks, chain, crlList, ocspClient, tsaClient, 0, CryptoStandard.CADES);
-
-
         }
 
         private static Rectangle GetSignatureRect(
