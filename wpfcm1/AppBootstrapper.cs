@@ -1,12 +1,13 @@
-﻿using Caliburn.Micro;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
+using System.Deployment.Application;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
+using Caliburn.Micro;
 using wpfcm1.Settings;
 using wpfcm1.Shell;
 
@@ -16,13 +17,17 @@ namespace wpfcm1
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static string appTitle = User.Default.AppTitle;
-        public static string appVersion = appTitle + " - 2.3.0.3";
+        public static string appVersion = appTitle;
 
         CompositionContainer _container;
 
         public AppBootstrapper()
         {
             Initialize();
+            if (ApplicationDeployment.IsNetworkDeployed)
+            {
+                appVersion += " - " + ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+            }
         }
 
         protected override void Configure()

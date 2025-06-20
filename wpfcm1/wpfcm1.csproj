@@ -26,16 +26,15 @@
     <UpdateRequired>true</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>http://polisignupdate.aserta.rs/publish_edokument/</InstallUrl>
-    <UpdateUrl>http://polisignupdate.aserta.rs/</UpdateUrl>
     <TargetCulture>sr-Latn</TargetCulture>
     <ProductName>eDokument PoliSign</ProductName>
     <PublisherName>Aserta doo</PublisherName>
     <SuiteName>eDokument</SuiteName>
-    <MinimumRequiredVersion>1.5.0.8</MinimumRequiredVersion>
+    <MinimumRequiredVersion>3.0.0.4</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>3</ApplicationRevision>
+    <ApplicationRevision>5</ApplicationRevision>
     <ApplicationVersion>3.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -121,6 +120,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Pipelines, Version=9.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
