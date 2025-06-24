@@ -23,10 +23,12 @@ namespace wpfcm1.Certificates
         public string CertDisplayWithErrors { get; private set; }
 
         public bool IsQualified { get; private set; }
+        public bool IsDisplayed { get; private set; }
 
         public bool HasDigitalSignature { get; private set; }
         public bool HasNonRepudiation { get; private set; }
         public bool HasExtendedDigitalSigning { get; private set; }
+        public bool HasEnhancedProperties { get; private set; }
 
         public CertificateModel(X509Certificate2 certificate)
         {
@@ -56,8 +58,10 @@ namespace wpfcm1.Certificates
                 Errors.Add("Cannot check revocation (no ocsp and crl).");
             }
 
-            //IsQualified = Errors.Count == 0 && (hasOcsp || hasCrl);
-            IsQualified = HasDigitalSignature && (HasExtendedDigitalSigning || HasNonRepudiation) && (hasOcsp || hasCrl);
+            IsQualified = Errors.Count == 0 && (hasOcsp || hasCrl);
+            //IsQualified = HasDigitalSignature && (HasExtendedDigitalSigning || HasNonRepudiation) && (hasOcsp || hasCrl);
+            //IsQualified = HasDigitalSignature && (HasExtendedDigitalSigning || !HasEnhancedProperties) && (hasOcsp || hasCrl);
+            IsDisplayed = HasDigitalSignature && (HasExtendedDigitalSigning || !HasEnhancedProperties);
 
             CertDisplayWithErrors = CertificateDisplayName;
             if (IsQualified)
@@ -95,8 +99,8 @@ namespace wpfcm1.Certificates
                     HasNonRepudiation = (keyUsageExtension.KeyUsages & X509KeyUsageFlags.NonRepudiation) != 0;
                     HasDigitalSignature = (keyUsageExtension.KeyUsages & X509KeyUsageFlags.DigitalSignature) != 0;
 
-                    //if (!(hasDigitalSignature || (hasNonRepudiation && hasDigitalSignature)))
-                    if (!(HasNonRepudiation && HasDigitalSignature))
+                    //if (!(HasNonRepudiation && HasDigitalSignature))
+                    if (!HasDigitalSignature)
                     {
                         errors.Add(string.Format("Bad key usage - {0}", keyUsageExtension.KeyUsages));
                     }
@@ -110,6 +114,7 @@ namespace wpfcm1.Certificates
                     var result = oids.Where(u => u.FriendlyName.Contains("Document Signing")).ToList();
 
                     HasExtendedDigitalSigning = result.Count() > 0;
+                    HasEnhancedProperties = true;
                 }
 
                 //if (v == "1.3.6.1.5.5.7.1.3") //QcStatements

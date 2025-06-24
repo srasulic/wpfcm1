@@ -35,7 +35,8 @@ namespace wpfcm1.Certificates
 
                     var cm = new CertificateModel(cert);
 
-                    if (!cm.IsQualified && cm.Errors.Any(e => e == "Bad key usage - KeyEncipherment, DigitalSignature"))
+                    //if (!cm.IsQualified && cm.Errors.Any(e => e.Contains("Bad key usage")))
+                    if (!cm.IsDisplayed)
                     {
                         continue;
                     }
