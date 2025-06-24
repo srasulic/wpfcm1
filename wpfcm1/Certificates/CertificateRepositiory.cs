@@ -35,6 +35,11 @@ namespace wpfcm1.Certificates
 
                     var cm = new CertificateModel(cert);
 
+                    if (!cm.IsQualified && cm.Errors.Any(e => e == "Bad key usage - KeyEncipherment, DigitalSignature"))
+                    {
+                        continue;
+                    }
+
                     // privremeno uslovno, dok ne nadjemo bolji nacin (podiže se Insert smart card za neke sertifikate iz liste, što nije exception)
                     if (pickCertificate)
                     {
