@@ -1,8 +1,8 @@
 ﻿<mah:MetroWindow x:Class="wpfcm1.Dialogs.DialogLoginView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-    ShowCloseButton="False" ShowMinButton="False" ShowMaxRestoreButton="False"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" xmlns:conv="clr-namespace:wpfcm1.Converters"
+                 ShowCloseButton="False" ShowMinButton="False" ShowMaxRestoreButton="False"
     WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
     BorderBrush="{DynamicResource AccentColorBrush}"
     BorderThickness="1"
@@ -13,6 +13,12 @@
     Loaded="DialogLoginView_Loaded"
 >
     <Grid>
+        <Grid.Resources>
+            <ResourceDictionary>
+                <BooleanToVisibilityConverter x:Key="b2vc" />
+                <conv:InverseBoolConverter x:Key="ibc" />
+            </ResourceDictionary>
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -54,9 +60,16 @@
 
         <PasswordBox x:Name="Password" Grid.Row="2" Grid.Column="1" Margin="8" VerticalAlignment="Center" PasswordChanged="PasswordBox_PasswordChanged" />
 
-        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-            <Button Content="Login" x:Name="Login" MinWidth="64" Margin="8" IsDefault="True"/>
-        </StackPanel>
+        <Grid Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="88" />
+            </Grid.ColumnDefinitions>
+            
+            <Button Grid.Column="1" Content="Login" x:Name="Login" 
+                    MinWidth="64" Margin="8" IsDefault="True" 
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource ibc}}"/>
+        </Grid>
 
         <ComboBox x:Name="Tenants" Grid.Row="4" Grid.Column="1" Margin="8" VerticalAlignment="Center">
             <ComboBox.ItemTemplate>

@@ -156,8 +156,21 @@ namespace wpfcm1.Dialogs
             }
         }
 
+        private bool _isBusy;
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set
+            {
+                _isBusy = value;
+                NotifyOfPropertyChange(() => IsBusy);
+            }
+        }
+
         public async void Login()
         {
+            IsBusy = true;
+
             var svc = new OlympusService(SelectedVariation.ApiUrl);
             Tenants = null;
 
@@ -167,6 +180,8 @@ namespace wpfcm1.Dialogs
                 Log.Error($"FAILED LOGIN: [UserName = {UserName}]");
                 Tenants = null;
                 //SelectedTenant = null;
+                MessageBox.Show("Greška: PostUsersLogin.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                IsBusy = false;
                 return;
             }
             Log.Info($"SUCCESSFUL LOGIN: [UserName = {UserName}]");
@@ -178,9 +193,12 @@ namespace wpfcm1.Dialogs
             {
                 Log.Error($"FAILED Obtaining Olympus Tenants: [UserName = {UserName}]");
                 Log.Error($"ERROR GetUsersTenants {userTenants.result.userMessage}");
+                MessageBox.Show("Greška: GetUsersTenants.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                IsBusy = false;
                 return;
             }
             Log.Info($"SUCCESSFUL Obtaining Olympus Tenants: [UserName = {UserName}]");
+            IsBusy = false;
 
             Tenants = new BindableCollection<Tenant>(userTenants.tenants);
             SelectedTenant = Tenants[0];
@@ -195,12 +213,18 @@ namespace wpfcm1.Dialogs
         {
             var svc = new OlympusService(SelectedVariation.ApiUrl);
 
+            if (SelectedTenant == null)
+            {
+                return;
+            }
+
             var putres = await svc.PutUsersSetTenant(Token, SelectedTenant);
             if (putres == null || putres.code != 0)
             {
                 Log.Error($"FAILED PUT set tenant: [UserName = {UserName}] [Tenant = {SelectedTenant?.tenant}]");
                 Log.Error($"ERROR PutUsersSetTenant {putres.userMessage}");
                 Tenants = null;
+                MessageBox.Show("Greška: PutUsersSetTenant.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 //SelectedTenant = null;
                 return;
             }
@@ -211,6 +235,7 @@ namespace wpfcm1.Dialogs
             {
                 Log.Error($"FAILED Obtaining Olympus Profile: [UserName = {UserName}] [Tenant = {SelectedTenant?.tenant}]");
                 Log.Error($"ERROR GetConfigPolisign {res.result.userMessage}");
+                MessageBox.Show("Greška: GetConfigPolisign.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             Log.Info($"SUCCESSFUL Obtaining Olympus Profile: [UserName = {UserName}] [Tenant = {SelectedTenant?.tenant}]");
