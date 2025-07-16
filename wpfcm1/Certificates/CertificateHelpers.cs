@@ -57,21 +57,30 @@ namespace wpfcm1.Certificates
             {
                 if (Regex.IsMatch(crlUrl, @"http.+", RegexOptions.IgnoreCase))
                 {
-                    // za NBGP BIH (Delta Planet) workaround ... Tamo cert telo nije umelo da zanovi SSL sertifikat na adresi koja vraća CRL
-                    if (Settings.User.Default.Variation == "BIH")
+                    try
                     {
-                        System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-                    }
+                        // za NBGP BIH (Delta Planet) workaround ... Tamo cert telo nije umelo da zanovi SSL sertifikat na adresi koja vraća CRL
+                        if (Settings.User.Default.Variation == "BIH")
+                        {
+                            System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+                        }
 
-                    System.Net.WebRequest req = System.Net.HttpWebRequest.Create(crlUrl);
-                    System.IO.Stream ins = req.GetResponse().GetResponseStream();
-                    var baos = new System.IO.MemoryStream();
-                    byte[] buf = new byte[1024];
-                    int readedBytes;
-                    while ((readedBytes = ins.Read(buf, 0, 1024)) > 0) baos.Write(buf, 0, readedBytes);
-                    ins.Close();
-                    ICrlClient ccoff = new CrlClientOffline(baos.ToArray());
-                    crlList.Add(ccoff);
+                        System.Net.WebRequest req = System.Net.HttpWebRequest.Create(crlUrl);
+                        System.IO.Stream ins = req.GetResponse().GetResponseStream();
+                        var baos = new System.IO.MemoryStream();
+                        byte[] buf = new byte[1024];
+                        int readedBytes;
+                        while ((readedBytes = ins.Read(buf, 0, 1024)) > 0) baos.Write(buf, 0, readedBytes);
+                        ins.Close();
+                        ICrlClient ccoff = new CrlClientOffline(baos.ToArray());
+                        crlList.Add(ccoff);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.Message + crlUrl);
+                        // TODO: da li nam treba crl lista?
+                        //throw new Exception(@"Server sertifikacionog tela nije dostupan: " + crlUrl, ex);
+                    }
                 }
                 else
                 {

@@ -59,6 +59,12 @@ namespace wpfcm1.Certificates
             }
 
             IsQualified = Errors.Count == 0 && (hasOcsp || hasCrl);
+
+            if (certificate.Issuer == "C=BA, S=Republika Srpska, O=Poreska uprava, CN=PURS CA 1")
+            {
+                IsQualified = Errors.Count == 1 && (hasOcsp || hasCrl);
+            }
+
             //IsQualified = HasDigitalSignature && (HasExtendedDigitalSigning || HasNonRepudiation) && (hasOcsp || hasCrl);
             //IsQualified = HasDigitalSignature && (HasExtendedDigitalSigning || !HasEnhancedProperties) && (hasOcsp || hasCrl);
             IsDisplayed = HasDigitalSignature && (HasExtendedDigitalSigning || !HasEnhancedProperties);
@@ -114,6 +120,14 @@ namespace wpfcm1.Certificates
                     var result = oids.Where(u => u.FriendlyName.Contains("Document Signing")).ToList();
 
                     HasExtendedDigitalSigning = result.Count() > 0;
+                   
+                    //Hardkodirano prema dokumentu Politike certifikacije za izdavanje i upravljanje elektronskim certifikatima
+                    //Poreske uprave Republike Srpske, prema izmenama 2025. godine.
+                    if (certificate.Issuer == "C=BA, S=Republika Srpska, O=Poreska uprava, CN=PURS CA 1")
+                    {
+                        HasExtendedDigitalSigning = true;
+                    }
+
                     HasEnhancedProperties = true;
                 }
 

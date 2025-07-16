@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.security;
+using Org.BouncyCastle.Crypto.Tls;
 using wpfcm1.Settings;
 using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 
@@ -71,14 +72,23 @@ namespace wpfcm1.PDF
 
             IExternalSignature pks;
             RSA rsa = cert.GetRSAPrivateKey();
-            if (rsa.KeySize >= 2048)
-            {
-                pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA256);
-            }
-            else
+
+            if (cert.Issuer == "C=BA, S=Republika Srpska, O=Poreska uprava, CN=PURS CA 1")
             {
                 pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA1);
             }
+            else
+            {
+                if (rsa.KeySize >= 2048)
+                {
+                    pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA256);
+                }
+                else
+                {
+                    pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA1);
+                }
+            }
+
             MakeSignature.SignDetached(appearance, pks, chain, crlList, ocspClient, tsaClient, 0, CryptoStandard.CADES);
         }
 
