@@ -16,18 +16,13 @@ namespace wpfcm1
     public class AppBootstrapper : BootstrapperBase 
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private static string appTitle = User.Default.AppTitle;
-        public static string appVersion = appTitle;
+        public static string appVersion = string.Empty;
 
         CompositionContainer _container;
 
         public AppBootstrapper()
         {
             Initialize();
-            if (ApplicationDeployment.IsNetworkDeployed)
-            {
-                appVersion += " - " + ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
-            }
         }
 
         protected override void Configure()

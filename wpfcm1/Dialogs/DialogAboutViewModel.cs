@@ -17,7 +17,7 @@ namespace wpfcm1.Dialogs
         {
             DisplayName = "About & Legal";
             //appVersion = AppBootstrapper.appVersion;
-            aboutText = "eDokument PoliSign ver " + AppBootstrapper.appVersion + " \r\n " +
+            aboutText = AppBootstrapper.appVersion + " \r\n " +
                 " \r\n " +
                 "Opšti uslovi: \r\n " +
                 "-------------- \r\n " +

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using System.Deployment.Application;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
@@ -25,7 +26,7 @@ namespace wpfcm1.Shell
         [ImportingConstructor]
         public ShellViewModel(IEventAggregator events, IWindowManager windowManager, ToolBarViewModel toolBar, CertificatesViewModel certs)
         {
-            DisplayName = "m:dok app    " + AppBootstrapper.appVersion;
+            DisplayName = string.Empty;
             _events = events;
             _events.SubscribeOnUIThread(this);
             _windowManager = windowManager;
@@ -137,6 +138,17 @@ namespace wpfcm1.Shell
                 // mora ovako jer je izgubljen publish sertifikata na UI thread
                 // (CertVM raspalio poruku pre nego sto je formiran HomeVM)
                 CertVM.OnSelectedCertificate();
+
+                DisplayName = User.Default.AppTitle;
+                if (ApplicationDeployment.IsNetworkDeployed)
+                {
+                    DisplayName += " - " + ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+                }
+
+                //var version = Assembly.GetExecutingAssembly().GetName().Version;
+                //DisplayName += " " + version;
+
+                AppBootstrapper.appVersion = DisplayName;
             }
         }
 
