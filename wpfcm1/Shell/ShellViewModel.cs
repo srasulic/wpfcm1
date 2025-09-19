@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Composition;
+﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Deployment.Application;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using wpfcm1.Events;
 using wpfcm1.FolderGroups;
 using wpfcm1.OlympusApi;
 using wpfcm1.Preview;
+using wpfcm1.Properties;
 using wpfcm1.Settings;
 using wpfcm1.Toolbar;
 
@@ -58,21 +60,21 @@ namespace wpfcm1.Shell
 
         protected override Task OnDeactivateAsync(bool close, CancellationToken cancellation = default)
         {
-            InboundVM.Dispose();
-            OutboundVM.Dispose();
-            IosInboundVM.Dispose();
-            IosOutboundVM.Dispose();
-            OtpadInboundVM.Dispose();
-            OtpadOutboundVM.Dispose();
-            OtpremnicaInboundVM.Dispose();
-            OtpremnicaOutboundVM.Dispose();
-            KpInboundVM.Dispose();
-            KpOutboundVM.Dispose();
-            PovratiInboundVM.Dispose();
-            PovratiOutboundVM.Dispose();
-            OtherInboundVM.Dispose();
-            OtherOutboundVM.Dispose();
-            LoginVM.Dispose();
+            InboundVM?.Dispose();
+            OutboundVM?.Dispose();
+            IosInboundVM?.Dispose();
+            IosOutboundVM?.Dispose();
+            OtpadInboundVM?.Dispose();
+            OtpadOutboundVM?.Dispose();
+            OtpremnicaInboundVM?.Dispose();
+            OtpremnicaOutboundVM?.Dispose();
+            KpInboundVM?.Dispose();
+            KpOutboundVM?.Dispose();
+            PovratiInboundVM?.Dispose();
+            PovratiOutboundVM?.Dispose();
+            OtherInboundVM?.Dispose();
+            OtherOutboundVM?.Dispose();
+            LoginVM?.Dispose();
 
             return Task.CompletedTask;
         }
@@ -107,7 +109,12 @@ namespace wpfcm1.Shell
             await ActivateItemAsync(HomeVM);
             await _events.PublishOnUIThreadAsync(new MessageViewModelActivated(ActiveItem.GetType().Name));
 
-            var result = await _windowManager.ShowDialogAsync(LoginVM);
+            var settings = new Dictionary<string, object>
+            {
+                { "Topmost", false },
+            };
+            var result = await _windowManager.ShowDialogAsync(LoginVM, null, settings);
+            
             if (result == false)
             {
                 System.Windows.Application.Current.Shutdown();
@@ -316,7 +323,12 @@ namespace wpfcm1.Shell
         {
             //TODO: ovo mora drugacije
             _events.PublishOnUIThreadAsync(new MessageShowPdf(PreviewViewModel.Empty));
-            var result = _windowManager.ShowDialogAsync(new DialogSyncViewModel());
+
+            var settings = new Dictionary<string, object>
+            {
+                { "Topmost", false },
+            };
+            var result = _windowManager.ShowDialogAsync(new DialogSyncViewModel(), null, settings);
         }
 
         public void Handle(MessagePickCert message)

@@ -423,7 +423,12 @@ namespace wpfcm1.FolderTypes
 
                 //TODO: ovo mora drugacije
                 // _events.PublishOnUIThread(new MessageShowPdf(PreviewViewModel.Empty));
-                var result = _windowManager.ShowDialogAsync(new DialogSignViewModel(_certificate, this));
+
+                var settings = new Dictionary<string, object>
+                {
+                    { "Topmost", false },
+                };
+                var result = _windowManager.ShowDialogAsync(new DialogSignViewModel(_certificate, this), null, settings);
             }
         }
 
