@@ -71,22 +71,13 @@ namespace wpfcm1.PDF
             appearance.Layer2Font = new Font(font);
 
             IExternalSignature pks;
-            RSA rsa = cert.GetRSAPrivateKey();
-
-            if (cert.Issuer == "C=BA, S=Republika Srpska, O=Poreska uprava, CN=PURS CA 1")
+            if (cert.SignatureAlgorithm.FriendlyName == "sha1RSA" || cert.IssuerName.Name == "C=BA, S=Republika Srpska, O=Poreska uprava, CN=PURS CA 1")
             {
                 pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA1);
             }
             else
             {
-                if (rsa.KeySize >= 2048)
-                {
-                    pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA256);
-                }
-                else
-                {
-                    pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA1);
-                }
+                pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA256);
             }
 
             MakeSignature.SignDetached(appearance, pks, chain, crlList, ocspClient, tsaClient, 0, CryptoStandard.CADES);
