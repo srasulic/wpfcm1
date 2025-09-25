@@ -63,6 +63,8 @@ namespace wpfcm1.OlympusApi
         public string alf_ticket { get; set; }
         public string alf_host { get; set; }
         public string alf_folder_node_id { get; set; }
+        public int br_dana_local_sent { get; set; }
+        public int br_dana_obradjeno { get; set; }
     }
 
     public class TipDokPristup

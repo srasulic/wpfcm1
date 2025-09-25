@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Deployment.Application;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
@@ -11,7 +13,6 @@ using wpfcm1.Events;
 using wpfcm1.FolderGroups;
 using wpfcm1.OlympusApi;
 using wpfcm1.Preview;
-using wpfcm1.Properties;
 using wpfcm1.Settings;
 using wpfcm1.Toolbar;
 
@@ -24,6 +25,8 @@ namespace wpfcm1.Shell
     {
         private readonly IEventAggregator _events;
         private readonly IWindowManager _windowManager;
+
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         [ImportingConstructor]
         public ShellViewModel(IEventAggregator events, IWindowManager windowManager, ToolBarViewModel toolBar, CertificatesViewModel certs)
@@ -138,6 +141,14 @@ namespace wpfcm1.Shell
 
                 SetFolderGroupVisibility();
 
+                // brisanje starih fajlova u obradjeno i loca_sent
+                Profile profile = OlympusService.DeserializeFromJson<Profile>(User.Default.JsonProfile);
+                int br_dana_obradjeno = profile.tenant_info.br_dana_obradjeno;
+                int br_dana_local_sent = profile.tenant_info.br_dana_local_sent;
+                string rootDir = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant);
+                DeleteOldFilesIn(rootDir, "obradjeno", br_dana_obradjeno);
+                DeleteOldFilesIn(rootDir, "local_sent", br_dana_local_sent);
+
                 HomeVM = new HomeViewModel(this);
                 await ActivateItemAsync(HomeVM);
                 await _events.PublishOnUIThreadAsync(new MessageViewModelActivated(ActiveItem.GetType().Name));
@@ -225,6 +236,62 @@ namespace wpfcm1.Shell
                 if (item.tip_dok == "ostali" && item.smer == "inbound")
                 {
                     OtherInboundVM.IsVisible = true;
+                }
+            }
+        }
+
+        private void DeleteOldFilesIn(string rootDir, string dirName, int br_dana)
+        {
+            foreach (string dir in Directory.GetDirectories(rootDir, "*", SearchOption.AllDirectories))
+            {
+                string folderName = Path.GetFileName(dir);
+
+                if (folderName.Equals(dirName, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (br_dana == -1)
+                    {
+                        // nema brisanja
+                    }
+                    else if (br_dana == 0)
+                    {
+                        Log.Info($"Cleaning target folder: {dir}");
+
+                        // brisemo sve
+                        foreach (string file in Directory.GetFiles(dir))
+                        {
+                            try
+                            {
+                                File.Delete(file);
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error($"Error deleting {file}: {ex.Message}");
+                            }
+                        }
+                    }
+                    else if (br_dana > 0)
+                    {
+                        Log.Info($"Cleaning target folder: {dir}");
+
+                        DateTime threshold = DateTime.Now.AddDays(-br_dana);
+
+                        foreach (string file in Directory.GetFiles(dir))
+                        {
+                            try
+                            {
+                                DateTime lastWriteTime = File.GetLastWriteTime(file);
+
+                                if (lastWriteTime.Date < threshold.Date)
+                                {
+                                    File.Delete(file);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error($"Error deleting {file}: {ex.Message}");
+                            }
+                        }
+                    }
                 }
             }
         }
