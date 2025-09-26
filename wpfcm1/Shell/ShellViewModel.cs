@@ -143,11 +143,7 @@ namespace wpfcm1.Shell
 
                 // brisanje starih fajlova u obradjeno i loca_sent
                 Profile profile = OlympusService.DeserializeFromJson<Profile>(User.Default.JsonProfile);
-                int br_dana_obradjeno = profile.tenant_info.br_dana_obradjeno;
-                int br_dana_local_sent = profile.tenant_info.br_dana_local_sent;
-                string rootDir = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant);
-                DeleteOldFilesIn(rootDir, "obradjeno", br_dana_obradjeno);
-                DeleteOldFilesIn(rootDir, "local_sent", br_dana_local_sent);
+                await PerformAsyncDeletionsParallel(profile);
 
                 HomeVM = new HomeViewModel(this);
                 await ActivateItemAsync(HomeVM);
@@ -242,20 +238,22 @@ namespace wpfcm1.Shell
 
         private void DeleteOldFilesIn(string rootDir, string dirName, int br_dana)
         {
+            if (br_dana == -1)
+            {
+                // nema brisanja
+                return;
+            }
+
             foreach (string dir in Directory.GetDirectories(rootDir, "*", SearchOption.AllDirectories))
             {
                 string folderName = Path.GetFileName(dir);
 
                 if (folderName.Equals(dirName, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (br_dana == -1)
-                    {
-                        // nema brisanja
-                    }
-                    else if (br_dana == 0)
-                    {
-                        Log.Info($"Cleaning target folder: {dir}");
+                    Log.Info($"Cleaning target folder: {dir}");
 
+                    if (br_dana == 0)
+                    {
                         // brisemo sve
                         foreach (string file in Directory.GetFiles(dir))
                         {
@@ -271,8 +269,6 @@ namespace wpfcm1.Shell
                     }
                     else if (br_dana > 0)
                     {
-                        Log.Info($"Cleaning target folder: {dir}");
-
                         DateTime threshold = DateTime.Now.AddDays(-br_dana);
 
                         foreach (string file in Directory.GetFiles(dir))
@@ -292,8 +288,30 @@ namespace wpfcm1.Shell
                             }
                         }
                     }
+
+                    Log.Info($"Cleaning target folder ended: {dir}");
                 }
             }
+        }
+
+        public async Task PerformAsyncDeletionsParallel(Profile profile)
+        {
+            int br_dana_obradjeno = profile.tenant_info.br_dana_obradjeno;
+            int br_dana_local_sent = profile.tenant_info.br_dana_local_sent;
+            Log.Info($"br_dana_obradjeno: {br_dana_obradjeno}");
+            Log.Info($"br_dana_local_sent: {br_dana_local_sent}");
+
+            string rootDir = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant);
+
+            Task deleteObradjeno = Task.Run(() =>
+                DeleteOldFilesIn(rootDir, "obradjeno", br_dana_obradjeno)
+            );
+
+            Task deleteLocalSent = Task.Run(() =>
+                DeleteOldFilesIn(rootDir, "local_sent", br_dana_local_sent)
+            );
+
+            await Task.WhenAll(deleteObradjeno, deleteLocalSent);
         }
 
         public void ShowHome()
