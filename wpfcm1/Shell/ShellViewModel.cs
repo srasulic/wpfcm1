@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Deployment.Application;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
@@ -236,64 +237,6 @@ namespace wpfcm1.Shell
             }
         }
 
-        private void DeleteOldFilesIn(string rootDir, string dirName, int br_dana)
-        {
-            if (br_dana == -1)
-            {
-                // nema brisanja
-                return;
-            }
-
-            foreach (string dir in Directory.GetDirectories(rootDir, "*", SearchOption.AllDirectories))
-            {
-                string folderName = Path.GetFileName(dir);
-
-                if (folderName.Equals(dirName, StringComparison.OrdinalIgnoreCase))
-                {
-                    Log.Info($"Cleaning target folder: {dir}");
-
-                    if (br_dana == 0)
-                    {
-                        // brisemo sve
-                        foreach (string file in Directory.GetFiles(dir))
-                        {
-                            try
-                            {
-                                File.Delete(file);
-                            }
-                            catch (Exception ex)
-                            {
-                                Log.Error($"Error deleting {file}: {ex.Message}");
-                            }
-                        }
-                    }
-                    else if (br_dana > 0)
-                    {
-                        DateTime threshold = DateTime.Now.AddDays(-br_dana);
-
-                        foreach (string file in Directory.GetFiles(dir))
-                        {
-                            try
-                            {
-                                DateTime lastWriteTime = File.GetLastWriteTime(file);
-
-                                if (lastWriteTime.Date < threshold.Date)
-                                {
-                                    File.Delete(file);
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                Log.Error($"Error deleting {file}: {ex.Message}");
-                            }
-                        }
-                    }
-
-                    Log.Info($"Cleaning target folder ended: {dir}");
-                }
-            }
-        }
-
         public async Task PerformAsyncDeletionsParallel(Profile profile)
         {
             int br_dana_obradjeno = profile.tenant_info.br_dana_obradjeno;
@@ -303,15 +246,69 @@ namespace wpfcm1.Shell
 
             string rootDir = Path.Combine(Folders.Default.RootFolder, profile.tenant_info.tenant);
 
-            Task deleteObradjeno = Task.Run(() =>
-                DeleteOldFilesIn(rootDir, "obradjeno", br_dana_obradjeno)
-            );
+            var dirs_obradjeno = Directory.GetDirectories(rootDir, "obradjeno", SearchOption.AllDirectories).ToList();
+            var dirs_local_sent = Directory.GetDirectories(rootDir, "local_sent", SearchOption.AllDirectories).ToList();
 
-            Task deleteLocalSent = Task.Run(() =>
-                DeleteOldFilesIn(rootDir, "local_sent", br_dana_local_sent)
-            );
+            var dirs = new List<(string, int)>();
+            dirs.AddRange(dirs_obradjeno.ToList<string>().Select(s => (s, br_dana_obradjeno)).ToList());
+            dirs.AddRange(dirs_local_sent.ToList<string>().Select(s => (s, br_dana_local_sent)).ToList());
 
-            await Task.WhenAll(deleteObradjeno, deleteLocalSent);
+            await Task.Run(() =>
+            {
+                Parallel.ForEach(dirs, d =>
+                {
+                    if (d.Item2 == -1)
+                    {
+                        //nema brisanja
+                        return;
+                    }
+                    DeleteOldFilesIn(d.Item1, d.Item2);
+                });
+            });
+        }
+
+        private void DeleteOldFilesIn(string dir, int br_dana)
+        {
+            Log.Info($"Cleaning target folder: {dir}");
+
+            if (br_dana == 0)
+            {
+                // brisemo sve
+                foreach (string file in Directory.GetFiles(dir))
+                {
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error($"Error deleting {file}: {ex.Message}");
+                    }
+                }
+            }
+            else if (br_dana > 0)
+            {
+                DateTime threshold = DateTime.Now.AddDays(-br_dana);
+
+                foreach (string file in Directory.GetFiles(dir))
+                {
+                    try
+                    {
+                        DateTime lastWriteTime = File.GetLastWriteTime(file);
+
+                        if (lastWriteTime.Date < threshold.Date)
+                        {
+                            File.Delete(file);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error($"Error deleting {file}: {ex.Message}");
+                    }
+                }
+            }
+
+            Log.Info($"Cleaning target folder ended: {dir}");
         }
 
         public void ShowHome()
