@@ -144,7 +144,8 @@ namespace wpfcm1.Shell
 
                 // brisanje starih fajlova u obradjeno i loca_sent
                 Profile profile = OlympusService.DeserializeFromJson<Profile>(User.Default.JsonProfile);
-                await PerformAsyncDeletionsParallel(profile);
+                //await PerformAsyncDeletionsParallel(profile);
+                var taskDel =  PerformAsyncDeletionsParallel(profile); // bez await, brisu se fajlovi u pozadini, UI moze da se koristi bez cekanja
 
                 HomeVM = new HomeViewModel(this);
                 await ActivateItemAsync(HomeVM);
