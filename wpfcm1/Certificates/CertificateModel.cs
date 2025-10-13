@@ -6,6 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using iTextSharp.text.pdf.security;
 using Org.BouncyCastle.Security;
+using wpfcm1.Settings;
 using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 
 namespace wpfcm1.Certificates
@@ -89,11 +90,14 @@ namespace wpfcm1.Certificates
         {
             var errors = new List<string>();
 
-            var chain = chainBuildInfo.Item1;
-            var isChainValid = chainBuildInfo.Item2;
-            if (!isChainValid)
+            if (User.Default.CheckCertStartup)
             {
-                errors.Add(string.Format("Certificate not valid - {0}", chain.ChainStatus[0].Status));
+                var chain = chainBuildInfo.Item1;
+                var isChainValid = chainBuildInfo.Item2;
+                if (!isChainValid)
+                {
+                    errors.Add(string.Format("Certificate not valid - {0}", chain.ChainStatus[0].Status));
+                }
             }
 
             foreach (var extension in certificate.Extensions)

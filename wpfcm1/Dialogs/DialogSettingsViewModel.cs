@@ -33,6 +33,8 @@ namespace wpfcm1.Dialogs
             YSigShift = user.YSigShift;
             XSigShiftRight = user.XSigShiftRight;
             YSigShiftRight = user.YSigShiftRight;
+            CheckCertStartup = user.CheckCertStartup;
+            CheckCertSign = user.CheckCertSign;
 
             /* boja hedera je definisana prema Variation u App.xaml.cs */
             /* Naziv u zaglavlju je definisan prema Variation u AppBootstrapper.cs */
@@ -160,6 +162,20 @@ namespace wpfcm1.Dialogs
             set { _ySigShiftRight = value; NotifyOfPropertyChange(() => YSigShiftRight); }
         }
 
+        private bool _checkCertificateStartup;
+        public bool CheckCertStartup
+        {
+            get { return _checkCertificateStartup; }
+            set { _checkCertificateStartup = value; NotifyOfPropertyChange(() => CheckCertStartup); }
+        }
+
+        private bool _checkCertificateSign;
+        public bool CheckCertSign
+        {
+            get { return _checkCertificateSign; }
+            set { _checkCertificateSign = value; NotifyOfPropertyChange(() => CheckCertSign); }
+        }
+
         public async Task OnClose()
         {
             SaveUser();
@@ -175,6 +191,9 @@ namespace wpfcm1.Dialogs
         {
             Folders.Default.RootFolder = RootFolder;
             Folders.Default.ArchiveFolder = ArchiveFolder;
+
+            User.Default.CheckCertStartup = CheckCertStartup;
+            User.Default.CheckCertSign = CheckCertSign;
 
             User.Default.Save();
             Folders.Default.Save();

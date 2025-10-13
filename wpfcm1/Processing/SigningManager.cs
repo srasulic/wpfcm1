@@ -40,8 +40,13 @@ namespace wpfcm1.Processing
             var pib = User.Default.PIB;
             if (string.IsNullOrEmpty(pib)) throw new ApplicationException("PIB korisnika nije unet!");
 
-            var crlList = await CertificateHelpers.GetCrlClentsOfflineAsync(Certificate.ChainElements);
-            var ocspClient = new OcspClientBouncyCastle();
+            IList<ICrlClient> crlList = null;
+            OcspClientBouncyCastle ocspClient = null;
+            if (User.Default.CheckCertSign)
+            {
+                crlList = await CertificateHelpers.GetCrlClentsOfflineAsync(Certificate.ChainElements);
+                ocspClient = new OcspClientBouncyCastle();
+            }
 
             // posebna podrska za definisanje željenog SHA algoritma
             // default će biti SHA1

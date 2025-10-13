@@ -6,10 +6,12 @@
     WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
     BorderBrush="{DynamicResource AccentColorBrush}"
     BorderThickness="1" FontSize="14"
-    Width="600" Height="400"
+    Width="600" Height="480"
     >
     <Grid Margin="5">
         <Grid.RowDefinitions >
+            <RowDefinition  Height="Auto"/>
+            <RowDefinition  Height="Auto"/>
             <RowDefinition  Height="Auto"/>
             <RowDefinition  Height="Auto"/>
             <RowDefinition  Height="Auto"/>
@@ -37,6 +39,8 @@
         <Label Grid.Row="7" Grid.Column="0" Content="Timestamp password" VerticalAlignment="Center"/>
         <Label Grid.Row="8" Grid.Column="0" Content="Potpis offset" VerticalAlignment="Center"/>
         <Label Grid.Row="9" Grid.Column="0" Content="Api URL" VerticalAlignment="Center"/>
+        <Label Grid.Row="10" Grid.Column="0" Content="Provera sertifikata" VerticalAlignment="Center"/>
+        <Label Grid.Row="11" Grid.Column="0" Content="Provera sertifikata" VerticalAlignment="Center"/>
 
         <TextBox Grid.Row="0" Grid.Column="1" Margin="8" VerticalAlignment="Center" x:Name="RootFolder" />
         <TextBox Grid.Row="1" Grid.Column="1" Margin="8" VerticalAlignment="Center" x:Name="ArchiveFolder"/>
@@ -69,7 +73,13 @@
         </Grid>
 
         <TextBox Grid.Row="9" Grid.Column="1" Margin="8,0,8,0" IsReadOnly="True" x:Name="ApiURL" BorderThickness="0"/>
-        <StackPanel Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+        
+        <CheckBox Grid.Row="10" Grid.Column="1" Margin="8" VerticalAlignment="Center" 
+          x:Name="CheckCertStartup" Content="prilikom pokretanja (zahteva restart)"/>
+        <CheckBox Grid.Row="11" Grid.Column="1" Margin="8" VerticalAlignment="Center" 
+         x:Name="CheckCertSign" Content="prilikom potpisivanja"/>
+
+        <StackPanel Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Button Content="OK" MinWidth="64" x:Name="OnClose" Margin="8"/>
             <Button Content="Cancel"  MinWidth="64" x:Name="OnCancel" Margin="8"/>
         </StackPanel>
