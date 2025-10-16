@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.security;
-using Org.BouncyCastle.Crypto.Tls;
+using wpfcm1.Certificates;
 using wpfcm1.Settings;
 using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 
@@ -25,6 +24,7 @@ namespace wpfcm1.PDF
             SignatureRules.SignatureLocation sigLocation,
             string reason = "")
         {
+            //PdfReader.unethicalreading = true;
             using (var reader = new PdfReader(src))
             using (var fs = new FileStream(dst, FileMode.Create))
 
@@ -38,7 +38,9 @@ namespace wpfcm1.PDF
                         break;
                     case SignatureRules.SignatureLocation.UpperRight:
                         using (var stamper = PdfStamper.CreateSignature(reader, fs, '\0', null, true))
+                        {
                             CreateSignature(cert, chain, crlList, ocspClient, tsaClient, stamper, reader, sigLocation, false, reason);
+                        }
                         break;
                 }
         }
@@ -77,7 +79,8 @@ namespace wpfcm1.PDF
             }
             else
             {
-                pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA256);
+                //pks = new X509Certificate2Signature(cert, DigestAlgorithms.SHA256);
+                pks = new CngExternalSignature(cert, "SHA-256");
             }
 
             MakeSignature.SignDetached(appearance, pks, chain, crlList, ocspClient, tsaClient, 0, CryptoStandard.CADES);
