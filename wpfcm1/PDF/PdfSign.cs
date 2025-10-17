@@ -24,7 +24,7 @@ namespace wpfcm1.PDF
             SignatureRules.SignatureLocation sigLocation,
             string reason = "")
         {
-            //PdfReader.unethicalreading = true;
+            PdfReader.unethicalreading = true;
             using (var reader = new PdfReader(src))
             using (var fs = new FileStream(dst, FileMode.Create))
 
